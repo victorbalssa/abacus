@@ -3,6 +3,11 @@ import { connect } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Configuration';
 
+type ConfigurationContainer = {
+  loading: boolean,
+  navigation: object,
+};
+
 const Configuration = ({
   loading,
   navigation,
@@ -31,11 +36,6 @@ const Configuration = ({
       resetApp={resetApp}
     />
   );
-};
-
-type ConfigurationContainer = {
-  navigation: any,
-  loading: boolean,
 };
 
 const mapStateToProps = (state) => ({

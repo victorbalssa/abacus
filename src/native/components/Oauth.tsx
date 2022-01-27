@@ -1,23 +1,31 @@
 import React from 'react';
-
-import { AuthRequest } from 'expo-auth-session';
-import {
-  Input, Box, FormControl,
-} from 'native-base';
-
+import { Input, Box, FormControl } from 'native-base';
 import { KeyboardAvoidingView } from 'react-native';
+
+import { AuthRequestPromptOptions } from 'expo-auth-session/src/AuthRequest.types';
+import { AuthSessionResult } from 'expo-auth-session/src/AuthSession.types';
+import { Dispatch } from 'redux';
 import UIButton from './UI/UIButton';
 import { isValidHttpUrl } from '../../lib/common';
+import { OauthConfig } from '../../containers/Oauth';
+
+interface ConfigurationComponent {
+  loading: boolean
+  config: OauthConfig
+  setConfig: Dispatch<OauthConfig>
+  promptAsync: (options?: AuthRequestPromptOptions) => Promise<AuthSessionResult>
+  backendURL: string
+  setBackendURL: (state: string) => Promise<null>
+}
 
 const Configuration = ({
   loading,
   config,
   setConfig,
-  navigation,
   promptAsync,
   backendURL,
   setBackendURL,
-}) => (
+}: ConfigurationComponent) => (
   <KeyboardAvoidingView
     h={{
       base: '400px',
@@ -80,11 +88,5 @@ const Configuration = ({
     </Box>
   </KeyboardAvoidingView>
 );
-
-Configuration.propTypes = {
-  loading: PropTypes.bool.isRequired,
-};
-
-Configuration.defaultProps = {};
 
 export default Configuration;

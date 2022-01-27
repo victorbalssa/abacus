@@ -13,6 +13,31 @@ import Layout from '../native/components/Oauth';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 
+const mapStateToProps = (state) => ({
+  backendURL: state.configuration.backendURL,
+  loading: state.loading.models.firefly,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setBackendURL: dispatch.configuration.setBackendURL,
+  testAccessToken: dispatch.firefly.testAccessToken,
+  getFreshAccessToken: dispatch.firefly.getFreshAccessToken,
+  getNewAccessToken: dispatch.firefly.getNewAccessToken,
+});
+
+interface ConfigurationContainer extends
+  ReturnType<typeof mapStateToProps>,
+  ReturnType<typeof mapDispatchToProps> {
+  navigation: object,
+  loading: boolean,
+  backendURL: string,
+}
+
+export type OauthConfig = {
+  oauthClientId: string,
+  oauthClientSecret: string,
+}
+
 const Configuration = ({
   loading,
   navigation,
@@ -21,10 +46,10 @@ const Configuration = ({
   testAccessToken,
   getNewAccessToken,
   getFreshAccessToken,
-}) => {
+}: ConfigurationContainer) => {
   const toast = useToast();
 
-  const [config, setConfig] = useState({
+  const [config, setConfig] = useState<OauthConfig>({
     oauthClientId: '',
     oauthClientSecret: '',
   });
@@ -131,23 +156,5 @@ const Configuration = ({
     />
   );
 };
-
-Configuration.propTypes = {
-  navigation: PropTypes.shape({}).isRequired,
-  loading: PropTypes.bool.isRequired,
-  backendURL: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  backendURL: state.configuration.backendURL,
-  loading: state.loading.models.firefly,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setBackendURL: dispatch.configuration.setBackendURL,
-  testAccessToken: dispatch.firefly.testAccessToken,
-  getFreshAccessToken: dispatch.firefly.getFreshAccessToken,
-  getNewAccessToken: dispatch.firefly.getNewAccessToken,
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Configuration);

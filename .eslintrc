@@ -1,17 +1,37 @@
 {
-    "extends": "airbnb",
-    "parser": "babel-eslint",
-    "plugins": [
-        "jest"
+    "extends": [
+        "airbnb",
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:import/errors",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
+    "parser":  "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
     "parserOptions": {
-        "ecmaFeatures": {
-            "classes": true
+        "ecmaVersion": 6,
+        "project": "./tsconfig.json",
+        "sourceType": "module"
+    },
+    "ecmaFeatures":  {
+        "jsx": true,
+        "tsx": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
         }
     },
-    "env": {
-        "jest/globals": true
-    },
+    "overrides": [
+        {
+            "files": ["**/*.ts", "**/*.tsx"],
+            "rules": {
+                "no-unused-vars": ["off"],
+                "no-undef": ["off"]
+            }
+        }
+    ],
     "rules": {
         "react/jsx-filename-extension": [
             "error",
@@ -25,8 +45,8 @@
             }
         ],
         "no-unused-vars": ["error", { "vars": "all", "args": "all" }],
-        "global-require": "off",
-        "no-console": "off",
+        "global-require": "warn",
+        "no-console": "warn",
         "import/no-extraneous-dependencies": "off",
         "import/extensions": "off",
         "import/no-unresolved": "off",

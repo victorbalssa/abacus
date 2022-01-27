@@ -12,6 +12,17 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
 
+type ChartType = {
+  range: number,
+  dashboard: [],
+  loading: boolean,
+  fetchData: () => Promise<void>,
+  start: string,
+  end: string,
+  handleChangeRange: (value: object) => Promise<void>,
+  filterData: () => Promise<void>,
+}
+
 const Chart = ({
   range,
   dashboard,
@@ -21,7 +32,7 @@ const Chart = ({
   start,
   end,
   handleChangeRange,
-}) => (
+}: ChartType) => (
   <ScrollView>
     <Stack safeAreaTop={8}>
       <Box alignItems="center">
