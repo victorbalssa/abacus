@@ -1,0 +1,95 @@
+{
+    "homepage": {
+        "title": "Accueil",
+        "card1Text1": "T'as choisi ton prochain événement ?",
+        "card1Text2": "Choisis ta prochaine soirée parmis une sélection d'événements musicaux autour de montréal",
+        "card2Text1": "T'as pris ton billet ?",
+        "card2Text2": "Viens checker tes billets dans l'appli",
+        "cardSignInText1": "Déjà un compte ?",
+        "cardSignInText2": "Connecte toi en cliquant ici pour avoir accès à toutes les fonctionnalités de l'appli"
+    },
+    "events": {
+        "title": "Événements",
+        "full": "complet",
+        "available": "pl. dispo.",
+        "buyTicket": "Prendre un billet",
+        "buyDone": "Le billet est sur l'appli",
+        "pay": "Payer"
+    },
+    "tickets": {
+        "title": "Tes billets",
+        "scanned": "SCANNÉ.",
+        "noTickets": "Pas de billets trouvés",
+        "noTicketsInfo": "Vous n'avez pas encore d'évenements prévus dans les prochains jours \uD83D\uDE25"
+    },
+    "profile": {
+        "connectWith": "Tu es connecté avec l'adresse",
+        "myAccount": "Mon compte",
+        "updateAccount": "Mettre à jour mes informations",
+        "updatePassword": "Mettre à jour le mot de passe",
+        "logout": "Se déconnecter",
+        "scan": "Scan tickets",
+        "push": "Push Notification",
+        "on": "Allumer",
+        "off": "Eteindre",
+        "updated": "Mis à jour \uD83D\uDE80",
+        "emailLink": "Check ton inbox 📫",
+        "welcome": "Bienvenu !"
+    },
+    "push": {
+        "send": "Envoyer une notification aux utilisateurs"
+    },
+    "global": {
+        "ok": "Ok",
+        "go": "Go",
+        "open": "Ouvrir H2T",
+        "currentLanguage": "Langue :",
+        "send": "Envoyer"
+    },
+    "payment": {
+        "info": "Information de paiement",
+        "name": "Nom du titulaire de la carte"
+    },
+    "errors": {
+        "default": "Hmm, an unknown error occured",
+        "timeout": "Server Timed Out. Check your internet connection",
+        "invalidJson": "Response returned is not valid JSON",
+        "invalidFirebase": "Firebase is not connected correctly",
+        "memberNotAuthd": "You need to be logged in, to update your profile",
+        "memberExists": "L'utilisateur existe déjà",
+        "missingFirstName": "Il manque le prénom",
+        "missingLastName": "Il manque le nom de famille",
+        "missingEmail": "Il manque ton email",
+        "missingPassword": "Il manque le mot de passe",
+        "passwordsDontMatch": "Les mots de passe ne sont pas identiques",
+        "events404": "Evenement non trouvé :(",
+        "needToBeLoggedIn": "Tu dois être connecté pour acheter un billet",
+        "noTicketsLeft": "Plus de places disponibles pour cet évent",
+        "auth/email-already-in-use": "Email déjà utilisé",
+        "auth/invalid-email": "Email invalide",
+        "auth/weak-password": "Mot de passe trop faible",
+        "auth/user-disabled": "Utilisateur désactivé par l'administrateur",
+        "auth/operation-not-allowed": "Non autorisé ",
+        "auth/wrong-password": "Mot de passe invalide",
+        "auth/user-not-found": "Utilisateur inconnu ou supprimé",
+        "card": "Mauvaise carte, veuillez réessayer plus tard"
+    },
+    "login": {
+        "forgotLabel": "Email du compte",
+        "forgotBtn": "Récupération du mot de passe",
+        "forgotPassword": "Mot de passe perdu",
+        "connect": "Se connecter",
+        "fields": {
+            "email": "Courriel",
+            "password": "Mot de passe",
+            "confirmPassword": "Confirmation de mot de passe",
+            "firstName": "Prénom",
+            "lastName": "Nom"
+        },
+        "update": "Mettre à jour",
+        "signUp": "S'inscrire",
+        "withoutAccount": "Continuer sans compte",
+        "connectText": "Connecte toi en cliquant ici pour avoir accès à toutes les fonctionnalités de l'appli",
+        "signUpText": "Tu n'as pas encore de compte ? inscris toi en cliquant ici"
+    }
+}

@@ -1,0 +1,95 @@
+{
+    "homepage": {
+        "title": "Home",
+        "card1Text1": "Have you chosen your next event?",
+        "card1Text2": "Choose your next party among a selection of musical events around Montréal",
+        "card2Text1": "Did you take your ticket?",
+        "card2Text2": "Come and check your tickets in the app",
+        "cardSignInText1": "Already have an account?",
+        "cardSignInText2": "Log in by clicking here to have access to all the features of the app"
+    },
+    "events": {
+        "title": "Events",
+        "full": "full",
+        "available": "tick. avail.",
+        "buyTicket": "Buy ticket",
+        "buyDone": "Ticket is on app",
+        "pay": "Pay"
+    },
+    "tickets": {
+        "title": "Tickets",
+        "scanned": "SCANNED",
+        "noTickets": "No tickets found",
+        "noTicketsInfo": "You have no events planned for the next few days yet \uD83D\uDE25"
+    },
+    "profile": {
+        "connectWith": "You are connected with email",
+        "myAccount": "Account",
+        "updateAccount": "Update informations",
+        "updatePassword": "Update password",
+        "logout": "Logout",
+        "scan": "Scan tickets",
+        "push": "Push Notification",
+        "on": "Lights On",
+        "off": "Light Off",
+        "updated": "Updated \uD83D\uDE80",
+        "emailLink": "Reset link emailed 📫",
+        "welcome": "Welcome !"
+    },
+    "push": {
+        "send": "Send push notification"
+    },
+    "global": {
+        "ok": "Ok",
+        "go": "Go",
+        "open": "Open H2T",
+        "currentLanguage": "Language :",
+        "send": "Send"
+    },
+    "payment": {
+        "info": "Payment info",
+        "name": "Name on card"
+    },
+    "errors": {
+        "default": "Hmm, an unknown error occured",
+        "timeout": "Server Timed Out. Check your internet connection",
+        "invalidJson": "Response returned is not valid JSON",
+        "invalidFirebase": "Firebase is not connected correctly",
+        "memberNotAuthd": "You need to be logged in, to update your profile",
+        "memberExists": "Member already exist",
+        "missingFirstName": "Firstname missing",
+        "missingLastName": "Lastname missing",
+        "missingEmail": "Email missing",
+        "missingPassword": "Password missing",
+        "passwordsDontMatch": "Passwords not equals",
+        "events404": "Event not found :(",
+        "needToBeLoggedIn": "Need to be connected",
+        "noTicketsLeft": "No tickets left",
+        "auth/email-already-in-use": "Email already in use",
+        "auth/invalid-email": "Invalid email",
+        "auth/weak-password": "Weak password",
+        "auth/user-disabled": "User disabled",
+        "auth/operation-not-allowed": "Operation not allowed",
+        "auth/wrong-password": "Wrong password",
+        "auth/user-not-found": "User not found",
+        "card": "Wrong card, try again later"
+    },
+    "login": {
+        "forgotLabel": "Account email",
+        "forgotBtn": "Password recovery",
+        "forgotPassword": "Forgot password",
+        "connect": "Login",
+        "fields": {
+            "email": "Email",
+            "password": "Password",
+            "confirmPassword": "Password confirm",
+            "firstName": "Firstname",
+            "lastName": "Lastname"
+        },
+        "update": "Update",
+        "signUp": "Register",
+        "withoutAccount": "Continue without account",
+        "connectText": "Log in by clicking here to have access to all the features of the app",
+        "signUpText": "Don't have an account yet? register by clicking here"
+    }
+}

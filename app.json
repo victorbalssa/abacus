@@ -1,0 +1,66 @@
+{
+    "expo": {
+        "name": "expo-ticket-app",
+        "description": "\uD83D\uDC8E A React Native ticket app to start learning Expo very quickly with selected libraries \uD83D\uDCDA",
+        "slug": "expo-ticket-app",
+        "privacy": "public",
+        "platforms": [
+            "ios",
+            "android",
+            "web"
+        ],
+        "version": "1.4.0",
+        "orientation": "portrait",
+        "icon": "./src/images/app-icon-h2t.png",
+        "splash": {
+            "image": "./src/images/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#10181f"
+        },
+        "updates": {
+            "enabled": true,
+            "checkAutomatically": "ON_LOAD",
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": [
+            "*/images/*"
+        ],
+        "ios": {
+            "buildNumber": "1.3.0",
+            "supportsTablet": false,
+            "bundleIdentifier": "expo.ticket.app",
+            "googleServicesFile": "",
+            "infoPlist": {
+                "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets."
+            },
+            "appStoreUrl": "https://apps.apple.com/us/app/h2t/id1502288567"
+        },
+        "androidStatusBar": {
+            "barStyle": "light-content"
+        },
+        "android": {
+            "playStoreUrl": "https://play.google.com/store/apps/details?id=club.h2t.app",
+            "package": "expo.ticket.app",
+            "versionCode": 1,
+            "googleServicesFile": "",
+            "permissions": [
+                "CAMERA"
+            ]
+        },
+        "web": {
+            "config": {
+                "firebase": {
+                    "appId": "",
+                    "apiKey": "",
+                    "measurementId": ""
+                }
+            }
+        },
+        "notification": {
+            "icon": "./src/images/ic_stat_logo_h2t.png",
+            "androidMode": "default",
+            "color": "#fc1055",
+            "androidCollapsedTitle": "H2T"
+        }
+    }
+}

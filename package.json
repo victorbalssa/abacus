@@ -1,0 +1,83 @@
+{
+  "name": "expo-ticket-app",
+  "homepage": "https://github.com/victorbalssa/expo-ticket-app",
+  "version": "1.3.0",
+  "private": false,
+  "main": "node_modules/expo/AppEntry.js",
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|react-clone-referenced-element|expo(nent)?|@expo(nent)?/.*|react-navigation|redux-persist|native-base(-shoutem-theme)|native-base|react-native-router-flux))"
+    ]
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001'"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^12.0.0",
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "@rematch/core": "^2.2.0",
+    "@rematch/loading": "^2.1.2",
+    "@rematch/persist": "^2.1.2",
+    "axios": "^0.21.1",
+    "babel-polyfill": "^6.26.0",
+    "bootstrap": "^4.4.1",
+    "expo": "^44.0.0",
+    "expo-asset": "~8.4.6",
+    "expo-barcode-scanner": "~11.2.0",
+    "expo-constants": "~13.0.1",
+    "expo-firebase-analytics": "~6.0.0",
+    "expo-firebase-core": "~4.1.0",
+    "expo-font": "~10.0.4",
+    "expo-localization": "~12.0.0",
+    "expo-notifications": "~0.14.0",
+    "expo-permissions": "~13.1.0",
+    "expo-splash-screen": "~0.14.1",
+    "expo-status-bar": "~1.2.0",
+    "expo-store-review": "~5.1.0",
+    "firebase": "^9.6.7",
+    "globally": "^0.0.0",
+    "i18n-js": "^3.8.0",
+    "lottie-react-native": "5.0.1",
+    "native-base": "^2.13.8",
+    "prop-types": "^15.7.2",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-helmet": "^5.2.1",
+    "react-native": "0.64.3",
+    "react-native-animated-splash-screen": "^2.0.5",
+    "react-native-credit-card-input": "^0.4.1",
+    "react-native-modal": "^11.5.6",
+    "react-native-pull-refresh": "^1.0.0",
+    "react-native-qrcode-svg": "^6.0.6",
+    "react-native-reanimated": "~1.13.4",
+    "react-native-router-flux": "^4.2.0",
+    "react-redux": "^7.1.3",
+    "redux": "^4.1.2",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
+    "sentry-expo": "^4.0.0",
+    "sharp-cli": "^1.14.1",
+    "slash": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "9.0.2",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jest": "^23.6.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.0",
+    "jest-expo": "^44.0.0",
+    "node-sass": "^7.0.0",
+    "react-scripts": "2.1.8"
+  }
+}
