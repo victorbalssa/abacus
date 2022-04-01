@@ -3,89 +3,126 @@ import * as Font from 'expo-font';
 import PropTypes from 'prop-types';
 import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
-import { Router } from 'react-native-router-flux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { LogBox, Image } from 'react-native';
-import { Root } from 'native-base';
+import { extendTheme, NativeBaseProvider } from 'native-base';
+import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import theme from '../constants/colors';
+import colors from '../constants/colors';
 import Routes from './routes/index';
-import H2TLoading from './components/UI/H2TLoading';
-import i18n from '../translations/i18n';
+import Loading from './components/UI/Loading';
 
-const cacheImages = (images) => {
-    return images.map(image => {
-        if (typeof image === 'string') {
-            return Image.prefetch(image);
-        } else {
-            return Asset.fromModule(image)
-                .downloadAsync();
-        }
-    });
+const config = {
+  dependencies: {
+    'linear-gradient': LinearGradient,
+  },
 };
 
+const cacheImages = (images) => images.map((image) => {
+  if (typeof image === 'string') {
+    return Image.prefetch(image);
+  }
+
+  return Asset.fromModule(image)
+    .downloadAsync();
+});
+
+const theme = extendTheme({
+  fontConfig: {
+    Montserrat: {
+      100: {
+        normal: 'Montserrat_Light',
+      },
+      200: {
+        normal: 'Montserrat_Light',
+      },
+      300: {
+        normal: 'Montserrat',
+      },
+      400: {
+        normal: 'Montserrat',
+      },
+      500: {
+        normal: 'Montserrat_Bold',
+      },
+      600: {
+        normal: 'Montserrat_Bold',
+      },
+    },
+  },
+  fonts: {
+    heading: 'Montserrat',
+    body: 'Montserrat',
+    mono: 'Montserrat',
+  },
+  components: {
+    Alert: {
+      baseStyle: {
+        m: '3',
+      },
+    },
+  },
+});
+
 export default class App extends React.Component {
-    static propTypes = {
-        store: PropTypes.shape({}).isRequired,
-        persistor: PropTypes.shape({}).isRequired,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
     };
+  }
 
-    state = {
-        loading: true,
-    };
+  async componentDidMount() {
+    await this.loadAssets();
+  }
 
-    componentDidMount() {
-        i18n.locale = this.props.store.getState().member.locale === 'fr' ? 'fr' : 'en';
-        this.loadAssets();
-    }
+  async loadAssets() {
+    await cacheImages([]);
+    await Font.loadAsync({
+      Montserrat: require('../images/Montserrat-Regular.ttf'),
+      Montserrat_Light: require('../images/Montserrat-Light.ttf'),
+      Montserrat_Bold: require('../images/Montserrat-Bold.ttf'),
+    });
+    this.setState({ loading: false });
+  }
 
-    async loadAssets() {
-        await cacheImages([
-            require('../images/Events/blueBackgroung.png'),
-            require('../images/Events/event.png'),
-            require('../images/Tickets/no-tickets.png'),
-            require('../images/Events/account.jpg'),
-            require('../images/Events/signIn.jpg'),
-        ]);
-        await Font.loadAsync({
-            Montserrat: require('../images/Montserrat-Regular.ttf'),
-            Montserrat_Bold: require('../images/Montserrat-Bold.ttf'),
-        });
-        this.setState({ loading: false });
-    };
+  render() {
+    const {
+      store,
+      persistor,
+    } = this.props;
+    const { loading } = this.state;
+    LogBox.ignoreAllLogs(true);
 
-    render() {
-        const {
-            store,
-            persistor
-        } = this.props;
-        LogBox.ignoreAllLogs(true);
-
-        return (
-            <AnimatedSplash
-                translucent={true}
-                isLoaded={!this.state.loading}
-                logoImage={require('../images/ic_launcher_h2t.png')}
-                backgroundColor={theme.backgroundColor}
-                logoHeight={185}
-                logoWidth={185}
+    return (
+      <AnimatedSplash
+        translucent
+        isLoaded={!loading}
+        logoImage={require('../images/icon-firefly3-splash.png')}
+        backgroundColor={colors.backgroundColor}
+        logoHeight={145}
+        logoWidth={145}
+      >
+        <NativeBaseProvider config={config} theme={theme}>
+          <StatusBar barStyle="light-content" />
+          <Provider store={store}>
+            <PersistGate
+              loading={<Loading />}
+              persistor={persistor}
             >
-                <Root>
-                    <Provider store={store}>
-                        <PersistGate
-                            loading={<H2TLoading/>}
-                            persistor={persistor}
-                        >
-                            {this.state.loading === false &&
-                                <Router>
-                                    {Routes}
-                                </Router>
-                            }
-                        </PersistGate>
-                    </Provider>
-                </Root>
-            </AnimatedSplash>
-        );
-    }
+              {loading === false && Routes}
+            </PersistGate>
+          </Provider>
+        </NativeBaseProvider>
+      </AnimatedSplash>
+    );
+  }
 }
+
+App.propTypes = {
+  store: PropTypes.shape({}).isRequired,
+  persistor: PropTypes.shape({}).isRequired,
+};

@@ -1,2 +1,7 @@
-export { default as member } from './member';
-export { default as events } from './events';
+import firefly from './firefly';
+import configuration from './configuration';
+
+export default {
+  firefly,
+  configuration,
+};

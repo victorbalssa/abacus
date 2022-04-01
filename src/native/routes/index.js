@@ -1,180 +1,85 @@
 import React from 'react';
-import {Scene, Tabs, Stack} from 'react-native-router-flux';
-import {Icon} from 'native-base';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
-import DefaultProps from '../constants/navigation';
+import OauthContainer from '../../containers/Oauth';
+import ConfigurationContainer from '../../containers/Configuration';
+import DashboardContainer from '../../containers/Dashboard';
+import colors from '../../constants/colors';
 
-import EventsContainer from '../../containers/Events';
-import EventListingComponent from '../components/Event/EventsListing';
-import EventViewComponent from '../components/Event/EventView';
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-import SignUpContainer from '../../containers/SignUp';
-import SignUpComponent from '../components/User/SignUp';
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'rgb(255,255,255)',
+  },
+};
 
-import LoginContainer from '../../containers/Login';
-import LoginComponent from '../components/User/Login';
+function Home() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({
+          focused,
+          color,
+        }) => {
+          let iconName;
 
-import ForgotPasswordContainer from '../../containers/ForgotPassword';
-import ForgotPasswordComponent from '../components/User/ForgotPassword';
-
-import UpdateProfileContainer from '../../containers/UpdateProfile';
-import UpdateProfileComponent from '../components/User/UpdateProfile';
-
-import MemberContainer from '../../containers/Member';
-import ProfileComponent from '../components/User/Profile';
-import TicketsListingComponent from '../components/Ticket/TicketsListing';
-import TicketViewComponent from '../components/Ticket/TicketView';
-
-import HomeContainer from '../../containers/Home';
-import HomeComponent from '../components/Home';
-import ScanComponent from '../components/User/Scan';
-
-import WelcomeComponent from '../components/User/Welcome';
+          if (route.name === 'dashboard-tab') {
+            iconName = focused
+              ? 'view-dashboard'
+              : 'view-dashboard-outline';
+            return <MaterialCommunityIcons name={iconName} size={30} color={color} />;
+          }
+          iconName = focused ? 'ios-settings' : 'ios-settings-outline';
+          return <Ionicons name={iconName} size={30} color={color} />;
+        },
+        tabBarActiveTintColor: colors.brandStyle,
+        tabBarInactiveTintColor: colors.brandDarkLight,
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarLazyLoad: true,
+        tabBarStyle: {
+          backgroundColor: 'transparent',
+          borderTopWidth: 0,
+          position: 'absolute',
+          left: 40,
+          right: 40,
+          bottom: 10,
+          height: 100,
+        },
+      })}
+    >
+      <Tab.Screen
+        name="dashboard-tab"
+        component={DashboardContainer}
+      />
+      <Tab.Screen
+        name="configuration-tab"
+        component={ConfigurationContainer}
+      />
+    </Tab.Navigator>
+  );
+}
 
 const Index = (
-  <Stack
-    key="root"
-  >
-    <Scene
-      initial
-      hideNavBar
-      type="replace"
-      key="welcome"
-      {...DefaultProps.navbarProps}
-      component={LoginContainer}
-      Layout={WelcomeComponent}
-    />
-    <Scene
-      back
-      key="login"
-      {...DefaultProps.navbarProps}
-      component={LoginContainer}
-      Layout={LoginComponent}
-    />
-    <Scene
-      back
-      key="signUp"
-      {...DefaultProps.navbarProps}
-      component={SignUpContainer}
-      Layout={SignUpComponent}
-    />
-    <Scene
-      back
-      key="forgotPassword"
-      {...DefaultProps.navbarProps}
-      component={ForgotPasswordContainer}
-      Layout={ForgotPasswordComponent}
-    />
-    <Tabs
-      hideNavBar
-      showLabel={false}
-      key="tabbar"
-      tabBarPosition="bottom"
-      type="reset"
-      {...DefaultProps.tabProps}
-    >
-      <Stack
-        hideNavBar
-        key="home"
-        icon={({focused}) => (
-          <Icon
-            type="FontAwesome"
-            name="home"
-            style={{color: focused ? '#FC1055' : '#CACDD4', fontSize: 25}}
-          />
-        )}
-        {...DefaultProps.navbarProps}
-      >
-        <Scene key="home" component={HomeContainer} Layout={HomeComponent}/>
-      </Stack>
-
-      <Stack
-        hideNavBar
-        key="events"
-        icon={({focused}) => (
-          <Icon
-            type="Ionicons"
-            name="md-search"
-            style={{color: focused ? '#FC1055' : '#CACDD4', fontSize: 25}}
-          />
-        )}
-        {...DefaultProps.navbarProps}
-      >
-        <Scene
-          key="eventsListing"
-          component={EventsContainer}
-          Layout={EventListingComponent}
-        />
-
-        <Scene
-          back
-          hideNavBar
-          key="eventView"
-          component={EventsContainer}
-          Layout={EventViewComponent}
-        />
-      </Stack>
-
-      <Stack
-        hideNavBar
-        key="tickets"
-        icon={({focused}) => (
-          <Icon
-            type="FontAwesome"
-            name="ticket"
-            style={{color: focused ? '#FC1055' : '#CACDD4', fontSize: 22}}
-          />
-        )}
-        {...DefaultProps.navbarProps}
-      >
-        <Scene
-          key="ticketsListing"
-          component={MemberContainer}
-          Layout={TicketsListingComponent}
-        />
-        <Scene
-          back
-          key="ticketView"
-          component={MemberContainer}
-          Layout={TicketViewComponent}
-        />
-      </Stack>
-
-      <Stack
-        key="profile"
-        icon={({focused}) => (
-          <Icon
-            name="person-circle"
-            style={{color: focused ? '#FC1055' : '#CACDD4', fontSize: 25}}
-          />
-        )}
-        {...DefaultProps.navbarProps}
-      >
-        <Scene
-          hideNavBar
-          key="profileHome"
-          component={MemberContainer}
-          Layout={ProfileComponent}
-        />
-
-        <Scene
-          back
-          key="updateProfile"
-          {...DefaultProps.navbarProps}
-          component={UpdateProfileContainer}
-          Layout={UpdateProfileComponent}
-        />
-
-        <Scene
-          back
-          key="scan"
-          {...DefaultProps.navbarProps}
-          component={MemberContainer}
-          Layout={ScanComponent}
-        />
-      </Stack>
-    </Tabs>
-  </Stack>
+  <NavigationContainer theme={MyTheme}>
+    <Stack.Navigator initialRouteName="oauth" screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="oauth"
+        component={OauthContainer}
+      />
+      <Stack.Screen
+        name="dashboard"
+        component={Home}
+      />
+    </Stack.Navigator>
+  </NavigationContainer>
 );
 
 export default Index;

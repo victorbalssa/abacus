@@ -2,28 +2,19 @@ import { init } from '@rematch/core';
 import createPersistPlugin, { getPersistor } from '@rematch/persist';
 import createLoadingPlugin from '@rematch/loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as models from '../models';
+import models from '../models/index';
 
 const persistPlugin = createPersistPlugin({
-    key: 'root',
-    storage: AsyncStorage,
-    blacklist: [],
+  key: 'root',
+  storage: AsyncStorage,
+  blacklist: [],
 });
+
 const loadingPlugin = createLoadingPlugin({});
 
-const configureStore = () => {
-    const store = init({
-        models,
-        redux: {
-            middlewares: [],
-        },
-        plugins: [persistPlugin, loadingPlugin],
-    });
+export const store = init({
+  models,
+  plugins: [persistPlugin, loadingPlugin],
+});
 
-    const persistor = getPersistor();
-    const { dispatch } = store;
-
-    return { persistor, store, dispatch };
-};
-
-export default configureStore;
+export const persistor = getPersistor();
