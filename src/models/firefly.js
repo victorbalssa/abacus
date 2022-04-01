@@ -2,7 +2,6 @@ import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import secureKeys from '../constants/oauth';
-import apiFetch from '../lib/apiFetch';
 import { discovery, redirectUri } from '../lib/oauth';
 
 const INITIAL_STATE = {
@@ -44,7 +43,7 @@ export default {
      * @returns {Promise}
      */
     async getSummaryBasic() {
-      const summary = await apiFetch('/api/v1/summary/basic?start=2022-01-01&end=2022-12-31');
+      const summary = await dispatch.configuration.apiFetch({ url: '/api/v1/summary/basic?start=2022-01-01&end=2022-12-31' });
 
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -69,7 +68,7 @@ export default {
      * @returns {Promise}
      */
     async getDashboardBasic() {
-      const dashboard = await apiFetch('/api/v1/chart/account/overview?start=2022-01-01&end=2022-03-21');
+      const dashboard = await dispatch.configuration.apiFetch({ url: '/api/v1/chart/account/overview?start=2022-01-01&end=2022-03-21' });
 
       // console.log(dashboard);
 
@@ -85,7 +84,7 @@ export default {
      * @returns {Promise}
      */
     async testAccessToken() {
-      return apiFetch('/api/v1/about/user');
+      return dispatch.configuration.apiFetch({ url: '/api/v1/about/user' });
     },
 
     /**

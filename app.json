@@ -7,27 +7,18 @@
     "platforms": [
       "ios"
     ],
-    "version": "0.0.1",
+    "version": "0.0.3",
     "orientation": "portrait",
     "icon": "./src/images/icon-firefly3.png",
     "splash": {
       "image": "./src/images/splash.png",
       "resizeMode": "contain"
     },
-    "updates": {
-      "enabled": true,
-      "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "*/images/*"
-    ],
     "ios": {
-      "buildNumber": "0.0.1",
-      "supportsTablet": false,
+      "buildNumber": "0.0.3",
       "bundleIdentifier": "firefly.ios.app"
     },
-    "scheme": "firefly3iosapp",
+    "scheme": "fireflyiosapp",
     "githubUrl": "https://github.com/victorbalssa/firefly-iii"
   }
 }

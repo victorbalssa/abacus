@@ -1,13 +1,12 @@
 {
   "name": "firefly-iii",
   "homepage": "https://github.com/victorbalssa/firefly-iii",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "private": true,
-  "main": "node_modules/expo/AppEntry.js",
   "jest": {
     "preset": "jest-expo",
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|react-clone-referenced-element|expo(nent)?|@expo(nent)?/.*|react-navigation|redux-persist|native-base(-shoutem-theme)|native-base|react-native-router-flux))"
+      "node_modules/(?!((jest-)?react-native|react-clone-referenced-element|expo(nent)?|@expo(nent)?/.*|react-navigation|redux-persist|native-base(-shoutem-theme)|native-base))"
     ]
   },
   "scripts": {
@@ -55,7 +54,8 @@
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
     "sharp-cli": "^1.14.1",
-    "slash": "^3.0.0"
+    "slash": "^3.0.0",
+    "expo-updates": "~0.11.6"
   },
   "devDependencies": {
     "babel-preset-expo": "9.0.2",
