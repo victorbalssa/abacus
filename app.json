@@ -20,7 +20,8 @@
       "fallbackToCacheTimeout": 0
     },
     "ios": {
-      "buildNumber": "0.0.4"
+      "buildNumber": "0.0.4",
+      "bundleIdentifier": "firefly.ios.app"
     },
     "scheme": "fireflyiosapp",
     "githubUrl": "https://github.com/victorbalssa/firefly-iii"
