@@ -45,12 +45,8 @@ function Home() {
         tabBarShowLabel: false,
         tabBarLazyLoad: true,
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: '#FFFFFF',
           borderTopWidth: 0,
-          position: 'absolute',
-          left: 40,
-          right: 40,
-          bottom: 10,
           height: 100,
         },
       })}

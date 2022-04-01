@@ -7,16 +7,20 @@
     "platforms": [
       "ios"
     ],
-    "version": "0.0.3",
+    "version": "0.0.4",
     "orientation": "portrait",
     "icon": "./src/images/icon-firefly3.png",
     "splash": {
       "image": "./src/images/splash.png",
       "resizeMode": "contain"
     },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
     "ios": {
-      "buildNumber": "0.0.3",
-      "bundleIdentifier": "firefly.ios.app"
+      "buildNumber": "0.0.4"
     },
     "scheme": "fireflyiosapp",
     "githubUrl": "https://github.com/victorbalssa/firefly-iii"

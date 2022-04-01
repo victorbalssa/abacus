@@ -1,10 +1,9 @@
 import React from 'react';
 import * as Font from 'expo-font';
 import PropTypes from 'prop-types';
-import { Asset } from 'expo-asset';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import { LogBox, Image } from 'react-native';
+import { LogBox } from 'react-native';
 import { extendTheme, NativeBaseProvider } from 'native-base';
 import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
@@ -19,15 +18,6 @@ const config = {
     'linear-gradient': LinearGradient,
   },
 };
-
-const cacheImages = (images) => images.map((image) => {
-  if (typeof image === 'string') {
-    return Image.prefetch(image);
-  }
-
-  return Asset.fromModule(image)
-    .downloadAsync();
-});
 
 const theme = extendTheme({
   fontConfig: {
@@ -80,7 +70,6 @@ export default class App extends React.Component {
   }
 
   async loadAssets() {
-    await cacheImages([]);
     await Font.loadAsync({
       Montserrat: require('../images/Montserrat-Regular.ttf'),
       Montserrat_Light: require('../images/Montserrat-Light.ttf'),

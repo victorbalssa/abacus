@@ -3,19 +3,40 @@ import {
   Box, HStack, ScrollView, Stack, Text, VStack,
 } from 'native-base';
 
-import { useWorkletCallback } from 'react-native-reanimated';
 import {
-  ChartDot,
-  ChartPath,
-  ChartPathProvider,
-  ChartXLabel,
-  ChartYLabel,
-  monotoneCubicInterpolation,
-} from '@rainbow-me/animated-charts';
+  Curve,
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart, VictoryCursorContainer,
+  VictoryLine,
+  VictoryScatter,
+  VictoryTheme, VictoryTooltip,
+  VictoryVoronoiContainer,
+} from 'victory-native';
 
 import { RefreshControl } from 'react-native';
+import Svg from 'react-native-svg';
 import Loading from './UI/Loading';
 import colors from '../../constants/colors';
+
+const data = [
+  {
+    quarter: 1,
+    earnings: -20000,
+  },
+  {
+    quarter: 2,
+    earnings: 16500,
+  },
+  {
+    quarter: 3,
+    earnings: 14250,
+  },
+  {
+    quarter: 4,
+    earnings: 19000,
+  },
+];
 
 const Dashboard = ({
   summary,
@@ -34,37 +55,27 @@ const Dashboard = ({
       };
     });
 
-  const points = monotoneCubicInterpolation({
-    data,
-    range: 100,
-  });
+  const data2 = Object.keys(dashboard[1].entries)
+    .map((key, index) => {
+      const value = dashboard[1].entries[key];
+      const date = new Date(key.replace(/T.*/, ''));
 
-  const formatTimestamp = useWorkletCallback(
-    (value) => {
-      'worklet';
+      return {
+        x: +date,
+        y: value,
+      };
+    });
 
-      if (value === '') {
-        return '';
-      }
+  const data3 = Object.keys(dashboard[2].entries)
+    .map((key, index) => {
+      const value = dashboard[2].entries[key];
+      const date = new Date(key.replace(/T.*/, ''));
 
-      return new Date(Math.round(value)).toLocaleDateString('fr-FR');
-    },
-  );
-
-  const formatDollars = useWorkletCallback(
-    (value) => {
-      'worklet';
-
-      if (value === '') {
-        return '';
-      }
-
-      const val = parseFloat(value)
-        .toFixed(2);
-
-      return `${val} $`;
-    },
-  );
+      return {
+        x: +date,
+        y: value,
+      };
+    });
 
   return (
     <Stack flex={1}>
@@ -75,7 +86,7 @@ const Dashboard = ({
             onRefresh={fetchData}
             refreshing={loading}
           />
-      )}
+        )}
       >
         <Box alignItems="center">
           <Text>
@@ -172,9 +183,8 @@ const Dashboard = ({
               </VStack>
             </HStack>
             <VStack
-              minH={300}
+              maxH={280}
               maxW={330}
-              padding={3}
               bg={{
                 linearGradient: {
                   colors: [colors.brandLight, colors.brandLight],
@@ -182,48 +192,99 @@ const Dashboard = ({
                   end: [1, 1],
                 },
               }}
+              paddingBottom={5}
               rounded="15"
               marginBottom={140}
               justifyContent="center"
-              alignItems="flex-start"
+              alignItems="center"
             >
-              <ChartPathProvider data={{
-                points,
-                smoothingStrategy: 'bezier',
-              }}
-              >
-                <ChartPath
-                  strokeWidth={3}
-                  selectedStrokeWidth={3}
-                  height={200}
-                  stroke="white"
-                  width={300}
-                />
-                <ChartDot style={{
-                  backgroundColor: 'white',
-                  margin: 13,
-                  marginTop: 12,
+              <VictoryChart
+                width={330}
+                domainPadding={10}
+                style={{
+                  grid: {
+                    stroke: '#ddd444',
+                    strokeWidth: 0,
+                  },
                 }}
-                />
-                <ChartYLabel
-                  format={formatDollars}
+                containerComponent={(
+                  <VictoryVoronoiContainer
+                    labels={({ datum }) => `${datum.y}`}
+                    labelComponent={(
+                      <VictoryTooltip
+                        flyoutStyle={{
+                          stroke: '',
+                          strokeWidth: 2,
+                        }}
+                        centerOffset={{
+                          x: 10,
+                          y: -30,
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              >
+                <VictoryAxis
+                  //tickFormat={['Jan', 'Jan', 'Jan', 'Jan']}
+                  tickFormat={(x) => (new Date(Math.round(x)).toLocaleString('default', { month: 'long' }))}
                   style={{
-                    color: 'white',
-                    fontFamily: 'Montserrat_Bold',
-                    fontSize: 20,
-                    margin: 4,
+                    grid: { strokeWidth: 0 },
                   }}
                 />
-                <ChartXLabel
-                  format={formatTimestamp}
+                <VictoryAxis
+                  dependentAxis
+                  tickFormat={(x) => (`$${x / 1000}k`)}
                   style={{
-                    color: 'white',
-                    fontFamily: 'Montserrat',
-                    fontSize: 14,
-                    margin: 4,
+                    grid: { strokeWidth: 0 },
                   }}
                 />
-              </ChartPathProvider>
+                <VictoryLine
+                  style={{
+                    data: {
+                      stroke: '#FFF',
+                      strokeWidth: 2,
+                    },
+                    parent: { border: '2px solid #ccc' },
+                  }}
+                  animate={{
+                    duration: 2000,
+                    onLoad: { duration: 1000 },
+                  }}
+                  data={data}
+                  interpolation="natural"
+                />
+                <VictoryLine
+                  style={{
+                    data: {
+                      stroke: '#df5314',
+                      strokeWidth: 2,
+                    },
+                    parent: { border: '2px solid #ccc' },
+                  }}
+                  animate={{
+                    duration: 2000,
+                    onLoad: { duration: 1000 },
+                  }}
+                  data={data2}
+                  interpolation="natural"
+                />
+                <VictoryLine
+                  style={{
+                    data: {
+                      stroke: '#121212',
+                      strokeWidth: 2,
+                    },
+                    parent: { border: '2px solid #ccc' },
+                  }}
+                  animate={{
+                    duration: 2000,
+                    onLoad: { duration: 1000 },
+                  }}
+                  data={data3}
+                  interpolation="natural"
+                />
+              </VictoryChart>
             </VStack>
           </Stack>
         )}
