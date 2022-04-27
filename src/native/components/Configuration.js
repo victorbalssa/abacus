@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Input, Box, FormControl, HStack,
+  Input, Box, FormControl, HStack, Button, Icon,
 } from 'native-base';
 
 import { KeyboardAvoidingView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
 
 const Configuration = ({
@@ -21,46 +22,27 @@ const Configuration = ({
     }}
     behavior="padding"
   >
-    <Box alignItems="center" marginTop={60}>
-      <Box maxWidth="500px">
-        <FormControl>
-          <FormControl.Label>FireFly3 backend URL</FormControl.Label>
-          <HStack>
-            <Input
-              placeholder="FireFly3 backend URL"
-              isDisabled
-              value={backendURL}
-            />
-            <UIButton
-              icon
-              style={{ height: 30, margin: 5, minW: 400 }}
-              text="Reset App"
-              loading={loading}
-              onPress={() => resetApp()}
-            />
-          </HStack>
-        </FormControl>
-{/*         <FormControl isRequired>
-          <FormControl.Label>Default Currency</FormControl.Label>
-          <Input
-            placeholder="Default Currency"
-            value
-            onChangeText={(v) => {}}
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormControl.Label>config</FormControl.Label>
-          <Input
-            placeholder=""
-            value
-            onChangeText={(v) => {}}
-          />
-          <FormControl.HelperText>
-            tests.
-          </FormControl.HelperText>
-        </FormControl> */}
-
-      </Box>
+    <Box alignItems="center" marginTop={60} p={5}>
+      <FormControl>
+        <FormControl.Label>FireFly3 backend URL</FormControl.Label>
+        <Input
+          variant="rounded"
+          placeholder="FireFly3 backend URL"
+          isDisabled
+          value={backendURL}
+        />
+        <UIButton
+          icon
+          style={{
+            marginTop: 10,
+            height: 32,
+            marginLeft: 5,
+          }}
+          text="Reset App"
+          loading={loading}
+          onPress={() => resetApp()}
+        />
+      </FormControl>
     </Box>
   </KeyboardAvoidingView>
 );

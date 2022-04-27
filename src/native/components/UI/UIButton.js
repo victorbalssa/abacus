@@ -17,7 +17,6 @@ const UIButton = ({
   <TouchableOpacity
     style={{
       height: 50,
-      marginTop: 10,
       borderRadius: 15,
       backgroundColor: disabled ? colors.brandDarkLight : colors.brandStyle,
       flexDirection: 'row',
@@ -45,7 +44,8 @@ const UIButton = ({
         style={{
           color: '#fff',
           fontSize: 15,
-          paddingRight: 5,
+          paddingRight: 10,
+          marginLeft: 10,
           paddingLeft: 5,
         }}
       />
@@ -56,7 +56,7 @@ const UIButton = ({
         color: '#fff',
         fontSize: 15,
         textAlign: icon ? 'left' : 'center',
-        paddingRight: 5,
+        paddingRight: 10,
       }}
       >
         {text}

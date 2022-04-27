@@ -43,7 +43,9 @@ export default {
      * @returns {Promise}
      */
     async getSummaryBasic() {
-      const summary = await dispatch.configuration.apiFetch({ url: '/api/v1/summary/basic?start=2022-01-01&end=2022-12-31' });
+      const today = new Date().toISOString().slice(0, 10);
+
+      const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?start=2022-01-01&end=${today}` });
 
       const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -68,7 +70,8 @@ export default {
      * @returns {Promise}
      */
     async getDashboardBasic() {
-      const dashboard = await dispatch.configuration.apiFetch({ url: '/api/v1/chart/account/overview?start=2022-01-01&end=2022-03-21' });
+      const today = new Date().toISOString().slice(0, 10);
+      const dashboard = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=2022-01-01&end=${today}` });
 
       // console.log(dashboard);
 
