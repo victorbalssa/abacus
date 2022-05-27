@@ -2,7 +2,7 @@
 <div align="center">
   <img src="documentation/img.png" height=100 />
   <p></p>
-  <h1>FireFly3 Client</h1>
+  <h1>Abacus: a FireFly-III iOS Client</h1>
     <div>
         <a href="https://apps.apple.com/us/app/h2t/id1502288567"><img src="documentation/apple.svg" /></a>
     </div>
