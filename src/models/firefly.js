@@ -54,7 +54,7 @@ export default {
       // summary['net-worth-in-CAD'].value_parsed
       // summary['net-worth-in-EUR'].value_parsed
       // TODO: set all net worth values
-      const exchangeRate = 1.41;
+      const exchangeRate = 1.42;
       summary.netWorth = summary['net-worth-in-CAD'].monetary_value;
       summary.netWorthEURCAD = exchangeRate * summary['net-worth-in-EUR'].monetary_value;
       summary.netWorth += summary.netWorthEURCAD;
@@ -71,14 +71,25 @@ export default {
      */
     async getDashboardBasic() {
       const today = new Date().toISOString().slice(0, 10);
-      const dashboard = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=2022-01-01&end=${today}` });
+      const dashboard = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=2022-01-02&end=${today}` });
 
-      // console.log(dashboard);
+      const colors = ['#7f7f7f', '#FFF', '#df5314', '#121212'];
 
-      // summary['net-worth-in-CAD'].value_parsed
-      // summary['net-worth-in-EUR'].value_parsed
-      // TODO: set all net worth values
-      this.setData({ dashboard });
+      dashboard.forEach((v, index) => {
+        dashboard[index].color = colors[index];
+        dashboard[index].entries = Object.keys(v.entries)
+          .map((key) => {
+            const value = dashboard[index].entries[key];
+            const date = new Date(key.replace(/T.*/, ''));
+
+            return {
+              x: +date,
+              y: value,
+            };
+          });
+      });
+
+      this.setData({ dashboard: dashboard.filter((v, i) => ![0].includes(i)) });
     },
 
     /**

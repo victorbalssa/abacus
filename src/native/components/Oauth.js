@@ -63,7 +63,7 @@ const Configuration = ({
             })}
           />
           <FormControl.HelperText>
-            Oauth Client Secret (not persisted).
+            All secrets are kept in iOS secure storage.
           </FormControl.HelperText>
         </FormControl>
 
