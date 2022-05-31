@@ -65,6 +65,9 @@ const Configuration = ({
           <FormControl.HelperText>
             All secrets are kept in iOS secure storage.
           </FormControl.HelperText>
+          <FormControl.HelperText>
+            Redirect URI: .
+          </FormControl.HelperText>
         </FormControl>
 
         <UIButton

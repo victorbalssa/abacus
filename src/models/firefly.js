@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
+import { maxBy, minBy } from 'lodash';
 
 const INITIAL_STATE = {
   summary: [],
@@ -51,15 +52,9 @@ export default {
         style: 'currency',
         currency: 'CAD',
       });
-      // summary['net-worth-in-CAD'].value_parsed
-      // summary['net-worth-in-EUR'].value_parsed
-      // TODO: set all net worth values
-      const exchangeRate = 1.42;
-      summary.netWorth = summary['net-worth-in-CAD'].monetary_value;
-      summary.netWorthEURCAD = exchangeRate * summary['net-worth-in-EUR'].monetary_value;
-      summary.netWorth += summary.netWorthEURCAD;
-      summary.netWorth = formatter.format(summary.netWorth);
-      summary.netWorthEURCAD = formatter.format(summary.netWorthEURCAD);
+
+      console.log(summary);
+      summary.netWorth = summary['net-worth-in-CAD'].value_parsed;
 
       this.setData({ summary });
     },
@@ -87,9 +82,11 @@ export default {
               y: value,
             };
           });
+        dashboard[index].maxY = maxBy(dashboard[index].entries, (o) => (o.y)).y;
+        dashboard[index].minY = minBy(dashboard[index].entries, (o) => (o.y)).y;
       });
 
-      this.setData({ dashboard: dashboard.filter((v, i) => ![0].includes(i)) });
+      this.setData({ dashboard: dashboard.filter((v, i) => ![].includes(i)) });
     },
 
     /**

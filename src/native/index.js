@@ -90,7 +90,7 @@ export default class App extends React.Component {
       <AnimatedSplash
         translucent
         isLoaded={!loading}
-        logoImage={require('../images/icon-firefly3-splash.png')}
+        logoImage={require('../images/icon-abacus-splash.png')}
         backgroundColor={colors.backgroundColor}
         logoHeight={145}
         logoWidth={145}

@@ -7,4 +7,5 @@ export const discovery = (url) => ({
 
 export const redirectUri = makeRedirectUri({
   useProxy: false,
+  path: 'redirect',
 });

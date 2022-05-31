@@ -15,6 +15,7 @@ import {
 } from 'victory-native';
 
 import * as Haptics from 'expo-haptics';
+import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
 import Loading from './UI/Loading';
 import colors from '../../constants/colors';
@@ -31,24 +32,31 @@ const Cursor = (props) => (
       x1={props.x}
       x2={props.x}
       y1={50}
-      y2={310}
+      y2={315}
     />
-    {props.activePoints.map((point) => (
-      <>
-        <Line
-          strokeDasharray="5, 5"
-          style={{
-            stroke: '#545454',
-            strokeWidth: 1,
-          }}
-          y1={310 - (310 / 20000) * point.y}
-          y2={310 - (310 / 20000) * point.y}
-          x1={50}
-          x2={300}
-        />
-        <Circle cx={props.x} cy={310 - (310 / 20000) * point.y} r="3" fill="#545454"/>
-      </>
-    ))}
+    {props.activePoints.map((point) => {
+      const yMinDisplay = 52;
+      const yMaxDisplay = 308;
+      const zeroPos = (-((props.minY / (props.maxY - props.minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
+      const y = (-((point.y / (props.maxY - props.minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay);
+
+      return (
+        <>
+          <Line
+            strokeDasharray="5, 5"
+            style={{
+              stroke: '#545454',
+              strokeWidth: 1,
+            }}
+            y1={y}
+            y2={y}
+            x1={50}
+            x2={300}
+          />
+          <Circle cx={props.x} cy={y} r="3" fill="#545454" />
+        </>
+      );
+    })}
   </>
 );
 
@@ -74,7 +82,7 @@ const Dashboard = ({
 
   return (
     <Stack flex={1}>
-      <Box alignItems="center" paddingTop={50}/>
+      <Box alignItems="center" paddingTop={50} />
       <Box alignItems="center">
         <Text>
           Net worth.
@@ -123,7 +131,6 @@ const Dashboard = ({
                 textAlign: 'center',
               }}
               >
-                {'\n'}
                 {summary['net-worth-in-CAD'].title}
               </Text>
             </VStack>
@@ -152,14 +159,6 @@ const Dashboard = ({
                 fontWeight={600}
               >
                 {summary['net-worth-in-EUR'].value_parsed}
-              </Text>
-              <Text style={{
-                fontSize: 11,
-                color: 'white',
-                textAlign: 'center',
-              }}
-              >
-                {summary.netWorthEURCAD}
               </Text>
               <Text style={{
                 fontSize: 14,
@@ -214,7 +213,12 @@ const Dashboard = ({
                 <VictoryVoronoiContainer
                   voronoiDimension="x"
                   labels={({ datum }) => datum.childName}
-                  labelComponent={<Cursor/>}
+                  labelComponent={(
+                    <Cursor
+                      maxY={maxBy(dashboard, (c) => c.maxY).maxY}
+                      minY={minBy(dashboard, (c) => c.minY).minY}
+                    />
+                  )}
                   onActivated={updatePoint}
                 />
               )}
@@ -232,7 +236,7 @@ const Dashboard = ({
                 style={{
                   tickLabels: {
                     fontSize: 15,
-                    padding: 15
+                    padding: 15,
                   },
                 }}
               />
@@ -263,7 +267,7 @@ const Dashboard = ({
           />
         </Stack>
       )}
-      {loading && <Loading/>}
+      {loading && <Loading />}
     </Stack>
   );
 };

@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "firefly3",
-    "description": "FireFly 3 client for iOS",
-    "slug": "firefly-iii",
+    "description": "Abacus: a FireFly III iOS Client",
+    "slug": "abacus",
     "privacy": "hidden",
     "platforms": [
       "ios"
     ],
-    "version": "0.0.4",
+    "version": "0.0.5",
     "orientation": "portrait",
-    "icon": "./src/images/icon-firefly3.png",
+    "icon": "./src/images/icon-abacus.png",
     "splash": {
       "image": "./src/images/splash.png",
       "resizeMode": "contain"
@@ -20,10 +20,10 @@
       "fallbackToCacheTimeout": 0
     },
     "ios": {
-      "buildNumber": "0.0.4",
-      "bundleIdentifier": "firefly.ios.app"
+      "buildNumber": "0.0.5",
+      "bundleIdentifier": "abacus.ios.app"
     },
-    "scheme": "fireflyiosapp",
-    "githubUrl": "https://github.com/victorbalssa/firefly-iii"
+    "scheme": "abacusiosapp",
+    "githubUrl": "https://github.com/victorbalssa/abacus"
   }
 }
