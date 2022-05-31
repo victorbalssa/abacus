@@ -66,7 +66,7 @@ const Configuration = ({
             All secrets are kept in iOS secure storage.
           </FormControl.HelperText>
           <FormControl.HelperText>
-            Redirect URI: .
+            Redirect URI: abacusiosapp://redirect.
           </FormControl.HelperText>
         </FormControl>
 
