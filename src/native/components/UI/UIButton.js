@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native';
-import { Icon, Text } from 'native-base';
-import { AntDesign } from '@expo/vector-icons';
+import { Text } from 'native-base';
 import colors from '../../../constants/colors';
 import Loading from './Loading';
 
@@ -36,20 +35,7 @@ const UIButton = ({
     onPress={onPress}
     disabled={loading || disabled}
   >
-    {icon && !loading
-      && (
-      <Icon
-        as={AntDesign}
-        name="exclamationcircleo"
-        style={{
-          color: '#fff',
-          fontSize: 15,
-          paddingRight: 10,
-          marginLeft: 10,
-          paddingLeft: 5,
-        }}
-      />
-      )}
+    {!loading && icon}
     {!loading && (
       <Text style={{
         flex: icon ? 0 : 1,

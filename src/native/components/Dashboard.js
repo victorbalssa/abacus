@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
-  HStack,
+  HStack, Icon,
   Stack,
   Text,
   VStack,
@@ -17,7 +17,7 @@ import {
 import * as Haptics from 'expo-haptics';
 import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
-import Loading from './UI/Loading';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import UIButton from './UI/UIButton';
 
@@ -81,28 +81,27 @@ const Dashboard = ({
   };
 
   return (
-    <Stack flex={1}>
+    <Stack>
       <Box alignItems="center" paddingTop={50} />
       <Box alignItems="center">
-        <Text>
-          Net worth.
-        </Text>
-        <Text style={{
-          fontSize: 35,
-          paddingTop: 20,
-          paddingBottom: 15,
-        }}
+        <Text
+          style={{
+            fontSize: 20,
+            paddingTop: 10,
+            paddingBottom: 15,
+          }}
         >
-          {summary.netWorth}
+          Abacus.
         </Text>
       </Box>
-      {summary && !loading && (
-        <Stack space={3} shadow="3" justifyContent="center" alignItems="center">
-          <HStack space={3} justifyContent="center">
+      <Stack space={3} shadow="3" justifyContent="center" alignItems="center">
+        <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
+          {summary.map((netWorth) => (
             <VStack
               minW={160}
               maxW={160}
-              height={85}
+              height={65}
+              margin={1}
               padding={3}
               bg={{
                 linearGradient: {
@@ -122,7 +121,7 @@ const Dashboard = ({
                 textAlign: 'center',
               }}
               >
-                {summary['net-worth-in-CAD'].value_parsed}
+                {netWorth.value_parsed}
               </Text>
               <Text style={{
                 fontSize: 14,
@@ -131,143 +130,119 @@ const Dashboard = ({
                 textAlign: 'center',
               }}
               >
-                {summary['net-worth-in-CAD'].title}
+                {netWorth.title}
               </Text>
             </VStack>
-            <VStack
-              minW={160}
-              maxW={160}
-              height={85}
-              padding={3}
-              bg={{
-                linearGradient: {
-                  colors: [colors.brandStyle, colors.brandStyleSecond],
-                  start: [0, 1],
-                  end: [1, 0],
-                },
-              }}
-              rounded="15"
-              justifyContent="flex-start"
-              alignItems="flex-end"
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: 'white',
-                  textAlign: 'center',
-                }}
-                fontWeight={600}
-              >
-                {summary['net-worth-in-EUR'].value_parsed}
-              </Text>
-              <Text style={{
-                fontSize: 14,
-                color: 'white',
-                textAlign: 'center',
-              }}
-              >
-                {summary['net-worth-in-EUR'].title}
-              </Text>
-            </VStack>
-          </HStack>
-          <VStack
-            height={395}
-            maxW={330}
-            bgColor={colors.brandLight}
-            rounded="15"
-            justifyContent="space-between"
+          ))}
+        </HStack>
+        <VStack
+          height={395}
+          maxW={330}
+          bgColor={colors.brandLight}
+          rounded="15"
+          justifyContent="space-between"
+        >
+          <Stack
+            style={{
+              top: 1,
+              position: 'absolute',
+              marginLeft: 10,
+            }}
           >
-            <Stack
+            {points[0].x !== 0 && (
+            <Text
               style={{
-                top: 1,
-                position: 'absolute',
-                marginLeft: 10,
+                fontSize: 15,
+                textAlign: 'flex-start',
               }}
             >
-              {points[0].x !== 0 && (
-                <Text
-                  style={{
-                    fontFamily: 'Montserrat',
-                    fontSize: 15,
-                    textAlign: 'flex-start',
-                  }}
-                >
-                  {`${new Date(points[0].x).toLocaleString('default', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}:\n`}
-                  {dashboard.map((chart, index) => (
-                    <Text color={chart.color}>
-                      {` –– ${chart.label}: ${points[index].y || '-'} ${chart.currency_symbol}\n`}
-                    </Text>
-                  ))}
+              {`${new Date(points[0].x).toLocaleString('default', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })}:\n`}
+              {dashboard.map((chart, index) => (
+                <Text color={chart.color}>
+                  {` –– ${chart.label}: ${points[index].y || '-'} ${chart.currency_symbol}\n`}
                 </Text>
-              )}
-            </Stack>
-            <VictoryChart
-              width={350}
-              height={360}
-              domainPadding={2}
-              containerComponent={(
-                <VictoryVoronoiContainer
-                  voronoiDimension="x"
-                  labels={({ datum }) => datum.childName}
-                  labelComponent={(
-                    <Cursor
-                      maxY={maxBy(dashboard, (c) => c.maxY).maxY}
-                      minY={minBy(dashboard, (c) => c.minY).minY}
-                    />
+              ))}
+            </Text>
+            )}
+          </Stack>
+          <VictoryChart
+            width={350}
+            height={360}
+            domainPadding={2}
+            containerComponent={(
+              <VictoryVoronoiContainer
+                voronoiDimension="x"
+                labels={({ datum }) => datum.childName}
+                labelComponent={(
+                  <Cursor
+                    maxY={maxBy(dashboard, (c) => c.maxY).maxY}
+                    minY={minBy(dashboard, (c) => c.minY).minY}
+                  />
                   )}
-                  onActivated={updatePoint}
-                />
+                onActivated={updatePoint}
+              />
               )}
-            >
-              <VictoryAxis
-                tickValues={[
-                  +new Date(2022, 0, 15),
-                  +new Date(2022, 1, 15),
-                  +new Date(2022, 2, 15),
-                  +new Date(2022, 3, 15),
-                  +new Date(2022, 4, 15),
-                  +new Date(2022, 5, 15),
-                ]}
-                tickFormat={(x) => (new Date(x).toLocaleString('default', { month: 'short' }))}
+          >
+            <VictoryAxis
+              dependentAxis
+              tickCount={6}
+              tickFormat={(x) => (`$${x / 1000}k`)}
+            />
+            {dashboard.map((chart) => (
+              <VictoryLine
                 style={{
-                  tickLabels: {
-                    fontSize: 15,
-                    padding: 15,
+                  data: {
+                    stroke: chart.color,
+                    strokeWidth: 2,
                   },
                 }}
+                data={chart.entries}
+                name={chart.label}
               />
-              <VictoryAxis
-                dependentAxis
-                tickCount={6}
-                tickFormat={(x) => (`$${x / 1000}k`)}
-              />
-              {dashboard.map((chart) => (
-                <VictoryLine
-                  style={{
-                    data: {
-                      stroke: chart.color,
-                      strokeWidth: 2,
-                    },
-                  }}
-                  data={chart.entries}
-                  name={chart.label}
-                />
-              ))}
-            </VictoryChart>
-          </VStack>
-          <UIButton
-            text="Refresh"
-            loading={loading}
-            onPress={fetchData}
-            style={{ margin: 30 }}
-          />
-        </Stack>
-      )}
-      {loading && <Loading />}
+            ))}
+            <VictoryAxis
+              tickValues={[
+                +new Date(2022, 0, 15),
+                +new Date(2022, 1, 15),
+                +new Date(2022, 2, 15),
+                +new Date(2022, 3, 15),
+                +new Date(2022, 4, 15),
+                +new Date(2022, 5, 15),
+              ]}
+              tickFormat={(x) => (new Date(x).toLocaleString('default', { month: 'short' }))}
+              style={{
+                tickLabels: {
+                  fontSize: 15,
+                  padding: 15,
+                },
+              }}
+            />
+          </VictoryChart>
+        </VStack>
+        <UIButton
+          text="Refresh"
+          loading={loading}
+          onPress={fetchData}
+          icon={(
+            <Icon
+              as={Ionicons}
+              name="refresh"
+              style={{
+                color: '#fff',
+                fontSize: 15,
+                paddingRight: 10,
+                marginLeft: 10,
+                paddingLeft: 5,
+              }}
+            />
+          )}
+          style={{ margin: 30 }}
+        />
+      </Stack>
     </Stack>
   );
 };

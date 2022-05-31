@@ -5,7 +5,7 @@ import {
 } from 'native-base';
 
 import { KeyboardAvoidingView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
 
 const Configuration = ({
@@ -32,10 +32,21 @@ const Configuration = ({
           value={backendURL}
         />
         <UIButton
-          icon
+          icon={(
+            <Icon
+              as={AntDesign}
+              name="exclamationcircleo"
+              style={{
+                color: '#fff',
+                fontSize: 15,
+                paddingRight: 10,
+                marginLeft: 10,
+                paddingLeft: 5,
+              }}
+            />
+          )}
           style={{
             marginTop: 10,
-            height: 32,
             marginLeft: 5,
           }}
           text="Reset App"

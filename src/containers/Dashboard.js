@@ -35,7 +35,7 @@ const Dashboard = ({
         status: 'error',
         description: e.message,
       });
-      goToOauth();
+      //goToOauth();
     }
   };
 
@@ -43,7 +43,7 @@ const Dashboard = ({
     await fetchData();
   }, []);
 
-  if (loading || !dashboard || !summary || !dashboard?.length) {
+  if (loading || !dashboard || !summary || !dashboard?.length || !summary?.length) {
     return <Loading />;
   }
 

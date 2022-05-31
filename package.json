@@ -31,13 +31,16 @@
     "expo-asset": "~8.4.6",
     "expo-auth-session": "~3.5.0",
     "expo-font": "~10.0.4",
+    "expo-haptics": "~11.1.0",
     "expo-linear-gradient": "~11.0.3",
     "expo-random": "~12.1.1",
     "expo-secure-store": "~11.1.0",
     "expo-splash-screen": "~0.14.1",
     "expo-status-bar": "~1.2.0",
+    "expo-updates": "~0.11.6",
     "expo-web-browser": "~10.1.0",
     "globally": "^0.0.0",
+    "lodash": "^4.17.21",
     "native-base": "^3.3.7",
     "prop-types": "^15.7.2",
     "react": "17.0.1",
@@ -57,9 +60,7 @@
     "redux-persist": "^6.0.0",
     "sharp-cli": "^1.14.1",
     "slash": "^3.0.0",
-    "victory-native": "^36.3.1",
-    "expo-updates": "~0.11.6",
-    "expo-haptics": "~11.1.0"
+    "victory-native": "^36.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -1,9 +1,9 @@
 import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
+import { maxBy, minBy } from 'lodash';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
-import { maxBy, minBy } from 'lodash';
 
 const INITIAL_STATE = {
   summary: [],
@@ -48,15 +48,14 @@ export default {
 
       const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?start=2022-01-01&end=${today}` });
 
-      const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'CAD',
+      const netWorth = [];
+      Object.keys(summary).forEach((key) => {
+        if (key.includes('net-worth-in')) {
+          netWorth.push(summary[key]);
+        }
       });
 
-      console.log(summary);
-      summary.netWorth = summary['net-worth-in-CAD'].value_parsed;
-
-      this.setData({ summary });
+      this.setData({ summary: netWorth });
     },
 
     /**
