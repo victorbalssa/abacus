@@ -28,7 +28,7 @@ const Configuration = ({
     <Box alignItems="center" marginTop={60}>
       <Box w="90%" maxWidth="300px">
         <FormControl isRequired>
-          <FormControl.Label>FireFly3 backend URL</FormControl.Label>
+          <FormControl.Label>FireFlyIII backend URL</FormControl.Label>
           <Input
             placeholder="FireFly3 backend URL (without '/' at the end)"
             keyboardType="url"

@@ -24,10 +24,10 @@ const Configuration = ({
   >
     <Box alignItems="center" marginTop={60} p={5}>
       <FormControl>
-        <FormControl.Label>FireFly3 backend URL</FormControl.Label>
+        <FormControl.Label>FireFlyIII backend URL</FormControl.Label>
         <Input
           variant="rounded"
-          placeholder="FireFly3 backend URL"
+          placeholder="FireFlyIII backend URL"
           isDisabled
           value={backendURL}
         />

@@ -1,7 +1,7 @@
 {
-  "name": "firefly-iii",
-  "homepage": "https://github.com/victorbalssa/firefly-iii",
-  "version": "0.0.4",
+  "name": "abacus",
+  "homepage": "https://github.com/victorbalssa/abacus",
+  "version": "0.0.5",
   "private": true,
   "jest": {
     "preset": "jest-expo",
