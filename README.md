@@ -4,7 +4,7 @@
   <p></p>
   <h1>Abacus: a FireFly-III iOS Client</h1>
     <div>
-        <a href="https://apps.apple.com/us/app/h2t/id1502288567"><img src="documentation/apple.svg" /></a>
+        <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
     <p></p>
   <sup>
