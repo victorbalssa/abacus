@@ -46,8 +46,9 @@ const Configuration = ({
             />
           )}
           style={{
+            height: 35,
+            padding: 5,
             marginTop: 10,
-            marginLeft: 5,
           }}
           text="Reset App"
           loading={loading}
