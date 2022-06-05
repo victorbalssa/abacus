@@ -20,6 +20,35 @@ const config = {
 };
 
 const theme = extendTheme({
+  colors: {
+    primary: {
+      50: colors.brandStyleSecond,
+      100: colors.brandStyleSecond,
+      200: colors.brandStyleSecond,
+      300: colors.brandStyleSecond,
+      400: colors.brandStyleSecond,
+      500: colors.brandStyle,
+      600: colors.brandStyle,
+      700: colors.brandStyle,
+      800: colors.brandStyle,
+      900: colors.brandStyle,
+    },
+    chart0: {
+      600: colors.brandStyle0,
+    },
+    chart1: {
+      600: colors.brandStyle1,
+    },
+    chart2: {
+      600: colors.brandStyle2,
+    },
+    chart3: {
+      600: colors.brandStyle3,
+    },
+    chart4: {
+      600: colors.brandStyle4,
+    },
+  },
   fontConfig: {
     Montserrat: {
       100: {

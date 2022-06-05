@@ -2,11 +2,13 @@ import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 
 import OauthContainer from '../../containers/Oauth';
 import ConfigurationContainer from '../../containers/Configuration';
 import DashboardContainer from '../../containers/Dashboard';
+import ChartContainer from '../../containers/Chart';
 import colors from '../../constants/colors';
 
 const Stack = createNativeStackNavigator();
@@ -20,48 +22,63 @@ const MyTheme = {
   },
 };
 
-function Home() {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({
-          focused,
-          color,
-        }) => {
-          let iconName;
+const tabIconConfig = {
+  'dashboard-tab': 'home',
+  'chart-tab': 'linechart',
+  'configuration-tab': 'setting',
+};
 
-          if (route.name === 'dashboard-tab') {
-            iconName = focused
-              ? 'view-dashboard'
-              : 'view-dashboard-outline';
-            return <MaterialCommunityIcons name={iconName} size={30} color={color} />;
-          }
-          iconName = focused ? 'ios-settings' : 'ios-settings-outline';
-          return <Ionicons name={iconName} size={30} color={color} />;
+const Home = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: (icon) => (
+        <AntDesign
+          name={tabIconConfig[route.name]}
+          size={25}
+          color={icon.color}
+        />
+      ),
+      tabBarActiveTintColor: colors.brandStyle,
+      tabBarInactiveTintColor: colors.brandDarkLight,
+      headerShown: false,
+      tabBarShowLabel: false,
+      tabBarLazyLoad: true,
+      tabBarStyle: {
+        backgroundColor: '#FFFFFF',
+        borderTopWidth: 0,
+        height: 80,
+      },
+    })}
+  >
+    <Tab.Screen
+      name="dashboard-tab"
+      component={DashboardContainer}
+      listeners={{
+        tabPress: (e) => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         },
-        tabBarActiveTintColor: colors.brandStyle,
-        tabBarInactiveTintColor: colors.brandDarkLight,
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarLazyLoad: true,
-        tabBarStyle: {
-          backgroundColor: '#FFFFFF',
-          borderTopWidth: 0,
-          height: 100,
+      }}
+    />
+    <Tab.Screen
+      name="chart-tab"
+      component={ChartContainer}
+      listeners={{
+        tabPress: (e) => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         },
-      })}
-    >
-      <Tab.Screen
-        name="dashboard-tab"
-        component={DashboardContainer}
-      />
-      <Tab.Screen
-        name="configuration-tab"
-        component={ConfigurationContainer}
-      />
-    </Tab.Navigator>
-  );
-}
+      }}
+    />
+    <Tab.Screen
+      name="configuration-tab"
+      component={ConfigurationContainer}
+      listeners={{
+        tabPress: (e) => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        },
+      }}
+    />
+  </Tab.Navigator>
+);
 
 const Index = (
   <NavigationContainer theme={MyTheme}>

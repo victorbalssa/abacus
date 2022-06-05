@@ -2,6 +2,11 @@ export default {
   brandPrimary: '#FFFFFF',
   brandStyle: '#FF5533',
   brandStyleSecond: '#ff6443',
+  brandStyle0: '#FF5533',
+  brandStyle1: '#56423D',
+  brandStyle2: '#BEA6A0',
+  brandStyle3: '#3FA500',
+  brandStyle4: '#007000',
   backgroundColor: '#FFFFFF',
   backgroundColorLighter: '#10181f',
   brandInfo: '#62B1F6',
@@ -10,5 +15,5 @@ export default {
   brandWarning: '#f0ad4e',
   brandDark: '#000',
   brandDarkLight: '#676767',
-  brandLight: '#ffab92',
+  brandLight: '#ffeade',
 };
