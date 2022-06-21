@@ -22,7 +22,7 @@
 
 ### 🎙 Introduction
 
-- FireFly-III Client for iOS.
+- FireFly-III Client for iOS. (https://github.com/firefly-iii/firefly-iii)
 - Authentication with Oauth2.
 - Use of iOS Keychains to store the accessToken / refreshToken.
 - No external API calls nor Analytics API, not even sentry / crashlytics.
