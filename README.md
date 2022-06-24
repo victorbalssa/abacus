@@ -26,8 +26,8 @@
 - Authentication with Oauth2.
 - Use of iOS Keychains to store the accessToken / refreshToken.
 - No external API calls nor Analytics API, not even sentry / crashlytics.
-- Support the Net Worth by currency and total Net Worth with currency configuration.
-- Chart to display the Total Net Worth in default currency (TNW).
+- Support the Net Worth by currency.
+- Chart to display history for each asset accounts.
 
 ---
 
