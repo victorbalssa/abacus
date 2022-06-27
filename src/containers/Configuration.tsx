@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-
 import Layout from '../native/components/Configuration';
 
 const Configuration = ({
@@ -11,7 +9,7 @@ const Configuration = ({
   backendURL,
   setBackendURL,
   resetAllStorage,
-}) => {
+}: ConfigurationContainer) => {
   const resetApp = async () => {
     await resetAllStorage();
     navigation.dispatch(
@@ -35,9 +33,9 @@ const Configuration = ({
   );
 };
 
-Configuration.propTypes = {
-  navigation: PropTypes.shape({}).isRequired,
-  loading: PropTypes.bool.isRequired,
+type ConfigurationContainer = {
+  navigation: any,
+  loading: boolean,
 };
 
 const mapStateToProps = (state) => ({

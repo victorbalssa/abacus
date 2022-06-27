@@ -1,9 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {ReactElement} from 'react';
+
 import { TouchableOpacity } from 'react-native';
 import { Text } from 'native-base';
 import colors from '../../../constants/colors';
 import Loading from './Loading';
+
+type UIButtonType = {
+  text: string,
+  style: {},
+  onPress: () => {},
+  loading: boolean,
+  disabled: boolean,
+  icon: ReactElement<any, any>,
+};
 
 const UIButton = ({
   text,
@@ -12,7 +21,7 @@ const UIButton = ({
   loading,
   disabled = false,
   icon = null,
-}) => (
+}: UIButtonType) => (
   <TouchableOpacity
     style={{
       height: 50,
@@ -51,11 +60,5 @@ const UIButton = ({
     {loading && <Loading />}
   </TouchableOpacity>
 );
-
-UIButton.propTypes = {
-  onPress: PropTypes.func,
-};
-
-UIButton.defaultProps = {};
 
 export default UIButton;

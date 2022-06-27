@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 import { AuthRequest } from 'expo-auth-session';
 import {
   Input, Box, FormControl,

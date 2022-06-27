@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';

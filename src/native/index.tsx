@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Font from 'expo-font';
-import PropTypes from 'prop-types';
+
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { LogBox } from 'react-native';
@@ -12,6 +12,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import colors from '../constants/colors';
 import Routes from './routes/index';
 import Loading from './components/UI/Loading';
+import {Persistor} from "redux-persist/es/types";
+import {Store} from "redux";
 
 const config = {
   dependencies: {
@@ -85,7 +87,16 @@ const theme = extendTheme({
   },
 });
 
-export default class App extends React.Component {
+type AppPropsType = {
+  store: Store,
+  persistor: Persistor,
+};
+
+type AppStateType = {
+  loading: {},
+};
+
+export default class App extends React.Component<AppPropsType, AppStateType> {
   constructor(props) {
     super(props);
 
@@ -100,9 +111,9 @@ export default class App extends React.Component {
 
   async loadAssets() {
     await Font.loadAsync({
-      Montserrat: require('../images/Montserrat-Regular.ttf'),
-      Montserrat_Light: require('../images/Montserrat-Light.ttf'),
-      Montserrat_Bold: require('../images/Montserrat-Bold.ttf'),
+      Montserrat: require('../fonts/Montserrat-Regular.ttf'),
+      Montserrat_Light: require('../fonts/Montserrat-Light.ttf'),
+      Montserrat_Bold: require('../fonts/Montserrat-Bold.ttf'),
     });
     this.setState({ loading: false });
   }
@@ -125,7 +136,7 @@ export default class App extends React.Component {
         logoWidth={145}
       >
         <NativeBaseProvider config={config} theme={theme}>
-          <StatusBar barStyle="light-content" />
+          <StatusBar style="light" />
           <Provider store={store}>
             <PersistGate
               loading={<Loading />}
@@ -139,8 +150,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-App.propTypes = {
-  store: PropTypes.shape({}).isRequired,
-  persistor: PropTypes.shape({}).isRequired,
-};

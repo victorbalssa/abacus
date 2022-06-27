@@ -64,6 +64,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@types/react": "~17.0.21",
+    "@types/react-native": "^0.67.8",
     "babel-preset-expo": "9.0.2",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.20.0",
@@ -72,6 +74,7 @@
     "eslint-plugin-react": "^7.18.0",
     "jest-expo": "^44.0.0",
     "node-sass": "^7.0.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "typescript": "^4.7.3"
   }
 }

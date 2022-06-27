@@ -9,7 +9,6 @@ import {
   VStack, Select, CheckIcon, IconButton,
 } from 'native-base';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-import colors from '../../constants/colors';
 import UIButton from './UI/UIButton';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
 
@@ -24,7 +23,7 @@ const Chart = ({
   handleChangeRange,
 }) => (
   <ScrollView>
-    <Stack safeAreaTop="8">
+    <Stack safeAreaTop={8}>
       <Box alignItems="center">
         <Text
           style={{
@@ -87,8 +86,8 @@ const Chart = ({
             <Icon
               as={Ionicons}
               name="refresh"
+              color="#fff"
               style={{
-                color: '#fff',
                 fontSize: 15,
                 paddingRight: 10,
                 marginLeft: 10,
