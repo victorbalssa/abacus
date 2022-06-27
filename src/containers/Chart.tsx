@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
-import PropTypes from 'prop-types';
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../native/components/Dashboard';
+import Layout from '../native/components/Chart';
 import Loading from '../native/components/UI/Loading';
 
 const Dashboard = ({
@@ -11,10 +10,6 @@ const Dashboard = ({
   start,
   end,
   navigation,
-  netWorth,
-  spent,
-  earned,
-  balance,
   dashboard,
   loading,
   getSummary,
@@ -43,14 +38,10 @@ const Dashboard = ({
         status: 'error',
         description: e.message,
       });
-      //TODO: if oauth exeption gotoOauth()
-      //goToOauth();
+      // TODO: only if oauth exception gotoOauth()
+      // goToOauth();
     }
   };
-
-  useEffect(async () => {
-    await handleChangeRange({range: '3'});
-  }, []);
 
   if (loading || !dashboard || !dashboard?.length) {
     return <Loading />;
@@ -62,10 +53,6 @@ const Dashboard = ({
       loading={loading}
       start={start}
       end={end}
-      netWorth={netWorth}
-      spent={spent}
-      balance={balance}
-      earned={earned}
       dashboard={dashboard}
       fetchData={fetchData}
       filterData={filterData}
@@ -78,10 +65,10 @@ const mapStateToProps = (state) => ({
   range: state.firefly.range,
   start: state.firefly.start,
   end: state.firefly.end,
-  netWorth: state.firefly.netWorth || [],
-  spent: state.firefly.spent || [],
-  earned: state.firefly.earned || [],
-  balance: state.firefly.balance || [],
+  netWorth: state.firefly.netWorth,
+  spent: state.firefly.spent,
+  earned: state.firefly.earned,
+  balance: state.firefly.balance,
   dashboard: state.firefly.dashboard,
   loading: state.loading.models.firefly,
 });

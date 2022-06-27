@@ -1,20 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 import {
-  Input, Box, FormControl, HStack, Button, Icon,
+  Input, Box, FormControl, Icon,
 } from 'native-base';
 
 import { KeyboardAvoidingView } from 'react-native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
+
+type ConfigurationComponent = {
+  loading: boolean,
+  resetApp: () => Promise<void>,
+  backendURL: string,
+};
 
 const Configuration = ({
   loading,
   resetApp,
-  navigation,
   backendURL,
-  setBackendURL,
-}) => (
+}: ConfigurationComponent) => (
   <KeyboardAvoidingView
     h={{
       base: '400px',
@@ -58,11 +62,5 @@ const Configuration = ({
     </Box>
   </KeyboardAvoidingView>
 );
-
-Configuration.propTypes = {
-  loading: PropTypes.bool.isRequired,
-};
-
-Configuration.defaultProps = {};
 
 export default Configuration;

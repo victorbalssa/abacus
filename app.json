@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "abacus",
+    "name": "Abacus",
     "description": "Abacus: a FireFly III iOS Client",
     "slug": "abacus",
     "privacy": "hidden",
     "platforms": [
       "ios"
     ],
-    "version": "0.0.6",
+    "version": "0.0.7",
     "orientation": "portrait",
     "icon": "./src/images/icon-abacus.png",
     "splash": {
@@ -20,7 +20,7 @@
       "fallbackToCacheTimeout": 0
     },
     "ios": {
-      "buildNumber": "0.0.6",
+      "buildNumber": "0.0.7",
       "bundleIdentifier": "abacus.ios.app"
     },
     "scheme": "abacusiosapp",

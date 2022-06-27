@@ -27,7 +27,7 @@ const Dashboard = ({
   handleChangeRange,
 }) => (
   <ScrollView>
-    <Stack safeAreaTop="8">
+    <Stack safeAreaTop={8}>
       <Box alignItems="center">
         <Text
           style={{
