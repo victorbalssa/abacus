@@ -12,7 +12,7 @@ interface ConfigurationComponent {
   setConfig: Dispatch<OauthConfig>
   promptAsync: () => Promise<void>
   backendURL: string
-  setBackendURL: (state: string) => Promise<null>
+  setBackendURL: (state: string) => Promise<void>
 }
 
 const Configuration = ({
@@ -27,7 +27,7 @@ const Configuration = ({
     <Box alignItems="center" marginTop={60}>
       <Box w="90%" maxWidth="300px">
         <FormControl isRequired>
-          <FormControl.Label>FireFlyIII backend URL</FormControl.Label>
+          <FormControl.Label>Firefly III backend URL</FormControl.Label>
           <Input
             placeholder="FireFly3 backend URL (without '/' at the end)"
             keyboardType="url"

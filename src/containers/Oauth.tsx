@@ -10,13 +10,14 @@ import { Keyboard } from 'react-native';
 import Layout from '../native/components/Oauth';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
+import { RootState, Dispatch } from '../store';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootState) => ({
   backendURL: state.configuration.backendURL,
   loading: state.loading.models.firefly,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   setBackendURL: dispatch.configuration.setBackendURL,
   testAccessToken: dispatch.firefly.testAccessToken,
   getFreshAccessToken: dispatch.firefly.getFreshAccessToken,
@@ -131,7 +132,7 @@ const OauthContainer = ({
             placement: 'top',
             title: 'Success',
             status: 'success',
-            description: 'Secure connexion ready with your FireFlyIII instance.',
+            description: 'Secure connexion ready with your Firefly III instance.',
           });
           goToDashboard();
         } catch (e) {
@@ -155,7 +156,9 @@ const OauthContainer = ({
         await promptAsync();
       }}
       backendURL={backendURL}
-      setBackendURL={setBackendURL}
+      setBackendURL={async (value) => {
+        await setBackendURL(value);
+      }}
     />
   );
 };
