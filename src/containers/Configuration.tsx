@@ -3,18 +3,31 @@ import { connect } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Configuration';
 
-type ConfigurationContainer = {
-  loading: boolean,
-  navigation: object,
-};
+const mapStateToProps = (state) => ({
+  backendURL: state.configuration.backendURL,
+  loading: state.loading.models.configuration,
+});
 
-const Configuration = ({
+const mapDispatchToProps = (dispatch) => ({
+  setBackendURL: dispatch.configuration.setBackendURL,
+  resetAllStorage: dispatch.configuration.resetAllStorage,
+});
+
+interface ConfigurationContainerType extends
+  ReturnType<typeof mapStateToProps>,
+  ReturnType<typeof mapDispatchToProps> {
+  navigation: object,
+  loading: boolean,
+  backendURL: string,
+}
+
+const ConfigurationContainer = ({
   loading,
   navigation,
   backendURL,
   setBackendURL,
   resetAllStorage,
-}: ConfigurationContainer) => {
+}: ConfigurationContainerType) => {
   const resetApp = async () => {
     await resetAllStorage();
     navigation.dispatch(
@@ -38,14 +51,4 @@ const Configuration = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  backendURL: state.configuration.backendURL,
-  loading: state.loading.models.configuration,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setBackendURL: dispatch.configuration.setBackendURL,
-  resetAllStorage: dispatch.configuration.resetAllStorage,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Configuration);
+export default connect(mapStateToProps, mapDispatchToProps)(ConfigurationContainer);

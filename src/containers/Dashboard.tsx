@@ -6,6 +6,11 @@ import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Dashboard';
 import Loading from '../native/components/UI/Loading';
 
+type DashboardContainerType = {
+  loading: boolean,
+  navigation: object,
+};
+
 const Dashboard = ({
   range,
   start,
@@ -21,7 +26,7 @@ const Dashboard = ({
   getDashboard,
   filterData,
   handleChangeRange,
-}) => {
+}: DashboardContainerType) => {
   const toast = useToast();
 
   const goToOauth = () => navigation.dispatch(

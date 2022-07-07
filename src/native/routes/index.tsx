@@ -53,29 +53,14 @@ const Home = () => (
     <Tab.Screen
       name="dashboard-tab"
       component={DashboardContainer}
-      listeners={{
-        tabPress: (e) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        },
-      }}
     />
     <Tab.Screen
       name="chart-tab"
       component={ChartContainer}
-      listeners={{
-        tabPress: (e) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        },
-      }}
     />
     <Tab.Screen
       name="configuration-tab"
       component={ConfigurationContainer}
-      listeners={{
-        tabPress: (e) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        },
-      }}
     />
   </Tab.Navigator>
 );

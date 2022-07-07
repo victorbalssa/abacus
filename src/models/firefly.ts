@@ -8,6 +8,34 @@ import colors from '../constants/colors';
 
 const getCurrentDate = () => new Date().toISOString().slice(0, 10);
 
+export type HomeDisplayType = {
+  title: string,
+  value_parsed: string,
+}
+
+export type AssetAccountType = {
+  title: string,
+  value_parsed: string,
+  skip: boolean,
+  color: string,
+  colorScheme: string,
+  entries: { x: string, y: string }[],
+  maxY: number,
+  minY: number,
+}
+
+export type FireflyState = {
+  start: string,
+  end: string,
+  range: number,
+  netWorth: HomeDisplayType[],
+  spent: HomeDisplayType[],
+  earned: HomeDisplayType[],
+  balance: HomeDisplayType[],
+  dashboard: AssetAccountType[],
+  user: null,
+}
+
 const INITIAL_STATE = {
   start: getCurrentDate(),
   end: getCurrentDate(),
@@ -22,7 +50,7 @@ const INITIAL_STATE = {
 
 export default {
 
-  state: INITIAL_STATE,
+  state: INITIAL_STATE as FireflyState,
 
   reducers: {
     setData(state, payload) {
@@ -96,8 +124,8 @@ export default {
         range = rootState.firefly.range,
         direction,
       } = payload;
-      let start = '';
-      let end = '';
+      let start;
+      let end;
 
       const rangeInt = parseInt(range, 10);
 

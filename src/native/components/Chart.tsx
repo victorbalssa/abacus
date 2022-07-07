@@ -1,4 +1,5 @@
 import React from 'react';
+import { ViewStyle } from 'react-native';
 import {
   Box,
   HStack,
@@ -6,7 +7,9 @@ import {
   Stack,
   Text,
   ScrollView,
-  VStack, Select, CheckIcon, IconButton,
+  Select,
+  CheckIcon,
+  IconButton,
 } from 'native-base';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
@@ -65,7 +68,7 @@ const Chart = ({
               bg: 'primary.600',
               endIcon: <CheckIcon size="5" />,
             }}
-            selectedValue={range}
+            selectedValue={`${range}`}
             onValueChange={(v) => handleChangeRange({ range: v })}
           >
             <Select.Item label="One month" value="1" />
@@ -103,7 +106,7 @@ const Chart = ({
                 paddingRight: 10,
                 marginLeft: 10,
                 paddingLeft: 5,
-              }}
+              } as ViewStyle}
             />
             )}
           style={{

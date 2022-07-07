@@ -19,13 +19,7 @@ const Configuration = ({
   resetApp,
   backendURL,
 }: ConfigurationComponent) => (
-  <KeyboardAvoidingView
-    h={{
-      base: '400px',
-      lg: 'auto',
-    }}
-    behavior="padding"
-  >
+  <KeyboardAvoidingView behavior="padding">
     <Box alignItems="center" marginTop={60} p={5}>
       <FormControl>
         <FormControl.Label>FireFlyIII backend URL</FormControl.Label>

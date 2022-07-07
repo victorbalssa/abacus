@@ -1,4 +1,5 @@
 import React from 'react';
+import { ViewStyle } from 'react-native';
 import {
   Box,
   HStack,
@@ -11,7 +12,18 @@ import {
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import UIButton from './UI/UIButton';
-import AssetsHistoryChart from './Charts/AssetsHistoryChart';
+import { HomeDisplayType } from '../../models/firefly';
+
+type DashboardType = {
+  range: number,
+  loading: boolean,
+  netWorth: HomeDisplayType[],
+  spent: HomeDisplayType[],
+  earned: HomeDisplayType[],
+  balance: HomeDisplayType[],
+  fetchData: () => Promise<void>,
+  handleChangeRange: (value: object) => Promise<void>,
+}
 
 const Dashboard = ({
   range,
@@ -21,11 +33,8 @@ const Dashboard = ({
   balance,
   loading,
   fetchData,
-  filterData,
-  start,
-  end,
   handleChangeRange,
-}) => (
+}: DashboardType) => (
   <ScrollView>
     <Stack safeAreaTop={8}>
       <Box alignItems="center">
@@ -99,7 +108,7 @@ const Dashboard = ({
               bg: 'primary.600',
               endIcon: <CheckIcon size="5" />,
             }}
-            selectedValue={range}
+            selectedValue={`${range}`}
             onValueChange={(v) => handleChangeRange({ range: v })}
           >
             <Select.Item label="One month" value="1" />
@@ -254,7 +263,7 @@ const Dashboard = ({
                 paddingRight: 10,
                 marginLeft: 10,
                 paddingLeft: 5,
-              }}
+              } as ViewStyle}
             />
             )}
           style={{
