@@ -5,33 +5,32 @@ import { useToast } from 'native-base';
 import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Dashboard';
 import Loading from '../native/components/UI/Loading';
+import { HomeDisplayType } from "../models/firefly";
+
+type DashboardContainerType = {
+  loading: boolean,
+  range: number,
+  netWorth: HomeDisplayType[],
+  spent: HomeDisplayType[],
+  earned: HomeDisplayType[],
+  balance: HomeDisplayType[],
+  getSummary: () => Promise<void>,
+  getDashboard: () => Promise<void>,
+  handleChangeRange: (value: object) => Promise<void>,
+};
 
 const Dashboard = ({
+  loading,
   range,
-  start,
-  end,
-  navigation,
   netWorth,
   spent,
   earned,
   balance,
-  dashboard,
-  loading,
   getSummary,
   getDashboard,
-  filterData,
   handleChangeRange,
-}) => {
+}: DashboardContainerType) => {
   const toast = useToast();
-
-  const goToOauth = () => navigation.dispatch(
-    CommonActions.reset({
-      index: 0,
-      routes: [
-        { name: 'oauth' },
-      ],
-    }),
-  );
 
   const fetchData = async () => {
     try {
@@ -43,16 +42,10 @@ const Dashboard = ({
         status: 'error',
         description: e.message,
       });
-      // TODO: if oauth exception gotoOauth()
-      // goToOauth();
     }
   };
 
-  useEffect(async () => {
-    await handleChangeRange({ range: '3' });
-  }, []);
-
-  if (loading || !dashboard || !dashboard?.length) {
+  if (loading) {
     return <Loading />;
   }
 
@@ -60,15 +53,11 @@ const Dashboard = ({
     <Layout
       range={range}
       loading={loading}
-      start={start}
-      end={end}
       netWorth={netWorth}
       spent={spent}
       balance={balance}
       earned={earned}
-      dashboard={dashboard}
       fetchData={fetchData}
-      filterData={filterData}
       handleChangeRange={handleChangeRange}
     />
   );

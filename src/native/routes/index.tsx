@@ -23,9 +23,9 @@ const MyTheme = {
 };
 
 const tabIconConfig = {
-  'dashboard-tab': 'home',
-  'chart-tab': 'linechart',
-  'configuration-tab': 'setting',
+  Home: 'home',
+  Chart: 'linechart',
+  Settings: 'setting',
 };
 
 const Home = () => (
@@ -41,9 +41,10 @@ const Home = () => (
       tabBarActiveTintColor: colors.brandStyle,
       tabBarInactiveTintColor: colors.brandDarkLight,
       headerShown: false,
-      tabBarShowLabel: false,
+      tabBarShowLabel: true,
       tabBarLazyLoad: true,
       tabBarStyle: {
+        fontFamily: 'Montserrat',
         backgroundColor: '#FFFFFF',
         borderTopWidth: 0,
         height: 80,
@@ -51,31 +52,16 @@ const Home = () => (
     })}
   >
     <Tab.Screen
-      name="dashboard-tab"
+      name="Home"
       component={DashboardContainer}
-      listeners={{
-        tabPress: (e) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        },
-      }}
     />
     <Tab.Screen
-      name="chart-tab"
+      name="Chart"
       component={ChartContainer}
-      listeners={{
-        tabPress: (e) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        },
-      }}
     />
     <Tab.Screen
-      name="configuration-tab"
+      name="Settings"
       component={ConfigurationContainer}
-      listeners={{
-        tabPress: (e) => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        },
-      }}
     />
   </Tab.Navigator>
 );

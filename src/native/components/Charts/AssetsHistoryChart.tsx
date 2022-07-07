@@ -12,10 +12,8 @@ import {
   VictoryLine,
   VictoryVoronoiContainer,
 } from 'victory-native';
-import * as Haptics from 'expo-haptics';
 import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
-
 import colors from '../../../constants/colors';
 
 const CursorPointer = ({
@@ -25,10 +23,8 @@ const CursorPointer = ({
   <>
     <Line
       strokeDasharray="5, 5"
-      style={{
-        stroke: colors.brandDarkLight,
-        strokeWidth: 1,
-      }}
+      stroke={colors.brandDarkLight}
+      strokeWidth={1}
       y1={y}
       y2={y}
       x1={40}
@@ -39,27 +35,27 @@ const CursorPointer = ({
   </>
 );
 
-const Cursor = (props) => (
+const Cursor = ({
+  x, y, minY, maxY, activePoints,
+}) => (
   <>
     <Line
       strokeDasharray="5, 5"
-      style={{
-        stroke: '#545454',
-        strokeWidth: 1,
-      }}
-      x1={props.x}
-      x2={props.x}
+      stroke={colors.brandDarkLight}
+      strokeWidth={1}
+      x1={x}
+      x2={x}
       y1={30}
       y2={253}
     />
-    {props.activePoints.map((point) => {
-      const yMinDisplay = props.maxY <= 0 ? 30 : 32;
-      const yMaxDisplay = props.minY !== 0 ? 248 : 250;
-      const zeroPos = (-((props.minY / (props.maxY - props.minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
-      const y = (-((point.y / (props.maxY - props.minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay);
+    {activePoints.map(({ y: yPoint, childName }) => {
+      const yMinDisplay = maxY <= 0 ? 30 : 32;
+      const yMaxDisplay = minY !== 0 ? 248 : 250;
+      const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
+      const yCursorPoint = (-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay);
 
       return (
-        <CursorPointer key={point.y + point.childName} x={props.x} y={y} />
+        <CursorPointer key={y + childName} x={x} y={yCursorPoint} />
       );
     })}
   </>
@@ -93,65 +89,12 @@ const AssetsHistoryChart = ({
       bgColor={colors.brandLight}
       rounded="15"
     >
-      <VictoryChart
-        padding={{
-          top: 30,
-          left: 40,
-          right: 40,
-          bottom: 30,
-        }}
-        width={350}
-        height={280}
-        domainPadding={2}
-        containerComponent={(
-          <VictoryVoronoiContainer
-            voronoiDimension="x"
-            onActivated={setPoints}
-            onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-            onTouchEnd={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-            labels={({ datum }) => datum.childName}
-            labelComponent={(
-              <Cursor
-                maxY={maxBy(dashboard.filter((v) => !v.skip), (c) => c.maxY).maxY}
-                minY={minBy(dashboard.filter((v) => !v.skip), (c) => c.minY).minY}
-              />
-            )}
-          />
-        )}
-      >
-        <VictoryAxis
-          dependentAxis
-          tickCount={6}
-          tickFormat={(x) => (`${x !== 0 ? (Math.round(x) / 1000) : '0'}k`)}
-        />
-        {dashboard
-          .filter((v) => !v.skip)
-          .map((chart) => (
-            <VictoryLine
-              key={chart.label}
-              style={{
-                data: {
-                  stroke: chart.color,
-                  strokeWidth: 2,
-                },
-              }}
-              interpolation="linear"
-              data={chart.entries}
-              name={chart.label}
-            />
-          ))}
-        <VictoryAxis
-          tickValues={getTickValues()}
-          tickFormat={(x) => (new Date(x).toLocaleString('default', { month: 'short' }))}
-          style={{ tickLabels: { angle: getTickValues().length > 5 ? -60 : 0} }}
-        />
-      </VictoryChart>
       <Stack
         style={{
-          marginTop: 0,
+          marginTop: 10,
           paddingTop: 0,
           paddingLeft: 15,
-          paddingBottom: 10,
+          paddingBottom: 0,
         }}
       >
         <VStack>
@@ -187,6 +130,60 @@ const AssetsHistoryChart = ({
           })}
         </VStack>
       </Stack>
+      <VictoryChart
+        padding={{
+          top: 30,
+          left: 40,
+          right: 40,
+          bottom: 30,
+        }}
+        width={350}
+        height={280}
+        domainPadding={2}
+        containerComponent={(
+          <VictoryVoronoiContainer
+            voronoiDimension="x"
+            onActivated={setPoints}
+            labels={({ datum }) => datum.childName}
+            labelComponent={(
+              <Cursor
+                x
+                y
+                activePoints
+                maxY={maxBy(dashboard.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY).maxY}
+                minY={minBy(dashboard.filter((v) => !v.skip), (c: { minY: number }) => c.minY).minY}
+              />
+            )}
+          />
+        )}
+      >
+        <VictoryAxis
+          dependentAxis
+          tickCount={6}
+          tickFormat={(x) => (`${x !== 0 ? (Math.round(x) / 1000) : '0'}k`)}
+        />
+        {dashboard
+          .filter((v) => !v.skip)
+          .map((chart) => (
+            <VictoryLine
+              key={chart.label}
+              style={{
+                data: {
+                  stroke: chart.color,
+                  strokeWidth: 2,
+                },
+              }}
+              interpolation="linear"
+              data={chart.entries}
+              name={chart.label}
+            />
+          ))}
+        <VictoryAxis
+          tickValues={getTickValues()}
+          tickFormat={(x) => (new Date(x).toLocaleString('default', { month: 'short' }))}
+          style={{ tickLabels: { angle: getTickValues().length > 5 ? -60 : 0 } }}
+        />
+      </VictoryChart>
     </VStack>
   );
 };

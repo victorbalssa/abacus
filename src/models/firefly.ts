@@ -1,3 +1,4 @@
+import { createModel } from '@rematch/core';
 import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
@@ -5,8 +6,37 @@ import { maxBy, minBy } from 'lodash';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
+import { RootModel } from './index';
 
 const getCurrentDate = () => new Date().toISOString().slice(0, 10);
+
+export type HomeDisplayType = {
+  title: string,
+  value_parsed: string,
+}
+
+export type AssetAccountType = {
+  title: string,
+  value_parsed: string,
+  skip: boolean,
+  color: string,
+  colorScheme: string,
+  entries: { x: string, y: string }[],
+  maxY: number,
+  minY: number,
+}
+
+export type FireflyStateType = {
+  start: string,
+  end: string,
+  range: number,
+  netWorth: HomeDisplayType[],
+  spent: HomeDisplayType[],
+  earned: HomeDisplayType[],
+  balance: HomeDisplayType[],
+  dashboard: AssetAccountType[],
+  user: null,
+}
 
 const INITIAL_STATE = {
   start: getCurrentDate(),
@@ -18,9 +48,9 @@ const INITIAL_STATE = {
   balance: [],
   dashboard: [],
   user: null,
-};
+} as FireflyStateType;
 
-export default {
+export default createModel<RootModel>()({
 
   state: INITIAL_STATE,
 
@@ -96,8 +126,8 @@ export default {
         range = rootState.firefly.range,
         direction,
       } = payload;
-      let start = '';
-      let end = '';
+      let start;
+      let end;
 
       const rangeInt = parseInt(range, 10);
 
@@ -226,8 +256,8 @@ export default {
               y: value,
             };
           });
-        dashboard[index].maxY = maxBy(dashboard[index].entries, (o) => (o.y)).y;
-        dashboard[index].minY = minBy(dashboard[index].entries, (o) => (o.y)).y;
+        dashboard[index].maxY = maxBy(dashboard[index].entries, (o: { x: string, y: string}) => (o.y)).y;
+        dashboard[index].minY = minBy(dashboard[index].entries, (o: { x: string, y: string}) => (o.y)).y;
       });
 
       this.setData({ dashboard });
@@ -328,4 +358,4 @@ export default {
     },
 
   }),
-};
+});

@@ -1,13 +1,18 @@
+import { createModel } from '@rematch/core';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import secureKeys from '../constants/oauth';
+import { RootModel } from './index';
+
+export type ConfigurationStateType = {
+  backendURL: string,
+}
 
 const INITIAL_STATE = {
   backendURL: '',
-  defaultCurrency: 'EUR',
-};
+} as ConfigurationStateType;
 
-export default {
+export default createModel<RootModel>()({
 
   state: INITIAL_STATE,
 
@@ -37,7 +42,7 @@ export default {
      *
      * @returns {Promise}
      */
-    async apiFetch({ url, config }, rootState) {
+    async apiFetch({ url, config }, rootState): Promise<any> {
       const {
         configuration: {
           backendURL,
@@ -58,7 +63,7 @@ export default {
      *
      * @returns {Promise}
      */
-    async resetAllStorage() {
+    async resetAllStorage(): Promise<void> {
       await Promise.all([
         SecureStore.deleteItemAsync(secureKeys.tokens),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
@@ -67,4 +72,4 @@ export default {
       dispatch.configuration.resetConfiguration();
     },
   }),
-};
+});

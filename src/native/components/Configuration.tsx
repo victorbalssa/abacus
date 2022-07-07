@@ -1,10 +1,10 @@
 import React from 'react';
 
 import {
-  Input, Box, FormControl, Icon,
+  Input, Box, FormControl, Icon, Stack,
 } from 'native-base';
 
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, ViewStyle } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
 
@@ -19,47 +19,43 @@ const Configuration = ({
   resetApp,
   backendURL,
 }: ConfigurationComponent) => (
-  <KeyboardAvoidingView
-    h={{
-      base: '400px',
-      lg: 'auto',
-    }}
-    behavior="padding"
-  >
-    <Box alignItems="center" marginTop={60} p={5}>
-      <FormControl>
-        <FormControl.Label>FireFlyIII backend URL</FormControl.Label>
-        <Input
-          variant="rounded"
-          placeholder="FireFlyIII backend URL"
-          isDisabled
-          value={backendURL}
-        />
-        <UIButton
-          icon={(
-            <Icon
-              as={AntDesign}
-              name="exclamationcircleo"
-              style={{
-                color: '#fff',
-                fontSize: 15,
-                paddingRight: 10,
-                marginLeft: 10,
-                paddingLeft: 5,
-              }}
-            />
+  <KeyboardAvoidingView behavior="padding">
+    <Stack safeAreaTop={12}>
+      <Box alignItems="center" p={5}>
+        <FormControl>
+          <FormControl.Label>Firefly III backend URL</FormControl.Label>
+          <Input
+            variant="rounded"
+            placeholder="Firefly III backend URL"
+            isDisabled
+            value={backendURL}
+          />
+          <UIButton
+            icon={(
+              <Icon
+                as={AntDesign}
+                name="exclamationcircleo"
+                style={{
+                  color: '#fff',
+                  fontSize: 15,
+                  paddingRight: 10,
+                  marginLeft: 10,
+                  paddingLeft: 5,
+                } as ViewStyle}
+              />
           )}
-          style={{
-            height: 35,
-            padding: 5,
-            marginTop: 10,
-          }}
-          text="Reset App"
-          loading={loading}
-          onPress={() => resetApp()}
-        />
-      </FormControl>
-    </Box>
+            style={{
+              height: 35,
+              padding: 5,
+              marginTop: 10,
+            }}
+            text="Reset App"
+            loading={loading}
+            onPress={() => resetApp()}
+          />
+        </FormControl>
+      </Box>
+    </Stack>
   </KeyboardAvoidingView>
 );
 
