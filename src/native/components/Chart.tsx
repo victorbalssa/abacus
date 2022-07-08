@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewStyle } from 'react-native';
+import { RefreshControl, ViewStyle } from 'react-native';
 import {
   Box,
   Icon,
@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
 import RangeTitle from './UI/RangeTitle';
+import colors from '../../constants/colors';
 
 type ChartType = {
   dashboard: [],
@@ -29,38 +30,26 @@ const Chart = ({
 }: ChartType) => (
   <Box flex={1} marginLeft={3} marginRight={3} safeAreaTop>
     <RangeTitle />
-    <Box flex={1} shadow="3" alignItems="center">
-      <ScrollView scrollEnabled={false}>
-        <AssetsHistoryChart
-          start={start}
-          end={end}
-          dashboard={dashboard}
-          filterData={filterData}
+    <ScrollView
+      shadow={3}
+      _contentContainerStyle={{
+        alignItems: 'center',
+      }}
+      refreshControl={(
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={fetchData}
+          tintColor={colors.brandStyle}
         />
-      </ScrollView>
-      <UIButton
-        text="Refresh"
-        loading={loading}
-        onPress={fetchData}
-        icon={(
-          <Icon
-            as={Ionicons}
-            name="refresh"
-            color="#fff"
-            style={{
-              fontSize: 15,
-              paddingRight: 10,
-              marginLeft: 10,
-              paddingLeft: 5,
-            } as ViewStyle}
-          />
-        )}
-        style={{
-          margin: 15,
-          height: 35,
-        }}
+      )}
+    >
+      <AssetsHistoryChart
+        start={start}
+        end={end}
+        dashboard={dashboard}
+        filterData={filterData}
       />
-    </Box>
+    </ScrollView>
   </Box>
 );
 

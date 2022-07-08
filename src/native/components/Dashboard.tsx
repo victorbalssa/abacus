@@ -1,11 +1,12 @@
 import React from 'react';
-import { ViewStyle } from 'react-native';
+import { RefreshControl, ViewStyle } from 'react-native';
 import {
   Box,
   HStack,
   Icon,
   Text,
   VStack,
+  ScrollView,
 } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../../constants/colors';
@@ -32,13 +33,25 @@ const Dashboard = ({
 }: DashboardType) => (
   <Box flex={1} marginLeft={3} marginRight={3} safeAreaTop>
     <RangeTitle />
-    <Box flex={1} shadow="3">
+    <ScrollView
+      shadow={3}
+      _contentContainerStyle={{
+        alignItems: 'center',
+      }}
+      refreshControl={(
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={fetchData}
+          tintColor={colors.brandStyle}
+        />
+      )}
+    >
       <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
         {netWorth.map((nw) => (
           <VStack
             key={nw.title}
-            minW={167}
-            maxW={167}
+            minW={175}
+            maxW={175}
             height={65}
             margin={1}
             padding={3}
@@ -78,8 +91,8 @@ const Dashboard = ({
         {spent.map((s) => (
           <VStack
             key={s.title}
-            minW={167}
-            maxW={167}
+            minW={175}
+            maxW={175}
             height={65}
             margin={1}
             padding={3}
@@ -119,8 +132,8 @@ const Dashboard = ({
         {balance.map((s) => (
           <VStack
             key={s.title}
-            minW={167}
-            maxW={167}
+            minW={175}
+            maxW={175}
             height={65}
             margin={1}
             padding={3}
@@ -160,8 +173,8 @@ const Dashboard = ({
         {earned.map((s) => (
           <VStack
             key={s.title}
-            minW={167}
-            maxW={167}
+            minW={175}
+            maxW={175}
             height={65}
             margin={1}
             padding={3}
@@ -197,29 +210,7 @@ const Dashboard = ({
           </VStack>
         ))}
       </HStack>
-      <UIButton
-        text="Refresh"
-        loading={loading}
-        onPress={fetchData}
-        icon={(
-          <Icon
-            as={Ionicons}
-            name="refresh"
-            style={{
-              color: '#fff',
-              fontSize: 15,
-              paddingRight: 10,
-              marginLeft: 10,
-              paddingLeft: 5,
-            } as ViewStyle}
-          />
-            )}
-        style={{
-          margin: 5,
-          height: 35,
-        }}
-      />
-    </Box>
+    </ScrollView>
   </Box>
 );
 

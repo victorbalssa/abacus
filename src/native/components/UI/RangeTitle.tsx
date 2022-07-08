@@ -33,6 +33,7 @@ const RangeTitle = ({
           transform: [{
             scale: 0.9,
           }],
+          opacity: 0.5,
         },
       }}
     />
@@ -91,6 +92,7 @@ const RangeTitle = ({
           transform: [{
             scale: 0.9,
           }],
+          opacity: 0.5,
         },
       }}
     />

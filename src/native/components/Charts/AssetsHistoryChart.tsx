@@ -22,15 +22,6 @@ const CursorPointer = ({
   y,
 }) => (
   <>
-    <Line
-      strokeDasharray="5, 5"
-      stroke={colors.brandDarkLight}
-      strokeWidth={1}
-      y1={y}
-      y2={y}
-      x1={40}
-      x2={x}
-    />
     <Circle cx={x} cy={y} r="5" fill={colors.brandDarkLight} />
     <Circle cx={x} cy={y} r="3" fill="#fff" />
   </>
@@ -43,15 +34,15 @@ const Cursor = ({
     <Line
       strokeDasharray="5, 5"
       stroke={colors.brandDarkLight}
-      strokeWidth={1}
+      strokeWidth={2}
       x1={x}
       x2={x}
-      y1={30}
-      y2={253}
+      y1={0}
+      y2={223}
     />
     {activePoints.map(({ y: yPoint, childName }) => {
-      const yMinDisplay = maxY <= 0 ? 30 : 32;
-      const yMaxDisplay = minY !== 0 ? 248 : 250;
+      const yMinDisplay = maxY <= 0 ? 0 : 2;
+      const yMaxDisplay = minY !== 0 ? 218 : 220;
       const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
       const yCursorPoint = (-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay);
 
@@ -146,6 +137,7 @@ const AssetsHistoryChart = ({
           <VictoryVoronoiContainer
             voronoiDimension="x"
             onActivated={setPoints}
+            onTouchEnd={() => setPoints([])}
             labels={({ datum }) => datum.childName}
             labelComponent={(
               <Cursor

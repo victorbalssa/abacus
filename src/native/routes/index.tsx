@@ -93,16 +93,16 @@ const TabBg = ({ ...props }) => (
 );
 
 // custom tabBarButton
-const TabBarAdvancedButton = ({ ...props }) => (
+const TabBarAdvancedButton = ({ onPress }) => (
   <Box style={styles.container} pointerEvents="box-none">
     <TabBg style={styles.background} />
     <TouchableOpacity
       style={styles.button}
-      onPress={props.onPress}
+      onPress={onPress}
     >
       <AntDesign
         name="edit"
-        size={24}
+        size={25}
         color="#FFFFFF"
       />
     </TouchableOpacity>
@@ -128,7 +128,7 @@ const Home = () => (
       tabBarIcon: (icon) => (
         <AntDesign
           name={tabIconConfig[route.name]}
-          size={20}
+          size={22}
           color={icon.color}
         />
       ),
@@ -140,14 +140,14 @@ const Home = () => (
       tabBarShowLabel: true,
       tabBarLazyLoad: true,
       tabBarStyle: {
-        fontFamily: 'Montserrat',
         backgroundColor: 'transparent',
         borderTopWidth: 0,
         height: 75,
       },
       tabBarLabelStyle: {
-        fontSize: 12,
-      }
+        fontSize: 11,
+        fontFamily: 'Montserrat_Bold',
+      },
     })}
   >
     <Tab.Screen
@@ -162,10 +162,8 @@ const Home = () => (
       name="Create"
       component={ChartContainer}
       options={{
-        tabBarButton: (props) => (
-          <TabBarAdvancedButton
-            {...props}
-          />
+        tabBarButton: ({ onPress }) => (
+          <TabBarAdvancedButton onPress={onPress} />
         ),
       }}
     />

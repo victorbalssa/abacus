@@ -47,10 +47,6 @@ const Chart = ({
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
     <Layout
       loading={loading}

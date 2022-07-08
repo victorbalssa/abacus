@@ -46,10 +46,6 @@ const Dashboard = ({
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-
   return (
     <Layout
       loading={loading}
