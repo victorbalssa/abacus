@@ -15,5 +15,7 @@ export default {
   brandWarning: '#f0ad4e',
   brandDark: '#000',
   brandDarkLight: '#676767',
+  tabInactiveDarkLight: 'rgba(103,103,103,0.61)',
   brandLight: '#ffeade',
+  tabBackgroundColor: '#fcfcfc',
 };

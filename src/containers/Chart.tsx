@@ -24,15 +24,13 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const Chart = ({
-  range,
+  loading,
   start,
   end,
   dashboard,
-  loading,
   getSummary,
   getDashboard,
   filterData,
-  handleChangeRange,
 }) => {
   const toast = useToast();
 
@@ -55,14 +53,12 @@ const Chart = ({
 
   return (
     <Layout
-      range={range}
       loading={loading}
       start={start}
       end={end}
       dashboard={dashboard}
       fetchData={fetchData}
       filterData={filterData}
-      handleChangeRange={handleChangeRange}
     />
   );
 };

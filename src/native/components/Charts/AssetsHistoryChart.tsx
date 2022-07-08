@@ -5,6 +5,7 @@ import {
   VStack,
   Checkbox,
   HStack,
+  Pressable,
 } from 'native-base';
 import {
   VictoryAxis,
@@ -98,13 +99,6 @@ const AssetsHistoryChart = ({
         }}
       >
         <VStack>
-          <Text fontWeight={600} fontSize={17}>
-            {`${points.length !== 0 ? new Date(points[0]?.x).toLocaleString('default', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            }) : ''}`}
-          </Text>
           {dashboard.map((chart, index) => {
             let value = '';
             if (points.filter((v) => v.childName === chart.label).length) {
@@ -112,33 +106,41 @@ const AssetsHistoryChart = ({
             }
 
             return (
-              <HStack p={1} key={`key-${chart.label}`}>
-                <Checkbox
-                  accessibilityLabel={`key-${chart.color}`}
-                  key={`key-${chart.label}`}
-                  colorScheme={chart.colorScheme}
-                  isDisabled={!chart.skip && dashboard.filter((v) => !v.skip).length < 2}
-                  isChecked={!chart.skip}
-                  value={index}
-                  onChange={() => filterData({ index })}
-                />
-                <Text ml={1} color={chart.color} fontWeight={600} fontSize={15}>
-                  {` ${chart.label} ${value ? (chart.currency_symbol + value) : ''}`}
-                </Text>
-              </HStack>
+              <Pressable onPress={() => filterData({ index })}>
+                <HStack p={1} key={`key-${chart.label}`}>
+                  <Checkbox
+                    accessibilityLabel={`key-${chart.color}`}
+                    key={`key-${chart.label}`}
+                    colorScheme={chart.colorScheme}
+                    isDisabled={!chart.skip && dashboard.filter((v) => !v.skip).length < 2}
+                    isChecked={!chart.skip}
+                    value={index}
+                    onChange={() => filterData({ index })}
+                  />
+                  <Text ml={1} color={chart.color} fontWeight={600} fontSize={15}>
+                    {` ${chart.label} ${value ? (chart.currency_symbol + value) : ''}`}
+                  </Text>
+                </HStack>
+              </Pressable>
             );
           })}
+          <Text fontWeight={600} fontSize={17}>
+            {`${points.length !== 0 ? new Date(points[0]?.x).toLocaleString('default', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            }) : '  '}`}
+          </Text>
         </VStack>
       </Stack>
       <VictoryChart
         padding={{
-          top: 30,
           left: 40,
           right: 40,
           bottom: 30,
         }}
         width={350}
-        height={280}
+        height={250}
         domainPadding={2}
         containerComponent={(
           <VictoryVoronoiContainer

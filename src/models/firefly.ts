@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core';
+import moment from 'moment';
 import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
@@ -30,6 +31,7 @@ export type FireflyStateType = {
   start: string,
   end: string,
   range: number,
+  rangeTitle: string,
   netWorth: HomeDisplayType[],
   spent: HomeDisplayType[],
   earned: HomeDisplayType[],
@@ -42,6 +44,7 @@ const INITIAL_STATE = {
   start: getCurrentDate(),
   end: getCurrentDate(),
   range: 3,
+  rangeTitle: 'Q2 2022',
   netWorth: [],
   spent: [],
   earned: [],
@@ -83,11 +86,13 @@ export default createModel<RootModel>()({
     setRange(state, payload) {
       const {
         range,
+        rangeTitle,
       } = payload;
 
       return {
         ...state,
         range,
+        rangeTitle,
       };
     },
 
@@ -120,31 +125,27 @@ export default createModel<RootModel>()({
         firefly: {
           start: oldStart,
           end: oldEnd,
+          range: oldRange,
         },
       } = rootState;
       const {
-        range = rootState.firefly.range,
+        range = oldRange,
         direction,
       } = payload;
       let start;
       let end;
 
       const rangeInt = parseInt(range, 10);
+      let rangeTitle = '';
 
       if (direction !== undefined) {
         if (direction > 0) {
-          start = new Date(oldStart);
-          start.setMonth(start.getMonth() + rangeInt);
-          end = new Date(oldEnd);
-          end.setMonth(end.getMonth() + rangeInt);
+          start = moment(oldStart).add(rangeInt, 'M').format('YYYY-MM-DD');
+          end = moment(oldEnd).add(rangeInt, 'M').endOf('M').format('YYYY-MM-DD');
         } else {
-          start = new Date(oldStart);
-          start.setMonth(start.getMonth() - rangeInt);
-          end = new Date(oldEnd);
-          end.setMonth(end.getMonth() - rangeInt);
+          start = moment(oldStart).subtract(rangeInt, 'M').format('YYYY-MM-DD');
+          end = moment(oldEnd).subtract(rangeInt, 'M').endOf('M').format('YYYY-MM-DD');
         }
-        start = start.toISOString().slice(0, 10);
-        end = end.toISOString().slice(0, 10);
       } else {
         const today = new Date();
         const month = today.getMonth();
@@ -155,14 +156,17 @@ export default createModel<RootModel>()({
           case 1:
             start = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-01`;
             end = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-30`;
+            end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 3:
             start = `${today.getFullYear()}-0${(quarter * 3) + 1}-01`;
             end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-30`;
+            end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 6:
             start = `${today.getFullYear()}-${semi === 1 ? '01' : '07'}-01`;
             end = `${today.getFullYear()}-${semi === 1 ? '06' : '12'}-30`;
+            end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 12:
             start = `${today.getFullYear()}-01-01`;
@@ -175,7 +179,25 @@ export default createModel<RootModel>()({
         }
       }
 
-      this.setRange({ range });
+      switch (rangeInt) {
+        case 1:
+          rangeTitle = `${moment(start).utc().format('MMMM')} ${moment(start).utc().year()}.`;
+          break;
+        case 3:
+          rangeTitle = `Q${moment(start).utc().quarter()} ${moment(start).utc().year()}.`;
+          break;
+        case 6:
+          rangeTitle = `S${moment(start).utc().quarter() < 3 ? 1 : 2} ${moment(start).utc().year()}.`;
+          break;
+        case 12:
+          rangeTitle = `${moment(start).utc().year()} Year.`;
+          break;
+        default:
+          rangeTitle = `${moment(start).utc().year()} Year.`;
+          break;
+      }
+
+      this.setRange({ range, rangeTitle });
       this.setData({ start, end });
 
       await Promise.all([this.getSummaryBasic(), this.getDashboardBasic()]);
@@ -249,7 +271,7 @@ export default createModel<RootModel>()({
         dashboard[index].entries = Object.keys(v.entries)
           .map((key) => {
             const value = dashboard[index].entries[key];
-            const date = new Date(key.replace(/T.*/, ''));
+            const date = new Date(key);
 
             return {
               x: +date,

@@ -8,41 +8,27 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import UIButton from './UI/UIButton';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
-import RangeSelect from './UI/RangeSelect';
+import RangeTitle from './UI/RangeTitle';
 
 type ChartType = {
-  range: number,
   dashboard: [],
   loading: boolean,
   fetchData: () => Promise<void>,
   start: string,
   end: string,
-  handleChangeRange: (value: object) => Promise<void>,
   filterData: () => Promise<void>,
 }
 
 const Chart = ({
-  range,
   dashboard,
   loading,
   fetchData,
   filterData,
   start,
   end,
-  handleChangeRange,
 }: ChartType) => (
-  <Box flex={1} safeAreaTop>
-    <Box marginLeft={8}>
-      <Text
-        style={{
-          fontSize: 30,
-          paddingTop: 15,
-          paddingBottom: 15,
-        }}
-      >
-        Q2 2022.
-      </Text>
-    </Box>
+  <Box flex={1} marginLeft={3} marginRight={3} safeAreaTop>
+    <RangeTitle />
     <Box flex={1} shadow="3" alignItems="center">
       <ScrollView scrollEnabled={false}>
         <AssetsHistoryChart
@@ -75,7 +61,6 @@ const Chart = ({
         }}
       />
     </Box>
-    <RangeSelect range={range} handleChangeRange={handleChangeRange} />
   </Box>
 );
 

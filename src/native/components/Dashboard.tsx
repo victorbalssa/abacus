@@ -10,49 +10,35 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import UIButton from './UI/UIButton';
-import RangeSelect from './UI/RangeSelect';
 import { HomeDisplayType } from '../../models/firefly';
+import RangeTitle from './UI/RangeTitle';
 
 type DashboardType = {
-  range: number,
   loading: boolean,
   netWorth: HomeDisplayType[],
   spent: HomeDisplayType[],
   earned: HomeDisplayType[],
   balance: HomeDisplayType[],
   fetchData: () => Promise<void>,
-  handleChangeRange: (value: object) => Promise<void>,
 }
 
 const Dashboard = ({
-  range,
   netWorth,
   spent,
   earned,
   balance,
   loading,
   fetchData,
-  handleChangeRange,
 }: DashboardType) => (
-  <Box flex={1} safeAreaTop>
-    <Box marginLeft={8}>
-      <Text
-        style={{
-          fontSize: 30,
-          paddingTop: 15,
-          paddingBottom: 15,
-        }}
-      >
-        Q2 2022.
-      </Text>
-    </Box>
-    <Box flex={1} shadow="3" alignItems="center">
+  <Box flex={1} marginLeft={3} marginRight={3} safeAreaTop>
+    <RangeTitle />
+    <Box flex={1} shadow="3">
       <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
         {netWorth.map((nw) => (
           <VStack
             key={nw.title}
-            minW={160}
-            maxW={160}
+            minW={167}
+            maxW={167}
             height={65}
             margin={1}
             padding={3}
@@ -92,8 +78,8 @@ const Dashboard = ({
         {spent.map((s) => (
           <VStack
             key={s.title}
-            minW={160}
-            maxW={160}
+            minW={167}
+            maxW={167}
             height={65}
             margin={1}
             padding={3}
@@ -133,8 +119,8 @@ const Dashboard = ({
         {balance.map((s) => (
           <VStack
             key={s.title}
-            minW={160}
-            maxW={160}
+            minW={167}
+            maxW={167}
             height={65}
             margin={1}
             padding={3}
@@ -174,8 +160,8 @@ const Dashboard = ({
         {earned.map((s) => (
           <VStack
             key={s.title}
-            minW={160}
-            maxW={160}
+            minW={167}
+            maxW={167}
             height={65}
             margin={1}
             padding={3}
@@ -229,12 +215,11 @@ const Dashboard = ({
           />
             )}
         style={{
-          margin: 15,
+          margin: 5,
           height: 35,
         }}
       />
     </Box>
-    <RangeSelect range={range} handleChangeRange={handleChangeRange} />
   </Box>
 );
 

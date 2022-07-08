@@ -8,12 +8,11 @@ import { extendTheme, NativeBaseProvider } from 'native-base';
 import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Store, Persistor } from '../store';
 
 import colors from '../constants/colors';
 import Routes from './routes/index';
 import Loading from './components/UI/Loading';
-import {Persistor} from "redux-persist/es/types";
-import {Store} from "redux";
 
 const config = {
   dependencies: {
@@ -93,7 +92,7 @@ type AppPropsType = {
 };
 
 type AppStateType = {
-  loading: {},
+  loading: boolean,
 };
 
 export default class App extends React.Component<AppPropsType, AppStateType> {
@@ -136,7 +135,7 @@ export default class App extends React.Component<AppPropsType, AppStateType> {
         logoWidth={145}
       >
         <NativeBaseProvider config={config} theme={theme}>
-          <StatusBar style="light" />
+          <StatusBar style="dark" />
           <Provider store={store}>
             <PersistGate
               loading={<Loading />}
