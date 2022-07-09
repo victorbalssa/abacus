@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { useToast } from 'native-base';
 
 import Layout from '../native/components/Dashboard';
-import Loading from '../native/components/UI/Loading';
 import { HomeDisplayType } from '../models/firefly';
 
 type DashboardContainerType = {
@@ -17,7 +16,7 @@ type DashboardContainerType = {
   handleChangeRange: (value: object) => Promise<void>,
 };
 
-const Dashboard = ({
+const Create = ({
   loading,
   netWorth,
   spent,
@@ -30,7 +29,14 @@ const Dashboard = ({
   const toast = useToast();
 
   useEffect(() => {
-    (async () => handleChangeRange({ range: '3' }))();
+    (async () => {
+      // TODO:
+      //  - get account list (or reuse accounts?)
+      //  - get currency list
+      //  - get Budget list
+      //  - get Category list
+      //  - get Bill list
+    })();
   }, []);
 
   const fetchData = async () => {
@@ -72,4 +78,4 @@ const mapDispatchToProps = (dispatch) => ({
   getDashboard: dispatch.firefly.getDashboardBasic,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Create);

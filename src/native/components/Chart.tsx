@@ -1,18 +1,16 @@
 import React from 'react';
-import { RefreshControl, ViewStyle } from 'react-native';
+import { RefreshControl } from 'react-native';
 import {
   Box,
-  Icon,
-  ScrollView, Text,
+  ScrollView,
 } from 'native-base';
-import { Ionicons } from '@expo/vector-icons';
-import UIButton from './UI/UIButton';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
 import RangeTitle from './UI/RangeTitle';
 import colors from '../../constants/colors';
+import { AssetAccountType } from '../../models/firefly';
 
 type ChartType = {
-  dashboard: [],
+  accounts: AssetAccountType[],
   loading: boolean,
   fetchData: () => Promise<void>,
   start: string,
@@ -21,7 +19,7 @@ type ChartType = {
 }
 
 const Chart = ({
-  dashboard,
+  accounts,
   loading,
   fetchData,
   filterData,
@@ -46,7 +44,7 @@ const Chart = ({
       <AssetsHistoryChart
         start={start}
         end={end}
-        dashboard={dashboard}
+        accounts={accounts}
         filterData={filterData}
       />
     </ScrollView>

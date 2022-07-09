@@ -36,7 +36,7 @@ export type FireflyStateType = {
   spent: HomeDisplayType[],
   earned: HomeDisplayType[],
   balance: HomeDisplayType[],
-  dashboard: AssetAccountType[],
+  accounts: AssetAccountType[],
   user: null,
 }
 
@@ -49,7 +49,7 @@ const INITIAL_STATE = {
   spent: [],
   earned: [],
   balance: [],
-  dashboard: [],
+  accounts: [],
   user: null,
 } as FireflyStateType;
 
@@ -66,7 +66,7 @@ export default createModel<RootModel>()({
         spent = state.spent,
         earned = state.earned,
         balance = state.balance,
-        dashboard = state.dashboard,
+        accounts = state.accounts,
         user = state.user,
       } = payload;
 
@@ -78,7 +78,7 @@ export default createModel<RootModel>()({
         spent,
         earned,
         balance,
-        dashboard,
+        accounts,
         user,
       };
     },
@@ -98,13 +98,13 @@ export default createModel<RootModel>()({
 
     filterData(state, payload) {
       const { index: filterIndex } = payload;
-      const { dashboard } = state;
-      const newDashboard = dashboard.map((d) => (d));
-      newDashboard[filterIndex].skip = !newDashboard[filterIndex].skip;
+      const { accounts } = state;
+      const newAccounts = accounts.map((d) => (d));
+      newAccounts[filterIndex].skip = !newAccounts[filterIndex].skip;
 
       return {
         ...state,
-        dashboard: newDashboard,
+        accounts: newAccounts,
       };
     },
 
@@ -257,20 +257,20 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      const dashboard = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` });
+      const accounts = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` });
       let colorIndex = 0;
 
-      dashboard.forEach((v, index) => {
+      accounts.forEach((v, index) => {
         if (colorIndex >= 4) {
           colorIndex = 0;
         }
-        dashboard[index].skip = false;
-        dashboard[index].color = colors[`brandStyle${colorIndex}`];
-        dashboard[index].colorScheme = `chart${colorIndex}`;
+        accounts[index].skip = false;
+        accounts[index].color = colors[`brandStyle${colorIndex}`];
+        accounts[index].colorScheme = `chart${colorIndex}`;
         colorIndex += 1;
-        dashboard[index].entries = Object.keys(v.entries)
+        accounts[index].entries = Object.keys(v.entries)
           .map((key) => {
-            const value = dashboard[index].entries[key];
+            const value = accounts[index].entries[key];
             const date = new Date(key);
 
             return {
@@ -278,11 +278,20 @@ export default createModel<RootModel>()({
               y: value,
             };
           });
-        dashboard[index].maxY = maxBy(dashboard[index].entries, (o: { x: string, y: string}) => (o.y)).y;
-        dashboard[index].minY = minBy(dashboard[index].entries, (o: { x: string, y: string}) => (o.y)).y;
+        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string}) => (o.y)).y;
+        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string}) => (o.y)).y;
       });
 
-      this.setData({ dashboard });
+      this.setData({ accounts });
+    },
+
+    /**
+     * Create Transactions
+     *
+     * @returns {Promise}
+     */
+    async createTransactions(payload, rootState) {
+      return dispatch.configuration.apiFetch({ url: '/api/v1/transactions', method: 'POST' });
     },
 
     /**

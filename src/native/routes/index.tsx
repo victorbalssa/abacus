@@ -3,16 +3,16 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign, Feather } from '@expo/vector-icons';
-
+import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
-import { Box } from 'native-base';
+import {Box, IconButton, Pressable} from 'native-base';
 import { TouchableOpacity, StyleSheet } from 'react-native';
+
 import OauthContainer from '../../containers/Oauth';
 import ConfigurationContainer from '../../containers/Configuration';
-import DashboardContainer from '../../containers/Dashboard';
+import HomeContainer from '../../containers/Home';
 import ChartContainer from '../../containers/Chart';
 import colors from '../../constants/colors';
-import { isiPhoneX } from '../../lib/common';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
 });
 
 // background svg which will create space
-const TabBg = ({ ...props }) => (
-  <Svg width={75} height={81} viewBox="0 0 75 81" {...props}>
+const TabBg = () => (
+  <Svg width={75} height={81} viewBox="0 0 75 81" style={styles.background}>
     <Path
       d="M75.2 0v61H0V0c4.1 0 7.4 3.1 7.9 7.1C10 21.7 22.5 33 37.7 33c15.2 0 27.7-11.3 29.7-25.9.5-4 3.9-7.1 7.9-7.1h-.1z"
       fill={colors.tabBackgroundColor}
@@ -95,17 +95,26 @@ const TabBg = ({ ...props }) => (
 // custom tabBarButton
 const TabBarAdvancedButton = ({ onPress }) => (
   <Box style={styles.container} pointerEvents="box-none">
-    <TabBg style={styles.background} />
-    <TouchableOpacity
-      style={styles.button}
+    <TabBg />
+    <IconButton
+      variant="solid"
+      _icon={{
+        as: AntDesign,
+        name: 'edit',
+      }}
       onPress={onPress}
-    >
-      <AntDesign
-        name="edit"
-        size={25}
-        color="#FFFFFF"
-      />
-    </TouchableOpacity>
+      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+      _pressed={{
+        style: {
+          ...styles.button,
+          transform: [{
+            scale: 0.95,
+          }],
+          opacity: 0.95,
+        },
+      }}
+      style={styles.button}
+    />
   </Box>
 );
 
@@ -152,7 +161,7 @@ const Home = () => (
   >
     <Tab.Screen
       name="Home"
-      component={DashboardContainer}
+      component={HomeContainer}
     />
     <Tab.Screen
       name="Chart"

@@ -56,7 +56,7 @@ const Cursor = ({
 const AssetsHistoryChart = ({
   start,
   end,
-  dashboard,
+  accounts,
   filterData,
 }) => {
   const [points, setPoints] = useState([]);
@@ -90,20 +90,23 @@ const AssetsHistoryChart = ({
         }}
       >
         <VStack>
-          {dashboard.map((chart, index) => {
+          {accounts.map((chart, index) => {
             let value = '';
             if (points.filter((v) => v.childName === chart.label).length) {
               value = points.filter((v) => v.childName === chart.label)[0].y;
             }
 
             return (
-              <Pressable onPress={() => filterData({ index })}>
+              <Pressable
+                key={`key-${chart.label}`}
+                onPress={() => filterData({ index })}
+              >
                 <HStack p={1} key={`key-${chart.label}`}>
                   <Checkbox
                     accessibilityLabel={`key-${chart.color}`}
                     key={`key-${chart.label}`}
                     colorScheme={chart.colorScheme}
-                    isDisabled={!chart.skip && dashboard.filter((v) => !v.skip).length < 2}
+                    isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
                     isChecked={!chart.skip}
                     value={index}
                     onChange={() => filterData({ index })}
@@ -144,8 +147,8 @@ const AssetsHistoryChart = ({
                 x
                 y
                 activePoints
-                maxY={maxBy(dashboard.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY).maxY}
-                minY={minBy(dashboard.filter((v) => !v.skip), (c: { minY: number }) => c.minY).minY}
+                maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY}
+                minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY}
               />
             )}
           />
@@ -156,7 +159,7 @@ const AssetsHistoryChart = ({
           tickCount={6}
           tickFormat={(x) => (`${x !== 0 ? (Math.round(x) / 1000) : '0'}k`)}
         />
-        {dashboard
+        {accounts
           .filter((v) => !v.skip)
           .map((chart) => (
             <VictoryLine

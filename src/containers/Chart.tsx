@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
 import Layout from '../native/components/Chart';
-import Loading from '../native/components/UI/Loading';
 
 const mapStateToProps = (state) => ({
   range: state.firefly.range,
@@ -12,7 +11,7 @@ const mapStateToProps = (state) => ({
   spent: state.firefly.spent,
   earned: state.firefly.earned,
   balance: state.firefly.balance,
-  dashboard: state.firefly.dashboard,
+  accounts: state.firefly.accounts,
   loading: state.loading.models.firefly,
 });
 
@@ -27,7 +26,7 @@ const Chart = ({
   loading,
   start,
   end,
-  dashboard,
+  accounts,
   getSummary,
   getDashboard,
   filterData,
@@ -52,7 +51,7 @@ const Chart = ({
       loading={loading}
       start={start}
       end={end}
-      dashboard={dashboard}
+      accounts={accounts}
       fetchData={fetchData}
       filterData={filterData}
     />

@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { AntDesign } from '@expo/vector-icons';
 import { Dispatch, RootState } from '../../../store';
+import * as Haptics from "expo-haptics";
 
 const RangeTitle = ({
   start,
@@ -28,12 +29,13 @@ const RangeTitle = ({
         name: 'arrowleft',
       }}
       onPress={() => handleChangeRange({ direction: -1 })}
+      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
       _pressed={{
         style: {
           transform: [{
-            scale: 0.9,
+            scale: 0.95,
           }],
-          opacity: 0.5,
+          opacity: 0.95,
         },
       }}
     />
@@ -87,12 +89,13 @@ const RangeTitle = ({
         name: 'arrowright',
       }}
       onPress={() => handleChangeRange({ direction: 1 })}
+      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
       _pressed={{
         style: {
           transform: [{
-            scale: 0.9,
+            scale: 0.95,
           }],
-          opacity: 0.5,
+          opacity: 0.95,
         },
       }}
     />
