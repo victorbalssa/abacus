@@ -24,6 +24,7 @@ const RangeTitle = ({
     backgroundColor="white"
     pl={4}
     pr={4}
+    zIndex={30}
     safeAreaTop
   >
     <HStack justifyContent="space-between" alignItems="center">

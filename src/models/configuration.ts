@@ -54,8 +54,6 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Reset all storage from app
-     *
      * @returns {Promise}
      */
     async apiFetch({ url, config }, rootState): Promise<any> {
@@ -75,8 +73,6 @@ export default createModel<RootModel>()({
     },
 
     /**
-     * Reset all storage from app
-     *
      * @returns {Promise}
      */
     async apiPost({ url, body, config }, rootState): Promise<any> {
@@ -88,6 +84,25 @@ export default createModel<RootModel>()({
 
       if (backendURL) {
         const { data } = await axios.post(`${backendURL}${url}`, body, config);
+
+        return data;
+      }
+
+      throw new Error('No backend URL defined.');
+    },
+
+    /**
+     * @returns {Promise}
+     */
+    async apiDelete({ url }, rootState): Promise<any> {
+      const {
+        configuration: {
+          backendURL,
+        },
+      } = rootState;
+
+      if (backendURL) {
+        const { data } = await axios.delete(`${backendURL}${url}`);
 
         return data;
       }

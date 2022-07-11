@@ -197,10 +197,14 @@ export default createModel<RootModel>()({
           break;
       }
 
-      this.setRange({ range, rangeTitle });
-      this.setData({ start, end });
+      dispatch.firefly.setRange({ range, rangeTitle });
+      dispatch.firefly.setData({ start, end });
 
-      await Promise.all([this.getSummaryBasic(), this.getDashboardBasic()]);
+      await Promise.all([
+        dispatch.firefly.getSummaryBasic(0),
+        dispatch.firefly.getDashboardBasic(0),
+        dispatch.transactions.getTransactions(0),
+      ]);
     },
 
     /**

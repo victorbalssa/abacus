@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
 
+import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Create';
 import { Dispatch, RootState } from '../store';
 
@@ -25,10 +26,12 @@ interface CreateContainerType extends
   ReturnType<typeof mapStateToProps>,
   ReturnType<typeof mapDispatchToProps> {
   loading: boolean,
+  navigation: { dispatch: (action) => void },
 }
 
 const Create = ({
   loading,
+  navigation,
   accounts,
   budgets,
   categories,
@@ -59,6 +62,12 @@ const Create = ({
     }
   };
 
+  const goToTransactions = () => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'Transactions',
+    }),
+  );
+
   const submit = async (payload) => {
     try {
       await createTransactions(payload);
@@ -68,6 +77,8 @@ const Create = ({
         status: 'success',
         variant: 'left-accent',
         description: 'Transaction created.',
+        isClosable: false,
+        onTouchEnd: () => goToTransactions(),
       });
     } catch (e) {
       if (e.response) {

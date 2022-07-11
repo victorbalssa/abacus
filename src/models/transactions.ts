@@ -61,9 +61,9 @@ export default createModel<RootModel>()({
 
       const type = 'all';
       const page = 1;
-      const { data: transactions } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${page}&start=${start}&end=${end}&type=${type}` });
+      const { data: transactions, meta } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${page}&start=${start}&end=${end}&type=${type}` });
 
-      console.log(transactions);
+      console.log(meta);
 
       dispatch.transactions.setTransactions({ transactions });
     },
@@ -96,6 +96,31 @@ export default createModel<RootModel>()({
       };
 
       const data = await dispatch.configuration.apiPost({ url: '/api/v1/transactions', body });
+
+      return data;
+    },
+
+    /**
+     * Delete transactions
+     *
+     * @returns {Promise}
+     */
+    async deleteTransaction(payload, rootState) {
+      const {
+        id,
+      } = payload;
+      const {
+        transactions: {
+          transactions,
+        },
+      } = rootState;
+      const newTransactions = [...transactions];
+      const prevIndex = transactions.findIndex((item) => item.id === id);
+      newTransactions.splice(prevIndex, 1);
+
+      const data = await dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
+
+      dispatch.transactions.setTransactions({ transactions: newTransactions });
 
       return data;
     },
