@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
 import Layout from '../native/components/Chart';
+import { Dispatch, RootState } from '../store';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootState) => ({
   range: state.firefly.range,
   start: state.firefly.start,
   end: state.firefly.end,
@@ -13,13 +14,16 @@ const mapStateToProps = (state) => ({
   balance: state.firefly.balance,
   accounts: state.firefly.accounts,
   loading: state.loading.models.firefly,
+  scrollEnabled: state.configuration.scrollEnabled,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   filterData: dispatch.firefly.filterData,
   handleChangeRange: dispatch.firefly.handleChangeRange,
   getSummary: dispatch.firefly.getSummaryBasic,
   getDashboard: dispatch.firefly.getDashboardBasic,
+  disableScroll: dispatch.configuration.disableScroll,
+  enableScroll: dispatch.configuration.enableScroll,
 });
 
 const Chart = ({
@@ -30,6 +34,9 @@ const Chart = ({
   getSummary,
   getDashboard,
   filterData,
+  disableScroll,
+  enableScroll,
+  scrollEnabled,
 }) => {
   const toast = useToast();
 
@@ -54,6 +61,9 @@ const Chart = ({
       accounts={accounts}
       fetchData={fetchData}
       filterData={filterData}
+      enableScroll={enableScroll}
+      disableScroll={disableScroll}
+      scrollEnabled={scrollEnabled}
     />
   );
 };

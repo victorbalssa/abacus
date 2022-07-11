@@ -286,15 +286,6 @@ export default createModel<RootModel>()({
     },
 
     /**
-     * Create Transactions
-     *
-     * @returns {Promise}
-     */
-    async createTransactions(payload, rootState) {
-      return dispatch.configuration.apiFetch({ url: '/api/v1/transactions', method: 'POST' });
-    },
-
-    /**
      * Test the accessToken
      *
      * @returns {Promise}

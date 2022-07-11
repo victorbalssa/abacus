@@ -6,10 +6,12 @@ import { RootModel } from './index';
 
 export type ConfigurationStateType = {
   backendURL: string,
+  scrollEnabled: boolean,
 }
 
 const INITIAL_STATE = {
   backendURL: '',
+  scrollEnabled: false,
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -21,6 +23,20 @@ export default createModel<RootModel>()({
       return {
         ...state,
         backendURL: payload,
+      };
+    },
+
+    disableScroll(state): ConfigurationStateType {
+      return {
+        ...state,
+        scrollEnabled: false,
+      };
+    },
+
+    enableScroll(state): ConfigurationStateType {
+      return {
+        ...state,
+        scrollEnabled: true,
       };
     },
 
@@ -53,6 +69,29 @@ export default createModel<RootModel>()({
         const { data } = await axios.get(`${backendURL}${url}`, config);
 
         return data;
+      }
+
+      throw new Error('No backend URL defined.');
+    },
+
+    /**
+     * Reset all storage from app
+     *
+     * @returns {Promise}
+     */
+    async apiPost({ url, body, config }, rootState): Promise<any> {
+      const {
+        configuration: {
+          backendURL,
+        },
+      } = rootState;
+
+      if (backendURL) {
+        const all = await axios.post(`${backendURL}${url}`, body, config);
+
+        console.log(all);
+
+        return all.data;
       }
 
       throw new Error('No backend URL defined.');

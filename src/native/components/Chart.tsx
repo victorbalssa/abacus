@@ -25,30 +25,39 @@ const Chart = ({
   filterData,
   start,
   end,
+  enableScroll,
+  disableScroll,
+  scrollEnabled,
 }: ChartType) => (
-  <Box flex={1} marginLeft={3} marginRight={3} safeAreaTop>
+  <>
     <RangeTitle />
-    <ScrollView
-      shadow={3}
-      _contentContainerStyle={{
-        alignItems: 'center',
-      }}
-      refreshControl={(
-        <RefreshControl
-          refreshing={loading}
-          onRefresh={fetchData}
-          tintColor={colors.brandStyle}
-        />
+    <Box flex={1}>
+      <ScrollView
+        p={3}
+        shadow={3}
+        _contentContainerStyle={{
+          alignItems: 'center',
+        }}
+        refreshControl={(
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={fetchData}
+            tintColor={colors.brandStyle}
+          />
       )}
-    >
-      <AssetsHistoryChart
-        start={start}
-        end={end}
-        accounts={accounts}
-        filterData={filterData}
-      />
-    </ScrollView>
-  </Box>
+        scrollEnabled={scrollEnabled}
+      >
+        <AssetsHistoryChart
+          start={start}
+          end={end}
+          accounts={accounts}
+          filterData={filterData}
+          enableScroll={enableScroll}
+          disableScroll={disableScroll}
+        />
+      </ScrollView>
+    </Box>
+  </>
 );
 
 export default Chart;

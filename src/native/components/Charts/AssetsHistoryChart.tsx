@@ -20,10 +20,11 @@ import colors from '../../../constants/colors';
 const CursorPointer = ({
   x,
   y,
+  stroke,
 }) => (
   <>
-    <Circle cx={x} cy={y} r="5" fill={colors.brandDarkLight} />
-    <Circle cx={x} cy={y} r="3" fill="#fff" />
+    <Circle cx={x} cy={y} r="6" fill={stroke} />
+    <Circle cx={x} cy={y} r="4" fill="#fff" />
   </>
 );
 
@@ -34,20 +35,27 @@ const Cursor = ({
     <Line
       strokeDasharray="5, 5"
       stroke={colors.brandDarkLight}
-      strokeWidth={2}
+      strokeWidth={3}
       x1={x}
       x2={x}
       y1={0}
       y2={223}
     />
-    {activePoints.map(({ y: yPoint, childName }) => {
+    {activePoints.map(({
+      y: yPoint, childName, style,
+    }) => {
+      const {
+        data: {
+          stroke,
+        },
+      } = style;
       const yMinDisplay = maxY <= 0 ? 0 : 2;
       const yMaxDisplay = minY !== 0 ? 218 : 220;
       const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
       const yCursorPoint = (-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay);
 
       return (
-        <CursorPointer key={y + childName} x={x} y={yCursorPoint} />
+        <CursorPointer key={y + childName} stroke={stroke} x={x} y={yCursorPoint} />
       );
     })}
   </>
@@ -58,6 +66,8 @@ const AssetsHistoryChart = ({
   end,
   accounts,
   filterData,
+  disableScroll,
+  enableScroll,
 }) => {
   const [points, setPoints] = useState([]);
 
@@ -100,6 +110,12 @@ const AssetsHistoryChart = ({
               <Pressable
                 key={`key-${chart.label}`}
                 onPress={() => filterData({ index })}
+                isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
+                _disabled={{
+                  style: {
+                    opacity: 0.4,
+                  },
+                }}
               >
                 <HStack p={1} key={`key-${chart.label}`}>
                   <Checkbox
@@ -140,7 +156,11 @@ const AssetsHistoryChart = ({
           <VictoryVoronoiContainer
             voronoiDimension="x"
             onActivated={setPoints}
-            onTouchEnd={() => setPoints([])}
+            onTouchStart={() => disableScroll()}
+            onTouchEnd={() => {
+              setPoints([]);
+              enableScroll();
+            }}
             labels={({ datum }) => datum.childName}
             labelComponent={(
               <Cursor

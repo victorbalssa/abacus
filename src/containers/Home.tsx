@@ -2,11 +2,24 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
 
-import Layout from '../native/components/Dashboard';
-import Loading from '../native/components/UI/Loading';
+import Layout from '../native/components/Home';
 import { HomeDisplayType } from '../models/firefly';
 
-type DashboardContainerType = {
+const mapStateToProps = (state) => ({
+  loading: state.loading.models.firefly,
+  netWorth: state.firefly.netWorth,
+  spent: state.firefly.spent,
+  balance: state.firefly.balance,
+  earned: state.firefly.earned,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  handleChangeRange: dispatch.firefly.handleChangeRange,
+  getSummary: dispatch.firefly.getSummaryBasic,
+  getDashboard: dispatch.firefly.getDashboardBasic,
+});
+
+type HomeContainerType = {
   loading: boolean,
   netWorth: HomeDisplayType[],
   spent: HomeDisplayType[],
@@ -26,7 +39,7 @@ const Home = ({
   getSummary,
   getDashboard,
   handleChangeRange,
-}: DashboardContainerType) => {
+}: HomeContainerType) => {
   const toast = useToast();
 
   useEffect(() => {
@@ -57,19 +70,5 @@ const Home = ({
     />
   );
 };
-
-const mapStateToProps = (state) => ({
-  loading: state.loading.models.firefly,
-  netWorth: state.firefly.netWorth,
-  spent: state.firefly.spent,
-  balance: state.firefly.balance,
-  earned: state.firefly.earned,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  handleChangeRange: dispatch.firefly.handleChangeRange,
-  getSummary: dispatch.firefly.getSummaryBasic,
-  getDashboard: dispatch.firefly.getDashboardBasic,
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

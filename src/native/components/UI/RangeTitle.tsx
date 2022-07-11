@@ -9,8 +9,8 @@ import {
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { AntDesign } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { Dispatch, RootState } from '../../../store';
-import * as Haptics from "expo-haptics";
 
 const RangeTitle = ({
   start,
@@ -19,87 +19,84 @@ const RangeTitle = ({
   rangeTitle,
   handleChangeRange,
 }) => (
-  <HStack shadow={3} justifyContent="space-between" alignItems="center">
-    <IconButton
-      size="sm"
-      borderRadius={15}
-      variant="solid"
-      _icon={{
-        as: AntDesign,
-        name: 'arrowleft',
-      }}
-      onPress={() => handleChangeRange({ direction: -1 })}
-      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-      _pressed={{
-        style: {
-          transform: [{
-            scale: 0.95,
-          }],
-          opacity: 0.95,
-        },
-      }}
-    />
-    <Box>
-      <Text
-        style={{
-          fontFamily: 'Montserrat_Bold',
-          fontSize: 21,
-          paddingTop: 15,
-          paddingLeft: 4,
-          paddingBottom: 5,
+  <Box
+    shadow={2}
+    backgroundColor="white"
+    pl={4}
+    pr={4}
+    safeAreaTop
+  >
+    <HStack justifyContent="space-between" alignItems="center">
+      <IconButton
+        shadow={2}
+        size="sm"
+        borderRadius={15}
+        variant="solid"
+        _icon={{
+          as: AntDesign,
+          name: 'arrowleft',
         }}
-      >
-        {rangeTitle}
-      </Text>
-      <Text
-        style={{
-          fontSize: 12,
-          paddingLeft: 4,
-          paddingBottom: 5,
+        onPress={() => handleChangeRange({ direction: -1 })}
+        onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        _pressed={{
+          style: {
+            transform: [{
+              scale: 0.95,
+            }],
+            opacity: 0.95,
+          },
         }}
+      />
+      <Box flex={1} pl={3} mt={1} height={41} justifyContent="center">
+        <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 21 }}>
+          {rangeTitle}
+        </Text>
+        <Text style={{ fontSize: 12 }}>
+          {`${moment(start).format('ll')} - ${moment(end).format('ll')}`}
+        </Text>
+      </Box>
+      <Select
+        m={1}
+        borderRadius={15}
+        variant="outline"
+        dropdownIcon={<></>}
+        height={41}
+        width={78}
+        _selectedItem={{
+          bg: 'primary.600',
+          endIcon: <CheckIcon size="5" />,
+        }}
+        selectedValue={`${range}`}
+        onValueChange={(v) => handleChangeRange({ range: v })}
       >
-        {`${moment(start).format('ll')} - ${moment(end).format('ll')}`}
-      </Text>
-    </Box>
-    <Select
-      m={1}
-      variant="outline"
-      dropdownIcon={<></>}
-      height={50}
-      width="70"
-      _selectedItem={{
-        bg: 'primary.600',
-        endIcon: <CheckIcon size="5" />,
-      }}
-      selectedValue={`${range}`}
-      onValueChange={(v) => handleChangeRange({ range: v })}
-    >
-      <Select.Item key="1" label="Monthly" value="1" />
-      <Select.Item key="3" label="Quarterly" value="3" />
-      <Select.Item key="6" label="Semiannually" value="6" />
-      <Select.Item key="12" label="Yearly" value="12" />
-    </Select>
+        <Select.Item key="1" label="Monthly" value="1" />
+        <Select.Item key="3" label="Quarterly" value="3" />
+        <Select.Item key="6" label="Semiannually" value="6" />
+        <Select.Item key="12" label="Yearly" value="12" />
+      </Select>
 
-    <IconButton
-      size="sm"
-      borderRadius={15}
-      variant="solid"
-      _icon={{
-        as: AntDesign,
-        name: 'arrowright',
-      }}
-      onPress={() => handleChangeRange({ direction: 1 })}
-      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-      _pressed={{
-        style: {
-          transform: [{
-            scale: 0.95,
-          }],
-          opacity: 0.95,
-        },
-      }}
-    />
-  </HStack>
+      <IconButton
+        shadow={2}
+        size="sm"
+        borderRadius={15}
+        variant="solid"
+        _icon={{
+          as: AntDesign,
+          name: 'arrowright',
+        }}
+        onPress={() => handleChangeRange({ direction: 1 })}
+        onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        _pressed={{
+          style: {
+            transform: [{
+              scale: 0.95,
+            }],
+            opacity: 0.95,
+          },
+        }}
+      />
+    </HStack>
+  </Box>
 );
 
 const mapStateToProps = (state: RootState) => ({

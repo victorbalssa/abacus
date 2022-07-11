@@ -25,9 +25,8 @@ const Configuration = ({
         <FormControl>
           <FormControl.Label>Firefly III backend URL</FormControl.Label>
           <Input
-            variant="rounded"
+            variant="outline"
             placeholder="Firefly III backend URL"
-            isDisabled
             value={backendURL}
           />
           <UIButton

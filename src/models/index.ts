@@ -1,13 +1,28 @@
 import { Models } from '@rematch/core';
-import firefly from './firefly';
+import accounts from './accounts';
+import budgets from './budgets';
+import categories from './categories';
 import configuration from './configuration';
+import currencies from './currencies';
+import firefly from './firefly';
+import transactions from './transactions';
 
 export interface RootModel extends Models<RootModel> {
-  firefly: typeof firefly
+  accounts: typeof accounts
+  budgets: typeof budgets
+  categories: typeof categories
   configuration: typeof configuration
+  currencies: typeof currencies
+  firefly: typeof firefly
+  transactions: typeof transactions
 }
 
 export const models: RootModel = {
-  firefly,
+  accounts,
+  budgets,
+  categories,
   configuration,
+  currencies,
+  firefly,
+  transactions,
 };

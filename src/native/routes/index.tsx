@@ -5,13 +5,14 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { AntDesign, Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
-import {Box, IconButton, Pressable} from 'native-base';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Box, IconButton } from 'native-base';
+import { StyleSheet } from 'react-native';
 
 import OauthContainer from '../../containers/Oauth';
 import ConfigurationContainer from '../../containers/Configuration';
 import HomeContainer from '../../containers/Home';
 import ChartContainer from '../../containers/Chart';
+import CreateContainer from '../../containers/Create';
 import colors from '../../constants/colors';
 
 const Stack = createNativeStackNavigator();
@@ -169,7 +170,7 @@ const Home = () => (
     />
     <Tab.Screen
       name="Create"
-      component={ChartContainer}
+      component={CreateContainer}
       options={{
         tabBarButton: ({ onPress }) => (
           <TabBarAdvancedButton onPress={onPress} />
