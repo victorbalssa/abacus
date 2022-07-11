@@ -12,6 +12,7 @@ import OauthContainer from '../../containers/Oauth';
 import ConfigurationContainer from '../../containers/Configuration';
 import HomeContainer from '../../containers/Home';
 import ChartContainer from '../../containers/Chart';
+import TransactionsContainer from '../../containers/Transactions';
 import CreateContainer from '../../containers/Create';
 import colors from '../../constants/colors';
 
@@ -179,7 +180,7 @@ const Home = () => (
     />
     <Tab.Screen
       name="Transactions"
-      component={ChartContainer}
+      component={TransactionsContainer}
       options={{
         tabBarIcon: (icon) => (
           <Feather name="list" size={25} color={icon.color} />

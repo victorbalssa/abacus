@@ -51,8 +51,19 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getTransactions(): Promise<void> {
-      const { data: transactions } = await dispatch.configuration.apiFetch({ url: '/api/v1/transactions' });
+    async getTransactions(payload, rootState): Promise<void> {
+      const {
+        firefly: {
+          start,
+          end,
+        },
+      } = rootState;
+
+      const type = 'all';
+      const page = 1;
+      const { data: transactions } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${page}&start=${start}&end=${end}&type=${type}` });
+
+      console.log(transactions);
 
       dispatch.transactions.setTransactions({ transactions });
     },
@@ -63,22 +74,19 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async createTransactions(payload, rootState) {
-      console.log(payload);
       const body = {
         transactions: [{
           type: 'deposit',
 
-          /*budget_id: '4',*/
-          /*category_id: '43',*/
-
-          /*piggy_bank_id: '2',*/
-          tags: 'test abaccus',
-          notes: 'test abaccus notes',
-
-          /*currency_id: '12',*/
-
-          /*foreign_amount: '123.45',*/
-          /*foreign_currency_id: '17',*/
+          // TODO: Add support for:
+          /* budget_id: '4', */
+          /* category_id: '43', */
+          /* piggy_bank_id: '2', */
+          /* tags: 'test abaccus', */
+          /* notes: 'test abaccus notes', */
+          /* currency_id: '12', */
+          /* foreign_amount: '123.45', */
+          /* foreign_currency_id: '17', */
 
           ...payload,
         }],
