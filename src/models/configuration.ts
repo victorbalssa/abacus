@@ -87,11 +87,9 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        const all = await axios.post(`${backendURL}${url}`, body, config);
+        const { data } = await axios.post(`${backendURL}${url}`, body, config);
 
-        console.log(all);
-
-        return all.data;
+        return data;
       }
 
       throw new Error('No backend URL defined.');

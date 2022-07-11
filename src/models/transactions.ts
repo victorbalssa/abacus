@@ -88,7 +88,6 @@ export default createModel<RootModel>()({
       };
 
       const data = await dispatch.configuration.apiPost({ url: '/api/v1/transactions', body });
-      console.log(data);
 
       return data;
     },

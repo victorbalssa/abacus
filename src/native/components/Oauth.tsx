@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
 import { Input, Box, FormControl } from 'native-base';
-import { KeyboardAvoidingView, ViewStyle } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 
 import UIButton from './UI/UIButton';
 import { isValidHttpUrl } from '../../lib/common';

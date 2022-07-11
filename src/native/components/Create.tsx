@@ -1,16 +1,20 @@
 import React from 'react';
 import {
-  Box, Button, CheckIcon, FormControl, Icon, IconButton, Input,
+  Box,
+  Button,
+  CheckIcon,
+  FormControl,
+  IconButton,
+  Input,
   ScrollView,
-  Select, VStack,
+  Select,
+  VStack,
+  KeyboardAvoidingView,
 } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
-import { ViewStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import UIButton from './UI/UIButton';
-import RangeTitle from "./UI/RangeTitle";
-import Title from "./UI/Title";
+import Title from './UI/Title';
 
 const TransactionForm = ({ accounts = [], loading, submit }) => {
   const [formData, setData] = React.useState({
@@ -245,20 +249,24 @@ const Create = ({
 }) => (
   <>
     <Title text="New Transaction" />
-    <Box flex={1}>
-      <ScrollView p={3}>
-        <Box>
-          <TransactionForm
-            loading={loading}
-            accounts={accounts}
-            budgets={budgets}
-            categories={categories}
-            currencies={currencies}
-            submit={submit}
-          />
-        </Box>
+    <KeyboardAvoidingView
+      h={{
+        base: '100%',
+        lg: 'auto',
+      }}
+      behavior="padding"
+    >
+      <ScrollView flex={1} p={3}>
+        <TransactionForm
+          loading={loading}
+          accounts={accounts}
+          budgets={budgets}
+          categories={categories}
+          currencies={currencies}
+          submit={submit}
+        />
       </ScrollView>
-    </Box>
+    </KeyboardAvoidingView>
   </>
 );
 
