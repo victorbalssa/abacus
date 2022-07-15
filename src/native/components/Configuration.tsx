@@ -1,13 +1,11 @@
 import React from 'react';
 
 import {
-  Input, Box, FormControl, Icon, Stack, Button,
+  Input, Box, FormControl, Stack, Button,
 } from 'native-base';
 
-import { KeyboardAvoidingView, ViewStyle } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import UIButton from './UI/UIButton';
-import * as Haptics from "expo-haptics";
+import { KeyboardAvoidingView } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 type ConfigurationComponent = {
   loading: boolean,

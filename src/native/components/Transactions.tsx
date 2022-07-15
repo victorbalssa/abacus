@@ -16,9 +16,9 @@ import colors from '../../constants/colors';
 type TransactionsType = {
   loading: boolean,
   transactions: [],
-  onRefresh: () => Promise<void>,
+  onRefresh: () => void,
   onDeleteTransaction: (id: string) => Promise<void>,
-  onEndReached: () => Promise<void>,
+  onEndReached: () => void,
 }
 
 const Basic = ({

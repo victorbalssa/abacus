@@ -3,9 +3,8 @@ import {
   Input, Box, FormControl, Button,
 } from 'native-base';
 import { KeyboardAvoidingView } from 'react-native';
-
 import * as Haptics from 'expo-haptics';
-import UIButton from './UI/UIButton';
+
 import { isValidHttpUrl } from '../../lib/common';
 import { OauthConfig } from '../../containers/Oauth';
 
