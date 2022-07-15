@@ -172,10 +172,12 @@ const Basic = ({
       rightOpenValue={-65}
       stopRightSwipe={-65}
       disableRightSwipe
+      /* TODO: preview
       previewRowKey="5356"
       previewOpenValue={-65}
       previewOpenDelay={2000}
       previewDuration={300}
+      */
       contentContainerStyle={{
         paddingBottom: 340,
       }}

@@ -1,11 +1,14 @@
 import React from 'react';
 
 import {
-  Input, Box, FormControl, Stack, Button,
+  Input, Box, FormControl, Stack, Button, VStack, Icon, Text, HStack, Heading,
 } from 'native-base';
+import * as Linking from 'expo-linking';
+import Constants from 'expo-constants';
 
 import { KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { AntDesign } from '@expo/vector-icons';
 
 type ConfigurationComponent = {
   loading: boolean,
@@ -18,51 +21,35 @@ const Configuration = ({
   resetApp,
   backendURL,
 }: ConfigurationComponent) => (
-  <KeyboardAvoidingView behavior="padding">
-    <Stack safeAreaTop={12}>
-      <Box alignItems="center" p={5}>
-        <FormControl>
-          <FormControl.Label>FireflyIII backend URL</FormControl.Label>
-          <Input
-            variant="outline"
-            placeholder="FireflyIII backend URL"
-            value={backendURL}
-          />
-          <Button
-            mt="2"
-            shadow={2}
-            borderRadius={15}
-            onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-            _pressed={{
-              style: {
-                transform: [{
-                  scale: 0.99,
-                }],
-              },
-            }}
-            _loading={{
-              bg: 'primary.50',
-              _text: {
-                color: 'white',
-              },
-              alignItems: 'flex-start',
-              opacity: 1,
-            }}
-            _spinner={{
-              color: 'white',
-              size: 10,
-            }}
-            colorScheme="primary"
-            isLoading={loading}
-            isLoadingText="Submitting..."
-            onPress={resetApp}
-          >
-            Reset App
-          </Button>
-        </FormControl>
-      </Box>
-    </Stack>
-  </KeyboardAvoidingView>
+  <Stack safeAreaTop>
+    <Heading mx={2} py={2} pt={5} size="sm">Security</Heading>
+    <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
+        <Text>FireflyIII backend URL</Text>
+        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(backendURL)} underline>{backendURL}</Text>
+      </HStack>
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
+        <Text>Help</Text>
+        <AntDesign name="arrowright" size={24} color="gray" onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} />
+      </HStack>
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between">
+        <Text>Clear & Reset Application</Text>
+        <AntDesign name="poweroff" size={20} color="gray" onPress={resetApp} />
+      </HStack>
+    </Box>
+
+    <Heading mx={2} py={2} pt={5} size="sm">About</Heading>
+    <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
+        <Text>App Version</Text>
+        <Text>{Constants.manifest.version}</Text>
+      </HStack>
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between">
+        <Text>Sources</Text>
+        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} underline>github.com</Text>
+      </HStack>
+    </Box>
+  </Stack>
 );
 
 export default Configuration;

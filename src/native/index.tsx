@@ -84,6 +84,11 @@ const theme = extendTheme({
         shadow: 2,
       },
     },
+    Heading: {
+      baseStyle: {
+        fontFamily: 'Montserrat_Bold',
+      },
+    },
     Input: {
       baseStyle: {
         borderRadius: 15,

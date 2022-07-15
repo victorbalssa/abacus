@@ -64,7 +64,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('GET  ', `${backendURL}${url}`)
+        console.log('GET  ', `${backendURL}${url}`);
         const { data } = await axios.get(`${backendURL}${url}`, config);
 
         return data;
@@ -84,8 +84,28 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('POST  ', `${backendURL}${url}`)
+        console.log('POST  ', `${backendURL}${url}`);
         const { data } = await axios.post(`${backendURL}${url}`, body, config);
+
+        return data;
+      }
+
+      throw new Error('No backend URL defined.');
+    },
+
+    /**
+     * @returns {Promise}
+     */
+    async apiPut({ url, body, config }, rootState): Promise<any> {
+      const {
+        configuration: {
+          backendURL,
+        },
+      } = rootState;
+
+      if (backendURL) {
+        console.log('PUT  ', `${backendURL}${url}`);
+        const { data } = await axios.put(`${backendURL}${url}`, body, config);
 
         return data;
       }

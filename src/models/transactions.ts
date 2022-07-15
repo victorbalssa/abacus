@@ -119,6 +119,37 @@ export default createModel<RootModel>()({
     },
 
     /**
+     * Create transactions
+     *
+     * @returns {Promise}
+     */
+    async updateTransactions(payload, rootState) {
+      const {
+        id,
+        transaction,
+      } = payload;
+      const body = {
+        transactions: [{
+          // TODO: Add support for:
+          /* budget_id: '4', */
+          /* category_id: '43', */
+          /* piggy_bank_id: '2', */
+          /* tags: 'test abaccus', */
+          /* notes: 'test abaccus notes', */
+          /* currency_id: '12', */
+          /* foreign_amount: '123.45', */
+          /* foreign_currency_id: '17', */
+
+          ...transaction,
+        }],
+      };
+
+      const data = await dispatch.configuration.apiPut({ url: `/api/v1/transactions/${id}`, body });
+
+      return data;
+    },
+
+    /**
      * Delete transactions
      *
      * @returns {Promise}
