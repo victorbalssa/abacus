@@ -54,6 +54,12 @@ const Basic = ({
       icon: 'arrow-left-right',
       prefix: '',
     },
+    'opening balance': {
+      bg: '#e5f2ff',
+      color: 'blue',
+      icon: 'arrow-left-right',
+      prefix: '',
+    },
   };
 
   const renderItem = ({

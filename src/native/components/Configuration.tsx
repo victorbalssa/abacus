@@ -25,7 +25,7 @@ const Configuration = ({
     <Heading mx={2} py={2} pt={5} size="sm">Security</Heading>
     <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
-        <Text>FireflyIII backend URL</Text>
+        <Text>URL</Text>
         <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(backendURL)} underline>{backendURL}</Text>
       </HStack>
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
@@ -44,9 +44,13 @@ const Configuration = ({
         <Text>App Version</Text>
         <Text>{Constants.manifest.version}</Text>
       </HStack>
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
+        <Text>Report an issue</Text>
+        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/new')} underline>New</Text>
+      </HStack>
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between">
         <Text>Sources</Text>
-        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} underline>github.com</Text>
+        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} underline>GitHub.com</Text>
       </HStack>
     </Box>
   </Stack>
