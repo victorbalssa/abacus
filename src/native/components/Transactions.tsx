@@ -19,10 +19,11 @@ type TransactionsType = {
   onRefresh: () => void,
   onDeleteTransaction: (id: string) => Promise<void>,
   onEndReached: () => void,
+  onPressItem: (id: string, payload: {}) => void,
 }
 
 const Basic = ({
-  loading, onRefresh, transactions, onDeleteTransaction, onEndReached,
+  loading, onRefresh, transactions, onDeleteTransaction, onEndReached, onPressItem,
 }) => {
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
@@ -70,7 +71,7 @@ const Basic = ({
       m={1}
       borderRadius={15}
       shadow={2}
-      onPress={() => console.log('You touched me')}
+      onPress={() => onPressItem(item.id, item.attributes.transactions[0])}
     >
       <Box pl={4} pr={3} py={2}>
         <HStack justifyContent="space-between" alignItems="center" space={3}>
@@ -237,6 +238,7 @@ const Transactions = ({
   onRefresh,
   onDeleteTransaction,
   onEndReached,
+  onPressItem,
 }: TransactionsType) => (
   <>
     <RangeTitle />
@@ -246,6 +248,7 @@ const Transactions = ({
         onRefresh={onRefresh}
         onDeleteTransaction={onDeleteTransaction}
         onEndReached={onEndReached}
+        onPressItem={onPressItem}
         transactions={transactions}
       />
     </Box>

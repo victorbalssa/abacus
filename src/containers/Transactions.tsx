@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
+import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Transactions';
 import { Dispatch, RootState } from '../store';
 
@@ -11,16 +12,29 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: dispatch.transactions.getTransactions,
+  updateTransactions: dispatch.transactions.updateTransactions,
   deleteTransaction: dispatch.transactions.deleteTransaction,
 });
 
 const Transactions = ({
   loading,
+  navigation,
   transactions,
   getTransactions,
+  updateTransactions,
   deleteTransaction,
 }) => {
   const toast = useToast();
+
+  const goToEdit = (id, payload) => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'TransactionsEdit',
+      params: {
+        id,
+        payload,
+      },
+    }),
+  );
 
   const onRefresh = () => {
     try {
@@ -75,6 +89,7 @@ const Transactions = ({
       onRefresh={onRefresh}
       onDeleteTransaction={onDeleteTransaction}
       onEndReached={onEndReached}
+      onPressItem={goToEdit}
     />
   );
 };

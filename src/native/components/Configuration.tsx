@@ -42,7 +42,7 @@ const Configuration = ({
     <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
         <Text>App Version</Text>
-        <Text>{Constants.manifest.version}</Text>
+        <Text>{Constants.manifest.version} (BETA)</Text>
       </HStack>
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
         <Text>Report an issue</Text>

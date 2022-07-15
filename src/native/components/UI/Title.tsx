@@ -17,15 +17,13 @@ const Title = ({ text }) => (
     height={104}
     shadow={2}
     backgroundColor="white"
-    pl={4}
-    pr={4}
+    px={5}
+    justifyContent="center"
     safeAreaTop
   >
-    <Box flex={1} pl={3} mt={1} height={41} justifyContent="center">
-      <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 21 }}>
-        {text}
-      </Text>
-    </Box>
+    <Text numberOfLines={1} style={{ fontFamily: 'Montserrat_Bold', fontSize: 21, lineHeight: 40 }}>
+      {text}
+    </Text>
   </Box>
 );
 

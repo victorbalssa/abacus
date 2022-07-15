@@ -13,10 +13,12 @@ import ConfigurationContainer from '../../containers/Configuration';
 import HomeContainer from '../../containers/Home';
 import ChartContainer from '../../containers/Chart';
 import TransactionsContainer from '../../containers/Transactions';
+import TransactionsEditContainer from '../../containers/TransactionsEdit';
 import CreateContainer from '../../containers/Create';
 import colors from '../../constants/colors';
 
 const Stack = createNativeStackNavigator();
+const Stack2 = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MyTheme = {
@@ -120,6 +122,19 @@ const TabBarAdvancedButton = ({ onPress }) => (
   </Box>
 );
 
+const TransactionNavigator = () => (
+  <Stack2.Navigator initialRouteName="TransactionsList" screenOptions={{ headerShown: false }}>
+    <Stack.Screen
+      name="TransactionsList"
+      component={TransactionsContainer}
+    />
+    <Stack.Screen
+      name="TransactionsEdit"
+      component={TransactionsEditContainer}
+    />
+  </Stack2.Navigator>
+);
+
 const Home = () => (
   <Tab.Navigator
     tabBar={({
@@ -180,7 +195,7 @@ const Home = () => (
     />
     <Tab.Screen
       name="Transactions"
-      component={TransactionsContainer}
+      component={TransactionNavigator}
       options={{
         tabBarIcon: (icon) => (
           <Feather name="list" size={25} color={icon.color} />

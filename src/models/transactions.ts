@@ -80,8 +80,6 @@ export default createModel<RootModel>()({
           meta,
         } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
-        console.log(transactions);
-
         dispatch.transactions.setTransactions({
           transactions: (endReached && page < totalPages) ? [...oldTransactions, ...transactions] : transactions,
           page: meta.pagination.current_page,
