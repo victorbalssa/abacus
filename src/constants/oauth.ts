@@ -1,4 +1,4 @@
 export default {
-  tokens: 'FireFly3OAuthTokens',
-  oauthConfig: 'FireFly3OAuthConfig',
+  tokens: 'FireflyIIIOAuthTokens',
+  oauthConfig: 'FireflyIIIOAuthConfig',
 };

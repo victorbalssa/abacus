@@ -81,6 +81,13 @@ const theme = extendTheme({
     Alert: {
       baseStyle: {
         m: '3',
+        shadow: 2,
+      },
+    },
+    Input: {
+      baseStyle: {
+        borderRadius: 15,
+        height: 10,
       },
     },
   },

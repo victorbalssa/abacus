@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Abacus",
-    "description": "Abacus: a FireFly III iOS Client",
+    "description": "Abacus: a FireflyIII iOS Client",
     "slug": "abacus",
     "privacy": "hidden",
     "platforms": [

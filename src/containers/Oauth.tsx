@@ -132,7 +132,7 @@ const OauthContainer = ({
             placement: 'top',
             title: 'Success',
             status: 'success',
-            description: 'Secure connexion ready with your Firefly III instance.',
+            description: 'Secure connexion ready with your FireflyIII instance.',
           });
           goToDashboard();
         } catch (e) {

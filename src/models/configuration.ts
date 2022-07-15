@@ -11,7 +11,7 @@ export type ConfigurationStateType = {
 
 const INITIAL_STATE = {
   backendURL: '',
-  scrollEnabled: false,
+  scrollEnabled: true,
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -120,7 +120,7 @@ export default createModel<RootModel>()({
         SecureStore.deleteItemAsync(secureKeys.tokens),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
       ]);
-      dispatch.firefly.resetFireFly();
+      dispatch.firefly.resetFireflyIII();
       dispatch.configuration.resetConfiguration();
     },
   }),

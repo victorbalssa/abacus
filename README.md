@@ -2,7 +2,7 @@
 <div align="center">
   <img src="documentation/img.png" height=100 />
   <p></p>
-  <h1>Abacus: a FireFly-III iOS Client</h1>
+  <h1>Abacus: a FireflyIII iOS Client</h1>
     <div>
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
@@ -22,7 +22,7 @@
 
 ### 🎙 Introduction
 
-- FireFly-III Client for iOS. (https://github.com/firefly-iii/firefly-iii)
+- FireflyIII Client for iOS. (https://github.com/firefly-iii/firefly-iii)
 - Authentication with Oauth2.
 - Use of iOS Keychains to store the accessToken / refreshToken.
 - No external API calls nor Analytics API, not even sentry / crashlytics.

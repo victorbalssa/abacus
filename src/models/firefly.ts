@@ -108,7 +108,7 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetFireFly() {
+    resetFireflyIII() {
       return INITIAL_STATE;
     },
   },
