@@ -22,9 +22,9 @@ const Transactions = ({
 }) => {
   const toast = useToast();
 
-  const onRefresh = async () => {
+  const onRefresh = () => {
     try {
-      await Promise.all([getTransactions()]);
+      getTransactions({ endReached: false });
     } catch (e) {
       console.error(e);
       toast.show({
@@ -50,6 +50,20 @@ const Transactions = ({
     }
   };
 
+  const onEndReached = () => {
+    try {
+      getTransactions({ endReached: true });
+    } catch (e) {
+      console.error(e);
+      toast.show({
+        placement: 'top',
+        title: 'Something went wrong',
+        status: 'error',
+        description: e.message,
+      });
+    }
+  };
+
   useEffect(() => {
     (async () => onRefresh())();
   }, []);
@@ -60,6 +74,7 @@ const Transactions = ({
       transactions={transactions}
       onRefresh={onRefresh}
       onDeleteTransaction={onDeleteTransaction}
+      onEndReached={onEndReached}
     />
   );
 };

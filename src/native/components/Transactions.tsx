@@ -2,7 +2,7 @@ import React from 'react';
 import { RefreshControl } from 'react-native';
 import {
   Box, HStack, Icon, Pressable, Text,
-  ScrollView, VStack, Spacer,
+  ScrollView, VStack, Spacer, Skeleton,
 } from 'native-base';
 import {
   Entypo, Feather, MaterialCommunityIcons, MaterialIcons,
@@ -17,10 +17,12 @@ type TransactionsType = {
   loading: boolean,
   transactions: [],
   onRefresh: () => Promise<void>,
+  onDeleteTransaction: (id: string) => Promise<void>,
+  onEndReached: () => Promise<void>,
 }
 
 const Basic = ({
-  loading, onRefresh, transactions, onDeleteTransaction,
+  loading, onRefresh, transactions, onDeleteTransaction, onEndReached,
 }) => {
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
@@ -159,9 +161,10 @@ const Basic = ({
           tintColor={colors.brandStyle}
         />
       )}
+      refreshing={loading}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
-      onEndReached={() => console.log('onEndReached')}
+      onEndReached={onEndReached}
       onEndReachedThreshold={0}
       data={transactions}
       renderItem={renderItem}
@@ -174,8 +177,48 @@ const Basic = ({
       previewOpenDelay={2000}
       previewDuration={300}
       contentContainerStyle={{
-        paddingBottom: 100,
+        paddingBottom: 340,
       }}
+      ListFooterComponent={(
+        <>
+          {loading && (
+            <>
+              <Box
+                bg="white"
+                m={1}
+                borderRadius={15}
+                shadow={2}
+              >
+                <Box pl={4} pr={3} py={2}>
+                  <HStack justifyContent="space-between" alignItems="center" space={3}>
+                    <HStack alignItems="center">
+                      <Skeleton w={10} m={2} ml={0} rounded={15} />
+                      <Skeleton.Text w={145} lines={3} />
+                    </HStack>
+                    <Skeleton w={75} rounded={15} />
+                  </HStack>
+                </Box>
+              </Box>
+              <Box
+                bg="white"
+                m={1}
+                borderRadius={15}
+                shadow={2}
+              >
+                <Box pl={4} pr={3} py={2}>
+                  <HStack justifyContent="space-between" alignItems="center" space={3}>
+                    <HStack alignItems="center">
+                      <Skeleton w={10} m={2} ml={0} rounded={15} />
+                      <Skeleton.Text w={145} lines={3} />
+                    </HStack>
+                    <Skeleton w={75} rounded={15} />
+                  </HStack>
+                </Box>
+              </Box>
+            </>
+          )}
+        </>
+)}
     />
   );
 };
@@ -185,6 +228,7 @@ const Transactions = ({
   transactions,
   onRefresh,
   onDeleteTransaction,
+  onEndReached,
 }: TransactionsType) => (
   <>
     <RangeTitle />
@@ -193,6 +237,7 @@ const Transactions = ({
         loading={loading}
         onRefresh={onRefresh}
         onDeleteTransaction={onDeleteTransaction}
+        onEndReached={onEndReached}
         transactions={transactions}
       />
     </Box>

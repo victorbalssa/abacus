@@ -64,6 +64,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
+        console.log('GET  ', `${backendURL}${url}`)
         const { data } = await axios.get(`${backendURL}${url}`, config);
 
         return data;
@@ -83,6 +84,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
+        console.log('POST  ', `${backendURL}${url}`)
         const { data } = await axios.post(`${backendURL}${url}`, body, config);
 
         return data;

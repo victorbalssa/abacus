@@ -18,10 +18,14 @@ export type TransactionType = {
 
 export type TransactionStateType = {
   transactions: TransactionType[],
+  page: number,
+  totalPages: number,
 }
 
 const INITIAL_STATE = {
   transactions: [],
+  page: 1,
+  totalPages: 1,
 } as TransactionStateType;
 
 export default createModel<RootModel>()({
@@ -32,10 +36,14 @@ export default createModel<RootModel>()({
     setTransactions(state, payload): TransactionStateType {
       const {
         transactions = state.transactions,
+        page = state.page,
+        totalPages = state.totalPages,
       } = payload;
 
       return {
         ...state,
+        page,
+        totalPages,
         transactions,
       };
     },
@@ -51,21 +59,33 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getTransactions(payload, rootState): Promise<void> {
+    async getTransactions({ endReached = false }, rootState): Promise<void> {
       const {
         firefly: {
           start,
           end,
         },
+        transactions: {
+          transactions: oldTransactions,
+          page = 1,
+          totalPages = 1,
+        },
       } = rootState;
 
       const type = 'all';
-      const page = 1;
-      const { data: transactions, meta } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${page}&start=${start}&end=${end}&type=${type}` });
+      const currentPage = (endReached && page < totalPages) ? page + 1 : 1;
+      if (page < totalPages || !endReached) {
+        const {
+          data: transactions,
+          meta,
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
-      console.log(meta);
-
-      dispatch.transactions.setTransactions({ transactions });
+        dispatch.transactions.setTransactions({
+          transactions: (endReached && page < totalPages) ? [...oldTransactions, ...transactions] : transactions,
+          page: meta.pagination.current_page,
+          totalPages: meta.pagination.total_pages,
+        });
+      }
     },
 
     /**
@@ -76,8 +96,6 @@ export default createModel<RootModel>()({
     async createTransactions(payload, rootState) {
       const body = {
         transactions: [{
-          type: 'deposit',
-
           // TODO: Add support for:
           /* budget_id: '4', */
           /* category_id: '43', */

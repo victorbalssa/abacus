@@ -76,7 +76,7 @@ const Create = ({
         title: 'Success',
         status: 'success',
         variant: 'left-accent',
-        description: 'Transaction created.',
+        description: 'Transaction created. Click here to go to transactions list.',
         isClosable: false,
         onTouchEnd: () => goToTransactions(),
       });

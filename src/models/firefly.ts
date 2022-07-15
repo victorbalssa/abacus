@@ -203,7 +203,7 @@ export default createModel<RootModel>()({
       await Promise.all([
         dispatch.firefly.getSummaryBasic(0),
         dispatch.firefly.getDashboardBasic(0),
-        dispatch.transactions.getTransactions(0),
+        dispatch.transactions.getTransactions({ endReached: false }),
       ]);
     },
 
