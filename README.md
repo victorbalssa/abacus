@@ -28,6 +28,9 @@
 - No external API calls nor Analytics API, not even sentry / crashlytics.
 - Support the Net Worth by currency.
 - Chart to display history for each asset accounts.
+- List, Create, Update, Delete transactions.
+- Report new error to github.
+- Display source link.
 
 ---
 
