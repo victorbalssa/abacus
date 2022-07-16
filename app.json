@@ -21,7 +21,10 @@
     },
     "ios": {
       "buildNumber": "0.0.9",
-      "bundleIdentifier": "abacus.ios.app"
+      "bundleIdentifier": "abacus.ios.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "scheme": "abacusiosapp",
     "githubUrl": "https://github.com/victorbalssa/abacus"

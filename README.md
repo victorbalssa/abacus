@@ -12,7 +12,7 @@
 ![size](https://img.shields.io/github/repo-size/victorbalssa/abacus?style=for-the-badge)
 ![licence](https://img.shields.io/github/license/victorbalssa/abacus?style=for-the-badge)
 ![stars](https://img.shields.io/github/stars/victorbalssa/abacus?style=for-the-badge)
-[![sdk](https://img.shields.io/badge/SDK-44.0.0-blue?style=for-the-badge)](https://www.npmjs.com/package/expo)
+[![sdk](https://img.shields.io/badge/SDK-45.0.0-blue?style=for-the-badge)](https://www.npmjs.com/package/expo)
 [![sdk](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
   </sup>
@@ -29,14 +29,14 @@
 - Support the Net Worth by currency.
 - Chart to display history for each asset accounts.
 - List, Create, Update, Delete transactions.
-- Report new error to github.
+- Report new error to GitHub.
 - Display source link.
 
 ---
 
 ### 📡 Technologies
 
-- __Expo SDK 44__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
+- __Expo SDK 45__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
 - __Routing and navigation__ React Navigation V6. [https://reactnavigation.org/docs](https://reactnavigation.org/docs/getting-started)
 - __Redux architecture__
     - Rematch core [@rematch/core](https://github.com/rematch/rematch)
