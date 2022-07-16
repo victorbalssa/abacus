@@ -36,6 +36,7 @@ const Home = ({
         shadow={3}
         _contentContainerStyle={{
           alignItems: 'center',
+          flex: 1,
         }}
         refreshControl={(
           <RefreshControl
@@ -48,9 +49,8 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {netWorth.map((nw) => (
             <VStack
+              flex={1}
               key={nw.title}
-              minW={170}
-              maxW={170}
               height={65}
               margin={1}
               padding={3}
@@ -89,9 +89,8 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {spent.map((s) => (
             <VStack
+              flex={1}
               key={s.title}
-              minW={170}
-              maxW={170}
               height={65}
               margin={1}
               padding={3}
@@ -130,9 +129,8 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {balance.map((s) => (
             <VStack
+              flex={1}
               key={s.title}
-              minW={170}
-              maxW={170}
               height={65}
               margin={1}
               padding={3}
@@ -171,9 +169,8 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {earned.map((s) => (
             <VStack
+              flex={1}
               key={s.title}
-              minW={170}
-              maxW={170}
               height={65}
               margin={1}
               padding={3}

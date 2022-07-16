@@ -60,7 +60,7 @@ const TransactionForm = ({
   };
 
   return (
-    <VStack mx="3">
+    <VStack mx="3" pb={240}>
       <FormControl isRequired>
         <FormControl.Label>
           Type
