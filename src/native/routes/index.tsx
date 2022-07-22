@@ -105,6 +105,7 @@ const TabBarAdvancedButton = ({ onPress }) => (
       _icon={{
         as: AntDesign,
         name: 'edit',
+        size: 'xl',
       }}
       onPress={onPress}
       onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}

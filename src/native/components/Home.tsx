@@ -49,7 +49,7 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {netWorth.map((nw) => (
             <VStack
-              flex={1}
+              minW={165}
               key={nw.title}
               height={65}
               margin={1}
@@ -89,7 +89,7 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {spent.map((s) => (
             <VStack
-              flex={1}
+              minW={165}
               key={s.title}
               height={65}
               margin={1}
@@ -129,7 +129,7 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {balance.map((s) => (
             <VStack
-              flex={1}
+              minW={165}
               key={s.title}
               height={65}
               margin={1}
@@ -169,7 +169,7 @@ const Home = ({
         <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
           {earned.map((s) => (
             <VStack
-              flex={1}
+              minW={165}
               key={s.title}
               height={65}
               margin={1}

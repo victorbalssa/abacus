@@ -100,6 +100,7 @@ const Configuration = ({
         colorScheme="primary"
         isDisabled={!isValidHttpUrl(backendURL) || config.oauthClientId === ''}
         isLoading={loading}
+        isLoadingText="Submitting..."
         onPress={() => promptAsync()}
       >
         Sign In

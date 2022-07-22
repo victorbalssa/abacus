@@ -89,6 +89,13 @@ const theme = extendTheme({
         fontFamily: 'Montserrat_Bold',
       },
     },
+    IconButton: {
+      baseStyle: {
+        _icon: {
+          size: 'xl',
+        },
+      },
+    },
     Input: {
       baseStyle: {
         borderRadius: 15,
