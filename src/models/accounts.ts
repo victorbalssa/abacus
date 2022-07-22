@@ -46,6 +46,10 @@ export type AccountType = {
   type: string,
 }
 
+export type ApiAccountType = {
+  data: AccountType[],
+}
+
 export type AccountStateType = {
   accounts: AccountType[],
 }
@@ -82,7 +86,32 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async getAccounts(): Promise<void> {
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts' });
+      let { data: accounts, meta } = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts?page=1' });
+
+      const {
+        pagination: {
+          total_pages: totalPages,
+        },
+      } = meta;
+
+      // /!\ TODO: implement search select with /autocomplete endpoints https://api-docs.firefly-iii.org/#/autocomplete/getAccountsAC
+      if (totalPages > 1) {
+        const promises: Promise<ApiAccountType>[] = [];
+        for (let i = 2; i < totalPages + 1; i += 1) {
+          promises.push(dispatch.configuration.apiFetch({ url: `/api/v1/accounts?page=${i}` }));
+        }
+
+        const pageAccounts = await Promise.all(promises);
+
+        pageAccounts.forEach((a) => {
+          const { data } = a;
+
+          accounts = [...accounts, ...data];
+        });
+
+        dispatch.accounts.setAccounts({ accounts });
+        return;
+      }
 
       dispatch.accounts.setAccounts({ accounts });
     },

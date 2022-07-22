@@ -1,7 +1,7 @@
 {
   "name": "abacus",
   "homepage": "https://github.com/victorbalssa/abacus",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "private": true,
   "jest": {
     "preset": "jest-expo",

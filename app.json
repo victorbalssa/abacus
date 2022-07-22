@@ -7,7 +7,7 @@
     "platforms": [
       "ios"
     ],
-    "version": "0.0.9",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./src/images/icon-abacus.png",
     "splash": {
@@ -20,7 +20,7 @@
       "fallbackToCacheTimeout": 0
     },
     "ios": {
-      "buildNumber": "0.0.9",
+      "buildNumber": "0.1.0",
       "bundleIdentifier": "abacus.ios.app",
       "config": {
         "usesNonExemptEncryption": false

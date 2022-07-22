@@ -118,8 +118,8 @@ const TransactionForm = ({ accounts = [], loading, submit }) => {
             source_id: value,
           })}
         >
-          {accounts.filter((a) => ['asset', 'revenue'].includes(a.attributes.type)).map((a) => (
-            <Select.Item key={a.id} label={a.attributes.name} value={a.id} />))}
+          {accounts.filter((a) => ['asset', 'revenue'].includes(a.attributes?.type)).map((a) => (
+            <Select.Item key={a.id} label={a.attributes?.name} value={a.id} />))}
         </Select>
       </FormControl>
       <FormControl mt="1" isRequired isInvalid={'destination_id' in errors}>
@@ -137,8 +137,8 @@ const TransactionForm = ({ accounts = [], loading, submit }) => {
             destination_id: value,
           })}
         >
-          {accounts.filter((a) => ['asset', 'expense'].includes(a.attributes.type)).map((a) => (
-            <Select.Item key={a.id} label={a.attributes.name} value={a.id} />))}
+          {accounts.filter((a) => ['asset', 'expense'].includes(a.attributes?.type)).map((a) => (
+            <Select.Item key={a.id} label={a.attributes?.name} value={a.id} />))}
         </Select>
       </FormControl>
       <FormControl mt="1" isRequired>
