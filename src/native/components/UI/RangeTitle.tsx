@@ -22,15 +22,14 @@ const RangeTitle = ({
   <Box
     shadow={2}
     backgroundColor="white"
-    pl={4}
-    pr={4}
+    pl={3}
+    pr={3}
     zIndex={30}
     safeAreaTop
   >
     <HStack justifyContent="space-between" alignItems="center">
       <IconButton
         shadow={2}
-        size="sm"
         borderRadius={15}
         variant="solid"
         _icon={{
@@ -48,7 +47,7 @@ const RangeTitle = ({
           },
         }}
       />
-      <Box flex={1} pl={3} mt={1} height={41} justifyContent="center">
+      <Box pl={2} mt={1} height={41} width={170} justifyContent="center">
         <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 21 }}>
           {rangeTitle}
         </Text>
@@ -62,7 +61,7 @@ const RangeTitle = ({
         variant="outline"
         dropdownIcon={<></>}
         height={41}
-        width={78}
+        width={84}
         _selectedItem={{
           bg: 'primary.600',
           endIcon: <CheckIcon size="5" />,
@@ -78,7 +77,6 @@ const RangeTitle = ({
 
       <IconButton
         shadow={2}
-        size="sm"
         borderRadius={15}
         variant="solid"
         _icon={{

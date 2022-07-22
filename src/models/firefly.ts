@@ -181,19 +181,19 @@ export default createModel<RootModel>()({
 
       switch (rangeInt) {
         case 1:
-          rangeTitle = `${moment(start).utc().format('MMMM')} ${moment(start).utc().year()}.`;
+          rangeTitle = `${moment(end).format('MMM')} ${moment(end).year()}.`;
           break;
         case 3:
-          rangeTitle = `Q${moment(start).utc().quarter()} ${moment(start).utc().year()}.`;
+          rangeTitle = `Q${moment(start).quarter()} ${moment(start).year()}.`;
           break;
         case 6:
-          rangeTitle = `S${moment(start).utc().quarter() < 3 ? 1 : 2} ${moment(start).utc().year()}.`;
+          rangeTitle = `S${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
           break;
         case 12:
-          rangeTitle = `${moment(start).utc().year()} Year.`;
+          rangeTitle = `${moment(start).year()} Year.`;
           break;
         default:
-          rangeTitle = `${moment(start).utc().year()} Year.`;
+          rangeTitle = `${moment(start).year()} Year.`;
           break;
       }
 
