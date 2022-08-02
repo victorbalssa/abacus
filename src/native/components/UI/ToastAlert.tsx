@@ -6,13 +6,12 @@ import {
 } from 'native-base';
 
 const ToastAlert = ({
-  id,
   status,
   variant,
   title,
   description,
   onClose,
-  onPress,
+  onPress = () => {},
 }) => (
   <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status={status || 'info'} variant={variant}>
     <VStack space={1} flexShrink={1} w="100%">

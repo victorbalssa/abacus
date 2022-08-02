@@ -367,8 +367,8 @@ const TransactionForm = ({
         {'amount' in errors ? <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage> : <></>}
       </FormControl>
 
-      {success && <ToastAlert title="Success" id="success" status="success" variant="solid" onClose={() => setSuccess(false)} description="Transaction created. Click here to go to transactions list." onPress={goToTransactions} />}
-      {'global' in errors && <ToastAlert title="Error" id="error" status="error" variant="solid" onClose={() => setErrors({})} description={errors.global} />}
+      {success && <ToastAlert title="Success" status="success" variant="solid" onClose={() => setSuccess(false)} description="Transaction created. Click here to go to transactions list." onPress={goToTransactions} />}
+      {'global' in errors && <ToastAlert title="Error" status="error" variant="solid" onClose={() => setErrors({})} description={errors.global} />}
 
       <Button
         mt="3"
