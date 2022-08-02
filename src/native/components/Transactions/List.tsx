@@ -10,8 +10,8 @@ import {
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import moment from 'moment';
-import RangeTitle from './UI/RangeTitle';
-import colors from '../../constants/colors';
+import RangeTitle from '../UI/RangeTitle';
+import colors from '../../../constants/colors';
 
 type TransactionsType = {
   loading: boolean,

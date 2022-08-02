@@ -1,38 +1,59 @@
 import React from 'react';
+import { FlatList, Keyboard } from 'react-native';
 import {
-  Text,
   Button,
   FormControl,
+  HStack,
   IconButton,
   Input,
-  ScrollView,
-  VStack,
-  KeyboardAvoidingView,
-  HStack,
   Pressable,
   Spinner,
+  Text,
+  VStack,
 } from 'native-base';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { FlatList, Keyboard } from 'react-native';
-import Title from './UI/Title';
-import ToastAlert from './UI/ToastAlert';
+import { AntDesign } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import ToastAlert from '../UI/ToastAlert';
 
-const TransactionForm = ({
-  accounts = [], loading, getAutocompleteAccounts, loadingAutocomplete, submit, goToTransactions,
+type ErrorStateType = {
+  description: string,
+  source_name: string,
+  destination_name: string,
+  amount: string,
+  global: string,
+}
+
+const INITIAL_ERROR = {
+  description: '',
+  amount: '',
+  source_name: '',
+  destination_name: '',
+  global: '',
+} as ErrorStateType;
+
+const Form = ({
+  accounts = [],
+  loading,
+  getAutocompleteAccounts,
+  loadingAutocomplete,
+  submit,
+  goToTransactions,
+  payload,
 }) => {
   const [formData, setData] = React.useState({
-    description: '',
-    date: new Date(),
-    source_name: '',
-    destination_name: '',
-    amount: '',
-    type: 'deposit',
+    description: payload.description,
+    date: new Date(payload.date),
+    source_name: payload.source_name,
+    destination_name: payload.destination_name,
+    amount: payload.amount ? parseFloat(payload.amount).toFixed(payload.currency_decimal_places) : '',
+    type: payload.type,
   });
-  const [errors, setErrors] = React.useState({});
+  const [errors, setErrors] = React.useState(INITIAL_ERROR);
   const [success, setSuccess] = React.useState(false);
   const [displayAutocomplete, setDisplayAutocomplete] = React.useState({ source: false, destination: false });
+
+  const resetErrors = () => setErrors(INITIAL_ERROR);
 
   const validate = () => {
     if (formData.description === undefined) {
@@ -49,6 +70,13 @@ const TransactionForm = ({
       });
       return false;
     }
+    if (formData.amount === undefined || parseFloat(formData.amount) <= 0) {
+      setErrors({
+        ...errors,
+        amount: 'Amount is required.',
+      });
+      return false;
+    }
 
     return true;
   };
@@ -57,44 +85,20 @@ const TransactionForm = ({
     Keyboard.dismiss();
     if (validate()) {
       try {
-        setErrors({});
+        resetErrors();
         await submit(formData);
-        /*      toast.show({
-        placement: 'top',
-        render: ({ id }) => <ToastAlert title="Success" id={id} status="success" variant="accent" isClosable description="Transaction created. Click here to go to transactions list." />,
-        onTouchEnd: () => goToTransactions(),
-      }); */
         setSuccess(true);
       } catch (e) {
         setSuccess(false);
         if (e.response) {
-          console.log(e.response.data);
-          console.log(e.response.data.message);
           setErrors({
-            ...errors,
+            ...INITIAL_ERROR,
             global: e.response.data.message,
           });
-          /*        toast.show({
-          placement: 'top',
-          title: 'Something went wrong',
-          status: 'error',
-          description: e.response.data.message,
-        }); */
-        } else {
-          /*        toast.show({
-          placement: 'top',
-          title: 'Something went wrong',
-          status: 'error',
-          description: e.message,
-        }); */
         }
       }
-    } else {
-
     }
   };
-
-  console.log(formData);
 
   const colorItemTypes = {
     withdrawal: 'red.600',
@@ -135,7 +139,7 @@ const TransactionForm = ({
           </Button.Group>
         </HStack>
       </FormControl>
-      <FormControl mt="1" isRequired isInvalid={'description' in errors}>
+      <FormControl mt="1" isRequired isInvalid={errors.description !== ''}>
         <FormControl.Label>
           Description
         </FormControl.Label>
@@ -167,7 +171,7 @@ const TransactionForm = ({
         />
         {'description' in errors ? <FormControl.ErrorMessage>{errors.description}</FormControl.ErrorMessage> : <></>}
       </FormControl>
-      <FormControl mt="1" isRequired isInvalid={'source_name' in errors}>
+      <FormControl mt="1" isInvalid={errors.source_name !== ''}>
         <FormControl.Label>
           Source account
         </FormControl.Label>
@@ -208,40 +212,40 @@ const TransactionForm = ({
 
         {displayAutocomplete.source && loadingAutocomplete && <Spinner mt={2} />}
         {displayAutocomplete.source && !loadingAutocomplete && (
-        <FlatList
-          keyboardShouldPersistTaps="handled"
-          data={accounts}
-          renderItem={(a) => (
-            <Pressable
-              mx={2}
-              onPress={() => {
-                setData({
-                  ...formData,
-                  source_name: a.item.name,
-                });
-                setDisplayAutocomplete({ source: false, destination: false });
-              }}
-              _pressed={{
-                borderRadius: 15,
-                backgroundColor: 'gray.300',
-              }}
-            >
-              <HStack
-                justifyContent="space-between"
-                key={a.index}
+          <FlatList
+            keyboardShouldPersistTaps="handled"
+            data={accounts}
+            renderItem={(a) => (
+              <Pressable
                 mx={2}
-                my={2}
+                onPress={() => {
+                  setData({
+                    ...formData,
+                    source_name: a.item.name,
+                  });
+                  setDisplayAutocomplete({ source: false, destination: false });
+                }}
+                _pressed={{
+                  borderRadius: 15,
+                  backgroundColor: 'gray.300',
+                }}
               >
-                <Text underline>
-                  {a.item.name_with_balance || 'no name'}
-                </Text>
-              </HStack>
-            </Pressable>
-          )}
-        />
+                <HStack
+                  justifyContent="space-between"
+                  key={a.index}
+                  mx={2}
+                  my={2}
+                >
+                  <Text underline>
+                    {a.item.name_with_balance || 'no name'}
+                  </Text>
+                </HStack>
+              </Pressable>
+            )}
+          />
         )}
       </FormControl>
-      <FormControl mt="1" isRequired isInvalid={'destination_name' in errors}>
+      <FormControl mt="1" isInvalid={errors.destination_name !== ''}>
         <FormControl.Label>
           Destination account
         </FormControl.Label>
@@ -330,7 +334,7 @@ const TransactionForm = ({
           })}
         />
       </FormControl>
-      <FormControl mt="1" isRequired isInvalid={'amount' in errors}>
+      <FormControl mt="1" isRequired isInvalid={errors.amount !== ''}>
         <FormControl.Label>
           Amount
         </FormControl.Label>
@@ -368,7 +372,7 @@ const TransactionForm = ({
       </FormControl>
 
       {success && <ToastAlert title="Success" status="success" variant="solid" onClose={() => setSuccess(false)} description="Transaction created. Click here to go to transactions list." onPress={goToTransactions} />}
-      {'global' in errors && <ToastAlert title="Error" status="error" variant="solid" onClose={() => setErrors({})} description={errors.global} />}
+      {errors.global !== '' && <ToastAlert title="Error" status="error" variant="solid" onClose={resetErrors} description={errors.global} />}
 
       <Button
         mt="3"
@@ -384,7 +388,7 @@ const TransactionForm = ({
             amount: '',
             type: 'deposit',
           });
-          setErrors({});
+          resetErrors();
         }}
       >
         Reset
@@ -424,36 +428,4 @@ const TransactionForm = ({
   );
 };
 
-const Create = ({
-  loading,
-  accounts,
-  submit,
-  getAutocompleteAccounts,
-  loadingAutocomplete,
-  navigation,
-  goToTransactions,
-}) => (
-  <>
-    <Title navigation={navigation} text="New Transaction" />
-    <KeyboardAvoidingView
-      h={{
-        base: '100%',
-        lg: 'auto',
-      }}
-      behavior="padding"
-    >
-      <ScrollView flex={1} p={1} keyboardShouldPersistTaps="handled">
-        <TransactionForm
-          loading={loading}
-          accounts={accounts}
-          getAutocompleteAccounts={getAutocompleteAccounts}
-          loadingAutocomplete={loadingAutocomplete}
-          submit={submit}
-          goToTransactions={goToTransactions}
-        />
-      </ScrollView>
-    </KeyboardAvoidingView>
-  </>
-);
-
-export default Create;
+export default Form;

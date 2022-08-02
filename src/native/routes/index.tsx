@@ -13,9 +13,9 @@ import OauthContainer from '../../containers/Oauth';
 import ConfigurationContainer from '../../containers/Configuration';
 import HomeContainer from '../../containers/Home';
 import ChartContainer from '../../containers/Chart';
-import TransactionsContainer from '../../containers/Transactions';
-import TransactionsEditContainer from '../../containers/TransactionsEdit';
-import TransactionsCreateContainer from '../../containers/Create';
+import TransactionsListContainer from '../../containers/Transactions/List';
+import TransactionsEditContainer from '../../containers/Transactions/Edit';
+import TransactionsCreateContainer from '../../containers/Transactions/Create';
 import colors from '../../constants/colors';
 
 const Stack = createNativeStackNavigator();
@@ -129,7 +129,7 @@ const TransactionNavigator = () => (
   <Stack2.Navigator screenOptions={{ headerShown: false }}>
     <Stack2.Screen
       name="TransactionsList"
-      component={TransactionsContainer}
+      component={TransactionsListContainer}
     />
   </Stack2.Navigator>
 );

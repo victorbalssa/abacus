@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as Updates from 'expo-updates';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { useAuthRequest, TokenResponse } from 'expo-auth-session';
@@ -50,8 +49,6 @@ const OauthContainer = ({
   getFreshAccessToken,
 }: OauthContainerType) => {
   const toast = useToast();
-  const [isOTAOpen, setOTAOpen] = React.useState(false);
-  const onOTAClose = () => setOTAOpen(false);
 
   const [config, setConfig] = useState<OauthConfig>({
     oauthClientId: '',
@@ -109,7 +106,6 @@ const OauthContainer = ({
           toast.show({
             placement: 'top',
             title: 'Error',
-            status: 'error',
             description: e.message,
           });
         }
@@ -123,7 +119,6 @@ const OauthContainer = ({
         toast.show({
           placement: 'top',
           title: 'Info',
-          status: 'info',
           description: 'Authentication cancel, check Client ID & backend URL.',
         });
       }
@@ -145,7 +140,6 @@ const OauthContainer = ({
           toast.show({
             placement: 'top',
             title: 'Success',
-            status: 'success',
             description: 'Secure connexion ready with your FireflyIII instance.',
           });
           await faceIdCheck();
@@ -153,7 +147,6 @@ const OauthContainer = ({
           toast.show({
             placement: 'top',
             title: 'Something went wrong',
-            status: 'error',
             description: `Failed to get accessToken, ${e.message}`,
           });
         }

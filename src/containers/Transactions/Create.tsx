@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useToast } from 'native-base';
 
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../native/components/Create';
-import { Dispatch, RootState } from '../store';
+import Layout from '../../native/components/Transactions/Create';
+import { Dispatch, RootState } from '../../store';
 
 const mapStateToProps = (state: RootState) => ({
   loading: state.loading.models.transactions,
@@ -40,8 +39,6 @@ const Create = ({
   getCurrencies,
   createTransactions,
 }: CreateContainerType) => {
-  const toast = useToast();
-
   const fetchData = async () => {
     try {
       await Promise.all([
@@ -50,11 +47,7 @@ const Create = ({
         getCurrencies(),
       ]);
     } catch (e) {
-      toast.show({
-        placement: 'top',
-        title: 'Something went wrong',
-        description: e.message,
-      });
+      // catch 401
     }
   };
 
@@ -62,11 +55,7 @@ const Create = ({
     try {
       await getTransactions({ endReached: false });
     } catch (e) {
-      toast.show({
-        placement: 'top',
-        title: 'Something went wrong',
-        description: e.message,
-      });
+      // catch 401
     }
   };
 

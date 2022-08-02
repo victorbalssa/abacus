@@ -1,6 +1,9 @@
 import React, { Dispatch } from 'react';
 import {
-  Input, Box, FormControl, Button, AlertDialog,
+  Input,
+  Box,
+  FormControl,
+  Button,
 } from 'native-base';
 import { KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -23,10 +26,6 @@ const Oauth = ({
   loading,
   faceId,
   faceIdCheck,
-  isOTAOpen,
-  onOTAUpdate,
-  onOTAClose,
-  OTARef,
   config,
   setConfig,
   promptAsync,

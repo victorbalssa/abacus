@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useToast } from 'native-base';
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../native/components/Transactions';
-import { Dispatch, RootState } from '../store';
+import Layout from '../../native/components/Transactions/List';
+import { Dispatch, RootState } from '../../store';
 
 const mapStateToProps = (state: RootState) => ({
   loading: state.loading.models.transactions,
@@ -12,16 +12,14 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: dispatch.transactions.getTransactions,
-  updateTransactions: dispatch.transactions.updateTransactions,
   deleteTransaction: dispatch.transactions.deleteTransaction,
 });
 
-const Transactions = ({
+const List = ({
   loading,
   navigation,
   transactions,
   getTransactions,
-  updateTransactions,
   deleteTransaction,
 }) => {
   const toast = useToast();
@@ -58,7 +56,6 @@ const Transactions = ({
       toast.show({
         placement: 'top',
         title: 'Something went wrong',
-        status: 'error',
         description: e.message,
       });
     }
@@ -72,7 +69,6 @@ const Transactions = ({
       toast.show({
         placement: 'top',
         title: 'Something went wrong',
-        status: 'error',
         description: e.message,
       });
     }
@@ -94,4 +90,4 @@ const Transactions = ({
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Transactions);
+export default connect(mapStateToProps, mapDispatchToProps)(List);
