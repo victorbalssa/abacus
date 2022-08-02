@@ -54,8 +54,12 @@ const Configuration = ({
         <Text>{Constants.manifest.version} (BETA)</Text>
       </HStack>
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
-        <Text>Report an issue</Text>
-        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/new')} underline>New</Text>
+        <Text>Error report</Text>
+        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/issues/new')} underline>New issue</Text>
+      </HStack>
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
+        <Text>Feature request</Text>
+        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/new')} underline>New discussion</Text>
       </HStack>
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between">
         <Text>Sources</Text>
