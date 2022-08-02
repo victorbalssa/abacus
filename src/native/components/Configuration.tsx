@@ -1,16 +1,19 @@
 import React from 'react';
-
 import {
-  Input, Box, FormControl, Stack, Button, VStack, Icon, Text, HStack, Heading,
+  Box,
+  Stack,
+  Text,
+  HStack,
+  Heading,
+  Switch,
 } from 'native-base';
 import * as Linking from 'expo-linking';
 import Constants from 'expo-constants';
-
-import { KeyboardAvoidingView } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { AntDesign } from '@expo/vector-icons';
 
 type ConfigurationComponent = {
+  faceId: boolean,
+  setFaceId: () => Promise<void>,
   loading: boolean,
   resetApp: () => Promise<void>,
   backendURL: string,
@@ -18,6 +21,8 @@ type ConfigurationComponent = {
 
 const Configuration = ({
   loading,
+  faceId,
+  setFaceId,
   resetApp,
   backendURL,
 }: ConfigurationComponent) => (
@@ -31,6 +36,10 @@ const Configuration = ({
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
         <Text>Help</Text>
         <AntDesign name="arrowright" size={24} color="gray" onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} />
+      </HStack>
+      <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
+        <Text>Face ID Lock</Text>
+        <Switch isChecked={faceId} onToggle={setFaceId} colorScheme="primary" />
       </HStack>
       <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between">
         <Text>Clear & Reset Application</Text>

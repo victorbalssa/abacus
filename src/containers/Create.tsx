@@ -8,14 +8,13 @@ import { Dispatch, RootState } from '../store';
 
 const mapStateToProps = (state: RootState) => ({
   loading: state.loading.models.transactions,
-  accounts: state.accounts.accounts,
-  budgets: state.budgets.budgets,
-  categories: state.categories.categories,
-  currencies: state.currencies.currencies,
+  accounts: state.accounts.autocompleteAccounts,
+  loadingAutocomplete: state.loading.effects.accounts.getAutocompleteAccounts,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getAccounts: dispatch.accounts.getAccounts,
+  getTransactions: dispatch.transactions.getTransactions,
+  getAutocompleteAccounts: dispatch.accounts.getAutocompleteAccounts,
   getBudgets: dispatch.budgets.getBudgets,
   getCategories: dispatch.categories.getCategories,
   getCurrencies: dispatch.currencies.getCurrencies,
@@ -33,10 +32,9 @@ const Create = ({
   loading,
   navigation,
   accounts,
-  budgets,
-  categories,
-  currencies,
-  getAccounts,
+  getTransactions,
+  getAutocompleteAccounts,
+  loadingAutocomplete,
   getBudgets,
   getCategories,
   getCurrencies,
@@ -47,7 +45,6 @@ const Create = ({
   const fetchData = async () => {
     try {
       await Promise.all([
-        getAccounts(),
         getBudgets(),
         getCategories(),
         getCurrencies(),
@@ -56,48 +53,30 @@ const Create = ({
       toast.show({
         placement: 'top',
         title: 'Something went wrong',
-        status: 'error',
         description: e.message,
       });
     }
   };
 
-  const goToTransactions = () => navigation.dispatch(
-    CommonActions.navigate({
-      name: 'Transactions',
-    }),
-  );
-
-  const submit = async (payload) => {
+  const fetchTransactions = async () => {
     try {
-      await createTransactions(payload);
+      await getTransactions({ endReached: false });
+    } catch (e) {
       toast.show({
         placement: 'top',
-        title: 'Success',
-        status: 'success',
-        variant: 'left-accent',
-        description: 'Transaction created. Click here to go to transactions list.',
-        isClosable: false,
-        onTouchEnd: () => goToTransactions(),
+        title: 'Something went wrong',
+        description: e.message,
       });
-    } catch (e) {
-      if (e.response) {
-        console.log(e.response.data);
-        toast.show({
-          placement: 'top',
-          title: 'Something went wrong',
-          status: 'error',
-          description: e.response.data.message,
-        });
-      } else {
-        toast.show({
-          placement: 'top',
-          title: 'Something went wrong',
-          status: 'error',
-          description: e.message,
-        });
-      }
     }
+  };
+
+  const goToTransactions = async () => {
+    await fetchTransactions();
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: 'Transactions',
+      }),
+    );
   };
 
   useEffect(() => {
@@ -108,10 +87,11 @@ const Create = ({
     <Layout
       loading={loading}
       accounts={accounts}
-      budgets={budgets}
-      categories={categories}
-      currencies={currencies}
-      submit={submit}
+      goToTransactions={goToTransactions}
+      getAutocompleteAccounts={getAutocompleteAccounts}
+      loadingAutocomplete={loadingAutocomplete}
+      submit={createTransactions}
+      navigation={navigation}
     />
   );
 };

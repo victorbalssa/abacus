@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-
 import { connect } from 'react-redux';
+import * as Updates from 'expo-updates';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { useAuthRequest, TokenResponse } from 'expo-auth-session';
 import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
 import Layout from '../native/components/Oauth';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
@@ -14,6 +15,7 @@ import { RootState, Dispatch } from '../store';
 
 const mapStateToProps = (state: RootState) => ({
   backendURL: state.configuration.backendURL,
+  faceId: state.configuration.faceId,
   loading: state.loading.models.firefly,
 });
 
@@ -39,6 +41,7 @@ export type OauthConfig = {
 
 const OauthContainer = ({
   loading,
+  faceId,
   navigation,
   backendURL,
   setBackendURL,
@@ -47,6 +50,8 @@ const OauthContainer = ({
   getFreshAccessToken,
 }: OauthContainerType) => {
   const toast = useToast();
+  const [isOTAOpen, setOTAOpen] = React.useState(false);
+  const onOTAClose = () => setOTAOpen(false);
 
   const [config, setConfig] = useState<OauthConfig>({
     oauthClientId: '',
@@ -67,7 +72,7 @@ const OauthContainer = ({
     discovery(backendURL),
   );
 
-  const goToDashboard = () => navigation.dispatch(
+  const goToHome = () => navigation.dispatch(
     CommonActions.reset({
       index: 0,
       routes: [
@@ -75,6 +80,17 @@ const OauthContainer = ({
       ],
     }),
   );
+
+  const faceIdCheck = async () => {
+    if (faceId) {
+      const bioAuth = await LocalAuthentication.authenticateAsync();
+      if (bioAuth.success) {
+        goToHome();
+      }
+    } else {
+      goToHome();
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -88,9 +104,7 @@ const OauthContainer = ({
             await getFreshAccessToken(storageValue.refreshToken);
           }
 
-          await testAccessToken();
-
-          goToDashboard();
+          await faceIdCheck();
         } catch (e) {
           toast.show({
             placement: 'top',
@@ -134,7 +148,7 @@ const OauthContainer = ({
             status: 'success',
             description: 'Secure connexion ready with your FireflyIII instance.',
           });
-          goToDashboard();
+          await faceIdCheck();
         } catch (e) {
           toast.show({
             placement: 'top',
@@ -150,6 +164,8 @@ const OauthContainer = ({
   return (
     <Layout
       loading={loading}
+      faceId={faceId}
+      faceIdCheck={faceIdCheck}
       config={config}
       setConfig={setConfig}
       promptAsync={async () => {

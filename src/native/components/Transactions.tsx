@@ -186,7 +186,9 @@ const Basic = ({
       previewDuration={300}
       */
       contentContainerStyle={{
-        paddingBottom: 340,
+        paddingTop: 5,
+        paddingHorizontal: 5,
+        paddingBottom: 300,
       }}
       ListFooterComponent={(
         <>

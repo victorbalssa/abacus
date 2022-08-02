@@ -1,30 +1,37 @@
 import React from 'react';
 import {
-  HStack,
-  Box,
   Text,
-  Select,
-  CheckIcon, IconButton,
+  IconButton,
+  HStack,
 } from 'native-base';
-import { connect } from 'react-redux';
-import moment from 'moment';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Dispatch, RootState } from '../../../store';
 
-const Title = ({ text }) => (
-  <Box
-    height={104}
+const Title = ({ text, navigation }) => (
+  <HStack
     shadow={2}
     backgroundColor="white"
+    py={3}
     px={5}
-    justifyContent="center"
-    safeAreaTop
+    justifyContent="space-between"
+    alignItems="center"
   >
-    <Text numberOfLines={1} style={{ fontFamily: 'Montserrat_Bold', fontSize: 21, lineHeight: 40 }}>
+    <Text numberOfLines={2} style={{ fontFamily: 'Montserrat_Bold', fontSize: 21, lineHeight: 40, maxWidth: 270 }}>
       {text}
     </Text>
-  </Box>
+    <IconButton
+      shadow={2}
+      borderRadius={15}
+      width={10}
+      variant="solid"
+      _icon={{
+        as: AntDesign,
+        name: 'arrowdown',
+      }}
+      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+      onPress={() => navigation.pop()}
+    />
+  </HStack>
 );
 
 export default Title;

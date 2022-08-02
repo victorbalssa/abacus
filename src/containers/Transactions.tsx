@@ -26,9 +26,10 @@ const Transactions = ({
 }) => {
   const toast = useToast();
 
+  // TODO: do not pass entire payload into this modal
   const goToEdit = (id, payload) => navigation.dispatch(
     CommonActions.navigate({
-      name: 'TransactionsEdit',
+      name: 'TransactionsEditModal',
       params: {
         id,
         payload,
@@ -44,7 +45,6 @@ const Transactions = ({
       toast.show({
         placement: 'top',
         title: 'Something went wrong',
-        status: 'error',
         description: e.message,
       });
     }

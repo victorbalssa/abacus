@@ -6,13 +6,15 @@ import { Dispatch, RootState } from '../store';
 
 const mapStateToProps = (state: RootState) => ({
   loading: state.loading.models.transactions,
-  accounts: state.accounts.accounts,
   budgets: state.budgets.budgets,
   categories: state.categories.categories,
   currencies: state.currencies.currencies,
+  accounts: state.accounts.autocompleteAccounts,
+  loadingAutocomplete: state.loading.effects.accounts.getAutocompleteAccounts,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  getAutocompleteAccounts: dispatch.accounts.getAutocompleteAccounts,
   updateTransactions: dispatch.transactions.updateTransactions,
   deleteTransaction: dispatch.transactions.deleteTransaction,
 });
@@ -22,6 +24,8 @@ const TransactionsEdit = ({
   navigation,
   route,
   accounts,
+  getAutocompleteAccounts,
+  loadingAutocomplete,
   updateTransactions,
   deleteTransaction,
 }) => {
@@ -85,7 +89,10 @@ const TransactionsEdit = ({
       payload={payload}
       onDeleteTransaction={onDeleteTransaction}
       submit={onEdit}
+      getAutocompleteAccounts={getAutocompleteAccounts}
+      loadingAutocomplete={loadingAutocomplete}
       accounts={accounts}
+      navigation={navigation}
     />
   );
 };

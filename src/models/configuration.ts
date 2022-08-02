@@ -7,11 +7,13 @@ import { RootModel } from './index';
 export type ConfigurationStateType = {
   backendURL: string,
   scrollEnabled: boolean,
+  faceId: boolean,
 }
 
 const INITIAL_STATE = {
   backendURL: '',
   scrollEnabled: true,
+  faceId: false,
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -23,6 +25,13 @@ export default createModel<RootModel>()({
       return {
         ...state,
         backendURL: payload,
+      };
+    },
+
+    setFaceId(state): ConfigurationStateType {
+      return {
+        ...state,
+        faceId: !state.faceId,
       };
     },
 
@@ -47,7 +56,7 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetConfiguration() {
+    resetState() {
       return INITIAL_STATE;
     },
   },
@@ -65,9 +74,11 @@ export default createModel<RootModel>()({
 
       if (backendURL) {
         console.log('GET  ', `${backendURL}${url}`);
-        const { data } = await axios.get(`${backendURL}${url}`, config);
+        const response = await axios.get(`${backendURL}${url}`, config);
 
-        return data;
+        if (response.data) return response.data;
+
+        return response;
       }
 
       throw new Error('No backend URL defined.');
@@ -142,8 +153,13 @@ export default createModel<RootModel>()({
         SecureStore.deleteItemAsync(secureKeys.tokens),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
       ]);
-      dispatch.firefly.resetFireflyIII();
-      dispatch.configuration.resetConfiguration();
+      dispatch.accounts.resetState();
+      dispatch.budgets.resetState();
+      dispatch.categories.resetState();
+      dispatch.configuration.resetState();
+      dispatch.currencies.resetState();
+      dispatch.firefly.resetState();
+      dispatch.transactions.resetState();
     },
   }),
 });

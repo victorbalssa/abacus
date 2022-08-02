@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 import OauthContainer from '../../containers/Oauth';
 import ConfigurationContainer from '../../containers/Configuration';
@@ -14,12 +15,13 @@ import HomeContainer from '../../containers/Home';
 import ChartContainer from '../../containers/Chart';
 import TransactionsContainer from '../../containers/Transactions';
 import TransactionsEditContainer from '../../containers/TransactionsEdit';
-import CreateContainer from '../../containers/Create';
+import TransactionsCreateContainer from '../../containers/Create';
 import colors from '../../constants/colors';
 
 const Stack = createNativeStackNavigator();
-const Stack2 = createNativeStackNavigator();
+const Stack2 = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const windowHeight = Dimensions.get('window').height;
 
 const MyTheme = {
   ...DefaultTheme,
@@ -124,14 +126,10 @@ const TabBarAdvancedButton = ({ onPress }) => (
 );
 
 const TransactionNavigator = () => (
-  <Stack2.Navigator initialRouteName="TransactionsList" screenOptions={{ headerShown: false }}>
-    <Stack.Screen
+  <Stack2.Navigator screenOptions={{ headerShown: false }}>
+    <Stack2.Screen
       name="TransactionsList"
       component={TransactionsContainer}
-    />
-    <Stack.Screen
-      name="TransactionsEdit"
-      component={TransactionsEditContainer}
     />
   </Stack2.Navigator>
 );
@@ -187,12 +185,12 @@ const Home = () => (
     />
     <Tab.Screen
       name="Create"
-      component={CreateContainer}
-      options={{
-        tabBarButton: ({ onPress }) => (
-          <TabBarAdvancedButton onPress={onPress} />
+      component={HomeContainer}
+      options={({ navigation }) => ({
+        tabBarButton: () => (
+          <TabBarAdvancedButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
         ),
-      }}
+      })}
     />
     <Tab.Screen
       name="Transactions"
@@ -221,6 +219,24 @@ const Index = (
         name="dashboard"
         component={Home}
       />
+      <Stack2.Group
+        screenOptions={{
+          headerShown: false,
+          presentation: 'modal',
+          gestureEnabled: true,
+          gestureResponseDistance: windowHeight,
+          ...TransitionPresets.ModalPresentationIOS,
+        }}
+      >
+        <Stack2.Screen
+          name="TransactionsEditModal"
+          component={TransactionsEditContainer}
+        />
+        <Stack2.Screen
+          name="TransactionsCreateModal"
+          component={TransactionsCreateContainer}
+        />
+      </Stack2.Group>
     </Stack.Navigator>
   </NavigationContainer>
 );
