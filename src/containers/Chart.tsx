@@ -47,7 +47,6 @@ const Chart = ({
       toast.show({
         placement: 'top',
         title: 'Something went wrong',
-        status: 'error',
         description: e.message,
       });
     }

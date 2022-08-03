@@ -38,14 +38,6 @@ const RangeTitle = ({
         }}
         onPress={() => handleChangeRange({ direction: -1 })}
         onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.95,
-            }],
-            opacity: 0.95,
-          },
-        }}
       />
       <Box pl={2} mt={1} height={41} width={170} justifyContent="center">
         <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 21 }}>
@@ -85,14 +77,6 @@ const RangeTitle = ({
         }}
         onPress={() => handleChangeRange({ direction: 1 })}
         onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.95,
-            }],
-            opacity: 0.95,
-          },
-        }}
       />
     </HStack>
   </Box>

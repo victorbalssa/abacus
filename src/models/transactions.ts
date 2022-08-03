@@ -48,7 +48,7 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetConfiguration() {
+    resetState() {
       return INITIAL_STATE;
     },
   },

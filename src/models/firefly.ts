@@ -44,7 +44,7 @@ const INITIAL_STATE = {
   start: getCurrentDate(),
   end: getCurrentDate(),
   range: 3,
-  rangeTitle: 'Q2 2022',
+  rangeTitle: '',
   netWorth: [],
   spent: [],
   earned: [],
@@ -108,7 +108,7 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetFireflyIII() {
+    resetState() {
       return INITIAL_STATE;
     },
   },
@@ -200,11 +200,9 @@ export default createModel<RootModel>()({
       dispatch.firefly.setRange({ range, rangeTitle });
       dispatch.firefly.setData({ start, end });
 
-      await Promise.all([
-        dispatch.firefly.getSummaryBasic(0),
-        dispatch.firefly.getDashboardBasic(0),
-        dispatch.transactions.getTransactions({ endReached: false }),
-      ]);
+      dispatch.firefly.getSummaryBasic(0);
+      dispatch.firefly.getDashboardBasic(0);
+      dispatch.transactions.getTransactions({ endReached: false });
     },
 
     /**
