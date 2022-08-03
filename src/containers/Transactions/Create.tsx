@@ -42,9 +42,9 @@ const Create = ({
   const fetchData = async () => {
     try {
       await Promise.all([
-        getBudgets(),
+/*        getBudgets(),
         getCategories(),
-        getCurrencies(),
+        getCurrencies(),*/
       ]);
     } catch (e) {
       // catch 401
