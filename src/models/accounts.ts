@@ -46,16 +46,30 @@ export type AccountType = {
   type: string,
 }
 
+export type AutocompleteAccounts = {
+  id: string,
+  name: string,
+  name_with_balance: string,
+  type: string,
+  currency_id: string,
+  currency_name: string,
+  currency_code: string,
+  currency_symbol: string,
+  currency_decimal_places: number,
+}
+
 export type ApiAccountType = {
   data: AccountType[],
 }
 
 export type AccountStateType = {
   accounts: AccountType[],
+  autocompleteAccounts: AutocompleteAccounts[],
 }
 
 const INITIAL_STATE = {
   accounts: [],
+  autocompleteAccounts: [],
 } as AccountStateType;
 
 export default createModel<RootModel>()({
@@ -74,7 +88,18 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetConfiguration() {
+    setAutocompleteAccounts(state, payload): AccountStateType {
+      const {
+        autocompleteAccounts = state.autocompleteAccounts,
+      } = payload;
+
+      return {
+        ...state,
+        autocompleteAccounts,
+      };
+    },
+
+    resetState() {
       return INITIAL_STATE;
     },
   },
@@ -86,34 +111,30 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async getAccounts(): Promise<void> {
-      let { data: accounts, meta } = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts?page=1' });
-
-      const {
-        pagination: {
-          total_pages: totalPages,
-        },
-      } = meta;
-
-      // /!\ TODO: implement search select with /autocomplete endpoints https://api-docs.firefly-iii.org/#/autocomplete/getAccountsAC
-      if (totalPages > 1) {
-        const promises: Promise<ApiAccountType>[] = [];
-        for (let i = 2; i < totalPages + 1; i += 1) {
-          promises.push(dispatch.configuration.apiFetch({ url: `/api/v1/accounts?page=${i}` }));
-        }
-
-        const pageAccounts = await Promise.all(promises);
-
-        pageAccounts.forEach((a) => {
-          const { data } = a;
-
-          accounts = [...accounts, ...data];
-        });
-
-        dispatch.accounts.setAccounts({ accounts });
-        return;
-      }
+      const accounts = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts?page=1' });
 
       dispatch.accounts.setAccounts({ accounts });
+    },
+
+    /**
+     * Get autocomplete accounts with query
+     *
+     * @returns {Promise}
+     */
+    async getAutocompleteAccounts(payload): Promise<void> {
+      const limit = 5;
+      const {
+        query,
+        isDestination,
+      } = payload;
+      const type = isDestination ? 'Expense%20account' : 'Revenue%20account';
+      const autocompleteAccounts = await dispatch.configuration.apiFetch(
+        { url: `/api/v1/autocomplete/accounts?types=Asset%20account,${type},Loan,Debt,Mortgage&limit=${limit}&query=${query}` },
+      );
+
+      console.log('autocompleteAccounts', autocompleteAccounts);
+
+      dispatch.accounts.setAutocompleteAccounts({ autocompleteAccounts });
     },
   }),
 });

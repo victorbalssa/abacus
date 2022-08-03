@@ -1,6 +1,9 @@
 import React, { Dispatch } from 'react';
 import {
-  Input, Box, FormControl, Button,
+  Input,
+  Box,
+  FormControl,
+  Button,
 } from 'native-base';
 import { KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -8,17 +11,21 @@ import * as Haptics from 'expo-haptics';
 import { isValidHttpUrl } from '../../lib/common';
 import { OauthConfig } from '../../containers/Oauth';
 
-interface ConfigurationComponent {
-  loading: boolean
-  config: OauthConfig
-  setConfig: Dispatch<OauthConfig>
-  promptAsync: () => Promise<void>
-  backendURL: string
-  setBackendURL: (state: string) => Promise<void>
+type ConfigurationComponent = {
+  loading: boolean,
+  faceId: boolean,
+  faceIdCheck: () => Promise<void>,
+  config: OauthConfig,
+  setConfig: Dispatch<OauthConfig>,
+  promptAsync: () => Promise<void>,
+  backendURL: string,
+  setBackendURL: (state: string) => Promise<void>,
 }
 
-const Configuration = ({
+const Oauth = ({
   loading,
+  faceId,
+  faceIdCheck,
   config,
   setConfig,
   promptAsync,
@@ -53,7 +60,7 @@ const Configuration = ({
           })}
         />
       </FormControl>
-      <FormControl isRequired>
+      <FormControl>
         <FormControl.Label>Oauth Client Secret</FormControl.Label>
         <Input
           returnKeyType="done"
@@ -98,15 +105,47 @@ const Configuration = ({
           size: 10,
         }}
         colorScheme="primary"
-        isDisabled={!isValidHttpUrl(backendURL) || config.oauthClientId === ''}
+        isDisabled={!isValidHttpUrl(backendURL)}
         isLoading={loading}
         isLoadingText="Submitting..."
         onPress={() => promptAsync()}
       >
         Sign In
       </Button>
+      {faceId && (
+      <Button
+        mt="2"
+        shadow={2}
+        borderRadius={15}
+        onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        _pressed={{
+          style: {
+            transform: [{
+              scale: 0.99,
+            }],
+          },
+        }}
+        _loading={{
+          bg: 'primary.50',
+          _text: {
+            color: 'white',
+          },
+          alignItems: 'flex-start',
+          opacity: 1,
+        }}
+        _spinner={{
+          color: 'white',
+          size: 10,
+        }}
+        colorScheme="coolGray"
+        isLoading={loading}
+        onPress={() => faceIdCheck()}
+      >
+        Face ID
+      </Button>
+      )}
     </Box>
   </KeyboardAvoidingView>
 );
 
-export default Configuration;
+export default Oauth;

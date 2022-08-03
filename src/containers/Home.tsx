@@ -27,7 +27,7 @@ type HomeContainerType = {
   earned: HomeDisplayType[],
   getSummary: () => Promise<void>,
   getDashboard: () => Promise<void>,
-  handleChangeRange: (value: object) => Promise<void>,
+  handleChangeRange: (value?: object) => Promise<void>,
 };
 
 const Home = ({
@@ -43,7 +43,7 @@ const Home = ({
   const toast = useToast();
 
   useEffect(() => {
-    (async () => handleChangeRange({ range: '3' }))();
+    (async () => handleChangeRange())();
   }, []);
 
   const fetchData = async () => {
@@ -53,7 +53,6 @@ const Home = ({
       toast.show({
         placement: 'top',
         title: 'Something went wrong',
-        status: 'error',
         description: e.message,
       });
     }

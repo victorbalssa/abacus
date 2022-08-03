@@ -2,19 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
 import Layout from '../native/components/Configuration';
-import {Dispatch} from "../store";
+import { Dispatch } from '../store';
 
 const mapStateToProps = (state) => ({
   backendURL: state.configuration.backendURL,
+  faceId: state.configuration.faceId,
   loading: state.loading.models.configuration,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   resetAllStorage: dispatch.configuration.resetAllStorage,
+  setFaceId: dispatch.configuration.setFaceId,
 });
 
-interface ConfigurationContainerType extends
-  ReturnType<typeof mapStateToProps>,
+interface ConfigurationContainerType extends ReturnType<typeof mapStateToProps>,
   ReturnType<typeof mapDispatchToProps> {
   navigation: { dispatch: (action) => void },
   loading: boolean,
@@ -26,6 +27,8 @@ const ConfigurationContainer = ({
   navigation,
   backendURL,
   resetAllStorage,
+  faceId,
+  setFaceId,
 }: ConfigurationContainerType) => {
   const resetApp = async () => {
     await resetAllStorage();
@@ -44,6 +47,8 @@ const ConfigurationContainer = ({
       loading={loading}
       backendURL={backendURL}
       resetApp={resetApp}
+      faceId={faceId}
+      setFaceId={setFaceId}
     />
   );
 };

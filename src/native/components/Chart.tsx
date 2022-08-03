@@ -16,6 +16,9 @@ type ChartType = {
   start: string,
   end: string,
   filterData: () => Promise<void>,
+  enableScroll: () => Promise<void>,
+  disableScroll: () => Promise<void>,
+  scrollEnabled: boolean,
 }
 
 const Chart = ({

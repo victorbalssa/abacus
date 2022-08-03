@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { connect } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
@@ -7,6 +6,7 @@ import { useAuthRequest, TokenResponse } from 'expo-auth-session';
 import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
 import Layout from '../native/components/Oauth';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
@@ -14,6 +14,7 @@ import { RootState, Dispatch } from '../store';
 
 const mapStateToProps = (state: RootState) => ({
   backendURL: state.configuration.backendURL,
+  faceId: state.configuration.faceId,
   loading: state.loading.models.firefly,
 });
 
@@ -39,6 +40,7 @@ export type OauthConfig = {
 
 const OauthContainer = ({
   loading,
+  faceId,
   navigation,
   backendURL,
   setBackendURL,
@@ -67,7 +69,7 @@ const OauthContainer = ({
     discovery(backendURL),
   );
 
-  const goToDashboard = () => navigation.dispatch(
+  const goToHome = () => navigation.dispatch(
     CommonActions.reset({
       index: 0,
       routes: [
@@ -75,6 +77,17 @@ const OauthContainer = ({
       ],
     }),
   );
+
+  const faceIdCheck = async () => {
+    if (faceId) {
+      const bioAuth = await LocalAuthentication.authenticateAsync();
+      if (bioAuth.success) {
+        goToHome();
+      }
+    } else {
+      goToHome();
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -88,14 +101,11 @@ const OauthContainer = ({
             await getFreshAccessToken(storageValue.refreshToken);
           }
 
-          await testAccessToken();
-
-          goToDashboard();
+          await faceIdCheck();
         } catch (e) {
           toast.show({
             placement: 'top',
             title: 'Error',
-            status: 'error',
             description: e.message,
           });
         }
@@ -109,7 +119,6 @@ const OauthContainer = ({
         toast.show({
           placement: 'top',
           title: 'Info',
-          status: 'info',
           description: 'Authentication cancel, check Client ID & backend URL.',
         });
       }
@@ -131,15 +140,13 @@ const OauthContainer = ({
           toast.show({
             placement: 'top',
             title: 'Success',
-            status: 'success',
             description: 'Secure connexion ready with your FireflyIII instance.',
           });
-          goToDashboard();
+          await faceIdCheck();
         } catch (e) {
           toast.show({
             placement: 'top',
             title: 'Something went wrong',
-            status: 'error',
             description: `Failed to get accessToken, ${e.message}`,
           });
         }
@@ -150,6 +157,8 @@ const OauthContainer = ({
   return (
     <Layout
       loading={loading}
+      faceId={faceId}
+      faceIdCheck={faceIdCheck}
       config={config}
       setConfig={setConfig}
       promptAsync={async () => {

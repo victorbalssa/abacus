@@ -1,15 +1,20 @@
 import React from 'react';
 import * as Font from 'expo-font';
-
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { LogBox } from 'react-native';
-import { extendTheme, NativeBaseProvider } from 'native-base';
+import {
+  AlertDialog,
+  Button,
+  extendTheme,
+  NativeBaseProvider,
+} from 'native-base';
 import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Store, Persistor } from '../store';
+import * as Updates from 'expo-updates';
 
+import { Store, Persistor } from '../store';
 import colors from '../constants/colors';
 import Routes from './routes/index';
 import Loading from './components/UI/Loading';
@@ -94,6 +99,14 @@ const theme = extendTheme({
         _icon: {
           size: 'xl',
         },
+        _pressed: {
+          style: {
+            transform: [{
+              scale: 0.95,
+            }],
+            opacity: 0.95,
+          },
+        },
       },
     },
     Input: {
@@ -112,6 +125,7 @@ type AppPropsType = {
 
 type AppStateType = {
   loading: boolean,
+  isOTAOpen: boolean,
 };
 
 export default class App extends React.Component<AppPropsType, AppStateType> {
@@ -120,11 +134,33 @@ export default class App extends React.Component<AppPropsType, AppStateType> {
 
     this.state = {
       loading: true,
+      isOTAOpen: false,
     };
   }
 
   async componentDidMount() {
     await this.loadAssets();
+    await this.onCheckOTA();
+  }
+
+  async onOTAUpdate() {
+    try {
+      await Updates.fetchUpdateAsync();
+      await Updates.reloadAsync();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async onCheckOTA() {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        this.setState({ isOTAOpen: true });
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async loadAssets() {
@@ -141,7 +177,13 @@ export default class App extends React.Component<AppPropsType, AppStateType> {
       store,
       persistor,
     } = this.props;
-    const { loading } = this.state;
+    const {
+      loading,
+      isOTAOpen,
+    } = this.state;
+
+    const OTARef = React.createRef();
+
     LogBox.ignoreAllLogs(true);
 
     return (
@@ -163,6 +205,26 @@ export default class App extends React.Component<AppPropsType, AppStateType> {
               {loading === false && Routes}
             </PersistGate>
           </Provider>
+
+          <AlertDialog leastDestructiveRef={OTARef} isOpen={isOTAOpen} onClose={() => this.setState({ isOTAOpen: false })}>
+            <AlertDialog.Content>
+              <AlertDialog.CloseButton />
+              <AlertDialog.Header>New Update Available</AlertDialog.Header>
+              <AlertDialog.Body>
+                You can always update later in Settings tab.
+              </AlertDialog.Body>
+              <AlertDialog.Footer>
+                <Button.Group>
+                  <Button variant="unstyled" colorScheme="coolGray" onPress={() => this.setState({ isOTAOpen: false })} ref={OTARef}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme="primary" onPress={this.onOTAUpdate}>
+                    Update now
+                  </Button>
+                </Button.Group>
+              </AlertDialog.Footer>
+            </AlertDialog.Content>
+          </AlertDialog>
         </NativeBaseProvider>
       </AnimatedSplash>
     );

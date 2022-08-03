@@ -7,7 +7,7 @@
     "platforms": [
       "ios"
     ],
-    "version": "0.1.0",
+    "version": "0.2.1",
     "orientation": "portrait",
     "icon": "./src/images/icon-abacus.png",
     "splash": {
@@ -16,12 +16,14 @@
     },
     "updates": {
       "enabled": true,
-      "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
+      "checkAutomatically": "ON_ERROR_RECOVERY"
     },
     "ios": {
-      "buildNumber": "0.1.0",
+      "buildNumber": "0.2.1",
       "bundleIdentifier": "abacus.ios.app",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID"
+      },
       "config": {
         "usesNonExemptEncryption": false
       }
