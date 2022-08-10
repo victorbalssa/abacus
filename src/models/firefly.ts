@@ -120,7 +120,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async handleChangeRange(payload, rootState) {
+    async handleChangeRange(payload = {}, rootState) {
       const {
         firefly: {
           start: oldStart,
@@ -197,11 +197,14 @@ export default createModel<RootModel>()({
           break;
       }
 
+      console.log('RANGE', range, rangeTitle);
+      console.log('DATE', start, end);
+
       dispatch.firefly.setRange({ range, rangeTitle });
       dispatch.firefly.setData({ start, end });
 
-      dispatch.firefly.getSummaryBasic(0);
-      dispatch.firefly.getDashboardBasic(0);
+      dispatch.firefly.getSummaryBasic();
+      dispatch.firefly.getDashboardBasic();
       dispatch.transactions.getTransactions({ endReached: false });
     },
 
@@ -210,7 +213,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getSummaryBasic(payload, rootState) {
+    async getSummaryBasic(_: void, rootState) {
       const {
         firefly: {
           start,
@@ -251,7 +254,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getDashboardBasic(payload, rootState) {
+    async getDashboardBasic(_: void, rootState) {
       const {
         firefly: {
           start,
@@ -280,8 +283,8 @@ export default createModel<RootModel>()({
               y: value,
             };
           });
-        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string}) => (o.y)).y;
-        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string}) => (o.y)).y;
+        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
+        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
       });
 
       this.setData({ accounts });

@@ -1,45 +1,27 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../../native/components/Transactions/Edit';
-import { Dispatch, RootState } from '../../store';
+import Layout from '../../components/Transactions/Edit';
+import { RootDispatch, RootState } from '../../store';
+import { ContainerPropType } from '../types';
 
-const mapStateToProps = (state: RootState) => ({
-  loading: state.loading.models.transactions,
-  budgets: state.budgets.budgets,
-  categories: state.categories.categories,
-  currencies: state.currencies.currencies,
-  accounts: state.accounts.autocompleteAccounts,
-  loadingAutocomplete: state.loading.effects.accounts.getAutocompleteAccounts,
-});
+const Edit: FC = ({ navigation, route }: ContainerPropType) => {
+  const loading = useSelector((state: RootState) => state.loading.models.transactions);
+  const accounts = useSelector((state: RootState) => state.accounts.autocompleteAccounts);
+  const loadingAutocomplete = useSelector((state: RootState) => state.loading.effects.accounts.getAutocompleteAccounts);
+  const dispatch = useDispatch<RootDispatch>();
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getAutocompleteAccounts: dispatch.accounts.getAutocompleteAccounts,
-  updateTransactions: dispatch.transactions.updateTransactions,
-  getTransactions: dispatch.transactions.getTransactions,
-});
-
-const Edit = ({
-  loading,
-  navigation,
-  route,
-  accounts,
-  getAutocompleteAccounts,
-  loadingAutocomplete,
-  updateTransactions,
-  getTransactions,
-}) => {
   const { payload } = route.params;
 
   const onEdit = async (transaction) => {
     const { id } = route.params;
 
-    await updateTransactions({ id, transaction });
+    await dispatch.transactions.updateTransactions({ id, transaction });
   };
 
   const fetchTransactions = async () => {
     try {
-      await getTransactions({ endReached: false });
+      await dispatch.transactions.getTransactions({ endReached: false });
     } catch (e) {
       // catch 401
     }
@@ -56,16 +38,16 @@ const Edit = ({
 
   return (
     <Layout
-      loading={loading}
-      payload={payload}
-      submit={onEdit}
-      goToTransactions={goToTransactions}
-      getAutocompleteAccounts={getAutocompleteAccounts}
-      loadingAutocomplete={loadingAutocomplete}
-      accounts={accounts}
       navigation={navigation}
+      loading={loading}
+      loadingAutocomplete={loadingAutocomplete}
+      payload={payload}
+      accounts={accounts}
+      goToTransactions={goToTransactions}
+      getAutocompleteAccounts={dispatch.accounts.getAutocompleteAccounts}
+      onEdit={onEdit}
     />
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Edit);
+export default Edit;

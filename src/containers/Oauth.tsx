@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { useAuthRequest, TokenResponse } from 'expo-auth-session';
@@ -7,50 +7,25 @@ import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
-import Layout from '../native/components/Oauth';
+
+import Layout from '../components/Oauth';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
-import { RootState, Dispatch } from '../store';
+import { RootState, RootDispatch } from '../store';
+import { ContainerPropType, OauthConfigType } from './types';
 
-const mapStateToProps = (state: RootState) => ({
-  backendURL: state.configuration.backendURL,
-  faceId: state.configuration.faceId,
-  loading: state.loading.models.firefly,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setBackendURL: dispatch.configuration.setBackendURL,
-  testAccessToken: dispatch.firefly.testAccessToken,
-  getFreshAccessToken: dispatch.firefly.getFreshAccessToken,
-  getNewAccessToken: dispatch.firefly.getNewAccessToken,
-});
-
-interface OauthContainerType extends
-  ReturnType<typeof mapStateToProps>,
-  ReturnType<typeof mapDispatchToProps> {
-  navigation: { dispatch: (action) => void },
-  loading: boolean,
-  backendURL: string,
-}
-
-export type OauthConfig = {
-  oauthClientId: string,
-  oauthClientSecret: string,
-}
-
-const OauthContainer = ({
-  loading,
-  faceId,
-  navigation,
-  backendURL,
-  setBackendURL,
-  testAccessToken,
-  getNewAccessToken,
-  getFreshAccessToken,
-}: OauthContainerType) => {
+const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
+  const loading = useSelector((state: RootState) => state.loading.models.firefly);
+  const configuration = useSelector((state: RootState) => state.configuration);
+  const dispatch = useDispatch<RootDispatch>();
 
-  const [config, setConfig] = useState<OauthConfig>({
+  const {
+    backendURL,
+    faceId,
+  } = configuration;
+
+  const [config, setConfig] = useState<OauthConfigType>({
     oauthClientId: '',
     oauthClientSecret: '',
   });
@@ -93,12 +68,12 @@ const OauthContainer = ({
     (async () => {
       const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
       const storageValue = JSON.parse(tokens);
-      if (storageValue && storageValue.accessToken) {
+      if (storageValue && storageValue.accessToken && backendURL) {
         axios.defaults.headers.Authorization = `Bearer ${storageValue.accessToken}`;
 
         try {
           if (!TokenResponse.isTokenFresh(storageValue)) {
-            await getFreshAccessToken(storageValue.refreshToken);
+            await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
           }
 
           await faceIdCheck();
@@ -134,13 +109,13 @@ const OauthContainer = ({
           };
           Keyboard.dismiss();
 
-          await getNewAccessToken(payload);
-          await testAccessToken();
+          await dispatch.firefly.getNewAccessToken(payload);
+          await dispatch.firefly.testAccessToken();
 
           toast.show({
             placement: 'top',
             title: 'Success',
-            description: 'Secure connexion ready with your FireflyIII instance.',
+            description: 'Secure connexion ready with your Firefly III instance.',
           });
           await faceIdCheck();
         } catch (e) {
@@ -156,20 +131,16 @@ const OauthContainer = ({
 
   return (
     <Layout
+      config={config}
       loading={loading}
       faceId={faceId}
-      faceIdCheck={faceIdCheck}
-      config={config}
-      setConfig={setConfig}
-      promptAsync={async () => {
-        await promptAsync();
-      }}
       backendURL={backendURL}
-      setBackendURL={async (value) => {
-        await setBackendURL(value);
-      }}
+      faceIdCheck={faceIdCheck}
+      setConfig={setConfig}
+      promptAsync={promptAsync}
+      setBackendURL={dispatch.configuration.setBackendURL}
     />
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OauthContainer);
+export default OauthContainer;

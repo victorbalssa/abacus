@@ -7,8 +7,8 @@ import {
   VStack,
   ScrollView,
 } from 'native-base';
-import colors from '../../constants/colors';
-import { HomeDisplayType } from '../../models/firefly';
+import colors from '../constants/colors';
+import { HomeDisplayType } from '../models/firefly';
 import RangeTitle from './UI/RangeTitle';
 
 type DashboardType = {

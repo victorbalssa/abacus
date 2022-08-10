@@ -1,48 +1,22 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from 'native-base';
-import Layout from '../native/components/Chart';
-import { Dispatch, RootState } from '../store';
+import Layout from '../components/Chart';
+import { RootDispatch, RootState } from '../store';
 
-const mapStateToProps = (state: RootState) => ({
-  range: state.firefly.range,
-  start: state.firefly.start,
-  end: state.firefly.end,
-  netWorth: state.firefly.netWorth,
-  spent: state.firefly.spent,
-  earned: state.firefly.earned,
-  balance: state.firefly.balance,
-  accounts: state.firefly.accounts,
-  loading: state.loading.models.firefly,
-  scrollEnabled: state.configuration.scrollEnabled,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  filterData: dispatch.firefly.filterData,
-  handleChangeRange: dispatch.firefly.handleChangeRange,
-  getSummary: dispatch.firefly.getSummaryBasic,
-  getDashboard: dispatch.firefly.getDashboardBasic,
-  disableScroll: dispatch.configuration.disableScroll,
-  enableScroll: dispatch.configuration.enableScroll,
-});
-
-const Chart = ({
-  loading,
-  start,
-  end,
-  accounts,
-  getSummary,
-  getDashboard,
-  filterData,
-  disableScroll,
-  enableScroll,
-  scrollEnabled,
-}) => {
+const Chart: FC = () => {
   const toast = useToast();
+  const loading = useSelector((state: RootState) => state.loading.models.firefly);
+  const configuration = useSelector((state: RootState) => state.configuration);
+  const firefly = useSelector((state: RootState) => state.firefly);
+  const dispatch = useDispatch<RootDispatch>();
 
   const fetchData = async () => {
     try {
-      await Promise.all([getSummary(), getDashboard()]);
+      await Promise.all([
+        dispatch.firefly.getSummaryBasic(),
+        dispatch.firefly.getDashboardBasic(),
+      ]);
     } catch (e) {
       toast.show({
         placement: 'top',
@@ -55,16 +29,16 @@ const Chart = ({
   return (
     <Layout
       loading={loading}
-      start={start}
-      end={end}
-      accounts={accounts}
+      start={firefly.start}
+      end={firefly.end}
+      accounts={firefly.accounts}
+      scrollEnabled={configuration.scrollEnabled}
       fetchData={fetchData}
-      filterData={filterData}
-      enableScroll={enableScroll}
-      disableScroll={disableScroll}
-      scrollEnabled={scrollEnabled}
+      filterData={dispatch.firefly.filterData}
+      enableScroll={dispatch.configuration.enableScroll}
+      disableScroll={dispatch.configuration.disableScroll}
     />
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Chart);
+export default Chart;

@@ -1,37 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../native/components/Configuration';
-import { Dispatch } from '../store';
 
-const mapStateToProps = (state) => ({
-  backendURL: state.configuration.backendURL,
-  faceId: state.configuration.faceId,
-  loading: state.loading.models.configuration,
-});
+import Layout from '../components/Configuration';
+import { RootDispatch, RootState } from '../store';
+import { ContainerPropType } from './types';
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  resetAllStorage: dispatch.configuration.resetAllStorage,
-  setFaceId: dispatch.configuration.setFaceId,
-});
+const ConfigurationContainer: FC = ({ navigation }: ContainerPropType) => {
+  const configuration = useSelector((state: RootState) => state.configuration);
+  const dispatch = useDispatch<RootDispatch>();
 
-interface ConfigurationContainerType extends ReturnType<typeof mapStateToProps>,
-  ReturnType<typeof mapDispatchToProps> {
-  navigation: { dispatch: (action) => void },
-  loading: boolean,
-  backendURL: string,
-}
-
-const ConfigurationContainer = ({
-  loading,
-  navigation,
-  backendURL,
-  resetAllStorage,
-  faceId,
-  setFaceId,
-}: ConfigurationContainerType) => {
   const resetApp = async () => {
-    await resetAllStorage();
+    await dispatch.configuration.resetAllStorage();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -44,13 +24,12 @@ const ConfigurationContainer = ({
 
   return (
     <Layout
-      loading={loading}
-      backendURL={backendURL}
+      backendURL={configuration.backendURL}
+      faceId={configuration.faceId}
       resetApp={resetApp}
-      faceId={faceId}
-      setFaceId={setFaceId}
+      setFaceId={dispatch.configuration.setFaceId}
     />
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConfigurationContainer);
+export default ConfigurationContainer;

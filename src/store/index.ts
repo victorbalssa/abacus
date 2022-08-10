@@ -22,5 +22,5 @@ export const store = init({
 export const persistor = getPersistor();
 export type Store = typeof store
 export type Persistor = typeof persistor
-export type Dispatch = RematchDispatch<RootModel>
+export type RootDispatch = RematchDispatch<RootModel>
 export type RootState = RematchRootState<RootModel, FullModel>

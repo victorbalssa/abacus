@@ -11,7 +11,7 @@ const Edit = ({
   loading,
   payload,
   accounts,
-  submit,
+  onEdit,
   getAutocompleteAccounts,
   loadingAutocomplete,
   navigation,
@@ -34,7 +34,7 @@ const Edit = ({
           goToTransactions={goToTransactions}
           getAutocompleteAccounts={getAutocompleteAccounts}
           loadingAutocomplete={loadingAutocomplete}
-          submit={submit}
+          submit={onEdit}
         />
       </ScrollView>
     </KeyboardAvoidingView>

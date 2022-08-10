@@ -1,28 +1,16 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from 'native-base';
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../../native/components/Transactions/List';
-import { Dispatch, RootState } from '../../store';
+import Layout from '../../components/Transactions/List';
+import { RootDispatch, RootState } from '../../store';
+import { ContainerPropType } from '../types';
 
-const mapStateToProps = (state: RootState) => ({
-  loading: state.loading.models.transactions,
-  transactions: state.transactions.transactions,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getTransactions: dispatch.transactions.getTransactions,
-  deleteTransaction: dispatch.transactions.deleteTransaction,
-});
-
-const List = ({
-  loading,
-  navigation,
-  transactions,
-  getTransactions,
-  deleteTransaction,
-}) => {
+const List: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
+  const loading = useSelector((state: RootState) => state.loading.models.transactions);
+  const transactions = useSelector((state: RootState) => state.transactions.transactions);
+  const dispatch = useDispatch<RootDispatch>();
 
   // TODO: do not pass entire payload into this modal
   const goToEdit = (id, payload) => navigation.dispatch(
@@ -37,7 +25,7 @@ const List = ({
 
   const onRefresh = () => {
     try {
-      getTransactions({ endReached: false });
+      dispatch.transactions.getTransactions({ endReached: false });
     } catch (e) {
       console.error(e);
       toast.show({
@@ -50,7 +38,7 @@ const List = ({
 
   const onDeleteTransaction = async (id) => {
     try {
-      await deleteTransaction({ id });
+      await dispatch.transactions.deleteTransaction({ id });
     } catch (e) {
       console.error(e);
       toast.show({
@@ -63,7 +51,7 @@ const List = ({
 
   const onEndReached = () => {
     try {
-      getTransactions({ endReached: true });
+      dispatch.transactions.getTransactions({ endReached: true });
     } catch (e) {
       console.error(e);
       toast.show({
@@ -90,4 +78,4 @@ const List = ({
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default List;

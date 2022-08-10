@@ -1,29 +1,31 @@
 import React from 'react';
 import { RefreshControl } from 'react-native';
 import {
-  Box, HStack, Icon, Pressable, Text,
-  ScrollView, VStack, Spacer, Skeleton,
+  Box,
+  HStack,
+  Icon,
+  Pressable,
+  Text,
+  VStack,
+  Skeleton,
 } from 'native-base';
 import {
-  Entypo, Feather, MaterialCommunityIcons, MaterialIcons,
+  MaterialCommunityIcons,
+  MaterialIcons,
 } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import moment from 'moment';
 import RangeTitle from '../UI/RangeTitle';
-import colors from '../../../constants/colors';
-
-type TransactionsType = {
-  loading: boolean,
-  transactions: [],
-  onRefresh: () => void,
-  onDeleteTransaction: (id: string) => Promise<void>,
-  onEndReached: () => void,
-  onPressItem: (id: string, payload: {}) => void,
-}
+import colors from '../../constants/colors';
 
 const Basic = ({
-  loading, onRefresh, transactions, onDeleteTransaction, onEndReached, onPressItem,
+  loading,
+  onRefresh,
+  transactions,
+  onDeleteTransaction,
+  onEndReached,
+  onPressItem,
 }) => {
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
@@ -241,7 +243,7 @@ const Transactions = ({
   onDeleteTransaction,
   onEndReached,
   onPressItem,
-}: TransactionsType) => (
+}) => (
   <>
     <RangeTitle />
     <Box flex={1}>
