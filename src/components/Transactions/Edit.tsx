@@ -13,6 +13,7 @@ const Edit = ({
   accounts,
   onEdit,
   getAutocompleteAccounts,
+  getAutocompleteDescription,
   loadingAutocomplete,
   navigation,
   goToTransactions,
@@ -33,6 +34,7 @@ const Edit = ({
           accounts={accounts}
           goToTransactions={goToTransactions}
           getAutocompleteAccounts={getAutocompleteAccounts}
+          getAutocompleteDescription={getAutocompleteDescription}
           loadingAutocomplete={loadingAutocomplete}
           submit={onEdit}
         />

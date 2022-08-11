@@ -46,6 +46,7 @@ const Edit: FC = ({ navigation, route }: ContainerPropType) => {
       accounts={accounts}
       goToTransactions={goToTransactions}
       getAutocompleteAccounts={dispatch.accounts.getAutocompleteAccounts}
+      getAutocompleteDescription={dispatch.accounts.getAutocompleteDescriptions}
       onEdit={onEdit}
     />
   );

@@ -35,7 +35,9 @@ const INITIAL_ERROR = {
 const Form = ({
   accounts = [],
   loading,
+  descriptions = [],
   getAutocompleteAccounts,
+  getAutocompleteDescription,
   loadingAutocomplete,
   submit,
   goToTransactions,
@@ -51,7 +53,7 @@ const Form = ({
   });
   const [errors, setErrors] = React.useState(INITIAL_ERROR);
   const [success, setSuccess] = React.useState(false);
-  const [displayAutocomplete, setDisplayAutocomplete] = React.useState({ source: false, destination: false });
+  const [displayAutocomplete, setDisplayAutocomplete] = React.useState({ description: false, source: false, destination: false });
 
   const resetErrors = () => setErrors(INITIAL_ERROR);
 
@@ -147,10 +149,18 @@ const Form = ({
           returnKeyType="done"
           placeholder="Description"
           value={formData.description}
-          onChangeText={(value) => setData({
-            ...formData,
-            description: value,
-          })}
+          onChangeText={(value) => {
+            setData({
+              ...formData,
+              description: value,
+            });
+            getAutocompleteDescription({ query: value });
+          }}
+          onFocus={() => {
+            getAutocompleteDescription({ query: formData.description });
+            setDisplayAutocomplete({ description: true, source: false, destination: false });
+          }}
+          onBlur={() => setDisplayAutocomplete({ description: false, source: false, destination: false })}
           InputRightElement={(
             <IconButton
               p={2}
@@ -170,6 +180,41 @@ const Form = ({
           )}
         />
         {'description' in errors ? <FormControl.ErrorMessage>{errors.description}</FormControl.ErrorMessage> : <></>}
+
+        {displayAutocomplete.description && loadingAutocomplete && <Spinner mt={2} />}
+        {displayAutocomplete.description && !loadingAutocomplete && (
+          <FlatList
+            keyboardShouldPersistTaps="handled"
+            data={descriptions}
+            renderItem={(a) => (
+              <Pressable
+                mx={2}
+                onPress={() => {
+                  setData({
+                    ...formData,
+                    description: a.item.name,
+                  });
+                  setDisplayAutocomplete({ description: false, source: false, destination: false });
+                }}
+                _pressed={{
+                  borderRadius: 15,
+                  backgroundColor: 'gray.300',
+                }}
+              >
+                <HStack
+                  justifyContent="space-between"
+                  key={a.index}
+                  mx={2}
+                  my={2}
+                >
+                  <Text underline>
+                    {a.item.name || 'no name'}
+                  </Text>
+                </HStack>
+              </Pressable>
+            )}
+          />
+        )}
       </FormControl>
       <FormControl mt="1" isInvalid={errors.source_name !== ''}>
         <FormControl.Label>
