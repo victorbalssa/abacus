@@ -97,6 +97,8 @@ export default createModel<RootModel>()({
     },
 
     filterData(state, payload) {
+      throw new Error('ARFF, fdsjkfljdskl');
+
       const { index: filterIndex } = payload;
       const { accounts } = state;
       const newAccounts = accounts.map((d) => (d));

@@ -1,22 +1,20 @@
 import { init, RematchDispatch, RematchRootState } from '@rematch/core';
-import createPersistPlugin, { getPersistor } from '@rematch/persist';
-import createLoadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
+import persistPlugin, { getPersistor } from '@rematch/persist';
+import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { models, RootModel } from '../models';
 
-const persistPlugin = createPersistPlugin({
+const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: [],
-});
+};
 
-type FullModel = ExtraModelsFromLoading<RootModel>
+type FullModel = ExtraModelsFromLoading<RootModel, { type: 'full' }>
 
-const loadingPlugin = createLoadingPlugin({});
-
-export const store = init({
+export const store = init<RootModel, FullModel>({
   models,
-  plugins: [persistPlugin, loadingPlugin],
+  plugins: [persistPlugin(persistConfig), loadingPlugin({ type: 'full' })],
 });
 
 export const persistor = getPersistor();

@@ -18,6 +18,7 @@ import { store, persistor } from './store';
 import colors from './constants/colors';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
+import ErrorWidget from "./components/UI/ErrorWidget";
 
 const config = {
   dependencies: {

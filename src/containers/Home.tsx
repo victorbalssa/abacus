@@ -1,34 +1,22 @@
 import React, { useEffect, FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useToast } from 'native-base';
 
 import Layout from '../components/Home';
 import { RootDispatch, RootState } from '../store';
 
 const Home: FC = () => {
-  const toast = useToast();
-  const loading = useSelector((state: RootState) => state.loading.models.firefly);
+  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const firefly = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
-    dispatch.firefly.handleChangeRange({});
+    dispatch.firefly.handleChangeRange({}).catch();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      await Promise.all([
-        dispatch.firefly.getSummaryBasic(),
-        dispatch.firefly.getDashboardBasic(),
-      ]);
-    } catch (e) {
-      toast.show({
-        placement: 'top',
-        title: 'Something went wrong',
-        description: e.message,
-      });
-    }
-  };
+  const fetchData = () => Promise.all([
+    dispatch.firefly.getSummaryBasic(),
+    dispatch.firefly.getDashboardBasic(),
+  ]).catch();
 
   return (
     <Layout

@@ -11,6 +11,7 @@ import moment from 'moment';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { RootDispatch, RootState } from '../../store';
+import ErrorWidget from "./ErrorWidget";
 
 const RangeTitle: FC = () => {
   const firefly = useSelector((state: RootState) => state.firefly);
@@ -64,6 +65,8 @@ const RangeTitle: FC = () => {
           <Select.Item key="6" label="Semiannually" value="6" />
           <Select.Item key="12" label="Yearly" value="12" />
         </Select>
+
+        <ErrorWidget />
 
         <IconButton
           shadow={2}

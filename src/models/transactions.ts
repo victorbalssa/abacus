@@ -154,10 +154,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async deleteTransaction(payload, rootState) {
-      const {
-        id,
-      } = payload;
+    async deleteTransaction(id, rootState) {
       const {
         transactions: {
           transactions,

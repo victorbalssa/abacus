@@ -13,10 +13,11 @@ import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import { RootState, RootDispatch } from '../store';
 import { ContainerPropType, OauthConfigType } from './types';
+import ToastAlert from '../components/UI/ToastAlert';
 
 const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
-  const loading = useSelector((state: RootState) => state.loading.models.firefly);
+  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const configuration = useSelector((state: RootState) => state.configuration);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -79,9 +80,15 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
           await faceIdCheck();
         } catch (e) {
           toast.show({
-            placement: 'top',
-            title: 'Error',
-            description: e.message,
+            render: ({ id }) => (
+              <ToastAlert
+                onClose={() => toast.close(id)}
+                title="Something went wrong"
+                status="error"
+                variant="solid"
+                description={`Failed to get accessToken, ${e.message}`}
+              />
+            ),
           });
         }
       }
@@ -92,9 +99,15 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
     (async () => {
       if (result?.type === 'cancel') {
         toast.show({
-          placement: 'top',
-          title: 'Info',
-          description: 'Authentication cancel, check Client ID & backend URL.',
+          render: ({ id }) => (
+            <ToastAlert
+              onClose={() => toast.close(id)}
+              title="Info"
+              status="info"
+              variant="solid"
+              description="Authentication cancel, check Client ID & backend URL."
+            />
+          ),
         });
       }
       if (result?.type === 'success') {
@@ -113,16 +126,28 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
           await dispatch.firefly.testAccessToken();
 
           toast.show({
-            placement: 'top',
-            title: 'Success',
-            description: 'Secure connexion ready with your Firefly III instance.',
+            render: ({ id }) => (
+              <ToastAlert
+                onClose={() => toast.close(id)}
+                title="Success"
+                status="success"
+                variant="solid"
+                description="Secure connexion ready with your Firefly III instance."
+              />
+            ),
           });
           await faceIdCheck();
         } catch (e) {
           toast.show({
-            placement: 'top',
-            title: 'Something went wrong',
-            description: `Failed to get accessToken, ${e.message}`,
+            render: ({ id }) => (
+              <ToastAlert
+                onClose={() => toast.close(id)}
+                title="Something went wrong"
+                status="error"
+                variant="solid"
+                description={`Failed to get accessToken, ${e.message}`}
+              />
+            ),
           });
         }
       }
