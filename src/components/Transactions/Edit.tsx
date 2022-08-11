@@ -11,6 +11,7 @@ const Edit = ({
   loading,
   payload,
   accounts,
+  descriptions,
   onEdit,
   getAutocompleteAccounts,
   getAutocompleteDescription,
@@ -32,6 +33,7 @@ const Edit = ({
           payload={payload}
           loading={loading}
           accounts={accounts}
+          descriptions={descriptions}
           goToTransactions={goToTransactions}
           getAutocompleteAccounts={getAutocompleteAccounts}
           getAutocompleteDescription={getAutocompleteDescription}

@@ -9,7 +9,8 @@ import { ContainerPropType } from '../types';
 const Edit: FC = ({ navigation, route }: ContainerPropType) => {
   const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
   const accounts = useSelector((state: RootState) => state.accounts.autocompleteAccounts);
-  const { loading: loadingAutocomplete } = useSelector((state: RootState) => state.loading.effects.accounts.getAutocompleteAccounts);
+  const descriptions = useSelector((state: RootState) => state.accounts.autocompleteDescriptions);
+  const { loading: loadingAutocomplete } = useSelector((state: RootState) => state.loading.models.accounts);
   const dispatch = useDispatch<RootDispatch>();
 
   const { payload } = route.params;
@@ -44,6 +45,7 @@ const Edit: FC = ({ navigation, route }: ContainerPropType) => {
       loadingAutocomplete={loadingAutocomplete}
       payload={payload}
       accounts={accounts}
+      descriptions={descriptions}
       goToTransactions={goToTransactions}
       getAutocompleteAccounts={dispatch.accounts.getAutocompleteAccounts}
       getAutocompleteDescription={dispatch.accounts.getAutocompleteDescriptions}

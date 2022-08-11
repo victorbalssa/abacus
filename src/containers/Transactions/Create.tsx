@@ -10,7 +10,7 @@ const Create: FC = ({ navigation }: ContainerPropType) => {
   const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
   const accounts = useSelector((state: RootState) => state.accounts.autocompleteAccounts);
   const descriptions = useSelector((state: RootState) => state.accounts.autocompleteDescriptions);
-  const { loading: loadingAutocomplete } = useSelector((state: RootState) => state.loading.effects.accounts.getAutocompleteAccounts);
+  const { loading: loadingAutocomplete } = useSelector((state: RootState) => state.loading.models.accounts);
   const dispatch = useDispatch<RootDispatch>();
 
   const goToTransactions = () => {
