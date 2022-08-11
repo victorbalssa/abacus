@@ -233,9 +233,9 @@ const Form = ({
           }}
           onFocus={() => {
             getAutocompleteAccounts({ query: formData.source_name, isDestination: false });
-            setDisplayAutocomplete({ source: true, destination: false });
+            setDisplayAutocomplete({ description: false, source: true, destination: false });
           }}
-          onBlur={() => setDisplayAutocomplete({ source: false, destination: false })}
+          onBlur={() => setDisplayAutocomplete({ description: false, source: false, destination: false })}
           InputRightElement={(
             <IconButton
               p={2}
@@ -268,7 +268,7 @@ const Form = ({
                     ...formData,
                     source_name: a.item.name,
                   });
-                  setDisplayAutocomplete({ source: false, destination: false });
+                  setDisplayAutocomplete({ description: false, source: false, destination: false });
                 }}
                 _pressed={{
                   borderRadius: 15,
@@ -307,9 +307,9 @@ const Form = ({
           }}
           onFocus={() => {
             getAutocompleteAccounts({ query: formData.destination_name, isDestination: true });
-            setDisplayAutocomplete({ source: false, destination: true });
+            setDisplayAutocomplete({ description: false, source: false, destination: true });
           }}
-          onBlur={() => setDisplayAutocomplete({ source: false, destination: false })}
+          onBlur={() => setDisplayAutocomplete({ description: false, source: false, destination: false })}
           InputRightElement={(
             <IconButton
               p={2}
@@ -342,7 +342,7 @@ const Form = ({
                     ...formData,
                     destination_name: a.item.name,
                   });
-                  setDisplayAutocomplete({ source: false, destination: false });
+                  setDisplayAutocomplete({ description: false, source: false, destination: false });
                 }}
                 _pressed={{
                   borderRadius: 15,

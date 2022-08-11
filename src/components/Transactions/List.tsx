@@ -7,7 +7,7 @@ import {
   Pressable,
   Text,
   VStack,
-  Skeleton,
+  Skeleton, AlertDialog, Button,
 } from 'native-base';
 import {
   MaterialCommunityIcons,
@@ -21,21 +21,30 @@ import colors from '../../constants/colors';
 
 const Basic = ({
   loading,
+  loadingDelete,
   onRefresh,
   transactions,
   onDeleteTransaction,
   onEndReached,
   onPressItem,
 }) => {
+  const [deleteModal, setDeleteModal] = React.useState({ open: false, item: {}, map: {} });
+  const DeleteModalRef = React.useRef(null);
+
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
   };
 
-  const deleteRow = async (rowMap, rowKey) => {
-    closeRow(rowMap, rowKey);
-    await onDeleteTransaction(rowKey);
+  const onDeleteModalClose = () => {
+    closeRow(deleteModal.map, deleteModal.item.id);
+    setDeleteModal({ open: false, item: {}, map: {} });
+  };
+
+  const deleteRow = async () => {
+    await onDeleteTransaction(deleteModal.item.id);
+    setDeleteModal({ open: false, item: {}, map: {} });
   };
 
   const colorItemTypes = {
@@ -146,7 +155,7 @@ const Basic = ({
         bg="red.500"
         justifyContent="center"
         borderRightRadius={15}
-        onPress={() => deleteRow(rowMap, data.item.id)}
+        onPress={() => setDeleteModal({ open: true, item: data.item, map: rowMap })}
         _pressed={{
           opacity: 0.5,
         }}
@@ -230,14 +239,36 @@ const Basic = ({
               </Box>
             </>
           )}
+          <AlertDialog leastDestructiveRef={DeleteModalRef} isOpen={deleteModal.open} onClose={onDeleteModalClose}>
+            <AlertDialog.Content>
+              <AlertDialog.CloseButton />
+              <AlertDialog.Header>Are you sure?</AlertDialog.Header>
+              <AlertDialog.Body>
+                Transaction will be permanently removed:
+                {deleteModal.item?.attributes?.transactions[0].description}
+                {`Id: ${deleteModal.item?.id}`}
+              </AlertDialog.Body>
+              <AlertDialog.Footer>
+                <Button.Group>
+                  <Button variant="unstyled" colorScheme="coolGray" onPress={onDeleteModalClose} ref={DeleteModalRef}>
+                    Cancel
+                  </Button>
+                  <Button colorScheme="red" onPress={deleteRow} isLoading={loadingDelete}>
+                    Delete
+                  </Button>
+                </Button.Group>
+              </AlertDialog.Footer>
+            </AlertDialog.Content>
+          </AlertDialog>
         </>
-)}
+      )}
     />
   );
 };
 
 const Transactions = ({
   loading,
+  loadingDelete,
   transactions,
   onRefresh,
   onDeleteTransaction,
@@ -249,6 +280,7 @@ const Transactions = ({
     <Box flex={1}>
       <Basic
         loading={loading}
+        loadingDelete={loadingDelete}
         onRefresh={onRefresh}
         onDeleteTransaction={onDeleteTransaction}
         onEndReached={onEndReached}

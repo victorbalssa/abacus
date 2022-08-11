@@ -8,6 +8,7 @@ import { ContainerPropType } from '../types';
 
 const List: FC = ({ navigation }: ContainerPropType) => {
   const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
+  const { loading: loadingDelete } = useSelector((state: RootState) => state.loading.effects.transactions.deleteTransaction);
   const transactions = useSelector((state: RootState) => state.transactions.transactions);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -53,6 +54,7 @@ const List: FC = ({ navigation }: ContainerPropType) => {
   return (
     <Layout
       loading={loading}
+      loadingDelete={loadingDelete}
       transactions={transactions}
       onRefresh={onRefresh}
       onDeleteTransaction={onDeleteTransaction}
