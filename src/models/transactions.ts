@@ -105,6 +105,7 @@ export default createModel<RootModel>()({
           /* currency_id: '12', */
           /* foreign_amount: '123.45', */
           /* foreign_currency_id: '17', */
+          amount: payload.amount.replace(/,/g, '.'),
 
           ...payload,
         }],
