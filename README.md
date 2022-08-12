@@ -1,19 +1,15 @@
-
 <div align="center">
-  <img src="documentation/img.png" height=100 />
-  <p></p>
-  <p></p>
-  <img src="https://i.imgur.com/nTlGVFa.gif" height=500 />
-  <img alt="chart" src=".github/img/chart.jpeg" height="500" />
-  <img alt="chart" src=".github/img/transaction.jpeg" height="500" />
-  <img alt="chart" src=".github/img/transactions-list.jpeg" height="500" />
-  <img alt="chart" src=".github/img/settings.jpeg" height="500" />
-
-
+    <p></p>
+  <img alt="logo" src="documentation/img.png" height=120 />
   <h1>🔥 Abacus: Firefly III iOS app 🔥</h1>
     <div>
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
+  <p></p>
+  <img alt="gif" src="https://i.imgur.com/9yOebcP.gif" height="500" />
+  <img alt="chart" src=".github/img/chart.jpeg" height="500" />
+  <img alt="transaction" src=".github/img/transaction.jpeg" height="500" />
+  <img alt="transaction-list" src=".github/img/transactions-list.jpeg" height="500" />
     <p></p>
   <sup>
 
@@ -30,7 +26,8 @@
 
 ### 🎙 Introduction
 
-[Firefly III](https://github.com/firefly-iii/firefly-iii) iOS application to manage your self-hosted Firefly III from your iPhone.
+[Firefly III](https://github.com/firefly-iii/firefly-iii) iOS application to manage your self-hosted Firefly III from
+your iPhone.
 
 All Tokens are stored in **iOS Keychains**.
 
@@ -40,26 +37,28 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 
 ### 📱 Features
 
-| Feature                      | Available  |
-|------------------------------|:----------:|
-| Oauth2 authentication        |     ✅      |
-| Asset accounts history chart |     ✅      | 
-| Transactions (create, list)  |     ✅      |
-| Net worth                    |     ✅      |
-| Balance                      |     ✅      |
-| Earned                       |     ✅      |
-| Time range selector          |     ✅      |
-| Budgets                      |     ❌      |
-| Categories                   |     ❌      |
-| Tags                         |     ❌      |
-| Translations                 |     ❌      |
+| Feature                      | Available |
+|------------------------------|:---------:|
+| Oauth2 authentication        |     ✅     |
+| Asset accounts history chart |     ✅     | 
+| Transactions (create, list)  |     ✅     |
+| Net worth                    |     ✅     |
+| Balance                      |     ✅     |
+| Earned                       |     ✅     |
+| Time range selector          |     ✅     |
+| Budgets                      |    🚧     |
+| Categories                   |    🚧     |
+| Tags                         |    🚧     |
+| Translations                 |    🚧     |
+| Net Worth history chart      |    🚧     | 
 
 ---
 
 ### 📡 Technologies
 
 - __Expo SDK 46__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
-- __Routing and navigation__ React Navigation V6. [https://reactnavigation.org/docs](https://reactnavigation.org/docs/getting-started)
+- __Routing and navigation__ React Navigation
+  V6. [https://reactnavigation.org/docs](https://reactnavigation.org/docs/getting-started)
 - __Redux architecture__
     - Rematch core [@rematch/core](https://github.com/rematch/rematch)
     - Rematch plugin [@rematch/loading](https://rematchjs.org/docs/plugins/loading)
@@ -70,6 +69,7 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
     - Airbnb's Linting : [https://github.com/airbnb/javascript](https://github.com/airbnb/javascript)
 - __Splash Screen Animated__
     - React Native Splash Screen : [npmjs](https://www.npmjs.com/package/react-native-animated-splash-screen)
+
 ---
 
 ### 📖 Docs
