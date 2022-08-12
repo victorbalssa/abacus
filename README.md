@@ -8,7 +8,6 @@
   <p></p>
   <img alt="gif" src="https://i.imgur.com/9yOebcP.gif" height="500" />
   <img alt="chart" src=".github/img/chart.jpeg" height="500" />
-  <img alt="transaction" src=".github/img/transaction.jpeg" height="500" />
   <img alt="transaction-list" src=".github/img/transactions-list.jpeg" height="500" />
     <p></p>
   <sup>
