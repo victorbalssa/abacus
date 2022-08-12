@@ -2,6 +2,14 @@
 <div align="center">
   <img src="documentation/img.png" height=100 />
   <p></p>
+  <p></p>
+  <img src="https://i.imgur.com/nTlGVFa.gif" height=500 />
+  <img alt="chart" src=".github/img/chart.jpeg" height="500" />
+  <img alt="chart" src=".github/img/transaction.jpeg" height="500" />
+  <img alt="chart" src=".github/img/transactions-list.jpeg" height="500" />
+  <img alt="chart" src=".github/img/settings.jpeg" height="500" />
+
+
   <h1>🔥 Abacus: Firefly III iOS app 🔥</h1>
     <div>
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
