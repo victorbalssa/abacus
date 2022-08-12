@@ -386,7 +386,7 @@ const Form = ({
         <Input
           InputLeftElement={<Text px={3} color="white">*</Text>}
           returnKeyType="done"
-          keyboardType="numeric"
+          keyboardType="numbers-and-punctuation"
           placeholder="0.00"
           value={formData.amount}
           textAlign="center"
