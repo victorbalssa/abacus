@@ -22,15 +22,29 @@
 
 ### 🎙 Introduction
 
-- FireflyIII Client for iOS. (https://github.com/firefly-iii/firefly-iii)
-- Authentication with Oauth2.
-- Use of iOS Keychains to store the accessToken / refreshToken.
-- No external API calls nor Analytics API, not even sentry / crashlytics.
-- Support the Net Worth by currency.
-- Chart to display history for each asset accounts.
-- List, Create, Update, Delete transactions.
-- Report new error to GitHub.
-- Display source link.
+[Firefly III](https://github.com/firefly-iii/firefly-iii) iOS application to manage your self-hosted Firefly III from your iPhone.
+
+All Tokens are stored in **iOS Keychains**.
+
+No external API calls nor Analytics API, not even sentry / crashlytics.
+
+---
+
+### 📱 Features
+
+| Feature                      | Available  |
+|------------------------------|:----------:|
+| Oauth2 authentication        |     ✅      |
+| Asset accounts history chart |     ✅      | 
+| Transactions (create, list)  |     ✅      |
+| Net worth                    |     ✅      |
+| Balance                      |     ✅      |
+| Earned                       |     ✅      |
+| Time range selector          |     ✅      |
+| Budgets                      |     ❌      |
+| Categories                   |     ❌      |
+| Tags                         |     ❌      |
+| Translations                 |     ❌      |
 
 ---
 

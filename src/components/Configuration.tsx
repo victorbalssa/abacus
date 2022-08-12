@@ -1,4 +1,5 @@
 import React from 'react';
+import { ScrollView, View } from 'react-native';
 import {
   Box,
   Stack,
@@ -8,8 +9,8 @@ import {
   Switch, AlertDialog, Button,
 } from 'native-base';
 import * as Linking from 'expo-linking';
+import * as Application from 'expo-application';
 import { AntDesign } from '@expo/vector-icons';
-import { ScrollView, View } from 'react-native';
 
 const Configuration = ({
   faceId,
@@ -45,6 +46,7 @@ const Configuration = ({
           <HStack mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
             <Text>App Version</Text>
             <Text>
+              {Application.nativeApplicationVersion}
               {' '}
               (BETA)
             </Text>
