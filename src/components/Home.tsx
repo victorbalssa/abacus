@@ -1,33 +1,25 @@
 import React from 'react';
-import { RefreshControl, StyleSheet, View } from 'react-native';
 import {
-  Box,
+  RefreshControl,
+  View,
+} from 'react-native';
+import {
   HStack,
   Text,
   VStack,
   ScrollView,
 } from 'native-base';
-import colors from '../../constants/colors';
-import { HomeDisplayType } from '../../models/firefly';
+import colors from '../constants/colors';
 import RangeTitle from './UI/RangeTitle';
 
-type DashboardType = {
-  loading: boolean,
-  netWorth: HomeDisplayType[],
-  spent: HomeDisplayType[],
-  earned: HomeDisplayType[],
-  balance: HomeDisplayType[],
-  fetchData: () => Promise<void>,
-}
-
 const Home = ({
+  loading,
   netWorth,
   spent,
   earned,
   balance,
-  loading,
   fetchData,
-}: DashboardType) => (
+}) => (
   <>
     <RangeTitle />
     <ScrollView
@@ -42,7 +34,7 @@ const Home = ({
           onRefresh={fetchData}
           tintColor={colors.brandStyle}
         />
-        )}
+      )}
     >
       <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
         {netWorth.map((nw) => (

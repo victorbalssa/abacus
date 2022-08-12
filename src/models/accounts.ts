@@ -46,7 +46,7 @@ export type AccountType = {
   type: string,
 }
 
-export type AutocompleteAccounts = {
+export type AutocompleteAccount = {
   id: string,
   name: string,
   name_with_balance: string,
@@ -58,18 +58,22 @@ export type AutocompleteAccounts = {
   currency_decimal_places: number,
 }
 
-export type ApiAccountType = {
-  data: AccountType[],
+export type AutocompleteDescription = {
+  id: string,
+  name: string,
+  description: string,
 }
 
 export type AccountStateType = {
   accounts: AccountType[],
-  autocompleteAccounts: AutocompleteAccounts[],
+  autocompleteAccounts: AutocompleteAccount[],
+  autocompleteDescriptions: AutocompleteDescription[],
 }
 
 const INITIAL_STATE = {
   accounts: [],
   autocompleteAccounts: [],
+  autocompleteDescriptions: [],
 } as AccountStateType;
 
 export default createModel<RootModel>()({
@@ -96,6 +100,17 @@ export default createModel<RootModel>()({
       return {
         ...state,
         autocompleteAccounts,
+      };
+    },
+
+    setAutocompleteDescriptions(state, payload): AccountStateType {
+      const {
+        autocompleteDescriptions = state.autocompleteDescriptions,
+      } = payload;
+
+      return {
+        ...state,
+        autocompleteDescriptions,
       };
     },
 
@@ -132,9 +147,26 @@ export default createModel<RootModel>()({
         { url: `/api/v1/autocomplete/accounts?types=Asset%20account,${type},Loan,Debt,Mortgage&limit=${limit}&query=${query}` },
       );
 
-      console.log('autocompleteAccounts', autocompleteAccounts);
-
       dispatch.accounts.setAutocompleteAccounts({ autocompleteAccounts });
+    },
+
+    /**
+     * Get autocomplete accounts with query
+     *
+     * @returns {Promise}
+     */
+    async getAutocompleteDescriptions(payload): Promise<void> {
+      const limit = 5;
+      const {
+        query,
+      } = payload;
+      const autocompleteDescriptions = await dispatch.configuration.apiFetch(
+        { url: `/api/v1/autocomplete/transactions?limit=${limit}&query=${query}` },
+      );
+
+      console.log('autocompleteDescriptions', autocompleteDescriptions);
+
+      dispatch.accounts.setAutocompleteDescriptions({ autocompleteDescriptions });
     },
   }),
 });

@@ -1,4 +1,4 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import {
   Input,
   Box,
@@ -8,19 +8,7 @@ import {
 import { KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
-import { isValidHttpUrl } from '../../lib/common';
-import { OauthConfig } from '../../containers/Oauth';
-
-type ConfigurationComponent = {
-  loading: boolean,
-  faceId: boolean,
-  faceIdCheck: () => Promise<void>,
-  config: OauthConfig,
-  setConfig: Dispatch<OauthConfig>,
-  promptAsync: () => Promise<void>,
-  backendURL: string,
-  setBackendURL: (state: string) => Promise<void>,
-}
+import { isValidHttpUrl } from '../lib/common';
 
 const Oauth = ({
   loading,
@@ -31,14 +19,14 @@ const Oauth = ({
   promptAsync,
   backendURL,
   setBackendURL,
-}: ConfigurationComponent) => (
+}) => (
   <KeyboardAvoidingView behavior="padding">
     <Box p={5} safeAreaTop>
       <FormControl isRequired>
-        <FormControl.Label>FireflyIII backend URL</FormControl.Label>
+        <FormControl.Label>Firefly III backend URL</FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="FireflyIII backend URL (without '/' at the end)"
+          placeholder="Firefly III backend URL (without '/' at the end)"
           keyboardType="url"
           value={backendURL}
           onChangeText={setBackendURL}

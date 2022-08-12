@@ -9,14 +9,14 @@ import { Svg, Path } from 'react-native-svg';
 import { Box, IconButton } from 'native-base';
 import { StyleSheet, Dimensions } from 'react-native';
 
-import OauthContainer from '../../containers/Oauth';
-import ConfigurationContainer from '../../containers/Configuration';
-import HomeContainer from '../../containers/Home';
-import ChartContainer from '../../containers/Chart';
-import TransactionsListContainer from '../../containers/Transactions/List';
-import TransactionsEditContainer from '../../containers/Transactions/Edit';
-import TransactionsCreateContainer from '../../containers/Transactions/Create';
-import colors from '../../constants/colors';
+import OauthContainer from '../containers/Oauth';
+import ConfigurationContainer from '../containers/Configuration';
+import HomeContainer from '../containers/Home';
+import ChartContainer from '../containers/Chart';
+import TransactionsListContainer from '../containers/Transactions/List';
+import TransactionsEditContainer from '../containers/Transactions/Edit';
+import TransactionsCreateContainer from '../containers/Transactions/Create';
+import colors from '../constants/colors';
 
 const Stack = createNativeStackNavigator();
 const Stack2 = createStackNavigator();

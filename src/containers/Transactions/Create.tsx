@@ -1,66 +1,20 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-import Layout from '../../native/components/Transactions/Create';
-import { Dispatch, RootState } from '../../store';
 
-const mapStateToProps = (state: RootState) => ({
-  loading: state.loading.models.transactions,
-  accounts: state.accounts.autocompleteAccounts,
-  loadingAutocomplete: state.loading.effects.accounts.getAutocompleteAccounts,
-});
+import Layout from '../../components/Transactions/Create';
+import { RootDispatch, RootState } from '../../store';
+import { ContainerPropType } from '../types';
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getTransactions: dispatch.transactions.getTransactions,
-  getAutocompleteAccounts: dispatch.accounts.getAutocompleteAccounts,
-  getBudgets: dispatch.budgets.getBudgets,
-  getCategories: dispatch.categories.getCategories,
-  getCurrencies: dispatch.currencies.getCurrencies,
-  createTransactions: dispatch.transactions.createTransactions,
-});
+const Create: FC = ({ navigation }: ContainerPropType) => {
+  const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
+  const accounts = useSelector((state: RootState) => state.accounts.autocompleteAccounts);
+  const descriptions = useSelector((state: RootState) => state.accounts.autocompleteDescriptions);
+  const { loading: loadingAutocomplete } = useSelector((state: RootState) => state.loading.models.accounts);
+  const dispatch = useDispatch<RootDispatch>();
 
-interface CreateContainerType extends
-  ReturnType<typeof mapStateToProps>,
-  ReturnType<typeof mapDispatchToProps> {
-  loading: boolean,
-  navigation: { dispatch: (action) => void },
-}
-
-const Create = ({
-  loading,
-  navigation,
-  accounts,
-  getTransactions,
-  getAutocompleteAccounts,
-  loadingAutocomplete,
-  getBudgets,
-  getCategories,
-  getCurrencies,
-  createTransactions,
-}: CreateContainerType) => {
-  const fetchData = async () => {
-    try {
-      await Promise.all([
-/*        getBudgets(),
-        getCategories(),
-        getCurrencies(),*/
-      ]);
-    } catch (e) {
-      // catch 401
-    }
-  };
-
-  const fetchTransactions = async () => {
-    try {
-      await getTransactions({ endReached: false });
-    } catch (e) {
-      // catch 401
-    }
-  };
-
-  const goToTransactions = async () => {
-    await fetchTransactions();
+  const goToTransactions = () => {
+    dispatch.transactions.getTransactions({ endReached: false });
     navigation.dispatch(
       CommonActions.navigate({
         name: 'Transactions',
@@ -68,21 +22,19 @@ const Create = ({
     );
   };
 
-  useEffect(() => {
-    (async () => fetchData())();
-  }, []);
-
   return (
     <Layout
-      loading={loading}
-      accounts={accounts}
-      goToTransactions={goToTransactions}
-      getAutocompleteAccounts={getAutocompleteAccounts}
-      loadingAutocomplete={loadingAutocomplete}
-      submit={createTransactions}
       navigation={navigation}
+      loading={loading}
+      loadingAutocomplete={loadingAutocomplete}
+      accounts={accounts}
+      descriptions={descriptions}
+      goToTransactions={goToTransactions}
+      getAutocompleteAccounts={dispatch.accounts.getAutocompleteAccounts}
+      getAutocompleteDescription={dispatch.accounts.getAutocompleteDescriptions}
+      submit={dispatch.transactions.createTransactions}
     />
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Create);
+export default Create;

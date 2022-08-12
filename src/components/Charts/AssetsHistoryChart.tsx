@@ -15,7 +15,7 @@ import {
 } from 'victory-native';
 import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
-import colors from '../../../constants/colors';
+import colors from '../../constants/colors';
 
 const CursorPointer = ({
   x,

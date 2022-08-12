@@ -6,20 +6,7 @@ import {
 } from 'native-base';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
 import RangeTitle from './UI/RangeTitle';
-import colors from '../../constants/colors';
-import { AssetAccountType } from '../../models/firefly';
-
-type ChartType = {
-  accounts: AssetAccountType[],
-  loading: boolean,
-  fetchData: () => Promise<void>,
-  start: string,
-  end: string,
-  filterData: () => Promise<void>,
-  enableScroll: () => Promise<void>,
-  disableScroll: () => Promise<void>,
-  scrollEnabled: boolean,
-}
+import colors from '../constants/colors';
 
 const Chart = ({
   accounts,
@@ -31,7 +18,7 @@ const Chart = ({
   enableScroll,
   disableScroll,
   scrollEnabled,
-}: ChartType) => (
+}) => (
   <>
     <RangeTitle />
     <Box flex={1}>

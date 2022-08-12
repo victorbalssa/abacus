@@ -1,73 +1,33 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { useToast } from 'native-base';
+import React, { useEffect, FC } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import Layout from '../native/components/Home';
-import { HomeDisplayType } from '../models/firefly';
+import Layout from '../components/Home';
+import { RootDispatch, RootState } from '../store';
 
-const mapStateToProps = (state) => ({
-  loading: state.loading.models.firefly,
-  netWorth: state.firefly.netWorth,
-  spent: state.firefly.spent,
-  balance: state.firefly.balance,
-  earned: state.firefly.earned,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  handleChangeRange: dispatch.firefly.handleChangeRange,
-  getSummary: dispatch.firefly.getSummaryBasic,
-  getDashboard: dispatch.firefly.getDashboardBasic,
-});
-
-type HomeContainerType = {
-  loading: boolean,
-  netWorth: HomeDisplayType[],
-  spent: HomeDisplayType[],
-  balance: HomeDisplayType[],
-  earned: HomeDisplayType[],
-  getSummary: () => Promise<void>,
-  getDashboard: () => Promise<void>,
-  handleChangeRange: (value?: object) => Promise<void>,
-};
-
-const Home = ({
-  loading,
-  netWorth,
-  spent,
-  balance,
-  earned,
-  getSummary,
-  getDashboard,
-  handleChangeRange,
-}: HomeContainerType) => {
-  const toast = useToast();
+const Home: FC = () => {
+  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
+  const firefly = useSelector((state: RootState) => state.firefly);
+  const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
-    (async () => handleChangeRange())();
+    dispatch.firefly.handleChangeRange({}).catch();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      await Promise.all([getSummary(), getDashboard()]);
-    } catch (e) {
-      toast.show({
-        placement: 'top',
-        title: 'Something went wrong',
-        description: e.message,
-      });
-    }
-  };
+  const fetchData = () => Promise.all([
+    dispatch.firefly.getSummaryBasic(),
+    dispatch.firefly.getDashboardBasic(),
+  ]).catch();
 
   return (
     <Layout
       loading={loading}
-      netWorth={netWorth}
-      spent={spent}
-      balance={balance}
-      earned={earned}
+      netWorth={firefly.netWorth}
+      spent={firefly.spent}
+      balance={firefly.balance}
+      earned={firefly.earned}
       fetchData={fetchData}
     />
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;
