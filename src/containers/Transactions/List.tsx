@@ -7,7 +7,8 @@ import { RootDispatch, RootState } from '../../store';
 import { ContainerPropType } from '../types';
 
 const List: FC = ({ navigation }: ContainerPropType) => {
-  const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
+  const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
+  const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions?.getMoreTransactions);
   const { loading: loadingDelete } = useSelector((state: RootState) => state.loading.effects.transactions.deleteTransaction);
   const transactions = useSelector((state: RootState) => state.transactions.transactions);
   const dispatch = useDispatch<RootDispatch>();
@@ -25,7 +26,7 @@ const List: FC = ({ navigation }: ContainerPropType) => {
 
   const onRefresh = () => {
     try {
-      dispatch.transactions.getTransactions({ endReached: false });
+      dispatch.transactions.getTransactions();
     } catch (e) {
       console.error(e);
     }
@@ -41,7 +42,7 @@ const List: FC = ({ navigation }: ContainerPropType) => {
 
   const onEndReached = () => {
     try {
-      dispatch.transactions.getTransactions({ endReached: true });
+      dispatch.transactions.getMoreTransactions();
     } catch (e) {
       console.error(e);
     }
@@ -53,7 +54,8 @@ const List: FC = ({ navigation }: ContainerPropType) => {
 
   return (
     <Layout
-      loading={loading}
+      loadingRefresh={loadingRefresh}
+      loadingMore={loadingMore}
       loadingDelete={loadingDelete}
       transactions={transactions}
       onRefresh={onRefresh}

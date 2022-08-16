@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RefreshControl } from 'react-native';
 import {
   Box,
@@ -16,11 +16,14 @@ import {
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import moment from 'moment';
+import * as Haptics from 'expo-haptics';
 import RangeTitle from '../UI/RangeTitle';
 import colors from '../../constants/colors';
+import { TransactionType } from '../../models/transactions';
 
 const Basic = ({
-  loading,
+  loadingRefresh,
+  loadingMore,
   loadingDelete,
   onRefresh,
   transactions,
@@ -38,12 +41,12 @@ const Basic = ({
   };
 
   const onDeleteModalClose = () => {
-    closeRow(deleteModal.map, deleteModal.item.id);
+    closeRow(deleteModal.map, (deleteModal.item as TransactionType)?.id);
     setDeleteModal({ open: false, item: {}, map: {} });
   };
 
   const deleteRow = async () => {
-    await onDeleteTransaction(deleteModal.item.id);
+    await onDeleteTransaction((deleteModal.item as TransactionType)?.id);
     setDeleteModal({ open: false, item: {}, map: {} });
   };
 
@@ -74,17 +77,21 @@ const Basic = ({
     },
   };
 
-  const renderItem = ({
-    item,
-  }) => (
+  const RenderItem = ({ item }) => useMemo(() => (
     <Pressable
+      h="71"
       bg="white"
       m={1}
+      borderWidth={1}
+      borderColor="#E3E3E3FF"
+      justifyContent="center"
       borderRadius={15}
-      shadow={2}
-      onPress={() => onPressItem(item.id, item.attributes.transactions[0])}
+      onPress={() => {
+        onPressItem(item.id, item.attributes.transactions[0]);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }}
     >
-      <Box pl={4} pr={3} py={2}>
+      <Box px={3}>
         <HStack justifyContent="space-between" alignItems="center" space={3}>
           <HStack alignItems="center">
             <Box style={{
@@ -144,10 +151,13 @@ const Basic = ({
         </HStack>
       </Box>
     </Pressable>
-  );
+  ), [item]);
 
-  const renderHiddenItem = (data, rowMap) => (
-    <HStack flex={1} m={1}>
+  const RenderHiddenItem = ({ data, rowMap }) => useMemo(() => (
+    <HStack
+      h="71"
+      m={1}
+    >
       <Pressable
         w="79"
         ml="auto"
@@ -157,7 +167,7 @@ const Basic = ({
         borderRightRadius={15}
         onPress={() => setDeleteModal({ open: true, item: data.item, map: rowMap })}
         _pressed={{
-          opacity: 0.5,
+          opacity: 0.8,
         }}
       >
         <VStack alignItems="center" space={2}>
@@ -168,48 +178,49 @@ const Basic = ({
         </VStack>
       </Pressable>
     </HStack>
-  );
+  ), [data, rowMap]);
 
   return (
     <SwipeListView
       refreshControl={(
         <RefreshControl
-          refreshing={loading}
+          refreshing={false}
           onRefresh={onRefresh}
           tintColor={colors.brandStyle}
         />
       )}
-      refreshing={loading}
-      keyExtractor={(item) => item.id}
-      showsVerticalScrollIndicator={false}
+      initialNumToRender={7}
+      keyExtractor={(item: TransactionType) => item.id}
+      showsVerticalScrollIndicator
       onEndReached={onEndReached}
       onEndReachedThreshold={0}
-      data={transactions}
-      renderItem={renderItem}
-      renderHiddenItem={renderHiddenItem}
+      data={!loadingRefresh ? transactions : []}
+      renderItem={({ item }) => <RenderItem item={item} />}
+      renderHiddenItem={(data, rowMap) => <RenderHiddenItem data={data} rowMap={rowMap} />}
       rightOpenValue={-65}
       stopRightSwipe={-65}
       disableRightSwipe
-      /* TODO: preview
-      previewRowKey="5356"
-      previewOpenValue={-65}
-      previewOpenDelay={2000}
-      previewDuration={300}
-      */
+      previewRowKey={(() => transactions[1]?.id)()}
+      previewOpenValue={-35}
+      previewOpenDelay={300}
+      previewDuration={125}
       contentContainerStyle={{
         paddingTop: 5,
         paddingHorizontal: 5,
-        paddingBottom: 300,
+        paddingBottom: 320,
       }}
       ListFooterComponent={(
         <>
-          {loading && (
+          {(loadingRefresh || loadingMore) && (
             <>
               <Box
+                h="71"
                 bg="white"
                 m={1}
+                borderWidth={1}
+                borderColor="#E3E3E3FF"
+                justifyContent="center"
                 borderRadius={15}
-                shadow={2}
               >
                 <Box pl={4} pr={3} py={2}>
                   <HStack justifyContent="space-between" alignItems="center" space={3}>
@@ -222,12 +233,15 @@ const Basic = ({
                 </Box>
               </Box>
               <Box
+                h="71"
                 bg="white"
                 m={1}
+                borderWidth={1}
+                borderColor="#E3E3E3FF"
+                justifyContent="center"
                 borderRadius={15}
-                shadow={2}
               >
-                <Box pl={4} pr={3} py={2}>
+                <Box px={3}>
                   <HStack justifyContent="space-between" alignItems="center" space={3}>
                     <HStack alignItems="center">
                       <Skeleton w={10} m={2} ml={0} rounded={15} />
@@ -244,9 +258,9 @@ const Basic = ({
               <AlertDialog.CloseButton />
               <AlertDialog.Header>Are you sure?</AlertDialog.Header>
               <AlertDialog.Body>
-                Transaction will be permanently removed:
-                {deleteModal.item?.attributes?.transactions[0].description}
-                {`Id: ${deleteModal.item?.id}`}
+                This transaction will be permanently removed:
+                <Text fontFamily="Montserrat_Bold">{(deleteModal.item as TransactionType)?.attributes?.transactions[0]?.description}</Text>
+                <Text fontFamily="Montserrat_Bold">{`${moment((deleteModal.item as TransactionType)?.attributes?.transactions[0]?.date).format('ll')} ${(deleteModal.item as TransactionType)?.attributes?.transactions[0]?.category_name ? `• ${(deleteModal.item as TransactionType)?.attributes?.transactions[0]?.category_name}` : ''}`}</Text>
               </AlertDialog.Body>
               <AlertDialog.Footer>
                 <Button.Group>
@@ -267,7 +281,8 @@ const Basic = ({
 };
 
 const Transactions = ({
-  loading,
+  loadingRefresh,
+  loadingMore,
   loadingDelete,
   transactions,
   onRefresh,
@@ -279,7 +294,8 @@ const Transactions = ({
     <RangeTitle />
     <Box flex={1}>
       <Basic
-        loading={loading}
+        loadingRefresh={loadingRefresh}
+        loadingMore={loadingMore}
         loadingDelete={loadingDelete}
         onRefresh={onRefresh}
         onDeleteTransaction={onDeleteTransaction}

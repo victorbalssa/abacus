@@ -5,15 +5,10 @@ import Layout from '../components/Chart';
 import { RootDispatch, RootState } from '../store';
 
 const Chart: FC = () => {
-  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
+  const { loading } = useSelector((state: RootState) => state.loading.effects.firefly.getDashboardBasic);
   const configuration = useSelector((state: RootState) => state.configuration);
   const firefly = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
-
-  const fetchData = () => Promise.all([
-    dispatch.firefly.getSummaryBasic(),
-    dispatch.firefly.getDashboardBasic(),
-  ]).catch();
 
   const filterData = (payload) => {
     try {
@@ -29,11 +24,9 @@ const Chart: FC = () => {
       start={firefly.start}
       end={firefly.end}
       accounts={firefly.accounts}
-      scrollEnabled={configuration.scrollEnabled}
-      fetchData={fetchData}
+      backendURL={configuration.backendURL}
+      fetchData={dispatch.firefly.getDashboardBasic}
       filterData={filterData}
-      enableScroll={dispatch.configuration.enableScroll}
-      disableScroll={dispatch.configuration.disableScroll}
     />
   );
 };

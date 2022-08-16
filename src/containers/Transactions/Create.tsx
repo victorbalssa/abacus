@@ -14,7 +14,7 @@ const Create: FC = ({ navigation }: ContainerPropType) => {
   const dispatch = useDispatch<RootDispatch>();
 
   const goToTransactions = () => {
-    dispatch.transactions.getTransactions({ endReached: false });
+    dispatch.transactions.getTransactions();
     navigation.dispatch(
       CommonActions.navigate({
         name: 'Transactions',

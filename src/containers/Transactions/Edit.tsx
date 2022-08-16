@@ -23,7 +23,7 @@ const Edit: FC = ({ navigation, route }: ContainerPropType) => {
 
   const fetchTransactions = async () => {
     try {
-      await dispatch.transactions.getTransactions({ endReached: false });
+      await dispatch.transactions.getTransactions();
     } catch (e) {
       // catch 401
     }

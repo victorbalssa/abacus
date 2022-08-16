@@ -1,9 +1,22 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
+export type TransactionSplitType = {
+  description: string,
+  amount: string,
+  currency_decimal_places: number,
+  type: string,
+  category_name: string,
+  currency_symbol: string,
+  date: string,
+  source_name: string,
+  destination_name: string,
+}
+
 export type TransactionType = {
   attributes: {
     name: string,
+    transactions: TransactionSplitType[],
   },
   id: string,
   links: {
@@ -59,7 +72,34 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getTransactions({ endReached = false }, rootState): Promise<void> {
+    async getTransactions(_: void, rootState): Promise<void> {
+      const {
+        firefly: {
+          start,
+          end,
+        },
+      } = rootState;
+
+      const type = 'all';
+      const currentPage = 1;
+      const {
+        data: transactions,
+        meta,
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
+
+      dispatch.transactions.setTransactions({
+        transactions,
+        page: meta.pagination.current_page,
+        totalPages: meta.pagination.total_pages,
+      });
+    },
+
+    /**
+     * Get transactions list
+     *
+     * @returns {Promise}
+     */
+    async getMoreTransactions(_: void, rootState): Promise<void> {
       const {
         firefly: {
           start,
@@ -73,15 +113,15 @@ export default createModel<RootModel>()({
       } = rootState;
 
       const type = 'all';
-      const currentPage = (endReached && page < totalPages) ? page + 1 : 1;
-      if (page < totalPages || !endReached) {
+      const currentPage = (page < totalPages) ? page + 1 : 1;
+      if (page < totalPages) {
         const {
           data: transactions,
           meta,
         } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
         dispatch.transactions.setTransactions({
-          transactions: (endReached && page < totalPages) ? [...oldTransactions, ...transactions] : transactions,
+          transactions: (page < totalPages) ? [...oldTransactions, ...transactions] : transactions,
           page: meta.pagination.current_page,
           totalPages: meta.pagination.total_pages,
         });

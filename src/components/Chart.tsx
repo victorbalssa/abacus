@@ -1,52 +1,37 @@
 import React from 'react';
-import { RefreshControl } from 'react-native';
 import {
-  Box,
   ScrollView,
 } from 'native-base';
+import { View } from 'react-native';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
 import RangeTitle from './UI/RangeTitle';
-import colors from '../constants/colors';
 
 const Chart = ({
-  accounts,
   loading,
+  accounts,
   fetchData,
   filterData,
   start,
   end,
-  enableScroll,
-  disableScroll,
-  scrollEnabled,
+  backendURL,
 }) => (
   <>
     <RangeTitle />
-    <Box flex={1}>
-      <ScrollView
-        p={3}
-        shadow={3}
-        _contentContainerStyle={{
-          alignItems: 'center',
-        }}
-        refreshControl={(
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={fetchData}
-            tintColor={colors.brandStyle}
-          />
-      )}
-        scrollEnabled={scrollEnabled}
-      >
-        <AssetsHistoryChart
-          start={start}
-          end={end}
-          accounts={accounts}
-          filterData={filterData}
-          enableScroll={enableScroll}
-          disableScroll={disableScroll}
-        />
-      </ScrollView>
-    </Box>
+    <ScrollView
+      p={2}
+      bounces={false}
+    >
+      <AssetsHistoryChart
+        loading={loading}
+        fetchData={fetchData}
+        start={start}
+        end={end}
+        accounts={accounts}
+        filterData={filterData}
+        backendURL={backendURL}
+      />
+      <View style={{ height: 100 }} />
+    </ScrollView>
   </>
 );
 

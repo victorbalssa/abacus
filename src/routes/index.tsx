@@ -109,8 +109,10 @@ const TabBarAdvancedButton = ({ onPress }) => (
         name: 'edit',
         size: 'xl',
       }}
-      onPress={onPress}
-      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+      onPress={() => {
+        onPress();
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }}
       _pressed={{
         style: {
           ...styles.button,

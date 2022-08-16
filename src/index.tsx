@@ -97,6 +97,7 @@ const theme = extendTheme({
     },
     IconButton: {
       baseStyle: {
+        borderRadius: 15,
         _icon: {
           size: 'xl',
         },
