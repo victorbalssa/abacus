@@ -8,7 +8,7 @@ import { ContainerPropType } from '../types';
 
 const List: FC = ({ navigation }: ContainerPropType) => {
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
-  const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions?.getMoreTransactions);
+  const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions?.getMoreTransactions || { loading: false });
   const { loading: loadingDelete } = useSelector((state: RootState) => state.loading.effects.transactions.deleteTransaction);
   const transactions = useSelector((state: RootState) => state.transactions.transactions);
   const dispatch = useDispatch<RootDispatch>();
