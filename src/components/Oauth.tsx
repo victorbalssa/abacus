@@ -8,9 +8,9 @@ import {
 import { KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
+import { Ionicons } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
 import { isValidHttpUrl } from '../lib/common';
-import {AntDesign, Ionicons} from "@expo/vector-icons";
-import * as Linking from "expo-linking";
 
 const Oauth = ({
   loading,

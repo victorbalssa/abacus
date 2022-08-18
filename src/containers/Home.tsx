@@ -71,6 +71,8 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
             ),
           });
         }
+      } else {
+        goToOauth();
       }
     })();
   }, []);
