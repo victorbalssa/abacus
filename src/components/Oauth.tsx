@@ -3,12 +3,14 @@ import {
   Input,
   Box,
   FormControl,
-  Button,
+  Button, HStack, Text, Pressable,
 } from 'native-base';
 import { KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 import { isValidHttpUrl } from '../lib/common';
+import {AntDesign, Ionicons} from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 
 const Oauth = ({
   loading,
@@ -63,12 +65,23 @@ const Oauth = ({
         <FormControl.HelperText>
           All secrets are kept in iOS secure storage.
         </FormControl.HelperText>
-        <FormControl.HelperText _text={{ fontSize: 15, color: 'primary.200' }}>
-          Redirect URI must be equal to: `abacusiosapp://redirect`
-        </FormControl.HelperText>
       </FormControl>
 
+      <HStack>
+        <Text py={1} pr={1} fontSize={14} color="primary.200">
+          🔥 set redirect URI to:
+        </Text>
+
+        <Box backgroundColor="primary.200" borderRadius={15} py={1} px={1}>
+          <Text fontFamily="Montserrat_Bold" color="white">abacusiosapp://redirect</Text>
+        </Box>
+      </HStack>
+      <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
+        <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>Need Help?</Text>
+      </Pressable>
+
       <Button
+        leftIcon={<Ionicons name="log-in-outline" size={20} color="white" />}
         mt="2"
         shadow={2}
         borderRadius={15}
@@ -102,6 +115,7 @@ const Oauth = ({
       </Button>
       {faceId && (
       <Button
+        leftIcon={<Ionicons name="ios-lock-open" size={16} color="white" />}
         mt="2"
         shadow={2}
         borderRadius={15}
@@ -114,7 +128,6 @@ const Oauth = ({
           },
         }}
         _loading={{
-          bg: 'primary.50',
           _text: {
             color: 'white',
           },

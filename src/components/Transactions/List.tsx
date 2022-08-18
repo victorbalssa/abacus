@@ -200,10 +200,6 @@ const Basic = ({
       rightOpenValue={-65}
       stopRightSwipe={-65}
       disableRightSwipe
-      previewRowKey={(() => transactions[1]?.id)()}
-      previewOpenValue={-35}
-      previewOpenDelay={300}
-      previewDuration={125}
       contentContainerStyle={{
         paddingTop: 5,
         paddingHorizontal: 5,

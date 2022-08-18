@@ -48,7 +48,7 @@ const Cursor = ({
 
           return (
             <Text key={childName} alignSelf="flex-start" mt={1} ml={1} color={stroke} fontWeight={600} fontSize={15}>
-              {` ${childName} ${yPoint ? (`$${yPoint}`) : ''}`}
+              {` ${childName} ${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
             </Text>
           );
         })}
@@ -228,18 +228,18 @@ const AssetsHistoryChart = ({
           tickFormat={(x) => (`${x !== 0 ? (Math.round(x) / 1000) : '0'}k`)}
         />
         {accounts.filter((v) => !v.skip).map((chart) => chart.entries.length > 0 && (
-        <VictoryLine
-          key={chart.label}
-          style={{
-            data: {
-              stroke: chart.color,
-              strokeWidth: 2,
-            },
-          }}
-          interpolation="monotoneX"
-          data={chart.entries}
-          name={chart.label}
-        />
+          <VictoryLine
+            key={chart.label}
+            style={{
+              data: {
+                stroke: chart.color,
+                strokeWidth: 2,
+              },
+            }}
+            interpolation="monotoneX"
+            data={chart.entries}
+            name={`${chart.label} (${chart.currency_symbol})`}
+          />
         ))}
         <VictoryAxis
           orientation="bottom"

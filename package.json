@@ -1,7 +1,7 @@
 {
   "name": "abacus",
   "homepage": "https://github.com/victorbalssa/abacus",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "jest": {
     "preset": "jest-expo",
@@ -67,8 +67,9 @@
     "slash": "^3.0.0",
     "victory-native": "^36.3.1",
     "expo-local-authentication": "~12.3.0",
-    "expo-dev-client": "~1.1.1",
-    "expo-application": "~4.2.2"
+    "expo-dev-client": "~1.2.1",
+    "expo-application": "~4.2.2",
+    "expo-blur": "~11.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

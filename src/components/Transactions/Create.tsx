@@ -42,7 +42,7 @@ const Create = ({
             date: new Date(),
             source_name: '',
             destination_name: '',
-            type: 'deposit',
+            type: 'withdrawal',
           }}
         />
       </ScrollView>

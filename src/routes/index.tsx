@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
@@ -7,8 +7,9 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, View } from 'react-native';
 
+import { BlurView } from 'expo-blur';
 import OauthContainer from '../containers/Oauth';
 import ConfigurationContainer from '../containers/Configuration';
 import HomeContainer from '../containers/Home';
@@ -210,9 +211,9 @@ const Home = () => (
   </Tab.Navigator>
 );
 
-const Index = (
+const Index: FC = () => (
   <NavigationContainer theme={MyTheme}>
-    <Stack.Navigator initialRouteName="oauth" screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="oauth"
         component={OauthContainer}
