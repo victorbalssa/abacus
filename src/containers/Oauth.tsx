@@ -6,7 +6,6 @@ import { useAuthRequest, TokenResponse } from 'expo-auth-session';
 import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
-import * as LocalAuthentication from 'expo-local-authentication';
 
 import Layout from '../components/Oauth';
 import secureKeys from '../constants/oauth';
@@ -54,17 +53,6 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
     }),
   );
 
-  const faceIdCheck = async () => {
-    if (faceId) {
-      const bioAuth = await LocalAuthentication.authenticateAsync();
-      if (bioAuth.success) {
-        goToHome();
-      }
-    } else {
-      goToHome();
-    }
-  };
-
   useEffect(() => {
     (async () => {
       const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
@@ -76,8 +64,6 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
           if (!TokenResponse.isTokenFresh(storageValue)) {
             await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
           }
-
-          await faceIdCheck();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -136,7 +122,7 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
               />
             ),
           });
-          await faceIdCheck();
+          goToHome();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -160,7 +146,7 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
       loading={loading}
       faceId={faceId}
       backendURL={backendURL}
-      faceIdCheck={faceIdCheck}
+      faceIdCheck={goToHome}
       setConfig={setConfig}
       promptAsync={promptAsync}
       setBackendURL={dispatch.configuration.setBackendURL}

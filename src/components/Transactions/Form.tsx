@@ -114,7 +114,7 @@ const Form = ({
       <FormControl isRequired>
         <HStack justifyContent="center">
           <Button.Group isAttached borderRadius={15}>
-            {['deposit', 'withdrawal', 'transfer'].map((type) => (
+            {['withdrawal', 'deposit', 'transfer'].map((type) => (
               <Button
                 shadow={2}
                 onPress={() => setData({
@@ -416,8 +416,8 @@ const Form = ({
         {'amount' in errors ? <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage> : <></>}
       </FormControl>
 
-      {success && <ToastAlert title="Success" status="success" variant="solid" onClose={() => setSuccess(false)} description="Transaction created. Click here to go to transactions list." onPress={goToTransactions} />}
-      {errors.global !== '' && <ToastAlert title="Error" status="error" variant="solid" onClose={resetErrors} description={errors.global} />}
+      {success && !loading && <ToastAlert title="Success" status="success" variant="solid" onClose={() => setSuccess(false)} description="Transaction created. Click here to go to transactions list." onPress={goToTransactions} />}
+      {errors.global !== '' && !loading && <ToastAlert title="Error" status="error" variant="solid" onClose={resetErrors} description={errors.global} />}
 
       <Button
         mt="3"

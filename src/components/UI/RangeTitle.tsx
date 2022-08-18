@@ -11,7 +11,7 @@ import moment from 'moment';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { RootDispatch, RootState } from '../../store';
-import ErrorWidget from "./ErrorWidget";
+import ErrorWidget from './ErrorWidget';
 
 const RangeTitle: FC = () => {
   const firefly = useSelector((state: RootState) => state.firefly);

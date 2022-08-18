@@ -205,7 +205,7 @@ export default createModel<RootModel>()({
 
       dispatch.firefly.getSummaryBasic();
       dispatch.firefly.getDashboardBasic();
-      dispatch.transactions.getTransactions({ endReached: false });
+      dispatch.transactions.getTransactions();
     },
 
     /**
@@ -259,6 +259,7 @@ export default createModel<RootModel>()({
         firefly: {
           start,
           end,
+          range,
         },
       } = rootState;
 
@@ -273,8 +274,20 @@ export default createModel<RootModel>()({
         accounts[index].color = colors[`brandStyle${colorIndex}`];
         accounts[index].colorScheme = `chart${colorIndex}`;
         colorIndex += 1;
-        accounts[index].entries = Object.keys(v.entries)
+        accounts[index].entries = range > 3 ? Object.keys(v.entries)
+          .filter((e, i) => i % 2 === 0)
+          .filter((e, i) => i % 2 === 0)
+          .filter((e, i) => i % 2 === 0)
           .map((key) => {
+            const value = accounts[index].entries[key];
+            const date = new Date(key);
+
+            return {
+              x: +date,
+              y: value,
+            };
+          })
+          : Object.keys(v.entries).map((key) => {
             const value = accounts[index].entries[key];
             const date = new Date(key);
 
