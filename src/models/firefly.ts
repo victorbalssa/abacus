@@ -44,7 +44,7 @@ const INITIAL_STATE = {
   start: getCurrentDate(),
   end: getCurrentDate(),
   range: 3,
-  rangeTitle: 'Q2 2022',
+  rangeTitle: '',
   netWorth: [],
   spent: [],
   earned: [],
@@ -108,7 +108,7 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetFireflyIII() {
+    resetState() {
       return INITIAL_STATE;
     },
   },
@@ -120,7 +120,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async handleChangeRange(payload, rootState) {
+    async handleChangeRange(payload = {}, rootState) {
       const {
         firefly: {
           start: oldStart,
@@ -181,30 +181,31 @@ export default createModel<RootModel>()({
 
       switch (rangeInt) {
         case 1:
-          rangeTitle = `${moment(start).utc().format('MMMM')} ${moment(start).utc().year()}.`;
+          rangeTitle = `${moment(end).format('MMM')} ${moment(end).year()}.`;
           break;
         case 3:
-          rangeTitle = `Q${moment(start).utc().quarter()} ${moment(start).utc().year()}.`;
+          rangeTitle = `Q${moment(start).quarter()} ${moment(start).year()}.`;
           break;
         case 6:
-          rangeTitle = `S${moment(start).utc().quarter() < 3 ? 1 : 2} ${moment(start).utc().year()}.`;
+          rangeTitle = `S${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
           break;
         case 12:
-          rangeTitle = `${moment(start).utc().year()} Year.`;
+          rangeTitle = `${moment(start).year()} Year.`;
           break;
         default:
-          rangeTitle = `${moment(start).utc().year()} Year.`;
+          rangeTitle = `${moment(start).year()} Year.`;
           break;
       }
+
+      console.log('RANGE', range, rangeTitle);
+      console.log('DATE', start, end);
 
       dispatch.firefly.setRange({ range, rangeTitle });
       dispatch.firefly.setData({ start, end });
 
-      await Promise.all([
-        dispatch.firefly.getSummaryBasic(0),
-        dispatch.firefly.getDashboardBasic(0),
-        dispatch.transactions.getTransactions({ endReached: false }),
-      ]);
+      dispatch.firefly.getSummaryBasic();
+      dispatch.firefly.getDashboardBasic();
+      dispatch.transactions.getTransactions({ endReached: false });
     },
 
     /**
@@ -212,7 +213,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getSummaryBasic(payload, rootState) {
+    async getSummaryBasic(_: void, rootState) {
       const {
         firefly: {
           start,
@@ -253,7 +254,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getDashboardBasic(payload, rootState) {
+    async getDashboardBasic(_: void, rootState) {
       const {
         firefly: {
           start,
@@ -282,8 +283,8 @@ export default createModel<RootModel>()({
               y: value,
             };
           });
-        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string}) => (o.y)).y;
-        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string}) => (o.y)).y;
+        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
+        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
       });
 
       this.setData({ accounts });

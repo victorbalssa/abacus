@@ -48,7 +48,7 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetConfiguration() {
+    resetState() {
       return INITIAL_STATE;
     },
   },
@@ -105,8 +105,8 @@ export default createModel<RootModel>()({
           /* currency_id: '12', */
           /* foreign_amount: '123.45', */
           /* foreign_currency_id: '17', */
-
           ...payload,
+          amount: payload.amount.replace(/,/g, '.'),
         }],
         error_if_duplicate_hash: false,
         apply_rules: true,
@@ -154,10 +154,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async deleteTransaction(payload, rootState) {
-      const {
-        id,
-      } = payload;
+    async deleteTransaction(id, rootState) {
       const {
         transactions: {
           transactions,

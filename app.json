@@ -1,13 +1,13 @@
 {
   "expo": {
     "name": "Abacus",
-    "description": "Abacus: a FireflyIII iOS Client",
+    "description": "🔥 Abacus: Firefly III iOS app 🔥",
     "slug": "abacus",
     "privacy": "hidden",
     "platforms": [
       "ios"
     ],
-    "version": "0.0.9",
+    "version": "0.2.2",
     "orientation": "portrait",
     "icon": "./src/images/icon-abacus.png",
     "splash": {
@@ -16,14 +16,23 @@
     },
     "updates": {
       "enabled": true,
-      "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "url": "https://u.expo.dev/292ed6dc-804c-4444-95f5-fa5d76d9913b"
     },
     "ios": {
-      "buildNumber": "0.0.9",
-      "bundleIdentifier": "abacus.ios.app"
+      "buildNumber": "0.2.2",
+      "bundleIdentifier": "abacus.ios.app",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID"
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "scheme": "abacusiosapp",
-    "githubUrl": "https://github.com/victorbalssa/abacus"
+    "githubUrl": "https://github.com/victorbalssa/abacus",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }

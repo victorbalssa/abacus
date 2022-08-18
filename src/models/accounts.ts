@@ -46,12 +46,34 @@ export type AccountType = {
   type: string,
 }
 
+export type AutocompleteAccount = {
+  id: string,
+  name: string,
+  name_with_balance: string,
+  type: string,
+  currency_id: string,
+  currency_name: string,
+  currency_code: string,
+  currency_symbol: string,
+  currency_decimal_places: number,
+}
+
+export type AutocompleteDescription = {
+  id: string,
+  name: string,
+  description: string,
+}
+
 export type AccountStateType = {
   accounts: AccountType[],
+  autocompleteAccounts: AutocompleteAccount[],
+  autocompleteDescriptions: AutocompleteDescription[],
 }
 
 const INITIAL_STATE = {
   accounts: [],
+  autocompleteAccounts: [],
+  autocompleteDescriptions: [],
 } as AccountStateType;
 
 export default createModel<RootModel>()({
@@ -70,7 +92,29 @@ export default createModel<RootModel>()({
       };
     },
 
-    resetConfiguration() {
+    setAutocompleteAccounts(state, payload): AccountStateType {
+      const {
+        autocompleteAccounts = state.autocompleteAccounts,
+      } = payload;
+
+      return {
+        ...state,
+        autocompleteAccounts,
+      };
+    },
+
+    setAutocompleteDescriptions(state, payload): AccountStateType {
+      const {
+        autocompleteDescriptions = state.autocompleteDescriptions,
+      } = payload;
+
+      return {
+        ...state,
+        autocompleteDescriptions,
+      };
+    },
+
+    resetState() {
       return INITIAL_STATE;
     },
   },
@@ -82,9 +126,47 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async getAccounts(): Promise<void> {
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts' });
+      const accounts = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts?page=1' });
 
       dispatch.accounts.setAccounts({ accounts });
+    },
+
+    /**
+     * Get autocomplete accounts with query
+     *
+     * @returns {Promise}
+     */
+    async getAutocompleteAccounts(payload): Promise<void> {
+      const limit = 5;
+      const {
+        query,
+        isDestination,
+      } = payload;
+      const type = isDestination ? 'Expense%20account' : 'Revenue%20account';
+      const autocompleteAccounts = await dispatch.configuration.apiFetch(
+        { url: `/api/v1/autocomplete/accounts?types=Asset%20account,${type},Loan,Debt,Mortgage&limit=${limit}&query=${query}` },
+      );
+
+      dispatch.accounts.setAutocompleteAccounts({ autocompleteAccounts });
+    },
+
+    /**
+     * Get autocomplete accounts with query
+     *
+     * @returns {Promise}
+     */
+    async getAutocompleteDescriptions(payload): Promise<void> {
+      const limit = 5;
+      const {
+        query,
+      } = payload;
+      const autocompleteDescriptions = await dispatch.configuration.apiFetch(
+        { url: `/api/v1/autocomplete/transactions?limit=${limit}&query=${query}` },
+      );
+
+      console.log('autocompleteDescriptions', autocompleteDescriptions);
+
+      dispatch.accounts.setAutocompleteDescriptions({ autocompleteDescriptions });
     },
   }),
 });
