@@ -77,6 +77,14 @@ const Basic = ({
     },
   };
 
+  const getTransactionTypeAttributes = (type: string): { bg: string, color: string, icon: any, prefix: string} => {
+    if (typeof colorItemTypes[type] === 'undefined') {
+      return colorItemTypes.transfer;
+    }
+
+    return colorItemTypes[type];
+  };
+
   const RenderItem = ({ item }) => useMemo(() => (
     <Pressable
       h="71"
@@ -95,15 +103,15 @@ const Basic = ({
         <HStack justifyContent="space-between" alignItems="center" space={3}>
           <HStack alignItems="center">
             <Box style={{
-              borderColor: colorItemTypes[item.attributes.transactions[0].type].bg,
+              borderColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
               borderRadius: 15,
               borderWidth: 7,
-              backgroundColor: colorItemTypes[item.attributes.transactions[0].type].bg,
+              backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
               margin: 10,
               marginLeft: 0,
             }}
             >
-              <MaterialCommunityIcons name={colorItemTypes[item.attributes.transactions[0].type].icon} size={24} color={colorItemTypes[item.attributes.transactions[0].type].color} />
+              <MaterialCommunityIcons name={getTransactionTypeAttributes(item.attributes.transactions[0].type).icon} size={24} color={getTransactionTypeAttributes(item.attributes.transactions[0].type).color} />
             </Box>
             <VStack>
               <Text
@@ -136,16 +144,16 @@ const Basic = ({
             </VStack>
           </HStack>
           <Box style={{
-            borderColor: colorItemTypes[item.attributes.transactions[0].type].bg,
+            borderColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
             borderRadius: 15,
             borderWidth: 7,
-            backgroundColor: colorItemTypes[item.attributes.transactions[0].type].bg,
+            backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
             margin: 10,
             marginRight: 0,
           }}
           >
-            <Text fontSize={15} fontFamily="Montserrat_Bold" style={{ color: colorItemTypes[item.attributes.transactions[0].type].color }}>
-              {`${colorItemTypes[item.attributes.transactions[0].type].prefix}${item.attributes.transactions[0].currency_symbol}${parseFloat(item.attributes.transactions[0].amount).toFixed(item.attributes.transactions[0].currency_decimal_places)}`}
+            <Text fontSize={15} fontFamily="Montserrat_Bold" style={{ color: getTransactionTypeAttributes(item.attributes.transactions[0].type).color }}>
+              {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${item.attributes.transactions[0].currency_symbol}${parseFloat(item.attributes.transactions[0].amount).toFixed(item.attributes.transactions[0].currency_decimal_places)}`}
             </Text>
           </Box>
         </HStack>
