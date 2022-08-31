@@ -7,197 +7,97 @@ import {
   HStack,
   Text,
   VStack,
-  ScrollView,
+  ScrollView, Heading, Box, Switch, AlertDialog, Button,
 } from 'native-base';
+import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated';
+
+import * as Linking from 'expo-linking';
+import { AntDesign } from '@expo/vector-icons';
+import * as Application from 'expo-application';
 import colors from '../constants/colors';
 import RangeTitle from './UI/RangeTitle';
+import CurrencySwitcher from './UI/CurrencySwitcher';
 
 const Home = ({
-  loading,
+  accounts,
   netWorth,
-  spent,
-  earned,
   balance,
   fetchData,
 }) => (
   <>
     <RangeTitle />
-    <ScrollView
-      p={3}
-      shadow={3}
-      _contentContainerStyle={{
-        alignItems: 'center',
-      }}
-      refreshControl={(
-        <RefreshControl
-          refreshing={loading}
-          onRefresh={fetchData}
-          tintColor={colors.brandStyle}
-        />
+    <Animated.View layout={Layout}>
+      {netWorth && netWorth[0] && (
+      <VStack pt={4} alignItems="center">
+        <Text style={{
+          fontSize: 27,
+          lineHeight: 30,
+          fontFamily: 'Montserrat_Bold',
+        }}
+        >
+          {netWorth[0].value_parsed}
+        </Text>
+        <Text style={{
+          fontSize: 12,
+          fontFamily: 'Montserrat_Light',
+          color: 'gray',
+        }}
+        >
+          {netWorth[0].title}
+        </Text>
+      </VStack>
       )}
-    >
-      <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
-        {netWorth.map((nw) => (
-          <VStack
-            minW={165}
-            key={nw.title}
-            height={65}
-            margin={1}
-            padding={3}
-            bg={{
-              linearGradient: {
-                colors: [colors.brandStyle, colors.brandStyleSecond],
-                start: [1, 0],
-                end: [0, 1],
-              },
-            }}
-            rounded="15"
-            justifyContent="flex-start"
-            alignItems="flex-start"
+
+      {balance && balance[0] && (
+      <VStack p={1} justifyContent="center" alignItems="center">
+        <Box style={{
+          backgroundColor: balance[0].monetary_value < 0 ? colors.brandDangerLight : colors.brandSuccessLight,
+          borderColor: balance[0].monetary_value < 0 ? colors.brandDangerLight : colors.brandSuccessLight,
+          borderRadius: 15,
+          borderRightWidth: 6,
+          borderLeftWidth: 6,
+        }}
+        >
+          <Text style={{
+            fontSize: 13,
+            fontFamily: 'Montserrat_Bold',
+            textAlign: 'center',
+            color: balance[0].monetary_value < 0 ? colors.brandDanger : colors.brandStyle3,
+          }}
           >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Montserrat_Bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {nw.value_parsed}
-            </Text>
-            <Text style={{
-              fontSize: 14,
-              fontFamily: 'Montserrat',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {nw.title}
-            </Text>
-          </VStack>
-        ))}
-      </HStack>
-      <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
-        {spent.map((s) => (
-          <VStack
-            minW={165}
-            key={s.title}
-            height={65}
-            margin={1}
-            padding={3}
-            bg={{
-              linearGradient: {
-                colors: [colors.brandStyle1, colors.brandStyle1],
-                start: [1, 0],
-                end: [0, 1],
-              },
-            }}
-            rounded="15"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Montserrat_Bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {s.value_parsed}
-            </Text>
-            <Text style={{
-              fontSize: 14,
-              fontFamily: 'Montserrat',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {s.title}
-            </Text>
-          </VStack>
-        ))}
-      </HStack>
-      <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
-        {balance.map((s) => (
-          <VStack
-            minW={165}
-            key={s.title}
-            height={65}
-            margin={1}
-            padding={3}
-            bg={{
-              linearGradient: {
-                colors: [colors.brandStyle2, colors.brandStyle2],
-                start: [1, 0],
-                end: [0, 1],
-              },
-            }}
-            rounded="15"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Montserrat_Bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {s.value_parsed}
-            </Text>
-            <Text style={{
-              fontSize: 14,
-              fontFamily: 'Montserrat',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {s.title}
-            </Text>
-          </VStack>
-        ))}
-      </HStack>
-      <HStack flexWrap="wrap" justifyContent="center" alignItems="center">
-        {earned.map((s) => (
-          <VStack
-            minW={165}
-            key={s.title}
-            height={65}
-            margin={1}
-            padding={3}
-            bg={{
-              linearGradient: {
-                colors: [colors.brandStyle3, colors.brandStyle3],
-                start: [1, 0],
-                end: [0, 1],
-              },
-            }}
-            rounded="15"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-          >
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Montserrat_Bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {s.value_parsed}
-            </Text>
-            <Text style={{
-              fontSize: 14,
-              fontFamily: 'Montserrat',
-              color: 'white',
-              textAlign: 'center',
-            }}
-            >
-              {s.title}
-            </Text>
-          </VStack>
-        ))}
-      </HStack>
-      <View style={{ height: 100 }} />
-    </ScrollView>
+            {`${balance[0].monetary_value > 0 ? '+' : ''}${balance[0].value_parsed}`}
+          </Text>
+        </Box>
+      </VStack>
+      )}
+
+      <ScrollView
+        pt={2}
+        refreshControl={(
+          <RefreshControl
+            refreshing={false}
+            onRefresh={fetchData}
+            tintColor={colors.brandStyle}
+          />
+      )}
+      >
+        <Heading mx={2} py={2} pt={5} size="sm">Asset accounts</Heading>
+        <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200">
+          {accounts && accounts?.map((account, index) => (
+            <HStack key={account.attributes.name} mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={index + 1 === accounts.length ? 0 : 1} borderColor="gray.200">
+              <Text style={{ fontFamily: 'Montserrat' }}>
+                {account.attributes.name}
+                {' '}
+                <Text style={{ fontSize: 10, fontFamily: 'Montserrat', color: colors.brandDanger }}>{account.attributes.include_net_worth ? '' : '(*)'}</Text>
+              </Text>
+              <Text style={{ fontFamily: 'Montserrat_Bold', color: account.attributes.current_balance < 0 ? colors.brandDanger : colors.brandStyle3 }}>{account.attributes.current_balance_formatted}</Text>
+            </HStack>
+          ))}
+        </Box>
+        <View style={{ height: 140 }} />
+      </ScrollView>
+
+    </Animated.View>
   </>
 );
 

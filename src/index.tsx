@@ -17,7 +17,11 @@ import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Updates from 'expo-updates';
-import { useFonts } from 'expo-font';
+import { useFonts, loadAsync } from 'expo-font';
+
+import {
+  AntDesign, Ionicons, Feather, MaterialCommunityIcons, MaterialIcons,
+} from '@expo/vector-icons';
 
 import { BlurView } from 'expo-blur';
 import { store, persistor } from './store';
@@ -34,6 +38,8 @@ const config = {
 
 const theme = extendTheme(themeConstants);
 
+const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
+
 const App: FC = () => {
   LogBox.ignoreAllLogs(true);
 
@@ -47,6 +53,18 @@ const App: FC = () => {
     Montserrat_Light: require('./fonts/Montserrat-Light.ttf'),
     Montserrat_Bold: require('./fonts/Montserrat-Bold.ttf'),
   });
+
+  const cache = async () => {
+    const fontAssets = cacheFonts([
+      AntDesign.font,
+      Ionicons.font,
+      Feather.font,
+      MaterialCommunityIcons.font,
+      MaterialIcons.font,
+    ]);
+
+    await Promise.all([fontAssets]);
+  };
 
   const onOTAUpdate = async () => {
     try {
@@ -75,7 +93,7 @@ const App: FC = () => {
 
   useEffect(() => {
     (async () => {
-      await onCheckOTA();
+      await Promise.all([cache(), onCheckOTA()]);
     })();
     const subscription = AppState.addEventListener('change', _handleAppStateChange);
     return () => {

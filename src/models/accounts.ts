@@ -14,15 +14,16 @@ export type AccountType = {
     currency_id: string,
     currency_symbol: string,
     current_balance: string,
+    current_balance_formatted: string,
     current_balance_date: Date,
     current_debt: string,
     iban: string,
     include_net_worth: boolean,
     interest: string,
     interest_period: string,
-    latitude: string,
     liability_direction: string,
     liability_type: string,
+    latitude: string,
     longitude: string,
     monthly_payment_date: string,
     name: string,
@@ -125,10 +126,30 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getAccounts(): Promise<void> {
-      const accounts = await dispatch.configuration.apiFetch({ url: '/api/v1/accounts?page=1' });
+    async getAccounts(_: void, rootState): Promise<void> {
+      const {
+        currencies: {
+          current,
+        },
+        firefly: {
+          end,
+        },
+      } = rootState;
 
-      dispatch.accounts.setAccounts({ accounts });
+      if (current && current.attributes.code) {
+        const formatter = new Intl.NumberFormat('en-EN', {
+          style: 'currency',
+          currency: current.attributes.code,
+        });
+
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current.attributes.code}/accounts?type=asset&date=${end}` });
+
+        accounts.forEach((v, index) => {
+          accounts[index].attributes.current_balance_formatted = formatter.format(accounts[index].attributes.current_balance);
+        });
+
+        dispatch.accounts.setAccounts({ accounts });
+      }
     },
 
     /**
@@ -163,8 +184,6 @@ export default createModel<RootModel>()({
       const autocompleteDescriptions = await dispatch.configuration.apiFetch(
         { url: `/api/v1/autocomplete/transactions?limit=${limit}&query=${query}` },
       );
-
-      console.log('autocompleteDescriptions', autocompleteDescriptions);
 
       dispatch.accounts.setAutocompleteDescriptions({ autocompleteDescriptions });
     },
