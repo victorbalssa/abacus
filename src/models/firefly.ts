@@ -14,6 +14,8 @@ const getCurrentDate = () => new Date().toISOString().slice(0, 10);
 export type HomeDisplayType = {
   title: string,
   value_parsed: string,
+  monetary_value: string,
+  currency_code: string,
 }
 
 export type AssetAccountType = {
@@ -200,12 +202,15 @@ export default createModel<RootModel>()({
       console.log('RANGE', range, rangeTitle);
       console.log('DATE', start, end);
 
-      dispatch.firefly.setRange({ range, rangeTitle });
-      dispatch.firefly.setData({ start, end });
+      this.setRange({ range, rangeTitle });
+      this.setData({ start, end });
 
-      dispatch.firefly.getSummaryBasic();
-      dispatch.firefly.getDashboardBasic();
-      dispatch.transactions.getTransactions();
+      await Promise.all([
+        dispatch.firefly.getSummaryBasic(),
+        dispatch.firefly.getDashboardBasic(),
+        dispatch.accounts.getAccounts(),
+        dispatch.transactions.getTransactions(),
+      ]);
     },
 
     /**
@@ -219,9 +224,17 @@ export default createModel<RootModel>()({
           start,
           end,
         },
+        currencies: {
+          current,
+        },
       } = rootState;
 
-      const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?start=${start}&end=${end}` });
+      const params = new URLSearchParams({
+        start,
+        end,
+        currency_code: current?.attributes.code,
+      });
+      const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
       const netWorth = [];
       const spent = [];
       const earned = [];

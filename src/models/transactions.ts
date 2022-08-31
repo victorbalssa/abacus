@@ -78,6 +78,9 @@ export default createModel<RootModel>()({
           start,
           end,
         },
+        currencies: {
+          current,
+        },
       } = rootState;
 
       const type = 'all';
@@ -85,7 +88,7 @@ export default createModel<RootModel>()({
       const {
         data: transactions,
         meta,
-      } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
       dispatch.transactions.setTransactions({
         transactions,
@@ -110,6 +113,9 @@ export default createModel<RootModel>()({
           page = 1,
           totalPages = 1,
         },
+        currencies: {
+          current,
+        },
       } = rootState;
 
       const type = 'all';
@@ -118,7 +124,7 @@ export default createModel<RootModel>()({
         const {
           data: transactions,
           meta,
-        } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
         dispatch.transactions.setTransactions({
           transactions: (page < totalPages) ? [...oldTransactions, ...transactions] : transactions,

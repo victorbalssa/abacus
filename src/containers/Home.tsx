@@ -16,14 +16,15 @@ import { ContainerPropType } from './types';
 
 const Home: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
-  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const firefly = useSelector((state: RootState) => state.firefly);
+  const accounts = useSelector((state: RootState) => state.accounts.accounts);
   const { backendURL, faceId } = useSelector((state: RootState) => state.configuration);
   const dispatch = useDispatch<RootDispatch>();
 
   const fetchData = () => Promise.all([
     dispatch.firefly.getSummaryBasic(),
     dispatch.firefly.getDashboardBasic(),
+    dispatch.accounts.getAccounts(),
   ]).catch();
 
   const goToOauth = () => navigation.dispatch(
@@ -57,6 +58,7 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
           }
 
           await faceIdCheck();
+          await dispatch.currencies.getCurrencies();
           dispatch.firefly.handleChangeRange({}).catch();
         } catch (e) {
           toast.show({
@@ -79,11 +81,9 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
 
   return (
     <Layout
-      loading={loading}
+      accounts={accounts}
       netWorth={firefly.netWorth}
-      spent={firefly.spent}
       balance={firefly.balance}
-      earned={firefly.earned}
       fetchData={fetchData}
     />
   );

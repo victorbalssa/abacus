@@ -14,6 +14,7 @@ import {
   MaterialIcons,
 } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import Animated, { Layout } from 'react-native-reanimated';
 
 import moment from 'moment';
 import * as Haptics from 'expo-haptics';
@@ -52,14 +53,14 @@ const Basic = ({
 
   const colorItemTypes = {
     withdrawal: {
-      bg: '#ffe5e5',
-      color: '#ff2d2d',
+      bg: colors.brandDangerLight,
+      color: colors.brandDanger,
       icon: 'arrow-up',
       prefix: '-',
     },
     deposit: {
-      bg: '#e5ffe5',
-      color: 'green',
+      bg: colors.brandSuccessLight,
+      color: colors.brandSuccess,
       icon: 'arrow-down',
       prefix: '+',
     },
@@ -296,7 +297,7 @@ const Transactions = ({
 }) => (
   <>
     <RangeTitle />
-    <Box flex={1}>
+    <Animated.View style={{ flex: 1 }} layout={Layout}>
       <Basic
         loadingRefresh={loadingRefresh}
         loadingMore={loadingMore}
@@ -307,7 +308,7 @@ const Transactions = ({
         onPressItem={onPressItem}
         transactions={transactions}
       />
-    </Box>
+    </Animated.View>
   </>
 );
 
