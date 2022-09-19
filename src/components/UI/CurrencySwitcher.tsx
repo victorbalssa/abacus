@@ -19,19 +19,33 @@ const CurrencySwitcher: FC = () => {
       py={1}
       justifyContent="center"
       alignItems="center"
-      bgColor="gray.200"
+      bgColor="gray.100"
+      borderBottomWidth={0.5}
+      borderColor="gray.200"
     >
       <Select
         ml={8}
         mr={1}
-        borderWidth={0.5}
+        borderWidth={0}
         borderRadius={5}
         width={90}
-        height={8}
+        height={7}
         dropdownIcon={<></>}
         _selectedItem={{
           bg: 'primary.600',
-          endIcon: <CheckIcon size="5" />,
+          borderRadius: 15,
+          endIcon: <CheckIcon size={5} color="white" />,
+          _text: {
+            fontFamily: 'Montserrat_Bold',
+            color: 'white',
+          },
+        }}
+        _item={{
+          borderRadius: 15,
+          _text: {
+            fontFamily: 'Montserrat_Bold',
+            color: 'gray.600',
+          },
         }}
         color="white"
         bgColor="primary.500"
@@ -44,14 +58,26 @@ const CurrencySwitcher: FC = () => {
       </Select>
       <HStack flex={1} justifyContent="space-between" alignItems="space-between">
         <Select
-          borderWidth={0.5}
+          borderWidth={0}
           borderRadius={5}
           width={90}
-          height={8}
+          height={7}
           dropdownIcon={<></>}
           _selectedItem={{
             bg: 'primary.600',
-            endIcon: <CheckIcon size="5" />,
+            borderRadius: 15,
+            endIcon: <CheckIcon size={5} color="white" />,
+            _text: {
+              fontFamily: 'Montserrat_Bold',
+              color: 'white',
+            },
+          }}
+          _item={{
+            borderRadius: 15,
+            _text: {
+              fontFamily: 'Montserrat_Bold',
+              color: 'gray.600',
+            },
           }}
           color="white"
           bgColor="primary.500"

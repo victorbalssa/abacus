@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { RefreshControl } from 'react-native';
+import { Alert, RefreshControl } from 'react-native';
 import {
   Box,
   HStack,
@@ -7,7 +7,7 @@ import {
   Pressable,
   Text,
   VStack,
-  Skeleton, AlertDialog, Button,
+  Skeleton,
 } from 'native-base';
 import {
   MaterialCommunityIcons,
@@ -18,37 +18,26 @@ import Animated, { Layout } from 'react-native-reanimated';
 
 import moment from 'moment';
 import * as Haptics from 'expo-haptics';
+import { useSelector } from 'react-redux';
 import RangeTitle from '../UI/RangeTitle';
 import colors from '../../constants/colors';
 import { TransactionType } from '../../models/transactions';
+import { RootState } from '../../store';
 
 const Basic = ({
   loadingRefresh,
   loadingMore,
-  loadingDelete,
   onRefresh,
-  transactions,
   onDeleteTransaction,
   onEndReached,
   onPressItem,
 }) => {
-  const [deleteModal, setDeleteModal] = React.useState({ open: false, item: {}, map: {} });
-  const DeleteModalRef = React.useRef(null);
+  const transactions = useSelector((state: RootState) => state.transactions.transactions);
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
       rowMap[rowKey].closeRow();
     }
-  };
-
-  const onDeleteModalClose = () => {
-    closeRow(deleteModal.map, (deleteModal.item as TransactionType)?.id);
-    setDeleteModal({ open: false, item: {}, map: {} });
-  };
-
-  const deleteRow = async () => {
-    await onDeleteTransaction((deleteModal.item as TransactionType)?.id);
-    setDeleteModal({ open: false, item: {}, map: {} });
   };
 
   const colorItemTypes = {
@@ -174,7 +163,28 @@ const Basic = ({
         bg="red.500"
         justifyContent="center"
         borderRightRadius={15}
-        onPress={() => setDeleteModal({ open: true, item: data.item, map: rowMap })}
+        onPress={() => {
+          Alert.alert(
+            'Are you sure?',
+            'This transaction will be permanently removed:\n'
+            + `${(data.item as TransactionType)?.attributes?.transactions[0]?.description}\n`
+            + `${moment((data.item as TransactionType)?.attributes?.transactions[0]?.date).format('ll')} ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name ? `• ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name}` : ''}\n`,
+            [
+              {
+                text: 'Delete',
+                onPress: async () => {
+                  await onDeleteTransaction((data.item as TransactionType)?.id);
+                },
+                style: 'destructive',
+              },
+              {
+                text: 'Cancel',
+                onPress: () => closeRow(rowMap, (data.item as TransactionType)?.id),
+                style: 'cancel',
+              },
+            ],
+          );
+        }}
         _pressed={{
           opacity: 0.8,
         }}
@@ -198,7 +208,7 @@ const Basic = ({
           tintColor={colors.brandStyle}
         />
       )}
-      initialNumToRender={7}
+      initialNumToRender={10}
       keyExtractor={(item: TransactionType) => item.id}
       showsVerticalScrollIndicator
       onEndReached={onEndReached}
@@ -258,27 +268,6 @@ const Basic = ({
               </Box>
             </>
           )}
-          <AlertDialog leastDestructiveRef={DeleteModalRef} isOpen={deleteModal.open} onClose={onDeleteModalClose}>
-            <AlertDialog.Content>
-              <AlertDialog.CloseButton />
-              <AlertDialog.Header>Are you sure?</AlertDialog.Header>
-              <AlertDialog.Body>
-                This transaction will be permanently removed:
-                <Text fontFamily="Montserrat_Bold">{(deleteModal.item as TransactionType)?.attributes?.transactions[0]?.description}</Text>
-                <Text fontFamily="Montserrat_Bold">{`${moment((deleteModal.item as TransactionType)?.attributes?.transactions[0]?.date).format('ll')} ${(deleteModal.item as TransactionType)?.attributes?.transactions[0]?.category_name ? `• ${(deleteModal.item as TransactionType)?.attributes?.transactions[0]?.category_name}` : ''}`}</Text>
-              </AlertDialog.Body>
-              <AlertDialog.Footer>
-                <Button.Group>
-                  <Button variant="unstyled" colorScheme="coolGray" onPress={onDeleteModalClose} ref={DeleteModalRef}>
-                    Cancel
-                  </Button>
-                  <Button colorScheme="red" onPress={deleteRow} isLoading={loadingDelete}>
-                    Delete
-                  </Button>
-                </Button.Group>
-              </AlertDialog.Footer>
-            </AlertDialog.Content>
-          </AlertDialog>
         </>
       )}
     />
@@ -288,8 +277,6 @@ const Basic = ({
 const Transactions = ({
   loadingRefresh,
   loadingMore,
-  loadingDelete,
-  transactions,
   onRefresh,
   onDeleteTransaction,
   onEndReached,
@@ -301,12 +288,10 @@ const Transactions = ({
       <Basic
         loadingRefresh={loadingRefresh}
         loadingMore={loadingMore}
-        loadingDelete={loadingDelete}
         onRefresh={onRefresh}
         onDeleteTransaction={onDeleteTransaction}
         onEndReached={onEndReached}
         onPressItem={onPressItem}
-        transactions={transactions}
       />
     </Animated.View>
   </>

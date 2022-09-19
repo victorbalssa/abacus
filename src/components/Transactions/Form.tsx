@@ -21,6 +21,8 @@ type ErrorStateType = {
   source_name: string,
   destination_name: string,
   amount: string,
+  category_id: string,
+  budget_id: string,
   global: string,
 }
 
@@ -29,15 +31,21 @@ const INITIAL_ERROR = {
   amount: '',
   source_name: '',
   destination_name: '',
+  category_id: '',
+  budget_id: '',
   global: '',
 } as ErrorStateType;
 
 const Form = ({
   accounts = [],
+  categories = [],
+  budgets = [],
   loading,
   descriptions = [],
   getAutocompleteAccounts,
   getAutocompleteDescription,
+  getAutocompleteCategories,
+  getAutocompleteBudgets,
   loadingAutocomplete,
   submit,
   goToTransactions,
@@ -49,13 +57,22 @@ const Form = ({
     source_name: payload.source_name,
     destination_name: payload.destination_name,
     amount: payload.amount ? parseFloat(payload.amount).toFixed(payload.currency_decimal_places) : '',
+    category_id: payload.category_id,
+    category_name: payload.category_name,
+    budget_id: payload.budget_id,
+    budget_name: payload.budget_name,
     type: payload.type,
   });
   const [errors, setErrors] = React.useState(INITIAL_ERROR);
   const [success, setSuccess] = React.useState(false);
-  const [displayAutocomplete, setDisplayAutocomplete] = React.useState({ description: false, source: false, destination: false });
+  const [displayAutocomplete, setDisplayAutocomplete] = React.useState({
+    budget: false, category: false, description: false, source: false, destination: false,
+  });
 
   const resetErrors = () => setErrors(INITIAL_ERROR);
+  const closeAllAutocomplete = () => setDisplayAutocomplete({
+    budget: false, category: false, description: false, source: false, destination: false,
+  });
 
   const validate = () => {
     if (formData.description === undefined) {
@@ -158,9 +175,12 @@ const Form = ({
           }}
           onFocus={() => {
             getAutocompleteDescription({ query: formData.description });
-            setDisplayAutocomplete({ description: true, source: false, destination: false });
+            setDisplayAutocomplete({
+              ...displayAutocomplete,
+              description: true,
+            });
           }}
-          onBlur={() => setDisplayAutocomplete({ description: false, source: false, destination: false })}
+          onBlur={closeAllAutocomplete}
           InputRightElement={(
             <IconButton
               p={2}
@@ -194,7 +214,7 @@ const Form = ({
                     ...formData,
                     description: a.item.name,
                   });
-                  setDisplayAutocomplete({ description: false, source: false, destination: false });
+                  closeAllAutocomplete();
                 }}
                 _pressed={{
                   borderRadius: 15,
@@ -233,9 +253,12 @@ const Form = ({
           }}
           onFocus={() => {
             getAutocompleteAccounts({ query: formData.source_name, isDestination: false });
-            setDisplayAutocomplete({ description: false, source: true, destination: false });
+            setDisplayAutocomplete({
+              ...displayAutocomplete,
+              source: true,
+            });
           }}
-          onBlur={() => setDisplayAutocomplete({ description: false, source: false, destination: false })}
+          onBlur={closeAllAutocomplete}
           InputRightElement={(
             <IconButton
               p={2}
@@ -268,7 +291,7 @@ const Form = ({
                     ...formData,
                     source_name: a.item.name,
                   });
-                  setDisplayAutocomplete({ description: false, source: false, destination: false });
+                  closeAllAutocomplete();
                 }}
                 _pressed={{
                   borderRadius: 15,
@@ -307,9 +330,12 @@ const Form = ({
           }}
           onFocus={() => {
             getAutocompleteAccounts({ query: formData.destination_name, isDestination: true });
-            setDisplayAutocomplete({ description: false, source: false, destination: true });
+            setDisplayAutocomplete({
+              ...displayAutocomplete,
+              destination: true,
+            });
           }}
-          onBlur={() => setDisplayAutocomplete({ description: false, source: false, destination: false })}
+          onBlur={closeAllAutocomplete}
           InputRightElement={(
             <IconButton
               p={2}
@@ -342,7 +368,7 @@ const Form = ({
                     ...formData,
                     destination_name: a.item.name,
                   });
-                  setDisplayAutocomplete({ description: false, source: false, destination: false });
+                  closeAllAutocomplete();
                 }}
                 _pressed={{
                   borderRadius: 15,
@@ -415,6 +441,164 @@ const Form = ({
         />
         {'amount' in errors ? <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage> : <></>}
       </FormControl>
+      <FormControl mt="1" isInvalid={errors.category_id !== ''}>
+        <FormControl.Label>
+          Category
+        </FormControl.Label>
+        <Input
+          returnKeyType="done"
+          placeholder="Category"
+          value={formData.category_name}
+          onChangeText={(value) => {
+            setData({
+              ...formData,
+              category_name: value,
+            });
+            getAutocompleteCategories({ query: value || '', isDestination: true });
+          }}
+          onFocus={() => {
+            getAutocompleteCategories({ query: formData.category_name || '' });
+            setDisplayAutocomplete({
+              ...displayAutocomplete,
+              category: true,
+            });
+          }}
+          onBlur={closeAllAutocomplete}
+          InputRightElement={(
+            <IconButton
+              p={2}
+              borderRadius={15}
+              colorScheme="gray"
+              _icon={{
+                as: AntDesign,
+                name: 'closecircle',
+                size: 19,
+                color: 'gray.400',
+              }}
+              onPress={() => setData({
+                ...formData,
+                category_id: '',
+                category_name: '',
+              })}
+            />
+          )}
+        />
+
+        {displayAutocomplete.category && loadingAutocomplete && <Spinner mt={2} />}
+        {displayAutocomplete.category && !loadingAutocomplete && (
+          <FlatList
+            keyboardShouldPersistTaps="handled"
+            data={categories}
+            renderItem={(a) => (
+              <Pressable
+                mx={2}
+                onPress={() => {
+                  setData({
+                    ...formData,
+                    category_id: a.item.id,
+                    category_name: a.item.name,
+                  });
+                  closeAllAutocomplete();
+                }}
+                _pressed={{
+                  borderRadius: 15,
+                  backgroundColor: 'gray.300',
+                }}
+              >
+                <HStack
+                  justifyContent="space-between"
+                  key={a.index}
+                  mx={2}
+                  my={1}
+                >
+                  <Text>
+                    {a.item.name || 'no category name'}
+                  </Text>
+                </HStack>
+              </Pressable>
+            )}
+          />
+        )}
+      </FormControl>
+      <FormControl mt="1" isInvalid={errors.budget_id !== ''}>
+        <FormControl.Label>
+          Budget
+        </FormControl.Label>
+        <Input
+          returnKeyType="done"
+          placeholder="Budget"
+          value={formData.budget_name}
+          onChangeText={(value) => {
+            setData({
+              ...formData,
+              budget_name: value,
+            });
+            getAutocompleteBudgets({ query: value || '', isDestination: true });
+          }}
+          onFocus={() => {
+            getAutocompleteBudgets({ query: formData.budget_name || '' });
+            setDisplayAutocomplete({
+              ...displayAutocomplete,
+              budget: true,
+            });
+          }}
+          onBlur={closeAllAutocomplete}
+          InputRightElement={(
+            <IconButton
+              p={2}
+              borderRadius={15}
+              colorScheme="gray"
+              _icon={{
+                as: AntDesign,
+                name: 'closecircle',
+                size: 19,
+                color: 'gray.400',
+              }}
+              onPress={() => setData({
+                ...formData,
+                budget_id: '',
+                budget_name: '',
+              })}
+            />
+          )}
+        />
+
+        {displayAutocomplete.budget && loadingAutocomplete && <Spinner mt={2} />}
+        {displayAutocomplete.budget && !loadingAutocomplete && (
+        <FlatList
+          keyboardShouldPersistTaps="handled"
+          data={budgets}
+          renderItem={(a) => (
+            <Pressable
+              mx={2}
+              onPress={() => {
+                setData({
+                  ...formData,
+                  budget_id: a.item.id,
+                  budget_name: a.item.name,
+                });
+                closeAllAutocomplete();
+              }}
+              _pressed={{
+                borderRadius: 15,
+                backgroundColor: 'gray.300',
+              }}
+            >
+              <HStack
+                justifyContent="space-between"
+                key={a.index}
+                mx={2}
+                my={1}
+              >
+                <Text>
+                  {a.item.name || 'no budget name'}
+                </Text>
+              </HStack>
+            </Pressable>
+          )}
+        />
+        )}
+      </FormControl>
 
       {success && !loading && <ToastAlert title="Success" status="success" variant="solid" onClose={() => setSuccess(false)} description="Transaction created. Click here to go to transactions list." onPress={goToTransactions} />}
       {errors.global !== '' && !loading && <ToastAlert title="Error" status="error" variant="solid" onClose={resetErrors} description={errors.global} />}
@@ -432,6 +616,10 @@ const Form = ({
             description: '',
             amount: '',
             type: 'deposit',
+            budget_id: '',
+            budget_name: '',
+            category_id: '',
+            category_name: '',
           });
           resetErrors();
         }}
@@ -442,7 +630,6 @@ const Form = ({
         mt="2"
         shadow={2}
         borderRadius={15}
-        onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         _pressed={{
           style: {
             transform: [{
@@ -465,7 +652,10 @@ const Form = ({
         colorScheme="primary"
         isLoading={loading}
         isLoadingText="Submitting..."
-        onPress={onSubmit}
+        onPress={() => {
+          onSubmit();
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }}
       >
         Submit
       </Button>

@@ -9,8 +9,6 @@ import { ContainerPropType } from '../types';
 const List: FC = ({ navigation }: ContainerPropType) => {
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
   const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions?.getMoreTransactions || { loading: false });
-  const { loading: loadingDelete } = useSelector((state: RootState) => state.loading.effects.transactions.deleteTransaction);
-  const transactions = useSelector((state: RootState) => state.transactions.transactions);
   const dispatch = useDispatch<RootDispatch>();
 
   // TODO: do not pass entire payload into this modal
@@ -56,8 +54,6 @@ const List: FC = ({ navigation }: ContainerPropType) => {
     <Layout
       loadingRefresh={loadingRefresh}
       loadingMore={loadingMore}
-      loadingDelete={loadingDelete}
-      transactions={transactions}
       onRefresh={onRefresh}
       onDeleteTransaction={onDeleteTransaction}
       onEndReached={onEndReached}

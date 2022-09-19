@@ -4,11 +4,11 @@ import {
   Box,
   Text,
   Select,
-  CheckIcon, IconButton, VStack,
+  CheckIcon, IconButton, VStack, Skeleton,
 } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { RootDispatch, RootState } from '../../store';
@@ -19,6 +19,7 @@ const RangeTitle: FC = () => {
   const firefly = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
   const displayFilter = useSelector((state: RootState) => state.configuration.displayFilter);
+  const { loading } = useSelector((state: RootState) => state.loading.effects.firefly.handleChangeRange);
 
   return (
     <>
@@ -33,39 +34,48 @@ const RangeTitle: FC = () => {
         justifyContent="center"
         safeAreaTop
       >
-        <HStack px={3} pb={1} justifyContent="space-between" alignItems="center">
+        <HStack px={3} justifyContent="space-between" alignItems="center">
           <IconButton
-            shadow={1}
             borderRadius={15}
-            variant="solid"
+            variant="link"
+            size="lg"
             _icon={{
-              as: AntDesign,
-              name: 'arrowleft',
-              size: 6,
+              as: FontAwesome,
+              name: 'angle-left',
+              px: 2,
             }}
+            colorScheme="primary"
             onPress={() => dispatch.firefly.handleChangeRange({ direction: -1 })}
             onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
           />
 
           <VStack px={3} flex={1} justifyContent="space-between">
-            <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 22, lineHeight: 25 }}>
-              {firefly.rangeTitle}
-            </Text>
-            <Text style={{ fontSize: 14 }}>
-              {`${moment(firefly.start).format('ll')} - ${moment(firefly.end).format('ll')}`}
-            </Text>
+            {!loading ? (
+              <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 18, lineHeight: 18 }}>
+                {firefly.rangeTitle}
+              </Text>
+            ) : (
+              <Skeleton w={100} h={6} rounded={15} />
+            )}
+            {!loading ? (
+              <Text style={{ fontSize: 12 }}>
+                {`${moment(firefly.start).format('ll')} - ${moment(firefly.end).format('ll')}`}
+              </Text>
+            ) : (
+              <Skeleton.Text w={160} py={1} lines={1} />
+            )}
           </VStack>
 
           <ErrorWidget />
 
           <IconButton
-            shadow={0}
-            mx={3}
+            mx={4}
             borderRadius={15}
+            variant="link"
+            size="sm"
             _icon={{
               as: AntDesign,
               name: 'filter',
-              size: 6,
             }}
             _pressed={{
               style: {
@@ -79,17 +89,21 @@ const RangeTitle: FC = () => {
           />
 
           <IconButton
-            shadow={1}
             borderRadius={15}
-            variant="solid"
+            variant="link"
+            size="lg"
             _icon={{
-              as: AntDesign,
-              name: 'arrowright',
-              size: 6,
+              as: FontAwesome,
+              name: 'angle-right',
+              size: 'lg',
+              px: 2,
             }}
+            alignContent="center"
+            colorScheme="primary"
             onPress={() => dispatch.firefly.handleChangeRange({ direction: 1 })}
             onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
           />
+
         </HStack>
       </Box>
       <Box>
@@ -97,19 +111,6 @@ const RangeTitle: FC = () => {
         <Box bgColor="gray.100" height={41} display={!displayFilter ? 'none' : ''} />
         <Animated.View layout={Layout}>
           <CurrencySwitcher />
-          <VStack
-            bgColor="white"
-            height={1}
-            style={{
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: -2,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 1.7,
-            }}
-          />
         </Animated.View>
       </Box>
     </>

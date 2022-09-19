@@ -2,34 +2,24 @@ import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
 export type CategoryType = {
-  attributes: {
-    name: string,
-  },
+  name: string,
   id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
-  type: string,
 }
 
-export type CategoryStateType = {
+export type CategoriesStateType = {
   categories: CategoryType[],
 }
 
 const INITIAL_STATE = {
   categories: [],
-} as CategoryStateType;
+} as CategoriesStateType;
 
 export default createModel<RootModel>()({
 
   state: INITIAL_STATE,
 
   reducers: {
-    setCategories(state, payload): CategoryStateType {
+    setCategories(state, payload): CategoriesStateType {
       const {
         categories = state.categories,
       } = payload;
@@ -47,12 +37,14 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get categories list
+     * Get Autocomplete categories list
      *
      * @returns {Promise}
      */
-    async getCategories(): Promise<void> {
-      const { data: categories } = await dispatch.configuration.apiFetch({ url: '/api/v1/categories' });
+    async getAutocompleteCategories(payload): Promise<void> {
+      const { query } = payload;
+      const limit = 10;
+      const categories = await dispatch.configuration.apiFetch({ url: `/api/v1/autocomplete/categories?limit=${limit}&query=${query}` });
 
       dispatch.categories.setCategories({ categories });
     },

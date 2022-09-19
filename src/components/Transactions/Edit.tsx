@@ -11,10 +11,14 @@ const Edit = ({
   loading,
   payload,
   accounts,
+  categories,
+  budgets,
   descriptions,
   onEdit,
   getAutocompleteAccounts,
   getAutocompleteDescription,
+  getAutocompleteCategories,
+  getAutocompleteBudgets,
   loadingAutocomplete,
   navigation,
   goToTransactions,
@@ -33,10 +37,14 @@ const Edit = ({
           payload={payload}
           loading={loading}
           accounts={accounts}
+          categories={categories}
+          budgets={budgets}
           descriptions={descriptions}
           goToTransactions={goToTransactions}
           getAutocompleteAccounts={getAutocompleteAccounts}
           getAutocompleteDescription={getAutocompleteDescription}
+          getAutocompleteCategories={getAutocompleteCategories}
+          getAutocompleteBudgets={getAutocompleteBudgets}
           loadingAutocomplete={loadingAutocomplete}
           submit={onEdit}
         />

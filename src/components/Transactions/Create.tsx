@@ -10,10 +10,14 @@ import TransactionForm from './Form';
 const Create = ({
   loading,
   accounts,
+  categories,
+  budgets,
   descriptions,
   submit,
   getAutocompleteAccounts,
   getAutocompleteDescription,
+  getAutocompleteCategories,
+  getAutocompleteBudgets,
   loadingAutocomplete,
   navigation,
   goToTransactions,
@@ -31,9 +35,13 @@ const Create = ({
         <TransactionForm
           loading={loading}
           accounts={accounts}
+          categories={categories}
+          budgets={budgets}
           descriptions={descriptions}
           getAutocompleteAccounts={getAutocompleteAccounts}
           getAutocompleteDescription={getAutocompleteDescription}
+          getAutocompleteCategories={getAutocompleteCategories}
+          getAutocompleteBudgets={getAutocompleteBudgets}
           loadingAutocomplete={loadingAutocomplete}
           submit={submit}
           goToTransactions={goToTransactions}

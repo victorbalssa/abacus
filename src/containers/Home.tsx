@@ -20,6 +20,7 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
   const { backendURL, faceId } = useSelector((state: RootState) => state.configuration);
   const dispatch = useDispatch<RootDispatch>();
+  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
 
   const fetchData = () => Promise.all([
     dispatch.firefly.getSummaryBasic(),
@@ -85,6 +86,7 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
       netWorth={firefly.netWorth}
       balance={firefly.balance}
       fetchData={fetchData}
+      loading={loading}
     />
   );
 };

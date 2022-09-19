@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import {
-  Stack,
   Text,
   VStack,
   Checkbox,
   HStack,
-  Pressable, ScrollView, IconButton, Skeleton, View,
+  Pressable,
+  ScrollView,
+  IconButton,
+  View,
 } from 'native-base';
 import {
   VictoryAxis,
@@ -19,6 +21,7 @@ import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
 import colors from '../../constants/colors';
+import Loading from '../UI/Loading';
 
 const CursorPointer = ({
   x,
@@ -189,8 +192,8 @@ const AssetsHistoryChart = ({
       </HStack>
       {loading && (
       <VStack m={2} justifyContent="center" borderRadius={15}>
-        <HStack alignItems="center">
-          <Skeleton height={200} bgColor="white" rounded={15} />
+        <HStack h={400} alignItems="center">
+          <Loading />
         </HStack>
       </VStack>
       )}

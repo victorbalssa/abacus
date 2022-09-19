@@ -144,6 +144,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
+        console.log('DELETE  ', `${backendURL}${url}`);
         const { data } = await axios.delete(`${backendURL}${url}`);
 
         return data;

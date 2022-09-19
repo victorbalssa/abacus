@@ -143,8 +143,6 @@ export default createModel<RootModel>()({
       const body = {
         transactions: [{
           // TODO: Add support for:
-          /* budget_id: '4', */
-          /* category_id: '43', */
           /* piggy_bank_id: '2', */
           /* tags: 'test abaccus', */
           /* notes: 'test abaccus notes', */
@@ -174,11 +172,12 @@ export default createModel<RootModel>()({
         id,
         transaction,
       } = payload;
+      if (transaction.category_name === '') {
+        delete transaction.category_id;
+      }
       const body = {
         transactions: [{
           // TODO: Add support for:
-          /* budget_id: '4', */
-          /* category_id: '43', */
           /* piggy_bank_id: '2', */
           /* tags: 'test abaccus', */
           /* notes: 'test abaccus notes', */
@@ -210,11 +209,8 @@ export default createModel<RootModel>()({
       const prevIndex = transactions.findIndex((item) => item.id === id);
       newTransactions.splice(prevIndex, 1);
 
-      const data = await dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
-
       dispatch.transactions.setTransactions({ transactions: newTransactions });
-
-      return data;
+      dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
     },
 
   }),

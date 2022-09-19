@@ -108,7 +108,7 @@ const TabBarAdvancedButton = ({ onPress }) => (
       _icon={{
         as: AntDesign,
         name: 'edit',
-        size: 'xl',
+        size: 'lg',
       }}
       onPress={() => {
         onPress();

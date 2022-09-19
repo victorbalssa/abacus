@@ -2,34 +2,24 @@ import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
 export type BudgetType = {
-  attributes: {
-    name: string,
-  },
+  name: string,
   id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
-  type: string,
 }
 
-export type BudgetStateType = {
+export type BudgetsStateType = {
   budgets: BudgetType[],
 }
 
 const INITIAL_STATE = {
   budgets: [],
-} as BudgetStateType;
+} as BudgetsStateType;
 
 export default createModel<RootModel>()({
 
   state: INITIAL_STATE,
 
   reducers: {
-    setBudgets(state, payload): BudgetStateType {
+    setBudgets(state, payload): BudgetsStateType {
       const {
         budgets = state.budgets,
       } = payload;
@@ -47,12 +37,14 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get budgets list
+     * Get Autocomplete budgets list
      *
      * @returns {Promise}
      */
-    async getBudgets(): Promise<void> {
-      const { data: budgets } = await dispatch.configuration.apiFetch({ url: '/api/v1/budgets' });
+    async getAutocompleteBudgets(payload): Promise<void> {
+      const { query } = payload;
+      const limit = 10;
+      const budgets = await dispatch.configuration.apiFetch({ url: `/api/v1/autocomplete/budgets?limit=${limit}&query=${query}` });
 
       dispatch.budgets.setBudgets({ budgets });
     },
