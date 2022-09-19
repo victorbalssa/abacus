@@ -45,8 +45,8 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 | Balance                      |     ✅     |
 | Earned                       |     ✅     |
 | Time range selector          |     ✅     |
-| Budgets                      |    🚧     |
-| Categories                   |    🚧     |
+| Budgets                      |    ✅     |
+| Categories                   |    ✅     |
 | Tags                         |    🚧     |
 | Translations                 |    🚧     |
 | Net Worth history chart      |    🚧     | 
