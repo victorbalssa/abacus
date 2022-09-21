@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
 
@@ -45,10 +45,6 @@ const List: FC = ({ navigation }: ContainerPropType) => {
       console.error(e);
     }
   };
-
-  useEffect(() => {
-    (async () => onRefresh())();
-  }, []);
 
   return (
     <Layout
