@@ -11,6 +11,7 @@ import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { isValidHttpUrl } from '../lib/common';
+import { translate } from '../i18n/locale';
 
 const Oauth = ({
   loading,
@@ -25,16 +26,16 @@ const Oauth = ({
   <KeyboardAvoidingView behavior="padding">
     <Box p={5} safeAreaTop>
       <FormControl isRequired>
-        <FormControl.Label>Firefly III backend URL</FormControl.Label>
+        <FormControl.Label>{translate('OAUTH_fireflyInstanceMainLabel')}</FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="Firefly III backend URL (without '/' at the end)"
+          placeholder={translate('OAUTH_fireflyPlaceholder')}
           keyboardType="url"
           value={backendURL}
           onChangeText={setBackendURL}
         />
         <FormControl.HelperText>
-          without '/' at the end.
+          {translate('OAUTH_fireflyInstanceHelpLabel')}
         </FormControl.HelperText>
       </FormControl>
       <FormControl isRequired>
@@ -114,36 +115,36 @@ const Oauth = ({
         Sign In
       </Button>
       {faceId && (
-      <Button
-        leftIcon={<Ionicons name="ios-lock-open" size={16} color="white" />}
-        mt="2"
-        shadow={2}
-        borderRadius={15}
-        onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.99,
-            }],
-          },
-        }}
-        _loading={{
-          _text: {
+        <Button
+          leftIcon={<Ionicons name="ios-lock-open" size={16} color="white" />}
+          mt="2"
+          shadow={2}
+          borderRadius={15}
+          onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+          _pressed={{
+            style: {
+              transform: [{
+                scale: 0.99,
+              }],
+            },
+          }}
+          _loading={{
+            _text: {
+              color: 'white',
+            },
+            alignItems: 'flex-start',
+            opacity: 1,
+          }}
+          _spinner={{
             color: 'white',
-          },
-          alignItems: 'flex-start',
-          opacity: 1,
-        }}
-        _spinner={{
-          color: 'white',
-          size: 10,
-        }}
-        colorScheme="coolGray"
-        isLoading={loading}
-        onPress={() => faceIdCheck()}
-      >
-        Face ID
-      </Button>
+            size: 10,
+          }}
+          colorScheme="coolGray"
+          isLoading={loading}
+          onPress={() => faceIdCheck()}
+        >
+          Face ID
+        </Button>
       )}
     </Box>
   </KeyboardAvoidingView>

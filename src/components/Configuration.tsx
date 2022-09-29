@@ -13,6 +13,8 @@ import * as Linking from 'expo-linking';
 import * as Application from 'expo-application';
 import { Octicons, FontAwesome } from '@expo/vector-icons';
 
+import { translate } from '../i18n/locale';
+
 const Configuration = ({
   faceId,
   setFaceId,
@@ -20,19 +22,16 @@ const Configuration = ({
   backendURL,
 }) => {
   const showAlert = () => Alert.alert(
-    'Are you sure?',
-    'Clearing cache will remove:\n'
-    + 'local configurations\n'
-    + 'Oauth Client ID & Secret\n'
-    + 'URL of your instance',
+    translate('configuration_clear_alert_title'),
+    translate('configuration_clear_alert_text'),
     [
       {
-        text: 'Clear now',
+        text: translate('configuration_clear_confirm_button'),
         onPress: () => resetApp(),
         style: 'destructive',
       },
       {
-        text: 'Cancel',
+        text: translate('configuration_clear_cancel_button'),
         style: 'cancel',
       },
     ],
@@ -53,10 +52,10 @@ const Configuration = ({
           </HStack>
         </Box>
 
-        <Heading mx={2} py={2} pt={5} size="sm">About</Heading>
+        <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_about')}</Heading>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
           <HStack px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">
-            <Text color="gray.600">App Version</Text>
+            <Text color="gray.600">{translate('configuration_app_version')}</Text>
             <Text color="gray.600">
               {Application.nativeApplicationVersion}
             </Text>
@@ -82,7 +81,7 @@ const Configuration = ({
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
           <Pressable _pressed={{ backgroundColor: 'muted.300' }} onPress={showAlert} px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text color="gray.600">Clear & Reset Application</Text>
+            <Text color="gray.600">{translate('configuration_clear_option')}</Text>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
         </Box>
