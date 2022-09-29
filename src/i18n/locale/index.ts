@@ -10,16 +10,13 @@ i18n.translations = {
 };
 
 i18n.enableFallback = true;
-i18n.defaultLocale = 'en';
+i18n.defaultLocale = 'en-US';
 i18n.locale = Localization.locale;
 
-function getKeyByValue(object, value: string) {
+export function getKeyByValue(object, value: string) {
   return Object.keys(object).find((key) => object[key] === value);
 }
 
-export default function translate(value: string, option: TranslateOptions = null) {
-  const key = getKeyByValue(i18n.locale, value);
-  return i18n.t(key, option);
+export function translate(value: string, option: TranslateOptions = null) {
+  return i18n.t(value, option);
 }
-
-// export const translateByCode = (key: string, option = null) => i18nObject.t(key, option);
