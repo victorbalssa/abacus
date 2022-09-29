@@ -29,6 +29,7 @@ import colors from './constants/colors';
 import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
+import { translate } from './i18n/locale';
 
 const config = {
   dependencies: {
@@ -141,17 +142,17 @@ const App: FC = () => {
         <AlertDialog leastDestructiveRef={OTARef} isOpen={OTAOpen} onClose={() => setOTAOpen(false)}>
           <AlertDialog.Content>
             <AlertDialog.CloseButton />
-            <AlertDialog.Header>New Update Available</AlertDialog.Header>
+            <AlertDialog.Header>{translate('layout_new_update_header')}</AlertDialog.Header>
             <AlertDialog.Body>
-              You can always update later in Settings tab.
+              {translate('layout_new_update_body_text')}
             </AlertDialog.Body>
             <AlertDialog.Footer>
               <Button.Group>
                 <Button variant="unstyled" colorScheme="coolGray" onPress={() => setOTAOpen(false)} ref={OTARef}>
-                  Cancel
+                  {translate('layout_new_update_cancel_button')}
                 </Button>
                 <Button colorScheme="primary" onPress={onOTAUpdate}>
-                  Update now
+                  {translate('layout_new_update_update_button')}
                 </Button>
               </Button.Group>
             </AlertDialog.Footer>

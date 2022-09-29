@@ -48,4 +48,8 @@ export default {
   OAUTH_submit_button_loading: 'Submitting...',
   OAUTH_faceID: 'Face ID',
   home_assetsAccount_title: 'Assets accounts',
+  layout_new_update_header: 'New Update Available',
+  layout_new_update_body_text: 'You can always update later in Settings tab.',
+  layout_new_update_cancel_button: 'Cancel',
+  layout_new_update_update_button: 'Update now',
 };
