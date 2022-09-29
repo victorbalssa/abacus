@@ -8,6 +8,7 @@ npm-debug.*
 *.mobileprovision
 /.tmp/
 eas.json
+.dccache
 
 # Xcode
 #
@@ -46,6 +47,9 @@ buck-out/
 
 # CocoaPods
 /ios/
+
+# Android files
+/android/
 
 # Expo
 .expo/
