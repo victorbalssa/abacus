@@ -39,5 +39,13 @@ export default {
   OAUTH_fireflyInstanceMainLabel: 'Firefly III backend URL',
   OAUTH_fireflyInstanceHelpLabel: "without '/' at the end.",
   OAUTH_fireflyPlaceholder: "Firefly III backend URL (without '/' at the end)",
+  OAUTH_oauth_clientId: 'Oauth Client ID',
+  OAUTH_oauth_client_secret: 'Oauth Client Secret',
+  OAUTH_secrets_help_message: 'All secrets are kept in iOS secure storage.',
+  OAUTH_set_redirect: 'set redirect URI to:',
+  OAUTH_need_help: 'Need Help?',
+  OAUTH_submit_button_initial: 'Sign In',
+  OAUTH_submit_button_loading: 'Submitting...',
+  OAUTH_faceID: 'Face ID',
   home_assetsAccount_title: 'Assets accounts',
 };

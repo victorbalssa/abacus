@@ -39,11 +39,11 @@ const Oauth = ({
         </FormControl.HelperText>
       </FormControl>
       <FormControl isRequired>
-        <FormControl.Label>Oauth Client ID</FormControl.Label>
+        <FormControl.Label>{translate('OAUTH_oauth_clientId')}</FormControl.Label>
         <Input
           keyboardType="numeric"
           returnKeyType="done"
-          placeholder="Oauth Client ID"
+          placeholder={translate('OAUTH_oauth_clientId')}
           value={config.oauthClientId}
           onChangeText={(v) => setConfig({
             ...config,
@@ -52,11 +52,11 @@ const Oauth = ({
         />
       </FormControl>
       <FormControl>
-        <FormControl.Label>Oauth Client Secret</FormControl.Label>
+        <FormControl.Label>{translate('OAUTH_oauth_client_secret')}</FormControl.Label>
         <Input
           returnKeyType="done"
           type="password"
-          placeholder="Oauth Client Secret"
+          placeholder={translate('OAUTH_oauth_client_secret')}
           value={config.oauthClientSecret}
           onChangeText={(v) => setConfig({
             ...config,
@@ -64,13 +64,15 @@ const Oauth = ({
           })}
         />
         <FormControl.HelperText>
-          All secrets are kept in iOS secure storage.
+          {translate('OAUTH_secrets_help_message')}
         </FormControl.HelperText>
       </FormControl>
 
       <HStack>
         <Text py={1} pr={1} fontSize={14} color="primary.200">
-          🔥 set redirect URI to:
+          🔥
+          {' '}
+          {translate('OAUTH_set_redirect')}
         </Text>
 
         <Box backgroundColor="primary.200" borderRadius={15} py={1} px={1}>
@@ -78,7 +80,7 @@ const Oauth = ({
         </Box>
       </HStack>
       <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
-        <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>Need Help?</Text>
+        <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('OAUTH_need_help')}</Text>
       </Pressable>
 
       <Button
@@ -109,10 +111,10 @@ const Oauth = ({
         colorScheme="primary"
         isDisabled={!isValidHttpUrl(backendURL)}
         isLoading={loading}
-        isLoadingText="Submitting..."
+        isLoadingText={translate('OAUTH_submit_button_loading')}
         onPress={() => promptAsync()}
       >
-        Sign In
+        {translate('OAUTH_submit_button_initial')}
       </Button>
       {faceId && (
         <Button
@@ -143,7 +145,7 @@ const Oauth = ({
           isLoading={loading}
           onPress={() => faceIdCheck()}
         >
-          Face ID
+          {translate('OAUTH_faceID')}
         </Button>
       )}
     </Box>
