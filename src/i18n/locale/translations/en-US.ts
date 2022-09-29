@@ -39,4 +39,5 @@ export default {
   OAUTH_fireflyInstanceMainLabel: 'Firefly III backend URL',
   OAUTH_fireflyInstanceHelpLabel: "without '/' at the end.",
   OAUTH_fireflyPlaceholder: "Firefly III backend URL (without '/' at the end)",
+  home_assetsAccount_title: 'Assets accounts',
 };
