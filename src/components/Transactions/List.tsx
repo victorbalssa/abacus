@@ -23,6 +23,7 @@ import RangeTitle from '../UI/RangeTitle';
 import colors from '../../constants/colors';
 import { TransactionType } from '../../models/transactions';
 import { RootState } from '../../store';
+import { translate } from '../../i18n/locale';
 
 const Basic = ({
   loadingRefresh,
@@ -165,20 +166,20 @@ const Basic = ({
         borderRightRadius={15}
         onPress={() => {
           Alert.alert(
-            'Are you sure?',
-            'This transaction will be permanently removed:\n'
+            translate('transaction_list_alert_title'),
+            `${translate('transaction_list_alert_text')}\n`
             + `${(data.item as TransactionType)?.attributes?.transactions[0]?.description}\n`
             + `${moment((data.item as TransactionType)?.attributes?.transactions[0]?.date).format('ll')} ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name ? `• ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name}` : ''}\n`,
             [
               {
-                text: 'Delete',
+                text: translate('transaction_list_delete_button'),
                 onPress: async () => {
                   await onDeleteTransaction((data.item as TransactionType)?.id);
                 },
                 style: 'destructive',
               },
               {
-                text: 'Cancel',
+                text: translate('transaction_list_cancel_button'),
                 onPress: () => closeRow(rowMap, (data.item as TransactionType)?.id),
                 style: 'cancel',
               },

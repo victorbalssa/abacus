@@ -15,6 +15,7 @@ import * as Haptics from 'expo-haptics';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ToastAlert from '../UI/ToastAlert';
+import { translate } from '../../i18n/locale';
 
 type ErrorStateType = {
   description: string,
@@ -78,21 +79,21 @@ const Form = ({
     if (formData.description === undefined) {
       setErrors({
         ...errors,
-        description: 'Description is required.',
+        description: translate('transaction_form_description_required'),
       });
       return false;
     }
     if (formData.description.length < 1) {
       setErrors({
         ...errors,
-        description: 'Description is too short.',
+        description: translate('transaction_form_description_short'),
       });
       return false;
     }
     if (formData.amount === undefined || parseFloat(formData.amount) <= 0) {
       setErrors({
         ...errors,
-        amount: 'Amount is required.',
+        amount: translate('transaction_form_amount_required'),
       });
       return false;
     }
@@ -160,11 +161,11 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isRequired isInvalid={errors.description !== ''}>
         <FormControl.Label>
-          Description
+          {translate('transaction_form_description_label')}
         </FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="Description"
+          placeholder={translate('transaction_form_description_label')}
           value={formData.description}
           onChangeText={(value) => {
             setData({
@@ -238,11 +239,11 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isInvalid={errors.source_name !== ''}>
         <FormControl.Label>
-          Source account
+          {translate('transaction_form_sourceAccount_label')}
         </FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="Source account"
+          placeholder={translate('transaction_form_sourceAccount_label')}
           value={formData.source_name}
           onChangeText={(value) => {
             setData({
@@ -315,11 +316,11 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isInvalid={errors.destination_name !== ''}>
         <FormControl.Label>
-          Destination account
+          {translate('transaction_form_destinationAccount_label')}
         </FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="Destination account"
+          placeholder={translate('transaction_form_destinationAccount_label')}
           value={formData.destination_name}
           onChangeText={(value) => {
             setData({
@@ -393,7 +394,7 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isRequired>
         <FormControl.Label>
-          Date
+          {translate('transaction_form_date_label')}
         </FormControl.Label>
         <DateTimePicker
           mode="date"
@@ -407,7 +408,7 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isRequired isInvalid={errors.amount !== ''}>
         <FormControl.Label>
-          Amount
+          {translate('transaction_form_amount_label')}
         </FormControl.Label>
         <Input
           InputLeftElement={<Text px={3} color="white">*</Text>}
@@ -443,11 +444,11 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isInvalid={errors.category_id !== ''}>
         <FormControl.Label>
-          Category
+          {translate('transaction_form_category_label')}
         </FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="Category"
+          placeholder={translate('transaction_form_category_label')}
           value={formData.category_name}
           onChangeText={(value) => {
             setData({
@@ -522,11 +523,11 @@ const Form = ({
       </FormControl>
       <FormControl mt="1" isInvalid={errors.budget_id !== ''}>
         <FormControl.Label>
-          Budget
+          {translate('transaction_form_budget_label')}
         </FormControl.Label>
         <Input
           returnKeyType="done"
-          placeholder="Budget"
+          placeholder={translate('transaction_form_budget_label')}
           value={formData.budget_name}
           onChangeText={(value) => {
             setData({
@@ -624,7 +625,7 @@ const Form = ({
           resetErrors();
         }}
       >
-        Reset
+        {translate('transaction_form_reset_button')}
       </Button>
       <Button
         mt="2"
@@ -657,7 +658,7 @@ const Form = ({
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }}
       >
-        Submit
+        {translate('transaction_form_submit_button')}
       </Button>
     </VStack>
   );
