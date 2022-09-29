@@ -22,6 +22,7 @@ import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
 import colors from '../../constants/colors';
 import Loading from '../UI/Loading';
+import { translate } from '../../i18n/locale';
 
 const CursorPointer = ({
   x,
@@ -256,13 +257,13 @@ const AssetsHistoryChart = ({
       {accounts.length > 4 && (
       <View m={2}>
         <Text fontSize={11}>
-          This chart works best with up to 4 accounts,
+          {translate('assetsHistoryCharts_chart_works')}
           {' '}
-          <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(`${backendURL}/preferences`)} underline>click here</Text>
+          <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(`${backendURL}/preferences`)} underline>{translate('assetsHistoryCharts_change_preferences')}</Text>
           {' '}
-          to choose your preferred accounts in the Firefly III preferences:
+          {translate('assetsHistoryCharts_choose_preferences_text')}
           {' '}
-          <Text fontFamily="Montserrat_Bold">Home screen</Text>
+          <Text fontFamily="Montserrat_Bold">{translate('assetsHistoryCharts_home_screen')}</Text>
           .
         </Text>
       </View>
