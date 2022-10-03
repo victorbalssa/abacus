@@ -32,7 +32,7 @@ const Chart = ({
           filterData={filterData}
           backendURL={backendURL}
         />
-        <View style={{ height: 100 }} />
+        <View style={{ height: 120 }} />
       </ScrollView>
     </Animated.View>
   </>

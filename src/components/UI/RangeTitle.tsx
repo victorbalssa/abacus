@@ -14,12 +14,25 @@ import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated
 import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';
 import CurrencySwitcher from './CurrencySwitcher';
+import { isMediumScreen, isSmallScreen } from '../../lib/common';
 
 const RangeTitle: FC = () => {
   const firefly = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
   const displayFilter = useSelector((state: RootState) => state.configuration.displayFilter);
   const { loading } = useSelector((state: RootState) => state.loading.effects.firefly.handleChangeRange);
+
+  const tabSize = (() => {
+    if (isSmallScreen()) {
+      return 28;
+    }
+
+    if (isMediumScreen()) {
+      return 54;
+    }
+
+    return 67;
+  })();
 
   return (
     <>
@@ -107,7 +120,7 @@ const RangeTitle: FC = () => {
         </HStack>
       </Box>
       <Box>
-        <Box height={55} />
+        <Box height={tabSize} />
         <Box bgColor="gray.100" height={41} display={!displayFilter ? 'none' : ''} />
         <Animated.View layout={Layout}>
           <CurrencySwitcher />
