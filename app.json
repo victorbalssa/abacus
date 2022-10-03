@@ -3,7 +3,7 @@
     "name": "Abacus",
     "description": "🔥 Abacus: Firefly III iOS app 🔥",
     "slug": "abacus",
-    "privacy": "hidden",
+    "privacy": "public",
     "platforms": [
       "ios"
     ],
@@ -33,6 +33,11 @@
     "githubUrl": "https://github.com/victorbalssa/abacus",
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "292ed6dc-804c-4444-95f5-fa5d76d9913b"
+      }
     }
   }
 }
