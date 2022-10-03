@@ -7,7 +7,7 @@
     "platforms": [
       "ios"
     ],
-    "version": "0.2.5",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./src/images/icon-abacus.png",
     "splash": {
@@ -20,7 +20,7 @@
       "url": "https://u.expo.dev/292ed6dc-804c-4444-95f5-fa5d76d9913b"
     },
     "ios": {
-      "buildNumber": "0.2.5",
+      "buildNumber": "0.3.0",
       "bundleIdentifier": "abacus.ios.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID"
