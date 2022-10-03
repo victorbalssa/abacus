@@ -161,7 +161,7 @@ export default createModel<RootModel>()({
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 3:
-            start = `${today.getFullYear()}-0${(quarter * 3) + 1}-01`;
+            start = `${today.getFullYear()}-${((quarter * 3) + 1).toString().padStart(2, '0')}-01`;
             end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-30`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
