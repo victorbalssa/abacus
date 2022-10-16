@@ -6,6 +6,7 @@
     - `/constants` - App-wide variables.
     - `/containers` - 'logic-components' that connect business logic to presentation. [OLD]
     - `/fonts` - All fonts assets.
+    - `/i18n` - All translations.
     - `/images` - All images assets.
     - `/lib` - Utils and custom libraries.
     - `/models` - Rematch models combining actions, reducers and state. [Read More &rarr;](https://github.com/rematch/rematch#step-2-models)
