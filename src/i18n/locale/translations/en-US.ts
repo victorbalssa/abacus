@@ -52,4 +52,15 @@ export default {
   layout_new_update_body_text: 'You can always update later in Settings tab.',
   layout_new_update_cancel_button: 'Cancel',
   layout_new_update_update_button: 'Update now',
+
+  // from version 0.31
+  transaction_screen_title: 'New Transaction',
+  navigation_home_tab: 'Home',
+  navigation_chart_tab: 'Chart',
+  navigation_create_tab: 'Create',
+  navigation_transactions_tab: 'Transactions',
+  navigation_settings_tab: 'Settings',
+  transaction_form_type_withdraw: 'Withdraw',
+  transaction_form_type_deposit: 'Deposit',
+  transaction_form_type_transfer: 'Transfer',
 };
