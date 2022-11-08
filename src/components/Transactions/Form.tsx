@@ -69,6 +69,20 @@ const Form = ({
   const [displayAutocomplete, setDisplayAutocomplete] = React.useState({
     budget: false, category: false, description: false, source: false, destination: false,
   });
+  const types = [
+    {
+      type: 'withdrawal',
+      name: translate('transaction_form_type_withdraw'),
+    },
+    {
+      type: 'deposit',
+      name: translate('transaction_form_type_deposit'),
+    },
+    {
+      type: 'transfer',
+      name: translate('transaction_form_type_transfer'),
+    },
+  ];
 
   const resetErrors = () => setErrors(INITIAL_ERROR);
   const closeAllAutocomplete = () => setDisplayAutocomplete({
@@ -132,7 +146,7 @@ const Form = ({
       <FormControl isRequired>
         <HStack justifyContent="center">
           <Button.Group isAttached borderRadius={15}>
-            {['withdrawal', 'deposit', 'transfer'].map((type) => (
+            {types.map(({ type, name }) => (
               <Button
                 shadow={2}
                 onPress={() => setData({
@@ -153,7 +167,7 @@ const Form = ({
                 borderWidth={1}
                 borderColor="white"
               >
-                {type}
+                {name}
               </Button>
             ))}
           </Button.Group>

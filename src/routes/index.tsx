@@ -19,6 +19,8 @@ import TransactionsEditContainer from '../containers/Transactions/Edit';
 import TransactionsCreateContainer from '../containers/Transactions/Create';
 import colors from '../constants/colors';
 
+import { translate } from '../i18n/locale';
+
 const Stack = createNativeStackNavigator();
 const Stack2 = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -179,15 +181,15 @@ const Home = () => (
     })}
   >
     <Tab.Screen
-      name="Home"
+      name={translate('navigation_home_tab')}
       component={HomeContainer}
     />
     <Tab.Screen
-      name="Chart"
+      name={translate('navigation_chart_tab')}
       component={ChartContainer}
     />
     <Tab.Screen
-      name="Create"
+      name={translate('navigation_create_tab')}
       component={HomeContainer}
       options={({ navigation }) => ({
         tabBarButton: () => (
@@ -196,7 +198,7 @@ const Home = () => (
       })}
     />
     <Tab.Screen
-      name="Transactions"
+      name={translate('navigation_transactions_tab')}
       component={TransactionNavigator}
       options={{
         tabBarIcon: (icon) => (
@@ -205,7 +207,7 @@ const Home = () => (
       }}
     />
     <Tab.Screen
-      name="Settings"
+      name={translate('navigation_settings_tab')}
       component={ConfigurationContainer}
     />
   </Tab.Navigator>

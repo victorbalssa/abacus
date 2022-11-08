@@ -7,6 +7,8 @@ import {
 import Title from '../UI/Title';
 import TransactionForm from './Form';
 
+import { translate } from '../../i18n/locale';
+
 const Create = ({
   loading,
   accounts,
@@ -23,7 +25,7 @@ const Create = ({
   goToTransactions,
 }) => (
   <>
-    <Title navigation={navigation} text="New Transaction" />
+    <Title navigation={navigation} text={translate('transaction_screen_title')} />
     <KeyboardAvoidingView
       h={{
         base: '100%',
