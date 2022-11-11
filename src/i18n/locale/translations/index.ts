@@ -13,6 +13,6 @@ export default {
   'en-US': enUS,
   'pt-BR': ptBR,
   'fr-FR': frFR,
-  'es-ES': esEs,
+  'es-ES': esES,
   'id-ID': idID,
 };
