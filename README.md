@@ -6,10 +6,8 @@
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
   <p></p>
-  <img alt="gif" src="https://i.imgur.com/9yOebcP.gif" height="500" />
-  <img alt="chart" src=".github/img/chart.jpeg" height="500" />
-  <img alt="transaction-list" src=".github/img/transactions-list.jpeg" height="500" />
-    <p></p>
+  <img alt="chart" src=".github/img/demo.gif" height="500" />
+  <p></p>
   <sup>
 
 ![size](https://img.shields.io/github/repo-size/victorbalssa/abacus?style=for-the-badge)
