@@ -52,4 +52,13 @@ export default {
     layout_new_update_body_text: 'Siempre puedes actualizar más tarde en la pestaña de Ajustes.',
     layout_new_update_cancel_button: 'Cancelar',
     layout_new_update_update_button: 'Actualizar ahora',
+    transaction_screen_title: 'Nueva transacción',
+    navigation_home_tab: 'Inicio',
+    navigation_chart_tab: 'Gráficos',
+    navigation_create_tab: 'Crear',
+    navigation_transactions_tab: 'Transacciones',
+    navigation_settings_tab: 'Ajustes',
+    transaction_form_type_withdraw: 'Retirar',
+    transaction_form_type_deposit: 'Depositar',
+    transaction_form_type_transfer: 'Transferir',
 };
