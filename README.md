@@ -6,7 +6,7 @@
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
   <p></p>
-  <img alt="chart" src=".github/img/demo.gif" height="500" />
+  <img alt="chart" src=".github/img/demo.gif" />
   <p></p>
   <sup>
 
