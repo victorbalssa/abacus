@@ -69,4 +69,5 @@ export default {
   period_switcher_quarterly: 'Quarterly',
   period_switcher_semiannually: 'Semiannually',
   period_switcher_yearly: 'Yearly',
+  error_widget_title: 'Something went wrong'
 };
