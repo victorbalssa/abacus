@@ -72,4 +72,10 @@ export default {
   error_widget_title: 'Something went wrong',
   home_container_error_title: 'Something went wrong',
   home_container_error_description: 'Failed to get accessToken',
+  oauth_token_error_title: 'Something went wrong',
+  oauth_token_error_description: 'Failed to get accessToken',
+  oauth_token_info_title: 'Info',
+  oauth_token_info_description: 'Authentication cancel, check Client ID & backend URL.',
+  oauth_token_success_title: 'Success',
+  oauth_token_success_description: 'Secure connexion ready with your Firefly III instance.',
 };
