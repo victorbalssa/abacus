@@ -52,4 +52,15 @@ export default {
   layout_new_update_body_text: 'Anda dapat memperbarui nanti pada tab Pengaturan.',
   layout_new_update_cancel_button: 'Batal',
   layout_new_update_update_button: 'Perbarui sekarang',
+
+  // from version 0.31
+  transaction_screen_title: 'Transaksi Baru',
+  navigation_home_tab: 'Beranda',
+  navigation_chart_tab: 'Grafik',
+  navigation_create_tab: 'Buat',
+  navigation_transactions_tab: 'Transaksi',
+  navigation_settings_tab: 'Pengaturan',
+  transaction_form_type_withdraw: 'Penarikan',
+  transaction_form_type_deposit: 'Deposit',
+  transaction_form_type_transfer: 'Transfer',
 };
