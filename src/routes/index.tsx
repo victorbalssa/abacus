@@ -34,12 +34,6 @@ const MyTheme = {
   },
 };
 
-const tabIconConfig = {
-  Home: 'home',
-  Chart: 'linechart',
-  Settings: 'setting',
-};
-
 const styles = StyleSheet.create({
   navigatorContainer: {
     position: 'absolute',
@@ -155,13 +149,6 @@ const Home = () => (
       </Box>
     )}
     screenOptions={({ route }) => ({
-      tabBarIcon: (icon) => (
-        <AntDesign
-          name={tabIconConfig[route.name]}
-          size={22}
-          color={icon.color}
-        />
-      ),
       tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
       tabBarActiveBackgroundColor: colors.tabBackgroundColor,
       tabBarActiveTintColor: colors.brandStyle,
@@ -182,11 +169,29 @@ const Home = () => (
   >
     <Tab.Screen
       name={translate('navigation_home_tab')}
+      options={{
+        tabBarIcon: (icon) => (
+          <AntDesign
+            name="home"
+            size={22}
+            color={icon.color}
+          />
+        ),
+      }}
       component={HomeContainer}
     />
     <Tab.Screen
       name={translate('navigation_chart_tab')}
       component={ChartContainer}
+      options={{
+        tabBarIcon: (icon) => (
+          <AntDesign
+            name="linechart"
+            size={22}
+            color={icon.color}
+          />
+        ),
+      }}
     />
     <Tab.Screen
       name={translate('navigation_create_tab')}
@@ -209,6 +214,15 @@ const Home = () => (
     <Tab.Screen
       name={translate('navigation_settings_tab')}
       component={ConfigurationContainer}
+      options={{
+        tabBarIcon: (icon) => (
+          <AntDesign
+            name="setting"
+            size={22}
+            color={icon.color}
+          />
+        ),
+      }}
     />
   </Tab.Navigator>
 );
