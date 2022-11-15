@@ -77,5 +77,5 @@ export default {
   oauth_token_info_title: 'Info',
   oauth_token_info_description: 'Authentication cancel, check Client ID & backend URL.',
   oauth_token_success_title: 'Success',
-  oauth_token_success_description: 'Secure connexion ready with your Firefly III instance.',
+  oauth_token_success_description: 'Secure connection ready with your Firefly III instance.',
 };
