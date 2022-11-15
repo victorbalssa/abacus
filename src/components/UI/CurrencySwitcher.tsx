@@ -7,6 +7,8 @@ import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated
 import { RootDispatch, RootState } from '../../store';
 import Loading from './Loading';
 
+import { translate } from '../../i18n/locale';
+
 const CurrencySwitcher: FC = () => {
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const firefly = useSelector((state: RootState) => state.firefly);
@@ -86,10 +88,10 @@ const CurrencySwitcher: FC = () => {
           selectedValue={`${firefly.range}`}
           onValueChange={(v) => dispatch.firefly.handleChangeRange({ range: v })}
         >
-          <Select.Item key="1" label="Monthly" value="1" />
-          <Select.Item key="3" label="Quarterly" value="3" />
-          <Select.Item key="6" label="Semiannually" value="6" />
-          <Select.Item key="12" label="Yearly" value="12" />
+          <Select.Item key="1" label={translate('period_switcher_monthly')} value="1" />
+          <Select.Item key="3" label={translate('period_switcher_quarterly')} value="3" />
+          <Select.Item key="6" label={translate('period_switcher_semiannually')} value="6" />
+          <Select.Item key="12" label={translate('period_switcher_yearly')} value="12" />
         </Select>
         <View style={{ width: 30 }}>
           {loading === true && <Loading />}
