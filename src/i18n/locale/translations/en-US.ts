@@ -63,4 +63,10 @@ export default {
   transaction_form_type_withdraw: 'Withdraw',
   transaction_form_type_deposit: 'Deposit',
   transaction_form_type_transfer: 'Transfer',
+
+  // from 0.4.1
+  period_switcher_monthly: 'Monthly',
+  period_switcher_quarterly: 'Quarterly',
+  period_switcher_semiannually: 'Semiannually',
+  period_switcher_yearly: 'Yearly',
 };
