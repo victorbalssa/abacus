@@ -63,4 +63,25 @@ export default {
   transaction_form_type_withdraw: 'Saída',
   transaction_form_type_deposit: 'Depósito',
   transaction_form_type_transfer: 'Transferência',
+
+  // from 0.4.1
+  period_switcher_monthly: 'Mês',
+  period_switcher_quarterly: 'Trimestre',
+  period_switcher_semiannually: 'Semestre',
+  period_switcher_yearly: 'Ano',
+  error_widget_title: 'Algo deu errado',
+  home_container_error_title: 'Algo deu errado',
+  home_container_error_description: 'Falha ao buscar a chave de acesso',
+  oauth_token_error_title: 'Algo deu errado',
+  oauth_token_error_description: 'Falha ao buscar a chave de acesso',
+  oauth_token_info_title: 'Info',
+  oauth_token_info_description: 'Autenticação cancelada, verifique o ID do cliente e URL do backend.',
+  oauth_token_success_title: 'Sucesso',
+  oauth_token_success_description: 'Temos uma conexão segura com sua instância do Firefly III.',
+  transaction_form_success_title: 'Sucesso',
+  transaction_form_success_description: 'Transação criada. Toque aqui para ir para a lista de transações.',
+  transaction_form_error_title: 'Erro',
+  home_header_time_range_year: 'Ano',
+  home_header_time_range_q: 'T', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 };
