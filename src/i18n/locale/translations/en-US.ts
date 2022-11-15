@@ -81,4 +81,7 @@ export default {
   transaction_form_success_title: 'Success',
   transaction_form_success_description: 'Transaction created. Tap here to go to transactions list.',
   transaction_form_error_title: 'Error',
+  home_header_time_range_year: 'Year',
+  home_header_time_range_q: 'Q', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 };

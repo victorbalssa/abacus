@@ -8,6 +8,7 @@ import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
+import { translate } from '../i18n/locale';
 
 const getCurrentDate = () => new Date().toISOString().slice(0, 10);
 
@@ -186,16 +187,16 @@ export default createModel<RootModel>()({
           rangeTitle = `${moment(end).format('MMM')} ${moment(end).year()}.`;
           break;
         case 3:
-          rangeTitle = `Q${moment(start).quarter()} ${moment(start).year()}.`;
+          rangeTitle = `${translate('home_header_time_range_q')}${moment(start).quarter()} ${moment(start).year()}.`;
           break;
         case 6:
-          rangeTitle = `S${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
+          rangeTitle = `${translate('home_header_time_range_s')}${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
           break;
         case 12:
-          rangeTitle = `${moment(start).year()} Year.`;
+          rangeTitle = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
           break;
         default:
-          rangeTitle = `${moment(start).year()} Year.`;
+          rangeTitle = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
           break;
       }
 
