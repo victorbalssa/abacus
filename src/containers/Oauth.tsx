@@ -14,6 +14,8 @@ import { RootState, RootDispatch } from '../store';
 import { ContainerPropType, OauthConfigType } from './types';
 import ToastAlert from '../components/UI/ToastAlert';
 
+import { translate } from '../i18n/locale';
+
 const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
   const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
@@ -69,10 +71,10 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
             render: ({ id }) => (
               <ToastAlert
                 onClose={() => toast.close(id)}
-                title="Something went wrong"
+                title={translate('oauth_token_error_title')}
                 status="error"
                 variant="solid"
-                description={`Failed to get accessToken, ${e.message}`}
+                description={`${translate('oauth_token_error_description')}, ${e.message}`}
               />
             ),
           });
@@ -88,10 +90,10 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
           render: ({ id }) => (
             <ToastAlert
               onClose={() => toast.close(id)}
-              title="Info"
+              title={translate('oauth_token_info_title')}
               status="info"
               variant="solid"
-              description="Authentication cancel, check Client ID & backend URL."
+              description={translate('oauth_token_info_description')}
             />
           ),
         });
@@ -115,10 +117,10 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
             render: ({ id }) => (
               <ToastAlert
                 onClose={() => toast.close(id)}
-                title="Success"
+                title={translate('oauth_token_success_title')}
                 status="success"
                 variant="solid"
-                description="Secure connexion ready with your Firefly III instance."
+                description={translate('oauth_token_success_description')}
               />
             ),
           });
@@ -128,10 +130,10 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
             render: ({ id }) => (
               <ToastAlert
                 onClose={() => toast.close(id)}
-                title="Something went wrong"
+                title={translate('oauth_token_error_title')}
                 status="error"
                 variant="solid"
-                description={`Failed to get accessToken, ${e.message}`}
+                description={`${translate('oauth_token_error_description')}, ${e.message}`}
               />
             ),
           });
