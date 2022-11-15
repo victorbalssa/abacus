@@ -69,5 +69,7 @@ export default {
   period_switcher_quarterly: 'Quarterly',
   period_switcher_semiannually: 'Semiannually',
   period_switcher_yearly: 'Yearly',
-  error_widget_title: 'Something went wrong'
+  error_widget_title: 'Something went wrong',
+  home_container_error_title: 'Something went wrong',
+  home_container_error_description: 'Failed to get accessToken',
 };
