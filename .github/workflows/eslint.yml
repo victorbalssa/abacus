@@ -23,15 +23,16 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      actions: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: npm install
-        run: npm install
+      - name: npm install eslint@^7.2.0
+        run: npm install eslint@^7.2.0
 
       - name: Run ESLint
-        run: npm run lint-with-results
+        run: npm run lint
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
