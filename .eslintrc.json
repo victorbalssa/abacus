@@ -10,13 +10,14 @@
     "parser":  "@typescript-eslint/parser",
     "plugins": ["@typescript-eslint"],
     "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true,
+            "tsx": true,
+            "modules": true
+        },
         "ecmaVersion": 6,
         "project": "./tsconfig.json",
         "sourceType": "module"
-    },
-    "ecmaFeatures":  {
-        "jsx": true,
-        "tsx": true
     },
     "settings": {
         "react": {
@@ -61,6 +62,7 @@
         "react/require-default-props": "off",
         "react/prop-types": "off",
         "max-len": "off",
-        "react/style-prop-object": "off"
+        "react/style-prop-object": "off",
+        "@typescript-eslint/no-empty-function": "off"
     }
 }

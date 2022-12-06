@@ -139,7 +139,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async createTransactions(payload, rootState) {
+    async createTransactions(payload) {
       const body = {
         transactions: [{
           // TODO: Add support for:
@@ -167,7 +167,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async updateTransactions(payload, rootState) {
+    async updateTransactions(payload) {
       const {
         id,
         transaction,
