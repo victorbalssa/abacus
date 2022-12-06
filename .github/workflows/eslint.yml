@@ -31,10 +31,7 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npm run lint
-          --config .eslintrc.json
-          --ext .js,.jsx,.ts,.tsx
-          --output-file eslint-results.sarif
+        run: npm run lint-with-results
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
