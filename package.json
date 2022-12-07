@@ -11,7 +11,7 @@
   },
   "scripts": {
     "lint": "eslint --config .eslintrc.json .",
-    "lint-with-results": "eslint --config .eslintrc.json --output-file eslint-results.sarif .",
+    "lint-with-results": "eslint --config .eslintrc.json --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif .",
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
