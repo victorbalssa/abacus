@@ -11,7 +11,7 @@
   },
   "scripts": {
     "lint": "eslint --config .eslintrc.json .",
-    "lint-with-results": "eslint --config .eslintrc.json --output-file eslint-results.sarif .",
+    "lint-with-results": "eslint --config .eslintrc.json --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif .",
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -81,7 +81,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "babel-preset-expo": "~9.2.1",
-    "eslint": "^7.2.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jest": "^23.6.0",
