@@ -9,7 +9,6 @@ import ToastAlert from './ToastAlert';
 
 import { translate } from '../../i18n/locale';
 
-
 const ErrorWidget: FC = () => {
   const toast = useToast();
   const { error } = useSelector((state: RootState) => state.loading.global);
