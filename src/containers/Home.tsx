@@ -16,7 +16,6 @@ import { ContainerPropType } from './types';
 
 import { translate } from '../i18n/locale';
 
-
 const Home: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
   const firefly = useSelector((state: RootState) => state.firefly);
