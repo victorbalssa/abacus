@@ -7,16 +7,15 @@ import {
   HStack,
   Text,
   VStack,
-  ScrollView, Heading, Box, Switch, AlertDialog, Button, Skeleton,
+  ScrollView,
+  Heading,
+  Box,
+  Skeleton,
 } from 'native-base';
-import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated';
+import Animated, { Layout } from 'react-native-reanimated';
 
-import * as Linking from 'expo-linking';
-import { AntDesign } from '@expo/vector-icons';
-import * as Application from 'expo-application';
 import colors from '../constants/colors';
 import RangeTitle from './UI/RangeTitle';
-import CurrencySwitcher from './UI/CurrencySwitcher';
 import { translate } from '../i18n/locale';
 
 const Home = ({
@@ -95,15 +94,37 @@ const Home = ({
         <Heading mx={2} py={2} pt={5} size="sm">{translate('home_assetsAccount_title')}</Heading>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200">
           {accounts && accounts?.map((account, index) => (
-            <HStack key={account.attributes.name} mx={3} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={index + 1 === accounts.length ? 0 : 1} borderColor="gray.200">
+            <HStack
+              key={account.attributes.name}
+              mx={3}
+              py={2}
+              minH={45}
+              alignItems="center"
+              justifyContent="space-between"
+              borderBottomWidth={index + 1 === accounts.length ? 0 : 1}
+              borderColor="gray.200"
+            >
               <Text style={{ fontFamily: 'Montserrat' }}>
                 {account.attributes.name}
                 {' '}
-                <Text style={{ fontSize: 10, fontFamily: 'Montserrat', color: colors.brandDanger }}>{account.attributes.include_net_worth ? '' : '(*)'}</Text>
+                <Text style={{
+                  fontSize: 10,
+                  fontFamily: 'Montserrat',
+                  color: colors.brandDanger,
+                }}
+                >
+                  {account.attributes.include_net_worth ? '' : '(*)'}
+                </Text>
               </Text>
 
               {!loading ? (
-                <Text style={{ fontFamily: 'Montserrat_Bold', color: account.attributes.current_balance < 0 ? colors.brandDanger : colors.brandStyle3 }}>{account.attributes.current_balance_formatted}</Text>
+                <Text style={{
+                  fontFamily: 'Montserrat_Bold',
+                  color: account.attributes.current_balance < 0 ? colors.brandDanger : colors.brandStyle3,
+                }}
+                >
+                  {account.attributes.current_balance_formatted}
+                </Text>
               ) : (
                 <Skeleton w={70} h={5} rounded={15} />
               )}

@@ -16,7 +16,12 @@ const Title = ({ text, navigation }) => (
     justifyContent="space-between"
     alignItems="center"
   >
-    <Text numberOfLines={2} style={{ fontFamily: 'Montserrat_Bold', fontSize: 21, lineHeight: 40, maxWidth: 270 }}>
+    <Text
+      numberOfLines={2}
+      style={{
+        fontFamily: 'Montserrat_Bold', fontSize: 21, lineHeight: 40, maxWidth: 270,
+      }}
+    >
       {text}
     </Text>
     <IconButton

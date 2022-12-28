@@ -17,7 +17,7 @@ export const isSmallScreen = () => {
     return false;
   }
 
-  return (Platform.OS === 'ios' && D_HEIGHT < XS_HEIGHT);
+  return (Platform.OS === 'ios' && D_HEIGHT < XS_HEIGHT && D_WIDTH);
 };
 
 export const isMediumScreen = () => {
