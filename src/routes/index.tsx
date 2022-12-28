@@ -7,9 +7,8 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
-import { BlurView } from 'expo-blur';
 import OauthContainer from '../containers/Oauth';
 import ConfigurationContainer from '../containers/Configuration';
 import HomeContainer from '../containers/Home';

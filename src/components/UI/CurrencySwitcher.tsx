@@ -1,9 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box, CheckIcon, HStack, Select, View, VStack,
+  CheckIcon,
+  HStack,
+  Select,
+  View,
 } from 'native-base';
-import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated';
 import { RootDispatch, RootState } from '../../store';
 import Loading from './Loading';
 
