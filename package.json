@@ -31,7 +31,7 @@
     "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.4.1",
-    "expo": "^47.0.3",
+    "expo": "^47.0.7",
     "expo-application": "~5.0.1",
     "expo-asset": "~8.7.0",
     "expo-auth-session": "~3.8.0",
