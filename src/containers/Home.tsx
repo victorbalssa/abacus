@@ -14,6 +14,8 @@ import secureKeys from '../constants/oauth';
 import ToastAlert from '../components/UI/ToastAlert';
 import { ContainerPropType } from './types';
 
+import { translate } from '../i18n/locale';
+
 const Home: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
   const firefly = useSelector((state: RootState) => state.firefly);
@@ -66,10 +68,10 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
             render: ({ id }) => (
               <ToastAlert
                 onClose={() => toast.close(id)}
-                title="Something went wrong"
+                title={translate('home_container_error_title')}
                 status="error"
                 variant="solid"
-                description={`Failed to get accessToken, ${e.message}`}
+                description={`${translate('home_container_error_description')}, ${e.message}`}
               />
             ),
           });

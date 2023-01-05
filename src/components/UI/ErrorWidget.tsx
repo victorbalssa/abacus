@@ -7,6 +7,8 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import { RootState } from '../../store';
 import ToastAlert from './ToastAlert';
 
+import { translate } from '../../i18n/locale';
+
 const ErrorWidget: FC = () => {
   const toast = useToast();
   const { error } = useSelector((state: RootState) => state.loading.global);
@@ -27,7 +29,7 @@ const ErrorWidget: FC = () => {
         render: ({ id }) => (
           <ToastAlert
             onClose={() => toast.close(id)}
-            title="Something went wrong"
+            title={translate('error_widget_title')}
             status="error"
             variant="solid"
             description={(error as Error).message}

@@ -63,4 +63,25 @@ export default {
   transaction_form_type_withdraw: 'Withdraw',
   transaction_form_type_deposit: 'Deposit',
   transaction_form_type_transfer: 'Transfer',
+
+  // from 0.4.1
+  period_switcher_monthly: 'Monthly',
+  period_switcher_quarterly: 'Quarterly',
+  period_switcher_semiannually: 'Semiannually',
+  period_switcher_yearly: 'Yearly',
+  error_widget_title: 'Something went wrong',
+  home_container_error_title: 'Something went wrong',
+  home_container_error_description: 'Failed to get accessToken',
+  oauth_token_error_title: 'Something went wrong',
+  oauth_token_error_description: 'Failed to get accessToken',
+  oauth_token_info_title: 'Info',
+  oauth_token_info_description: 'Authentication cancel, check Client ID & backend URL.',
+  oauth_token_success_title: 'Success',
+  oauth_token_success_description: 'Secure connection ready with your Firefly III instance.',
+  transaction_form_success_title: 'Success',
+  transaction_form_success_description: 'Transaction created. Tap here to go to transactions list.',
+  transaction_form_error_title: 'Error',
+  home_header_time_range_year: 'Year',
+  home_header_time_range_q: 'Q', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 };
