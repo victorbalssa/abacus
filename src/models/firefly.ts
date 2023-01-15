@@ -293,7 +293,7 @@ export default createModel<RootModel>()({
           .filter((e, i) => i % 2 === 0)
           .filter((e, i) => i % 2 === 0)
           .map((key) => {
-            const value = accounts[index].entries[key];
+            const value = parseFloat(accounts[index].entries[key]);
             const date = new Date(key);
 
             return {
@@ -302,7 +302,7 @@ export default createModel<RootModel>()({
             };
           })
           : Object.keys(v.entries).map((key) => {
-            const value = accounts[index].entries[key];
+            const value = parseFloat(accounts[index].entries[key]);
             const date = new Date(key);
 
             return {
