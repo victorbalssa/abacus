@@ -63,4 +63,25 @@ export default {
   transaction_form_type_withdraw: 'Penarikan',
   transaction_form_type_deposit: 'Deposit',
   transaction_form_type_transfer: 'Transfer',
+
+  // from 0.4.1
+  period_switcher_monthly: 'Bulanan',
+  period_switcher_quarterly: 'Triwulan',
+  period_switcher_semiannually: 'Semester',
+  period_switcher_yearly: 'Tahunan',
+  error_widget_title: 'Terjadi kesalahan',
+  home_container_error_title: 'Terjadi kesalahan',
+  home_container_error_description: 'Gagal mendapatkan accessToken',
+  oauth_token_error_title: 'Terjadi kesalahan',
+  oauth_token_error_description: 'Gagal mendapatkan accessToken',
+  oauth_token_info_title: 'Info',
+  oauth_token_info_description: 'Autentikasi dibatalkan, cek Client ID & backend URL.',
+  oauth_token_success_title: 'Berhasil',
+  oauth_token_success_description: 'Anda berhasil masuk ke Firefly III.',
+  transaction_form_success_title: 'Berhasil',
+  transaction_form_success_description: 'Transaksi berhasil dibuat. Klik di sini untuk melihat daftar transaksi.',
+  transaction_form_error_title: 'Error',
+  home_header_time_range_year: 'Tahun',
+  home_header_time_range_q: 'Q', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 };
