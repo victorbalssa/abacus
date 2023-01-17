@@ -27,7 +27,7 @@ export default {
   transaction_form_sourceAccount_label: '付款账户',
   transaction_form_destinationAccount_label: '收款账户',
   transaction_form_date_label: '日期',
-  transaction_form_amount_label: '账户',
+  transaction_form_amount_label: '金额',
   transaction_form_category_label: '分类',
   transaction_form_budget_label: '预算',
   transaction_form_reset_button: '重置',
@@ -63,4 +63,25 @@ export default {
   transaction_form_type_withdraw: '支出',
   transaction_form_type_deposit: '收入',
   transaction_form_type_transfer: '转账',
+
+  // from 0.4.1
+  period_switcher_monthly: '月',
+  period_switcher_quarterly: '季度',
+  period_switcher_semiannually: '半年',
+  period_switcher_yearly: '年',
+  error_widget_title: '出错了',
+  home_container_error_title: '出错了',
+  home_container_error_description: '获取accessToken失败',
+  oauth_token_error_title: '出错了',
+  oauth_token_error_description: '获取accessToken失败',
+  oauth_token_info_title: '信息',
+  oauth_token_info_description: '授权被取消了, 请检查Client ID和Firefly III 后端网址是否正确。',
+  oauth_token_success_title: '成功',
+  oauth_token_success_description: '与您的Firefly III 后端服务建立安全连接成功',
+  transaction_form_success_title: '成功',
+  transaction_form_success_description: '交易已创建，点这里去查看交易列表',
+  transaction_form_error_title: '错误',
+  home_header_time_range_year: '年',
+  home_header_time_range_q: 'Q', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 };
