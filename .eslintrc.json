@@ -63,6 +63,8 @@
         "react/prop-types": "off",
         "max-len": "off",
         "react/style-prop-object": "off",
-        "@typescript-eslint/no-empty-function": "off"
+        "@typescript-eslint/no-empty-function": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"]
     }
 }
