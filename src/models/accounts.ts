@@ -158,7 +158,7 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async getAutocompleteAccounts(payload): Promise<void> {
-      const limit = 5;
+      const limit = 9;
       const {
         query,
         isDestination,
@@ -177,7 +177,7 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async getAutocompleteDescriptions(payload): Promise<void> {
-      const limit = 5;
+      const limit = 9;
       const {
         query,
       } = payload;

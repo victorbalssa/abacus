@@ -12,7 +12,7 @@ export type ConfigurationStateType = {
 }
 
 const INITIAL_STATE = {
-  backendURL: '',
+  backendURL: 'https://',
   scrollEnabled: true,
   faceId: false,
   displayFilter: false,

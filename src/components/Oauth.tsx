@@ -3,15 +3,24 @@ import {
   Input,
   Box,
   FormControl,
-  Button, HStack, Text, Pressable,
+  Button,
+  HStack,
+  Text,
+  Pressable,
 } from 'native-base';
-import { KeyboardAvoidingView } from 'react-native';
+import { Alert, KeyboardAvoidingView } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import * as Clipboard from 'expo-clipboard';
 
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { isValidHttpUrl } from '../lib/common';
 import { translate } from '../i18n/locale';
+
+const copyToClipboard = async () => {
+  await Clipboard.setStringAsync('abacusiosapp://redirect');
+  Alert.alert('\'abacusiosapp://redirect\' copied to clipboard');
+};
 
 const Oauth = ({
   loading,
@@ -75,9 +84,10 @@ const Oauth = ({
           {translate('OAUTH_set_redirect')}
         </Text>
 
-        <Box backgroundColor="primary.200" borderRadius={15} py={1} px={1}>
-          <Text fontFamily="Montserrat_Bold" color="white">abacusiosapp://redirect</Text>
-        </Box>
+        <Pressable flexDirection="row" justifyContent="center" alignItems="center" onPress={copyToClipboard} backgroundColor="primary.200" borderRadius={15} py={1} px={1}>
+          <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
+          <Text fontFamily="Montserrat_Bold" color="white" mr={1}>abacusiosapp://redirect</Text>
+        </Pressable>
       </HStack>
       <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
         <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('OAUTH_need_help')}</Text>

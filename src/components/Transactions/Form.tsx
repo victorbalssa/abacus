@@ -630,7 +630,7 @@ const Form = ({
             destination_name: '',
             description: '',
             amount: '',
-            type: 'deposit',
+            type: 'withdrawal',
             budget_id: '',
             budget_name: '',
             category_id: '',

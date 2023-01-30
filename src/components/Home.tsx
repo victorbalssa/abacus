@@ -93,7 +93,7 @@ const Home = ({
       >
         <Heading mx={2} py={2} pt={5} size="sm">{translate('home_assetsAccount_title')}</Heading>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200">
-          {accounts && accounts?.map((account, index) => (
+          {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
             <HStack
               key={account.attributes.name}
               mx={3}
@@ -101,7 +101,7 @@ const Home = ({
               minH={45}
               alignItems="center"
               justifyContent="space-between"
-              borderBottomWidth={index + 1 === accounts.length ? 0 : 1}
+              borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 1}
               borderColor="gray.200"
             >
               <Text style={{ fontFamily: 'Montserrat' }}>
