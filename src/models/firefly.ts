@@ -158,17 +158,17 @@ export default createModel<RootModel>()({
         switch (rangeInt) {
           case 1:
             start = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-01`;
-            end = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-30`;
+            end = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 3:
             start = `${today.getFullYear()}-${((quarter * 3) + 1).toString().padStart(2, '0')}-01`;
-            end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-30`;
+            end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 6:
             start = `${today.getFullYear()}-${semi === 1 ? '01' : '07'}-01`;
-            end = `${today.getFullYear()}-${semi === 1 ? '06' : '12'}-30`;
+            end = `${today.getFullYear()}-${semi === 1 ? '06' : '12'}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 12:
