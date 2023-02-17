@@ -165,7 +165,7 @@ export default createModel<RootModel>()({
       } = payload;
       const type = isDestination ? 'Expense%20account' : 'Revenue%20account';
       const autocompleteAccounts = await dispatch.configuration.apiFetch(
-        { url: `/api/v1/autocomplete/accounts?types=Asset%20account,${type},Loan,Debt,Mortgage&limit=${limit}&query=${query}` },
+        { url: `/api/v1/autocomplete/accounts?types=Asset%20account,${type},Loan,Debt,Mortgage&limit=${limit}&query=${encodeURIComponent(query)}` },
       );
 
       dispatch.accounts.setAutocompleteAccounts({ autocompleteAccounts });
