@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Keyboard } from 'react-native';
+import { FlatList, Keyboard, View } from 'react-native';
 import {
   Button,
   FormControl,
@@ -16,6 +16,10 @@ import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ToastAlert from '../UI/ToastAlert';
 import { translate } from '../../i18n/locale';
+import { AutocompleteAccount, AutocompleteDescription } from '../../models/accounts';
+import { CategoryType } from '../../models/categories';
+import { BudgetType } from '../../models/budgets';
+import colors from '../../constants/colors';
 
 type ErrorStateType = {
   description: string,
@@ -47,7 +51,6 @@ const Form = ({
   getAutocompleteDescription,
   getAutocompleteCategories,
   getAutocompleteBudgets,
-  loadingAutocomplete,
   submit,
   goToTransactions,
   payload,
@@ -141,6 +144,25 @@ const Form = ({
     'opening balance': 'blue.700',
   };
 
+  const deleteBtn = (fields: string[]) => (
+    <IconButton
+      m={2}
+      p={0}
+      borderRadius={15}
+      colorScheme="gray"
+      _icon={{
+        as: AntDesign,
+        name: 'closecircle',
+        size: 19,
+        color: 'gray.500',
+      }}
+      onPress={() => setData({
+        ...formData,
+        ...fields.reduce((acc, curr) => { acc[curr] = ''; return acc; }, {}),
+      })}
+    />
+  );
+
   return (
     <VStack mx="3" my={3} pb={240}>
       <FormControl isRequired>
@@ -160,7 +182,7 @@ const Form = ({
                 _disabled={{
                   opacity: 1,
                 }}
-                onTouchEnd={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+                onTouchEnd={() => (type !== formData.type) && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
                 isDisabled={type === formData.type}
                 backgroundColor={type !== formData.type ? 'gray.400' : colorItemTypes[formData.type]}
                 key={type}
@@ -196,38 +218,20 @@ const Form = ({
             });
           }}
           onBlur={closeAllAutocomplete}
-          InputRightElement={(
-            <IconButton
-              p={2}
-              borderRadius={15}
-              colorScheme="gray"
-              _icon={{
-                as: AntDesign,
-                name: 'closecircle',
-                size: 19,
-                color: 'gray.400',
-              }}
-              onPress={() => setData({
-                ...formData,
-                description: '',
-              })}
-            />
-          )}
+          InputRightElement={deleteBtn(['description'])}
         />
         {'description' in errors ? <FormControl.ErrorMessage>{errors.description}</FormControl.ErrorMessage> : <></>}
 
-        {displayAutocomplete.description && loadingAutocomplete && <Spinner mt={2} />}
-        {displayAutocomplete.description && !loadingAutocomplete && (
-          <FlatList
-            keyboardShouldPersistTaps="handled"
-            data={descriptions}
-            renderItem={(a) => (
+        {displayAutocomplete.description && (
+          <View>
+            {descriptions.map((a: AutocompleteDescription) => (
               <Pressable
+                key={a.id}
                 mx={2}
                 onPress={() => {
                   setData({
                     ...formData,
-                    description: a.item.name,
+                    description: a.name,
                   });
                   closeAllAutocomplete();
                 }}
@@ -238,17 +242,16 @@ const Form = ({
               >
                 <HStack
                   justifyContent="space-between"
-                  key={a.index}
                   mx={2}
                   my={2}
                 >
                   <Text underline>
-                    {a.item.name || 'no name'}
+                    {a.name || 'no name'}
                   </Text>
                 </HStack>
               </Pressable>
-            )}
-          />
+            ))}
+          </View>
         )}
       </FormControl>
       <FormControl mt="1" isInvalid={errors.source_name !== ''}>
@@ -274,37 +277,19 @@ const Form = ({
             });
           }}
           onBlur={closeAllAutocomplete}
-          InputRightElement={(
-            <IconButton
-              p={2}
-              borderRadius={15}
-              colorScheme="gray"
-              _icon={{
-                as: AntDesign,
-                name: 'closecircle',
-                size: 19,
-                color: 'gray.400',
-              }}
-              onPress={() => setData({
-                ...formData,
-                source_name: '',
-              })}
-            />
-          )}
+          InputRightElement={deleteBtn(['source_name'])}
         />
 
-        {displayAutocomplete.source && loadingAutocomplete && <Spinner mt={2} />}
-        {displayAutocomplete.source && !loadingAutocomplete && (
-          <FlatList
-            keyboardShouldPersistTaps="handled"
-            data={accounts}
-            renderItem={(a) => (
+        {displayAutocomplete.source && (
+          <View>
+            {accounts.map((a: AutocompleteAccount) => (
               <Pressable
+                key={a.id}
                 mx={2}
                 onPress={() => {
                   setData({
                     ...formData,
-                    source_name: a.item.name,
+                    source_name: a.name,
                   });
                   closeAllAutocomplete();
                 }}
@@ -315,17 +300,16 @@ const Form = ({
               >
                 <HStack
                   justifyContent="space-between"
-                  key={a.index}
                   mx={2}
                   my={2}
                 >
                   <Text underline>
-                    {a.item.name_with_balance || 'no name'}
+                    {a.name_with_balance || 'no name'}
                   </Text>
                 </HStack>
               </Pressable>
-            )}
-          />
+            ))}
+          </View>
         )}
       </FormControl>
       <FormControl mt="1" isInvalid={errors.destination_name !== ''}>
@@ -351,37 +335,19 @@ const Form = ({
             });
           }}
           onBlur={closeAllAutocomplete}
-          InputRightElement={(
-            <IconButton
-              p={2}
-              borderRadius={15}
-              colorScheme="gray"
-              _icon={{
-                as: AntDesign,
-                name: 'closecircle',
-                size: 19,
-                color: 'gray.400',
-              }}
-              onPress={() => setData({
-                ...formData,
-                destination_name: '',
-              })}
-            />
-          )}
+          InputRightElement={deleteBtn(['destination_name'])}
         />
 
-        {displayAutocomplete.destination && loadingAutocomplete && <Spinner mt={2} />}
-        {displayAutocomplete.destination && !loadingAutocomplete && (
-          <FlatList
-            keyboardShouldPersistTaps="handled"
-            data={accounts}
-            renderItem={(a) => (
+        {displayAutocomplete.destination && (
+          <View>
+            {accounts.map((a: AutocompleteAccount) => (
               <Pressable
+                key={a.id}
                 mx={2}
                 onPress={() => {
                   setData({
                     ...formData,
-                    destination_name: a.item.name,
+                    destination_name: a.name,
                   });
                   closeAllAutocomplete();
                 }}
@@ -392,17 +358,16 @@ const Form = ({
               >
                 <HStack
                   justifyContent="space-between"
-                  key={a.index}
                   mx={2}
                   my={2}
                 >
                   <Text underline>
-                    {a.item.name_with_balance || 'no name'}
+                    {a.name_with_balance || 'no name'}
                   </Text>
                 </HStack>
               </Pressable>
-            )}
-          />
+            ))}
+          </View>
         )}
 
       </FormControl>
@@ -411,8 +376,10 @@ const Form = ({
           {translate('transaction_form_date_label')}
         </FormControl.Label>
         <DateTimePicker
+          accentColor={colors.brandDark}
+          themeVariant="light"
           mode="date"
-          style={{ width: 130 }}
+          style={{ width: 130, backgroundColor: colors.backgroundColor }}
           value={formData.date}
           onChange={(event, value) => setData({
             ...formData,
@@ -437,22 +404,7 @@ const Form = ({
             ...formData,
             amount: value,
           })}
-          InputRightElement={(
-            <IconButton
-              p={2}
-              borderRadius={15}
-              colorScheme="gray"
-              _icon={{
-                as: AntDesign,
-                name: 'closecircle',
-                color: 'gray.400',
-              }}
-              onPress={() => setData({
-                ...formData,
-                amount: '',
-              })}
-            />
-          )}
+          InputRightElement={deleteBtn(['amount'])}
         />
         {'amount' in errors ? <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage> : <></>}
       </FormControl>
@@ -479,39 +431,20 @@ const Form = ({
             });
           }}
           onBlur={closeAllAutocomplete}
-          InputRightElement={(
-            <IconButton
-              p={2}
-              borderRadius={15}
-              colorScheme="gray"
-              _icon={{
-                as: AntDesign,
-                name: 'closecircle',
-                size: 19,
-                color: 'gray.400',
-              }}
-              onPress={() => setData({
-                ...formData,
-                category_id: '',
-                category_name: '',
-              })}
-            />
-          )}
+          InputRightElement={deleteBtn(['category_id', 'category_name'])}
         />
 
-        {displayAutocomplete.category && loadingAutocomplete && <Spinner mt={2} />}
-        {displayAutocomplete.category && !loadingAutocomplete && (
-          <FlatList
-            keyboardShouldPersistTaps="handled"
-            data={categories}
-            renderItem={(a) => (
+        {displayAutocomplete.category && (
+          <View>
+            {categories.map((c: CategoryType) => (
               <Pressable
+                key={c.id}
                 mx={2}
                 onPress={() => {
                   setData({
                     ...formData,
-                    category_id: a.item.id,
-                    category_name: a.item.name,
+                    category_id: c.id,
+                    category_name: c.name,
                   });
                   closeAllAutocomplete();
                 }}
@@ -522,17 +455,16 @@ const Form = ({
               >
                 <HStack
                   justifyContent="space-between"
-                  key={a.index}
                   mx={2}
-                  my={1}
+                  my={2}
                 >
-                  <Text>
-                    {a.item.name || 'no category name'}
+                  <Text underline>
+                    {c.name || 'no category name'}
                   </Text>
                 </HStack>
               </Pressable>
-            )}
-          />
+            ))}
+          </View>
         )}
       </FormControl>
       <FormControl mt="1" isInvalid={errors.budget_id !== ''}>
@@ -558,65 +490,64 @@ const Form = ({
             });
           }}
           onBlur={closeAllAutocomplete}
-          InputRightElement={(
-            <IconButton
-              p={2}
-              borderRadius={15}
-              colorScheme="gray"
-              _icon={{
-                as: AntDesign,
-                name: 'closecircle',
-                size: 19,
-                color: 'gray.400',
-              }}
-              onPress={() => setData({
-                ...formData,
-                budget_id: '',
-                budget_name: '',
-              })}
-            />
-          )}
+          InputRightElement={deleteBtn(['budget_id', 'budget_name'])}
         />
 
-        {displayAutocomplete.budget && loadingAutocomplete && <Spinner mt={2} />}
-        {displayAutocomplete.budget && !loadingAutocomplete && (
-        <FlatList
-          keyboardShouldPersistTaps="handled"
-          data={budgets}
-          renderItem={(a) => (
-            <Pressable
-              mx={2}
-              onPress={() => {
-                setData({
-                  ...formData,
-                  budget_id: a.item.id,
-                  budget_name: a.item.name,
-                });
-                closeAllAutocomplete();
-              }}
-              _pressed={{
-                borderRadius: 15,
-                backgroundColor: 'gray.300',
-              }}
-            >
-              <HStack
-                justifyContent="space-between"
-                key={a.index}
+        {displayAutocomplete.budget && (
+          <View>
+            {budgets.map((b: BudgetType) => (
+              <Pressable
+                key={b.id}
                 mx={2}
-                my={1}
+                onPress={() => {
+                  setData({
+                    ...formData,
+                    budget_id: b.id,
+                    budget_name: b.name,
+                  });
+                  closeAllAutocomplete();
+                }}
+                _pressed={{
+                  borderRadius: 15,
+                  backgroundColor: 'gray.300',
+                }}
               >
-                <Text>
-                  {a.item.name || 'no budget name'}
-                </Text>
-              </HStack>
-            </Pressable>
-          )}
-        />
+                <HStack
+                  justifyContent="space-between"
+                  mx={2}
+                  my={2}
+                >
+                  <Text underline>
+                    {b.name || 'no budget name'}
+                  </Text>
+                </HStack>
+              </Pressable>
+            ))}
+          </View>
         )}
       </FormControl>
 
-      {success && !loading && <ToastAlert title={translate('transaction_form_success_title')} status="success" variant="solid" onClose={() => setSuccess(false)} description={translate('transaction_form_success_description')} onPress={goToTransactions} />}
-      {errors.global !== '' && !loading && <ToastAlert title={translate('transaction_form_error_title')} status="error" variant="solid" onClose={resetErrors} description={errors.global} />}
+      {success && !loading
+        && (
+        <ToastAlert
+          title={translate('transaction_form_success_title')}
+          status="success"
+          variant="solid"
+          onClose={() => setSuccess(false)}
+          description={translate('transaction_form_success_description')}
+          onPress={goToTransactions}
+        />
+        )}
+      {errors.global !== '' && !loading
+        && (
+        <ToastAlert
+          title={translate('transaction_form_error_title')}
+          status="error"
+          variant="solid"
+          onClose={resetErrors}
+          description={errors.global}
+        />
+        )}
 
       <Button
         mt="3"

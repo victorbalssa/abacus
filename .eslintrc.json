@@ -65,6 +65,13 @@
         "react/style-prop-object": "off",
         "@typescript-eslint/no-empty-function": "off",
         "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": ["error"]
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "no-param-reassign": [
+            "error",
+            {
+                "props": true,
+                "ignorePropertyModificationsFor": ["acc"]
+            }
+        ]
     }
 }

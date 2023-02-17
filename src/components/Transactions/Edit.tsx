@@ -19,7 +19,6 @@ const Edit = ({
   getAutocompleteDescription,
   getAutocompleteCategories,
   getAutocompleteBudgets,
-  loadingAutocomplete,
   navigation,
   goToTransactions,
 }) => (
@@ -45,7 +44,6 @@ const Edit = ({
           getAutocompleteDescription={getAutocompleteDescription}
           getAutocompleteCategories={getAutocompleteCategories}
           getAutocompleteBudgets={getAutocompleteBudgets}
-          loadingAutocomplete={loadingAutocomplete}
           submit={onEdit}
         />
       </ScrollView>

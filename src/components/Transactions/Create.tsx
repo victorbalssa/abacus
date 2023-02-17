@@ -20,7 +20,6 @@ const Create = ({
   getAutocompleteDescription,
   getAutocompleteCategories,
   getAutocompleteBudgets,
-  loadingAutocomplete,
   navigation,
   goToTransactions,
 }) => (
@@ -44,7 +43,6 @@ const Create = ({
           getAutocompleteDescription={getAutocompleteDescription}
           getAutocompleteCategories={getAutocompleteCategories}
           getAutocompleteBudgets={getAutocompleteBudgets}
-          loadingAutocomplete={loadingAutocomplete}
           submit={submit}
           goToTransactions={goToTransactions}
           payload={{

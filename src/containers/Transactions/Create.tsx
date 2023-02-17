@@ -12,7 +12,6 @@ const Create: FC = ({ navigation }: ContainerPropType) => {
   const categories = useSelector((state: RootState) => state.categories.categories);
   const budgets = useSelector((state: RootState) => state.budgets.budgets);
   const descriptions = useSelector((state: RootState) => state.accounts.autocompleteDescriptions);
-  const { loading: loadingAutocomplete } = useSelector((state: RootState) => state.loading.models.accounts);
   const dispatch = useDispatch<RootDispatch>();
 
   const goToTransactions = () => {
@@ -28,7 +27,6 @@ const Create: FC = ({ navigation }: ContainerPropType) => {
     <Layout
       navigation={navigation}
       loading={loading}
-      loadingAutocomplete={loadingAutocomplete}
       accounts={accounts}
       categories={categories}
       budgets={budgets}

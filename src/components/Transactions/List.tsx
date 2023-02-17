@@ -1,23 +1,15 @@
 import React, { useMemo } from 'react';
 import { Alert, RefreshControl } from 'react-native';
 import {
-  Box,
-  HStack,
-  Icon,
-  Pressable,
-  Text,
-  VStack,
-  Skeleton,
+  Box, HStack, Icon, Pressable, Skeleton, Text, VStack,
 } from 'native-base';
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Animated, { Layout } from 'react-native-reanimated';
 
 import moment from 'moment';
 import * as Haptics from 'expo-haptics';
+import { ImpactFeedbackStyle } from 'expo-haptics';
 import { useSelector } from 'react-redux';
 import RangeTitle from '../UI/RangeTitle';
 import colors from '../../constants/colors';
@@ -86,8 +78,12 @@ const Basic = ({
       justifyContent="center"
       borderRadius={15}
       onPress={() => {
-        onPressItem(item.id, item.attributes.transactions[0]);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onPressItem(item.id, item.attributes.transactions[0]);
+      }}
+      onLongPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        onPressItem(item.id, item.attributes.transactions[0]);
       }}
     >
       <Box px={3}>
@@ -152,6 +148,30 @@ const Basic = ({
     </Pressable>
   ), [item]);
 
+  const deleteAlert = async (data, rowMap) => {
+    await Haptics.impactAsync(ImpactFeedbackStyle.Light);
+    Alert.alert(
+      translate('transaction_list_alert_title'),
+      `${translate('transaction_list_alert_text')}\n`
+      + `${(data.item as TransactionType)?.attributes?.transactions[0]?.description}\n`
+      + `${moment((data.item as TransactionType)?.attributes?.transactions[0]?.date).format('ll')} ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name ? `• ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name}` : ''}\n`,
+      [
+        {
+          text: translate('transaction_list_delete_button'),
+          onPress: async () => {
+            await onDeleteTransaction((data.item as TransactionType)?.id);
+          },
+          style: 'destructive',
+        },
+        {
+          text: translate('transaction_list_cancel_button'),
+          onPress: () => closeRow(rowMap, (data.item as TransactionType)?.id),
+          style: 'cancel',
+        },
+      ],
+    );
+  };
+
   const RenderHiddenItem = ({ data, rowMap }) => useMemo(() => (
     <HStack
       h="71"
@@ -164,28 +184,7 @@ const Basic = ({
         bg="red.500"
         justifyContent="center"
         borderRightRadius={15}
-        onPress={() => {
-          Alert.alert(
-            translate('transaction_list_alert_title'),
-            `${translate('transaction_list_alert_text')}\n`
-            + `${(data.item as TransactionType)?.attributes?.transactions[0]?.description}\n`
-            + `${moment((data.item as TransactionType)?.attributes?.transactions[0]?.date).format('ll')} ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name ? `• ${(data.item as TransactionType)?.attributes?.transactions[0]?.category_name}` : ''}\n`,
-            [
-              {
-                text: translate('transaction_list_delete_button'),
-                onPress: async () => {
-                  await onDeleteTransaction((data.item as TransactionType)?.id);
-                },
-                style: 'destructive',
-              },
-              {
-                text: translate('transaction_list_cancel_button'),
-                onPress: () => closeRow(rowMap, (data.item as TransactionType)?.id),
-                style: 'cancel',
-              },
-            ],
-          );
-        }}
+        onPress={() => deleteAlert(data, rowMap)}
         _pressed={{
           opacity: 0.8,
         }}

@@ -162,14 +162,14 @@ export default createModel<RootModel>()({
       await Promise.all([
         SecureStore.deleteItemAsync(secureKeys.tokens),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
+        dispatch.accounts.resetState(),
+        dispatch.budgets.resetState(),
+        dispatch.categories.resetState(),
+        dispatch.configuration.resetState(),
+        dispatch.currencies.resetState(),
+        dispatch.firefly.resetState(),
+        dispatch.transactions.resetState(),
       ]);
-      dispatch.accounts.resetState();
-      dispatch.budgets.resetState();
-      dispatch.categories.resetState();
-      dispatch.configuration.resetState();
-      dispatch.currencies.resetState();
-      dispatch.firefly.resetState();
-      dispatch.transactions.resetState();
     },
   }),
 });

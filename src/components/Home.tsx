@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   RefreshControl,
   View,
@@ -24,7 +24,7 @@ const Home = ({
   balance,
   fetchData,
   loading,
-}) => (
+}) => useMemo(() => (
   <>
     <RangeTitle />
     <Animated.View layout={Layout}>
@@ -133,9 +133,13 @@ const Home = ({
         </Box>
         <View style={{ height: 140 }} />
       </ScrollView>
-
     </Animated.View>
   </>
-);
+), [
+  accounts,
+  netWorth,
+  balance,
+  fetchData,
+]);
 
 export default Home;

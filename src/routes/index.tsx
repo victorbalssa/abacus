@@ -102,8 +102,8 @@ const TabBarAdvancedButton = ({ onPress }) => (
       variant="solid"
       _icon={{
         as: AntDesign,
-        name: 'edit',
-        size: 'lg',
+        name: 'plus',
+        size: 6,
       }}
       onPress={() => {
         onPress();
@@ -186,7 +186,7 @@ const Home = () => (
         tabBarIcon: (icon) => (
           <AntDesign
             name="linechart"
-            size={22}
+            size={20}
             color={icon.color}
           />
         ),
@@ -206,7 +206,11 @@ const Home = () => (
       component={TransactionNavigator}
       options={{
         tabBarIcon: (icon) => (
-          <Feather name="list" size={25} color={icon.color} />
+          <AntDesign
+            name="bars"
+            size={25}
+            color={icon.color}
+          />
         ),
       }}
     />

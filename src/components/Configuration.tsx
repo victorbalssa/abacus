@@ -11,7 +11,7 @@ import {
 } from 'native-base';
 import * as Linking from 'expo-linking';
 import * as Application from 'expo-application';
-import { Octicons, FontAwesome } from '@expo/vector-icons';
+import { Octicons, FontAwesome, AntDesign } from '@expo/vector-icons';
 
 import { translate } from '../i18n/locale';
 
@@ -60,17 +60,17 @@ const Configuration = ({
               {Application.nativeApplicationVersion}
             </Text>
           </HStack>
-          <Pressable _pressed={{ backgroundColor: 'muted.300' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/new')} px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={1} borderColor="gray.200">
+          <Pressable _pressed={{ backgroundColor: 'muted.300' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/')} px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={1} borderColor="gray.200">
             <Text color="gray.600">{translate('configuration_share_feedback')}</Text>
-            <Octicons name="cross-reference" size={19} color="gray" />
+            <Octicons name="cross-reference" size={20} color="gray" />
           </Pressable>
           <Pressable _pressed={{ backgroundColor: 'muted.300' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/issues/new')} px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={1} borderColor="gray.200">
             <Text color="gray.600">{translate('configuration_report_issue')}</Text>
-            <Octicons name="issue-opened" size={19} color="gray" />
+            <Octicons name="issue-opened" size={20} color="gray" />
           </Pressable>
           <Pressable _pressed={{ backgroundColor: 'muted.300' }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" flexDirection="row">
             <Text color="gray.600">{translate('configuration_sources')}</Text>
-            <FontAwesome name="angle-right" size={22} color="gray" />
+            <AntDesign name="github" size={20} color="gray" />
           </Pressable>
         </Box>
 
