@@ -1,26 +1,25 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import {
   HStack,
   Box,
   Text,
-  Select,
-  CheckIcon, IconButton, VStack, Skeleton,
+  IconButton,
+  VStack,
 } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import Animated, { Layout, SlideInUp, SlideOutUp } from 'react-native-reanimated';
+import Animated, { Layout } from 'react-native-reanimated';
 import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';
 import CurrencySwitcher from './CurrencySwitcher';
 import { isMediumScreen, isSmallScreen } from '../../lib/common';
 
 const RangeTitle: FC = () => {
-  const firefly = useSelector((state: RootState) => state.firefly);
+  const { rangeTitle, start, end } = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
   const displayFilter = useSelector((state: RootState) => state.configuration.displayFilter);
-  const { loading } = useSelector((state: RootState) => state.loading.effects.firefly.handleChangeRange);
 
   const tabSize = (() => {
     if (isSmallScreen()) {
@@ -34,7 +33,7 @@ const RangeTitle: FC = () => {
     return 67;
   })();
 
-  return (
+  return useMemo(() => (
     <>
       <Box
         shadow={0}
@@ -63,20 +62,12 @@ const RangeTitle: FC = () => {
           />
 
           <VStack px={3} flex={1} justifyContent="space-between">
-            {!loading ? (
-              <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 18, lineHeight: 18 }}>
-                {firefly.rangeTitle}
-              </Text>
-            ) : (
-              <Skeleton w={100} h={6} rounded={15} />
-            )}
-            {!loading ? (
-              <Text style={{ fontSize: 12 }}>
-                {`${moment(firefly.start).format('ll')} - ${moment(firefly.end).format('ll')}`}
-              </Text>
-            ) : (
-              <Skeleton.Text w={160} py={1} lines={1} />
-            )}
+            <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 18, lineHeight: 18 }}>
+              {rangeTitle}
+            </Text>
+            <Text style={{ fontSize: 12 }}>
+              {`${moment(start).format('ll')} - ${moment(end).format('ll')}`}
+            </Text>
           </VStack>
 
           <ErrorWidget />
@@ -127,7 +118,12 @@ const RangeTitle: FC = () => {
         </Animated.View>
       </Box>
     </>
-  );
+  ), [
+    displayFilter,
+    rangeTitle,
+    start,
+    end,
+  ]);
 };
 
 export default RangeTitle;

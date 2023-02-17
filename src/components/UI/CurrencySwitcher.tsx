@@ -1,24 +1,28 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CheckIcon,
   HStack,
   Select,
-  View,
 } from 'native-base';
-import { RootDispatch, RootState } from '../../store';
-import Loading from './Loading';
 
+import { RootDispatch, RootState } from '../../store';
 import { translate } from '../../i18n/locale';
 
 const CurrencySwitcher: FC = () => {
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
-  const firefly = useSelector((state: RootState) => state.firefly);
-  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const currentCurrency = useSelector((state: RootState) => state.currencies.current);
-  const dispatch = useDispatch<RootDispatch>();
+  const { range } = useSelector((state: RootState) => state.firefly);
+  const {
+    firefly: {
+      handleChangeRange,
+    },
+    currencies: {
+      changeCurrent,
+    },
+  } = useDispatch<RootDispatch>();
 
-  return (
+  return useMemo(() => (
     <HStack
       py={1}
       justifyContent="center"
@@ -56,7 +60,7 @@ const CurrencySwitcher: FC = () => {
         fontFamily="Montserrat_Bold"
         fontSize={12}
         selectedValue={currentCurrency?.id}
-        onValueChange={(v) => dispatch.currencies.changeCurrent(v)}
+        onValueChange={(v) => changeCurrent(v)}
       >
         {currencies.map((c) => <Select.Item key={c.id} label={`${c.attributes.code} ${c.attributes.symbol}`} value={c.id} />)}
       </Select>
@@ -87,20 +91,23 @@ const CurrencySwitcher: FC = () => {
           bgColor="primary.500"
           fontFamily="Montserrat_Bold"
           fontSize={12}
-          selectedValue={`${firefly.range}`}
-          onValueChange={(v) => dispatch.firefly.handleChangeRange({ range: v })}
+          selectedValue={`${range}`}
+          onValueChange={(v) => handleChangeRange({ range: v })}
         >
           <Select.Item key="1" label={translate('period_switcher_monthly')} value="1" />
           <Select.Item key="3" label={translate('period_switcher_quarterly')} value="3" />
           <Select.Item key="6" label={translate('period_switcher_semiannually')} value="6" />
           <Select.Item key="12" label={translate('period_switcher_yearly')} value="12" />
         </Select>
-        <View style={{ width: 30 }}>
-          {loading === true && <Loading />}
-        </View>
       </HStack>
     </HStack>
-  );
+  ), [
+    currencies,
+    currentCurrency,
+    changeCurrent,
+    range,
+    handleChangeRange,
+  ]);
 };
 
 export default CurrencySwitcher;
