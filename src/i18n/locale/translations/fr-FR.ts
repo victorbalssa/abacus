@@ -52,4 +52,36 @@ export default {
   layout_new_update_body_text: 'Vous pouvez toujours effectuer une mise à jour ultérieurement dans l\'onglet "Paramètres".',
   layout_new_update_cancel_button: 'Annuler',
   layout_new_update_update_button: 'Mettre à jour',
+
+  // from version 0.31
+  transaction_screen_title: 'Nouvelle Transaction',
+  navigation_home_tab: 'Accueil',
+  navigation_chart_tab: 'Graphique',
+  navigation_create_tab: 'Créer',
+  navigation_transactions_tab: 'Transactions',
+  navigation_settings_tab: 'Paramètres',
+  transaction_form_type_withdraw: 'Dépense',
+  transaction_form_type_deposit: 'Dépôt',
+  transaction_form_type_transfer: 'Transfert',
+
+  // from 0.4.1
+  period_switcher_monthly: 'Mensuel',
+  period_switcher_quarterly: 'Trimestriel',
+  period_switcher_semiannually: 'Semestriel',
+  period_switcher_yearly: 'Annuel',
+  error_widget_title: 'Une erreur est survenue',
+  home_container_error_title: 'Une erreur est survenue',
+  home_container_error_description: 'Échec de l\'obtention de l\'accessToken',
+  oauth_token_error_title: 'Une erreur est survenue',
+  oauth_token_error_description: 'Échec de l\'obtention de l\'accessToken',
+  oauth_token_info_title: 'Info',
+  oauth_token_info_description: 'Annulation de l\'authentification, vérifiez l\'ID du client et l\'URL du serveur.',
+  oauth_token_success_title: 'Réussite',
+  oauth_token_success_description: 'Connexion sécurisée prête avec votre instance Firefly III.',
+  transaction_form_success_title: 'Réussite',
+  transaction_form_success_description: 'Transaction créée. Tapez ici pour aller à la liste des transactions.',
+  transaction_form_error_title: 'Erreur',
+  home_header_time_range_year: 'Année',
+  home_header_time_range_q: 'T', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 };
