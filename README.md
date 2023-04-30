@@ -1,7 +1,7 @@
 <div align="center">
     <p></p>
   <img alt="logo" src="documentation/img.png" height=120 />
-  <h1>🔥 Abacus: Firefly III iOS app 🔥</h1>
+  <h1>Abacus: Firefly III iOS app</h1>
     <div>
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
@@ -13,8 +13,9 @@
 ![size](https://img.shields.io/github/repo-size/victorbalssa/abacus?style=for-the-badge)
 ![licence](https://img.shields.io/github/license/victorbalssa/abacus?style=for-the-badge)
 ![stars](https://img.shields.io/github/stars/victorbalssa/abacus?style=for-the-badge)
-[![sdk](https://img.shields.io/badge/SDK-47.0.0-blue?style=for-the-badge)](https://www.npmjs.com/package/expo)
-[![sdk](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![sdk](https://img.shields.io/badge/SDK-48.0.0-purple?style=for-the-badge&label=EXPO%20SDK)](https://www.npmjs.com/package/expo)
+[![pr](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![sponsor](https://img.shields.io/github/sponsors/victorbalssa?style=for-the-badge&color=ff69b4)](https://github.com/sponsors/victorbalssa)
 
   </sup>
 </div>
@@ -45,15 +46,13 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 | Time range selector          |     ✅     |
 | Budgets                      |     ✅     |
 | Categories                   |     ✅     |
-| Tags                         |    🚧     |
 | Translations                 |   ✅(@carvalholeo)    |
-| Net Worth history chart      |    🚧     | 
 
 ---
 
 ### 📡 Technologies
 
-- __Expo SDK 47__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
+- __Expo SDK 48__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
 - __Routing and navigation__ React Navigation
   V6. [https://reactnavigation.org/docs](https://reactnavigation.org/docs/getting-started)
 - __Redux architecture__
