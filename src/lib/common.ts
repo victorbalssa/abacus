@@ -1,4 +1,5 @@
 import { Dimensions, Platform } from 'react-native';
+import { getLocales } from 'expo-localization';
 
 const { height: D_HEIGHT, width: D_WIDTH } = (() => {
   const { width, height } = Dimensions.get('window');
@@ -44,4 +45,14 @@ export const isValidHttpUrl = (string) => {
     + '(\\?[;&a-z\\d%_.~+=-]*)?' // query string
     + '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
   return !!pattern.test(string);
+};
+
+export const localNumberFormat = (currencyCode, string) => {
+  const [local] = getLocales();
+  const formatter = new Intl.NumberFormat(local.languageTag, {
+    style: 'currency',
+    currency: currencyCode,
+  });
+
+  return formatter.format(string);
 };

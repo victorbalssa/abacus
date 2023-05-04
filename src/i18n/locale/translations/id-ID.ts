@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'Masuk',
   OAUTH_submit_button_loading: 'Mengirim...',
   OAUTH_faceID: 'Face ID',
-  home_assetsAccount_title: 'Akun aset',
+  home_accounts: 'Akun aset',
   layout_new_update_header: 'Versi baru tersedia.',
   layout_new_update_body_text: 'Anda dapat memperbarui nanti pada tab Pengaturan.',
   layout_new_update_cancel_button: 'Batal',

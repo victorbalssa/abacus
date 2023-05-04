@@ -1,77 +1,96 @@
 {
-    "extends": [
-        "airbnb",
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:import/errors",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "parser":  "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true,
-            "tsx": true,
-            "modules": true
-        },
-        "ecmaVersion": 6,
-        "project": "./tsconfig.json",
-        "sourceType": "module"
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "tsx": true,
+      "modules": true
     },
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    },
-    "overrides": [
-        {
-            "files": ["**/*.ts", "**/*.tsx"],
-            "rules": {
-                "no-unused-vars": ["off"],
-                "no-undef": ["off"]
-            }
-        }
-    ],
-    "rules": {
-        "react/jsx-filename-extension": [
-            "error",
-            {
-                "extensions": [
-                    ".js",
-                    ".jsx",
-                    ".ts",
-                    ".tsx"
-                ]
-            }
-        ],
-        "no-unused-vars": ["error", { "vars": "all", "args": "all" }],
-        "global-require": "warn",
-        "no-console": "warn",
-        "import/no-extraneous-dependencies": "off",
-        "import/extensions": "off",
-        "import/no-unresolved": "off",
-        "jsx-a11y/anchor-is-valid": "off",
-        "no-underscore-dangle": "off",
-        "prefer-promise-reject-errors": "off",
-        "no-nested-ternary": "off",
-        "react/no-multi-comp": "off",
-        "react/no-unescaped-entities": "off",
-        "jsx-a11y/click-events-have-key-events": "off",
-        "jsx-a11y/no-static-element-interactions": "off",
-        "react/require-default-props": "off",
-        "react/prop-types": "off",
-        "max-len": "off",
-        "react/style-prop-object": "off",
-        "@typescript-eslint/no-empty-function": "off",
-        "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": ["error"],
-        "no-param-reassign": [
-            "error",
-            {
-                "props": true,
-                "ignorePropertyModificationsFor": ["acc"]
-            }
-        ]
+    "ecmaVersion": 6,
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.ts",
+        "**/*.tsx"
+      ],
+      "rules": {
+        "no-unused-vars": [
+          "off"
+        ],
+        "no-undef": [
+          "off"
+        ]
+      }
+    }
+  ],
+  "rules": {
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "all"
+      }
+    ],
+    "global-require": "warn",
+    "no-console": "warn",
+    "import/no-extraneous-dependencies": "off",
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "no-underscore-dangle": "off",
+    "prefer-promise-reject-errors": "off",
+    "no-nested-ternary": "off",
+    "react/no-multi-comp": "off",
+    "react/no-unescaped-entities": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "react/require-default-props": "off",
+    "react/prop-types": "off",
+    "max-len": "off",
+    "react/style-prop-object": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": [
+          "acc"
+        ]
+      }
+    ]
+  }
 }

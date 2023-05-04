@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'S\'identifier',
   OAUTH_submit_button_loading: 'Envoi en cours...',
   OAUTH_faceID: 'Face ID',
-  home_assetsAccount_title: 'Comptes d\'actifs',
+  home_accounts: 'Comptes d\'actifs',
   layout_new_update_header: 'Nouvelle mise à jour disponible',
   layout_new_update_body_text: 'Vous pouvez toujours effectuer une mise à jour ultérieurement dans l\'onglet "Paramètres".',
   layout_new_update_cancel_button: 'Annuler',

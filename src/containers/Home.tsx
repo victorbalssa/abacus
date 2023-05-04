@@ -19,16 +19,9 @@ import { translate } from '../i18n/locale';
 const Home: FC = ({ navigation }: ContainerPropType) => {
   const toast = useToast();
   const firefly = useSelector((state: RootState) => state.firefly);
-  const accounts = useSelector((state: RootState) => state.accounts.accounts);
   const { backendURL, faceId } = useSelector((state: RootState) => state.configuration);
   const dispatch = useDispatch<RootDispatch>();
   const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
-
-  const fetchData = () => Promise.all([
-    dispatch.firefly.getSummaryBasic(),
-    dispatch.firefly.getDashboardBasic(),
-    dispatch.accounts.getAccounts(),
-  ]).catch();
 
   const goToOauth = () => navigation.dispatch(
     CommonActions.reset({
@@ -84,10 +77,8 @@ const Home: FC = ({ navigation }: ContainerPropType) => {
 
   return (
     <Layout
-      accounts={accounts}
       netWorth={firefly.netWorth}
       balance={firefly.balance}
-      fetchData={fetchData}
       loading={loading}
     />
   );

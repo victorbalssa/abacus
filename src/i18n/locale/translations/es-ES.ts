@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'Iniciar sesión',
   OAUTH_submit_button_loading: 'Enviando...',
   OAUTH_faceID: 'Face ID',
-  home_assetsAccount_title: 'Cuentas de activos',
+  home_accounts: 'Cuentas de activos',
   layout_new_update_header: 'Nueva Actualización Disponible',
   layout_new_update_body_text: 'Siempre puedes actualizar más tarde en la pestaña de Ajustes.',
   layout_new_update_cancel_button: 'Cancelar',

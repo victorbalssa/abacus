@@ -1,6 +1,8 @@
 export default {
   brandPrimary: '#FFFFFF',
   brandStyle: '#FF5533',
+  brandStyle70: 'rgba(175,175,175,0.7)',
+  brandStyle20: 'rgba(203,203,203,0.4)',
   brandStyleSecond: '#ff6443',
   brandStyle0: '#FF5533',
   brandStyle1: '#56423D',
@@ -18,6 +20,8 @@ export default {
   brandDark: '#000',
   brandDarkLight: '#676767',
   tabInactiveDarkLight: 'rgba(103,103,103,0.61)',
-  brandLight: '#ffeade',
+  brandLight: '#f8f8f8',
   tabBackgroundColor: '#FFFFFF',
+  warmGray100: '#f5f5f4',
+  warmGray200: '#e7e5e4',
 };

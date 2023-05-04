@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { Alert, RefreshControl } from 'react-native';
+import { Alert, RefreshControl, View } from 'react-native';
 import {
-  Box, HStack, Icon, Pressable, Skeleton, Text, VStack,
+  Box, Button, Heading, HStack, Icon, Pressable, ScrollView, Skeleton, Text, VStack,
 } from 'native-base';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -10,12 +10,14 @@ import Animated, { Layout } from 'react-native-reanimated';
 import moment from 'moment';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RangeTitle from '../UI/RangeTitle';
 import colors from '../../constants/colors';
 import { TransactionType } from '../../models/transactions';
-import { RootState } from '../../store';
+import { RootDispatch, RootState } from '../../store';
 import { translate } from '../../i18n/locale';
+import {getLocales} from "expo-localization";
+import {localNumberFormat} from "../../lib/common";
 
 const Basic = ({
   loadingRefresh,
@@ -140,7 +142,7 @@ const Basic = ({
           }}
           >
             <Text fontSize={15} fontFamily="Montserrat_Bold" style={{ color: getTransactionTypeAttributes(item.attributes.transactions[0].type).color }}>
-              {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${item.attributes.transactions[0].currency_symbol}${parseFloat(item.attributes.transactions[0].amount).toFixed(item.attributes.transactions[0].currency_decimal_places)}`}
+              {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currency_code, item.attributes.transactions[0].amount)}`}
             </Text>
           </Box>
         </HStack>

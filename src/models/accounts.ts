@@ -1,5 +1,8 @@
 import { createModel } from '@rematch/core';
+import { getLocales } from 'expo-localization';
+
 import { RootModel } from './index';
+import { localNumberFormat } from '../lib/common';
 
 export type AccountType = {
   attributes: {
@@ -14,7 +17,6 @@ export type AccountType = {
     currency_id: string,
     currency_symbol: string,
     current_balance: string,
-    current_balance_formatted: string,
     current_balance_date: Date,
     current_debt: string,
     iban: string,
@@ -137,16 +139,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (current && current.attributes.code) {
-        const formatter = new Intl.NumberFormat('en-EN', {
-          style: 'currency',
-          currency: current.attributes.code,
-        });
-
         const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current.attributes.code}/accounts?type=asset&date=${end}` });
-
-        accounts.forEach((v, index) => {
-          accounts[index].attributes.current_balance_formatted = formatter.format(accounts[index].attributes.current_balance);
-        });
 
         dispatch.accounts.setAccounts({ accounts });
       }

@@ -3,7 +3,7 @@ import moment from 'moment';
 import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import { maxBy, minBy } from 'lodash';
+import { maxBy, minBy, isEmpty } from 'lodash';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
@@ -211,7 +211,10 @@ export default createModel<RootModel>()({
         dispatch.firefly.getDashboardBasic(),
         dispatch.accounts.getAccounts(),
         dispatch.transactions.getTransactions(),
+        dispatch.categories.getInsightCategories(),
       ]);
+
+      //dispatch.firefly.getBalances();
     },
 
     /**

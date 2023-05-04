@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: '登录',
   OAUTH_submit_button_loading: '提交...',
   OAUTH_faceID: 'Face ID',
-  home_assetsAccount_title: '资产账户',
+  home_accounts: '资产账户',
   layout_new_update_header: '有更新可用',
   layout_new_update_body_text: '您可以稍后在设置页面手动升级',
   layout_new_update_cancel_button: '取消',

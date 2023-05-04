@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'Entrar',
   OAUTH_submit_button_loading: 'Enviando...',
   OAUTH_faceID: 'Face ID',
-  home_assetsAccount_title: 'Contas de ativos',
+  home_accounts: 'Contas de ativos',
   layout_new_update_header: 'Nova atualização disponível',
   layout_new_update_body_text: 'Você pode atualizar depois, na aba Ajustes.',
   layout_new_update_cancel_button: 'Cancelar',

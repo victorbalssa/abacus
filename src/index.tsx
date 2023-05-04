@@ -50,9 +50,11 @@ const App: FC = () => {
   const OTARef = React.createRef();
   const [OTAOpen, setOTAOpen] = useState(false);
   const [fontsLoaded] = useFonts({
+    /* eslint-disable global-require */
     Montserrat: require('./fonts/Montserrat-Regular.ttf'),
     Montserrat_Light: require('./fonts/Montserrat-Light.ttf'),
     Montserrat_Bold: require('./fonts/Montserrat-Bold.ttf'),
+    /* eslint-enable global-require */
   });
 
   const cache = async () => {
@@ -102,11 +104,14 @@ const App: FC = () => {
     };
   }, []);
 
+  /* eslint-disable-next-line @typescript-eslint/no-var-requires,global-require */
+  const abacusIcon = require('./images/icon-abacus-splash.png');
+
   return (
     <AnimatedSplash
       translucent
       isLoaded={fontsLoaded}
-      logoImage={require('./images/icon-abacus-splash.png')}
+      logoImage={abacusIcon}
       backgroundColor={colors.backgroundColor}
       logoHeight={145}
       logoWidth={145}
@@ -119,22 +124,22 @@ const App: FC = () => {
             persistor={persistor}
           >
             {fontsLoaded && (
-            <>
-              <Routes />
-              {appStateVisible !== 'active' && (
-              <BlurView
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                }}
-                intensity={60}
-                tint="light"
-              />
-              )}
-            </>
+              <>
+                <Routes />
+                {appStateVisible !== 'active' && (
+                  <BlurView
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
+                    }}
+                    intensity={60}
+                    tint="light"
+                  />
+                )}
+              </>
             )}
           </PersistGate>
         </Provider>

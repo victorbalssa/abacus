@@ -3,7 +3,7 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
 import { Box, IconButton } from 'native-base';
@@ -105,10 +105,8 @@ const TabBarAdvancedButton = ({ onPress }) => (
         name: 'plus',
         size: 6,
       }}
-      onPress={() => {
-        onPress();
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      }}
+      onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+      onPress={onPress}
       _pressed={{
         style: {
           ...styles.button,
@@ -147,7 +145,7 @@ const Home = () => (
         <Box style={[styles.xFillLine, { backgroundColor: colors.tabBackgroundColor }]} />
       </Box>
     )}
-    screenOptions={({ route }) => ({
+    screenOptions={() => ({
       tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
       tabBarActiveBackgroundColor: colors.tabBackgroundColor,
       tabBarActiveTintColor: colors.brandStyle,
