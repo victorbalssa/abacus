@@ -213,8 +213,6 @@ export default createModel<RootModel>()({
         dispatch.transactions.getTransactions(),
         dispatch.categories.getInsightCategories(),
       ]);
-
-      //dispatch.firefly.getBalances();
     },
 
     /**

@@ -99,7 +99,6 @@ export default createModel<RootModel>()({
         dispatch.accounts.getAccounts(),
         dispatch.categories.getInsightCategories(),
       ]);
-      dispatch.firefly.getBalances();
     },
   }),
 });

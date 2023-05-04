@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { Alert, RefreshControl, View } from 'react-native';
+import { Alert, RefreshControl } from 'react-native';
 import {
-  Box, Button, Heading, HStack, Icon, Pressable, ScrollView, Skeleton, Text, VStack,
+  Box, HStack, Icon, Pressable, Skeleton, Text, VStack,
 } from 'native-base';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -10,14 +10,13 @@ import Animated, { Layout } from 'react-native-reanimated';
 import moment from 'moment';
 import * as Haptics from 'expo-haptics';
 import { ImpactFeedbackStyle } from 'expo-haptics';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import RangeTitle from '../UI/RangeTitle';
 import colors from '../../constants/colors';
 import { TransactionType } from '../../models/transactions';
-import { RootDispatch, RootState } from '../../store';
+import { RootState } from '../../store';
 import { translate } from '../../i18n/locale';
-import {getLocales} from "expo-localization";
-import {localNumberFormat} from "../../lib/common";
+import { localNumberFormat } from '../../lib/common';
 
 const Basic = ({
   loadingRefresh,
@@ -213,7 +212,7 @@ const Basic = ({
       initialNumToRender={10}
       keyExtractor={(item: TransactionType) => item.id}
       showsVerticalScrollIndicator
-      onEndReached={onEndReached}
+      onEndReached={() => !(loadingRefresh || loadingMore) && onEndReached()}
       onEndReachedThreshold={0}
       data={!loadingRefresh ? transactions : []}
       renderItem={({ item }) => <RenderItem item={item} />}
