@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'Masuk',
   OAUTH_submit_button_loading: 'Mengirim...',
   OAUTH_faceID: 'Face ID',
-  home_accounts: 'Akun aset',
+  home_accounts: 'Akun',
   layout_new_update_header: 'Versi baru tersedia.',
   layout_new_update_body_text: 'Anda dapat memperbarui nanti pada tab Pengaturan.',
   layout_new_update_cancel_button: 'Batal',
@@ -84,4 +84,7 @@ export default {
   home_header_time_range_year: 'Tahun',
   home_header_time_range_q: 'Q', // Put an abbreviation that best represents a quarter
   home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
+
+  // from 0.7.0
+  home_budgets: 'Anggaran',
 };

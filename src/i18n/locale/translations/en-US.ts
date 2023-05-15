@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'Sign In',
   OAUTH_submit_button_loading: 'Submitting...',
   OAUTH_faceID: 'Face ID',
-  home_accounts: 'Assets accounts',
+  home_accounts: 'Accounts',
   layout_new_update_header: 'New Update Available',
   layout_new_update_body_text: 'You can always update later in Settings tab.',
   layout_new_update_cancel_button: 'Cancel',
@@ -90,4 +90,7 @@ export default {
   history: 'History',
   home_categories: 'Categories',
   home_net_worth: 'Net Worth',
+
+  // from 0.7.0
+  home_budgets: 'Budgets',
 };

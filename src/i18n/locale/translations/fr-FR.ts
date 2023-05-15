@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'S\'identifier',
   OAUTH_submit_button_loading: 'Envoi en cours...',
   OAUTH_faceID: 'Face ID',
-  home_accounts: 'Comptes d\'actifs',
+  home_accounts: 'Comptes',
   layout_new_update_header: 'Nouvelle mise à jour disponible',
   layout_new_update_body_text: 'Vous pouvez toujours effectuer une mise à jour ultérieurement dans l\'onglet "Paramètres".',
   layout_new_update_cancel_button: 'Annuler',
@@ -84,4 +84,7 @@ export default {
   home_header_time_range_year: 'Année',
   home_header_time_range_q: 'T', // Put an abbreviation that best represents a quarter
   home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
+
+  // from 0.7.0
+  home_budgets: 'Budgets',
 };

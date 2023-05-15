@@ -47,7 +47,7 @@ export default {
   OAUTH_submit_button_initial: 'Iniciar sesión',
   OAUTH_submit_button_loading: 'Enviando...',
   OAUTH_faceID: 'Face ID',
-  home_accounts: 'Cuentas de activos',
+  home_accounts: 'Cuentas',
   layout_new_update_header: 'Nueva Actualización Disponible',
   layout_new_update_body_text: 'Siempre puedes actualizar más tarde en la pestaña de Ajustes.',
   layout_new_update_cancel_button: 'Cancelar',
@@ -61,4 +61,7 @@ export default {
   transaction_form_type_withdraw: 'Retirar',
   transaction_form_type_deposit: 'Depositar',
   transaction_form_type_transfer: 'Transferir',
+
+  // from 0.7.0
+  home_budgets: 'Presupuestos',
 };

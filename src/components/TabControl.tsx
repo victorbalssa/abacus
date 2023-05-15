@@ -28,7 +28,7 @@ const tabControlStyles = StyleSheet.create({
     paddingVertical: 1,
   },
   tabTextStyle: {
-    color: colors.brandDarkLight,
+    color: colors.brandDark,
     fontFamily: 'Montserrat_Bold',
     paddingVertical: 2 * gap,
     paddingHorizontal: 2 * gap,
@@ -36,19 +36,25 @@ const tabControlStyles = StyleSheet.create({
   },
   activeTabStyle: {
     backgroundColor: colors.brandPrimary,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.5,
   },
   activeTabTextStyle: {
-    color: colors.brandDarkLight,
+
   },
   firstTabStyle: { marginLeft: 0 },
   lastTabStyle: { marginRight: 0 },
 });
 const wrapperStyles = StyleSheet.create({
   outerGapStyle: {
-    padding: 2,
-    backgroundColor: colors.warmGray100,
-    borderWidth: 0.5,
-    borderColor: colors.warmGray200,
+    backgroundColor: colors.warmGray200,
+    borderRadius: 10,
+    marginHorizontal: 12,
   },
 });
 
@@ -68,7 +74,7 @@ const Container = ({
     const leftVal = (containerWidth / numberValues) * activeTabIndex;
     Animated.timing(moveAnimation, {
       toValue: leftVal,
-      duration: 150,
+      duration: 250,
       // not supported by native animated module
       useNativeDriver: false,
     }).start();
@@ -133,10 +139,10 @@ const IosTab = ({
     {renderLeftSeparator && (
     <View
       style={{
-        height: '50%',
-        width: 2,
+        height: '70%',
+        width: 1,
         borderRadius: 5,
-        backgroundColor: colors.brandDarkLight,
+        backgroundColor: colors.warmGray100,
       }}
     />
     )}
@@ -193,10 +199,7 @@ const SegmentedControl = ({
     {tabValues.map((tabValue, index) => (
       <Tab
         label={tabValue}
-        onPress={async () => {
-          onIndexChange(index);
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }}
+        onPress={() => onIndexChange(index)}
         isActive={selectedIndex === index}
         isFirst={index === 0}
         isLast={index === tabValues.length - 1}
