@@ -203,7 +203,7 @@ const Home = ({
         )}
 
         <TabControl
-          values={['home_accounts', 'home_categories']}
+          values={['home_accounts', 'home_categories', 'home_budgets']}
           onChange={setTab}
         />
 

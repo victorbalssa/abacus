@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Abacus",
-    "description": "🔥 Abacus: Firefly III iOS app 🔥",
+    "description": "Abacus: Firefly III iOS app",
     "slug": "abacus",
     "privacy": "public",
     "platforms": [
@@ -24,7 +24,7 @@
       "bundleIdentifier": "abacus.ios.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID",
-        "NSLocalNetworkUsageDescription": "Abacus use Authentication with TouchId or FaceID"
+        "NSLocalNetworkUsageDescription": "Abacus use Local Network to connect to your local instance of Firefly III"
       },
       "config": {
         "usesNonExemptEncryption": false

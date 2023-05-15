@@ -22,6 +22,6 @@ export default {
   tabInactiveDarkLight: 'rgba(103,103,103,0.61)',
   brandLight: '#f8f8f8',
   tabBackgroundColor: '#FFFFFF',
-  warmGray100: '#f5f5f4',
-  warmGray200: '#e7e5e4',
+  warmGray100: '#e7e5e4',
+  warmGray200: 'rgba(238,238,238,0.61)',
 };

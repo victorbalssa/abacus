@@ -8,6 +8,7 @@ import {
 
 import { RootDispatch, RootState } from '../../store';
 import { translate } from '../../i18n/locale';
+import colors from '../../constants/colors';
 
 const CurrencySwitcher: FC = () => {
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
@@ -27,7 +28,7 @@ const CurrencySwitcher: FC = () => {
       py={1}
       justifyContent="center"
       alignItems="center"
-      bgColor="gray.100"
+      bgColor={colors.warmGray200}
       borderBottomWidth={0.5}
       borderColor="gray.200"
     >
