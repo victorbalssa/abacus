@@ -59,7 +59,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-helmet": "^5.2.1",
-    "react-native": "0.71.7",
+    "react-native": "0.71.8",
     "react-native-animated-splash-screen": "^2.0.5",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-modal": "^11.5.6",
