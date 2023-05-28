@@ -212,6 +212,7 @@ export default createModel<RootModel>()({
         dispatch.accounts.getAccounts(),
         dispatch.transactions.getTransactions(),
         dispatch.categories.getInsightCategories(),
+        dispatch.budgets.getInsightBudgets(),
       ]);
     },
 

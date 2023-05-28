@@ -93,4 +93,7 @@ export default {
 
   // from 0.7.0
   home_budgets: 'Budgets',
+  configuration_ui: 'User Interface',
+  configuration_color_mode: 'Dark Mode',
+  privacy_screen: 'Privacy Screen',
 };
