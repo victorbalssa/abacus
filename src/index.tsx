@@ -6,12 +6,12 @@ import React, {
 } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import { AppState, LogBox } from 'react-native';
+import { AppState, LogBox, Image } from 'react-native';
 import {
   AlertDialog,
   Button,
   extendTheme,
-  NativeBaseProvider,
+  NativeBaseProvider, Text, useColorModeValue,
 } from 'native-base';
 import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
@@ -25,7 +25,6 @@ import {
 
 import { BlurView } from 'expo-blur';
 import { store, persistor } from './store';
-import colors from './constants/colors';
 import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
@@ -44,6 +43,7 @@ const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 const App: FC = () => {
   LogBox.ignoreAllLogs(true);
 
+  const backgroundColor = useColorModeValue('#ffffff', '#1f2937');
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -112,7 +112,7 @@ const App: FC = () => {
       translucent
       isLoaded={fontsLoaded}
       logoImage={abacusIcon}
-      backgroundColor={colors.backgroundColor}
+      backgroundColor={backgroundColor}
       logoHeight={145}
       logoWidth={145}
     >
@@ -134,10 +134,22 @@ const App: FC = () => {
                       left: 0,
                       bottom: 0,
                       right: 0,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}
                     intensity={60}
                     tint="light"
-                  />
+                  >
+                    <Image
+                      style={{
+                        width: 100,
+                        height: 100,
+                      }}
+                      source={abacusIcon}
+                    />
+                    <Text>Abacus</Text>
+                    <Text>{translate('privacy_screen')}</Text>
+                  </BlurView>
                 )}
               </>
             )}

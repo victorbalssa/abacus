@@ -6,7 +6,7 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Svg, Path } from 'react-native-svg';
-import { Box, IconButton } from 'native-base';
+import { Box, IconButton, useColorModeValue } from 'native-base';
 import { StyleSheet, Dimensions } from 'react-native';
 
 import OauthContainer from '../containers/Oauth';
@@ -24,14 +24,6 @@ const Stack = createNativeStackNavigator();
 const Stack2 = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const windowHeight = Dimensions.get('window').height;
-
-const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'rgb(255,255,255)',
-  },
-};
 
 const styles = StyleSheet.create({
   navigatorContainer: {
@@ -228,37 +220,49 @@ const Home = () => (
   </Tab.Navigator>
 );
 
-const Index: FC = () => (
-  <NavigationContainer theme={MyTheme}>
-    <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name="oauth"
-        component={OauthContainer}
-      />
-      <Stack.Screen
-        name="dashboard"
-        component={Home}
-      />
-      <Stack2.Group
-        screenOptions={{
-          headerShown: false,
-          presentation: 'modal',
-          gestureEnabled: true,
-          gestureResponseDistance: windowHeight,
-          ...TransitionPresets.ModalPresentationIOS,
-        }}
-      >
-        <Stack2.Screen
-          name="TransactionsEditModal"
-          component={TransactionsEditContainer}
+const Index: FC = () => {
+  const backgroundColor = useColorModeValue('#ffffff', '#1f2937');
+
+  return (
+    <NavigationContainer
+      theme={{
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: backgroundColor,
+        },
+      }}
+    >
+      <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="oauth"
+          component={OauthContainer}
         />
-        <Stack2.Screen
-          name="TransactionsCreateModal"
-          component={TransactionsCreateContainer}
+        <Stack.Screen
+          name="dashboard"
+          component={Home}
         />
-      </Stack2.Group>
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+        <Stack2.Group
+          screenOptions={{
+            headerShown: false,
+            presentation: 'modal',
+            gestureEnabled: true,
+            gestureResponseDistance: windowHeight,
+            ...TransitionPresets.ModalPresentationIOS,
+          }}
+        >
+          <Stack2.Screen
+            name="TransactionsEditModal"
+            component={TransactionsEditContainer}
+          />
+          <Stack2.Screen
+            name="TransactionsCreateModal"
+            component={TransactionsCreateContainer}
+          />
+        </Stack2.Group>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default Index;

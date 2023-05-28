@@ -98,6 +98,7 @@ export default createModel<RootModel>()({
         dispatch.firefly.getSummaryBasic(),
         dispatch.accounts.getAccounts(),
         dispatch.categories.getInsightCategories(),
+        dispatch.budgets.getInsightBudgets(),
       ]);
     },
   }),

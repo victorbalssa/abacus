@@ -8,6 +8,7 @@ import {
   Heading,
   Switch,
   Pressable,
+  useColorMode,
 } from 'native-base';
 import * as Linking from 'expo-linking';
 import * as Application from 'expo-application';
@@ -37,9 +38,21 @@ const Configuration = ({
     ],
   );
 
+  const { toggleColorMode, colorMode } = useColorMode();
+
   return (
     <Stack safeAreaTop>
       <ScrollView bounces={false}>
+{/*
+        <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_ui')}</Heading>
+        <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
+          <HStack px={4} py={2} minH={45} alignItems="center" justifyContent="space-between">
+            <Text color="gray.600">{translate('configuration_color_mode')}</Text>
+            <Switch isChecked={colorMode === 'dark'} onToggle={toggleColorMode} colorScheme="primary" />
+          </HStack>
+        </Box>
+*/}
+
         <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_security')}</Heading>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor="gray.200" backgroundColor="gray.100">
           <HStack px={4} py={2} minH={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor="gray.200">

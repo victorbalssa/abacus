@@ -14,7 +14,7 @@ import colors from '../constants/colors';
 import { translate } from '../i18n/locale';
 
 const gap = 2;
-const iosTabVerticalSpacing = gap;
+const iosTabVerticalSpacing = 1;
 const tabControlStyles = StyleSheet.create({
   tabsContainerStyle: {
     paddingTop: gap,
@@ -22,10 +22,8 @@ const tabControlStyles = StyleSheet.create({
   },
   tabStyle: {
     flex: 1,
-    marginVertical: iosTabVerticalSpacing,
+    marginVertical: 1,
     borderRadius: 5,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
   },
   tabTextStyle: {
     color: colors.brandDark,
@@ -45,7 +43,7 @@ const tabControlStyles = StyleSheet.create({
     shadowRadius: 1.5,
   },
   activeTabTextStyle: {
-
+    fontSize: 14.5,
   },
   firstTabStyle: { marginLeft: 0 },
   lastTabStyle: { marginRight: 0 },
@@ -53,8 +51,8 @@ const tabControlStyles = StyleSheet.create({
 const wrapperStyles = StyleSheet.create({
   outerGapStyle: {
     backgroundColor: colors.warmGray200,
-    borderRadius: 10,
-    marginHorizontal: 12,
+    borderRadius: 7,
+    marginHorizontal: 20,
   },
 });
 
@@ -66,7 +64,7 @@ const Container = ({
   onIndexChange,
 }) => {
   const { tabStyle, activeTabStyle, tabsContainerStyle } = style;
-  const margin = 5;
+  const margin = 2;
   const [moveAnimation] = useState(new Animated.Value(0));
   const [containerWidth, setContainerWidth] = useState(0);
 
@@ -75,7 +73,6 @@ const Container = ({
     Animated.timing(moveAnimation, {
       toValue: leftVal,
       duration: 250,
-      // not supported by native animated module
       useNativeDriver: false,
     }).start();
   }, [containerWidth, activeTabIndex]);

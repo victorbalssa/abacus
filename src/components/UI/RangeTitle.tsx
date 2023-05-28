@@ -4,7 +4,7 @@ import {
   Box,
   Text,
   IconButton,
-  VStack,
+  VStack, useColorModeValue,
 } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -20,6 +20,7 @@ const RangeTitle: FC = () => {
   const { rangeTitle, start, end } = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
   const displayFilter = useSelector((state: RootState) => state.configuration.displayFilter);
+  const backgroundColor = useColorModeValue('warmGray.50', 'coolGray.800');
 
   const tabSize = (() => {
     if (isSmallScreen()) {
@@ -40,7 +41,7 @@ const RangeTitle: FC = () => {
         right={0}
         left={0}
         position="absolute"
-        backgroundColor="white"
+        backgroundColor={backgroundColor}
         zIndex={30}
         alignItems="center"
         justifyContent="center"
