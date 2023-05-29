@@ -12,6 +12,7 @@ import { translate } from '../../i18n/locale';
 const Create = ({
   loading,
   accounts,
+  payload,
   categories,
   budgets,
   descriptions,
@@ -46,11 +47,14 @@ const Create = ({
           submit={submit}
           goToTransactions={goToTransactions}
           payload={{
-            description: '',
+            description: payload.description || '',
             date: new Date(),
-            source_name: '',
-            destination_name: '',
-            type: 'withdrawal',
+            source_name: payload.source_name || '',
+            destination_name: payload.destination_name || '',
+            category_name: payload.category_name || '',
+            budget_name: payload.budget_name || '',
+            amount: payload.amount || '',
+            type: payload.type || 'withdrawal',
           }}
         />
       </ScrollView>

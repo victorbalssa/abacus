@@ -30,6 +30,7 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
   const [config, setConfig] = useState<OauthConfigType>({
     oauthClientId: '',
     oauthClientSecret: '',
+    personalAccessToken: '',
   });
 
   const {
@@ -126,7 +127,7 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
           });
           goToHome();
         } catch (e) {
-          toast.show({
+          await toast.show({
             render: ({ id }) => (
               <ToastAlert
                 onClose={() => toast.close(id)}
@@ -142,6 +143,45 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
     })();
   }, [result]);
 
+  const tokenLogin = async () => {
+    try {
+      axios.defaults.headers.Authorization = `Bearer ${config.personalAccessToken}`;
+
+      // test personal token
+      await axios.get(`${backendURL}/api/v1/about/user`);
+
+      const storageValue = JSON.stringify({
+        accessToken: config.personalAccessToken,
+      });
+      await SecureStore.setItemAsync(secureKeys.tokens, storageValue);
+
+      toast.show({
+        render: ({ id }) => (
+          <ToastAlert
+            onClose={() => toast.close(id)}
+            title={translate('oauth_token_success_title')}
+            status="success"
+            variant="solid"
+            description={translate('oauth_token_success_description')}
+          />
+        ),
+      });
+      goToHome();
+    } catch (_) {
+      toast.show({
+        render: ({ id }) => (
+          <ToastAlert
+            onClose={() => toast.close(id)}
+            title={translate('oauth_token_error_title')}
+            status="error"
+            variant="solid"
+            description={`${translate('oauth_wrong_token_error_description')}`}
+          />
+        ),
+      });
+    }
+  };
+
   return (
     <Layout
       config={config}
@@ -150,7 +190,8 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
       backendURL={backendURL}
       faceIdCheck={goToHome}
       setConfig={setConfig}
-      promptAsync={promptAsync}
+      oauthLogin={() => promptAsync()}
+      tokenLogin={tokenLogin}
       setBackendURL={dispatch.configuration.setBackendURL}
     />
   );

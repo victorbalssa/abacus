@@ -25,6 +25,7 @@ const Basic = ({
   onDeleteTransaction,
   onEndReached,
   onPressItem,
+  onLongPressItem,
 }) => {
   const transactions = useSelector((state: RootState) => state.transactions.transactions);
 
@@ -83,8 +84,8 @@ const Basic = ({
         onPressItem(item.id, item.attributes.transactions[0]);
       }}
       onLongPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        onPressItem(item.id, item.attributes.transactions[0]);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        onLongPressItem(item.attributes.transactions[0]);
       }}
     >
       <Box px={3}>
@@ -282,6 +283,7 @@ const Transactions = ({
   onDeleteTransaction,
   onEndReached,
   onPressItem,
+  onLongPressItem,
 }) => (
   <>
     <RangeTitle />
@@ -293,6 +295,7 @@ const Transactions = ({
         onDeleteTransaction={onDeleteTransaction}
         onEndReached={onEndReached}
         onPressItem={onPressItem}
+        onLongPressItem={onLongPressItem}
       />
     </Animated.View>
   </>
