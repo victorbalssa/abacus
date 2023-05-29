@@ -42,7 +42,7 @@ export default {
   OAUTH_oauth_clientId: 'ID de Oauth Client',
   OAUTH_oauth_client_secret: 'Secreto de Oauth Client',
   OAUTH_secrets_help_message: 'Todos los secretos están almacenados en iOS secure storage.',
-  OAUTH_set_redirect: 'establecer URL de redirección a:',
+  OAUTH_set_redirect: 'Establecer URL de redirección a:',
   OAUTH_need_help: '¿Necesitas ayuda?',
   OAUTH_submit_button_initial: 'Iniciar sesión',
   OAUTH_submit_button_loading: 'Enviando...',

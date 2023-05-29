@@ -148,7 +148,6 @@ const App: FC = () => {
                       source={abacusIcon}
                     />
                     <Text>Abacus</Text>
-                    <Text>{translate('privacy_screen')}</Text>
                   </BlurView>
                 )}
               </>

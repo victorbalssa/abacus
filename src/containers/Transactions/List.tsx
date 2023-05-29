@@ -22,6 +22,16 @@ const List: FC = ({ navigation }: ContainerPropType) => {
     }),
   );
 
+  // TODO: do not pass entire payload into this modal
+  const goToDuplicate = (payload) => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'TransactionsCreateModal',
+      params: {
+        payload,
+      },
+    }),
+  );
+
   const onRefresh = () => {
     try {
       dispatch.transactions.getTransactions();
@@ -54,6 +64,7 @@ const List: FC = ({ navigation }: ContainerPropType) => {
       onDeleteTransaction={onDeleteTransaction}
       onEndReached={onEndReached}
       onPressItem={goToEdit}
+      onLongPressItem={goToDuplicate}
     />
   );
 };

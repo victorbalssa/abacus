@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Input,
   Box,
   FormControl,
   Button,
   HStack,
+  Stack,
   Text,
   Pressable,
+  Switch,
+  ScrollView,
 } from 'native-base';
-import { Alert, KeyboardAvoidingView } from 'react-native';
+import { Alert, KeyboardAvoidingView, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
 
@@ -19,7 +22,7 @@ import { translate } from '../i18n/locale';
 
 const copyToClipboard = async () => {
   await Clipboard.setStringAsync('abacusiosapp://redirect');
-  Alert.alert('\'abacusiosapp://redirect\' copied to clipboard');
+  Alert.alert('abacusiosapp://redirect copied to clipboard');
 };
 
 const Oauth = ({
@@ -28,138 +31,217 @@ const Oauth = ({
   faceIdCheck,
   config,
   setConfig,
-  promptAsync,
+  oauthLogin,
+  tokenLogin,
   backendURL,
   setBackendURL,
-}) => (
-  <KeyboardAvoidingView behavior="padding">
-    <Box p={5} safeAreaTop>
-      <FormControl isRequired>
-        <FormControl.Label>{translate('OAUTH_fireflyInstanceMainLabel')}</FormControl.Label>
-        <Input
-          returnKeyType="done"
-          placeholder={translate('OAUTH_fireflyPlaceholder')}
-          keyboardType="url"
-          value={backendURL}
-          onChangeText={setBackendURL}
-        />
-        <FormControl.HelperText>
-          {translate('OAUTH_fireflyInstanceHelpLabel')}
-        </FormControl.HelperText>
-      </FormControl>
-      <FormControl isRequired>
-        <FormControl.Label>{translate('OAUTH_oauth_clientId')}</FormControl.Label>
-        <Input
-          keyboardType="numeric"
-          returnKeyType="done"
-          placeholder={translate('OAUTH_oauth_clientId')}
-          value={config.oauthClientId}
-          onChangeText={(v) => setConfig({
-            ...config,
-            oauthClientId: v,
-          })}
-        />
-      </FormControl>
-      <FormControl>
-        <FormControl.Label>{translate('OAUTH_oauth_client_secret')}</FormControl.Label>
-        <Input
-          returnKeyType="done"
-          type="password"
-          placeholder={translate('OAUTH_oauth_client_secret')}
-          value={config.oauthClientSecret}
-          onChangeText={(v) => setConfig({
-            ...config,
-            oauthClientSecret: v,
-          })}
-        />
-        <FormControl.HelperText>
-          {translate('OAUTH_secrets_help_message')}
-        </FormControl.HelperText>
-      </FormControl>
+}) => {
+  const [isOauth, setIsAuth] = useState<boolean>(true);
+  const toggleIsOauth = () => setIsAuth((value) => !value);
+  const isMinimumRequirement = () => {
+    if (isOauth && config.oauthClientId) {
+      return true;
+    }
 
-      <HStack>
-        <Text py={1} pr={1} fontSize={14} color="primary.200">
-          🔥
-          {' '}
-          {translate('OAUTH_set_redirect')}
-        </Text>
+    if (!isOauth && config.personalAccessToken) {
+      return true;
+    }
 
-        <Pressable flexDirection="row" justifyContent="center" alignItems="center" onPress={copyToClipboard} backgroundColor="primary.200" borderRadius={15} py={1} px={1}>
-          <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
-          <Text fontFamily="Montserrat_Bold" color="white" mr={1}>abacusiosapp://redirect</Text>
-        </Pressable>
-      </HStack>
-      <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
-        <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('OAUTH_need_help')}</Text>
-      </Pressable>
+    return false;
+  };
 
-      <Button
-        leftIcon={<Ionicons name="log-in-outline" size={20} color="white" />}
-        mt="2"
-        shadow={2}
-        borderRadius={15}
-        onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.99,
-            }],
-          },
-        }}
-        _loading={{
-          bg: 'primary.50',
-          _text: {
-            color: 'white',
-          },
-          alignItems: 'flex-start',
-          opacity: 1,
-        }}
-        _spinner={{
-          color: 'white',
-          size: 10,
-        }}
-        colorScheme="primary"
-        isDisabled={!isValidHttpUrl(backendURL)}
-        isLoading={loading}
-        isLoadingText={translate('OAUTH_submit_button_loading')}
-        onPress={() => promptAsync()}
-      >
-        {translate('OAUTH_submit_button_initial')}
-      </Button>
-      {faceId && (
-        <Button
-          leftIcon={<Ionicons name="ios-lock-open" size={16} color="white" />}
-          mt="2"
-          shadow={2}
-          borderRadius={15}
-          onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-          _pressed={{
-            style: {
-              transform: [{
-                scale: 0.99,
-              }],
-            },
-          }}
-          _loading={{
-            _text: {
+  const handleLogin = async () => {
+    if (isOauth) {
+      oauthLogin();
+    } else {
+      await tokenLogin();
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView behavior="padding">
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <Box p={5} safeAreaTop>
+          <FormControl isRequired>
+            <FormControl.Label>{translate('OAUTH_fireflyInstanceMainLabel')}</FormControl.Label>
+            <Input
+              returnKeyType="done"
+              placeholder={translate('OAUTH_fireflyPlaceholder')}
+              keyboardType="url"
+              value={backendURL}
+              onChangeText={setBackendURL}
+            />
+            <FormControl.HelperText>
+              {translate('OAUTH_fireflyInstanceHelpLabel')}
+            </FormControl.HelperText>
+          </FormControl>
+
+          <Text fontSize={12} pt={3}>{translate('auth_external_heads_up')}</Text>
+
+          <Stack py={2}>
+            <HStack py={2} minH={45} alignItems="center" justifyContent="space-between">
+              <Text fontSize={12} color="gray.600">{translate('auth_use_personal_access_token')}</Text>
+              <Switch isChecked={!isOauth} onToggle={toggleIsOauth} colorScheme="primary" />
+            </HStack>
+          </Stack>
+
+          {isOauth && (
+          <>
+            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)}>
+              ‣
+              {' '}
+              {translate('auth_create_new_oauth_client')}
+            </Text>
+            <Text fontSize={12} underline>
+              {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
+              /profile
+            </Text>
+            <HStack>
+              <Text py={1} pr={1} fontSize={12}>
+                ‣
+                {' '}
+                {translate('OAUTH_set_redirect')}
+              </Text>
+
+              <Pressable flexDirection="row" justifyContent="center" alignItems="center" onPress={copyToClipboard} backgroundColor="primary.200" borderRadius={10} py={0} px={0}>
+                <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
+                <Text fontFamily="Montserrat_Bold" color="white" mr={1}>abacusiosapp://redirect</Text>
+              </Pressable>
+            </HStack>
+            <FormControl isRequired>
+              <FormControl.Label>{translate('OAUTH_oauth_clientId')}</FormControl.Label>
+              <Input
+                keyboardType="numeric"
+                returnKeyType="done"
+                placeholder={translate('OAUTH_oauth_clientId')}
+                value={config.oauthClientId}
+                onChangeText={(v) => setConfig({
+                  ...config,
+                  oauthClientId: v,
+                })}
+              />
+            </FormControl>
+            <FormControl>
+              <FormControl.Label>{translate('OAUTH_oauth_client_secret')}</FormControl.Label>
+              <Input
+                returnKeyType="done"
+                type="password"
+                placeholder={translate('OAUTH_oauth_client_secret')}
+                value={config.oauthClientSecret}
+                onChangeText={(v) => setConfig({
+                  ...config,
+                  oauthClientSecret: v,
+                })}
+              />
+              <FormControl.HelperText>
+                {translate('OAUTH_secrets_help_message')}
+              </FormControl.HelperText>
+            </FormControl>
+          </>
+          )}
+
+          {!isOauth && (
+          <>
+            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)}>
+              ‣
+              {' '}
+              {translate('auth_create_new_personal_access_token')}
+            </Text>
+            <Text fontSize={12} underline>
+              {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
+              /profile
+            </Text>
+            <FormControl isRequired>
+              <FormControl.Label>{translate('auth_personal_access_token')}</FormControl.Label>
+              <Input
+                returnKeyType="done"
+                type="password"
+                placeholder={translate('auth_personal_access_token')}
+                value={config.personalAccessToken}
+                onChangeText={(v) => setConfig({
+                  ...config,
+                  personalAccessToken: v,
+                })}
+              />
+              <FormControl.HelperText>
+                {translate('OAUTH_secrets_help_message')}
+              </FormControl.HelperText>
+            </FormControl>
+          </>
+          )}
+
+          <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
+            <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('OAUTH_need_help')}</Text>
+          </Pressable>
+
+          <Button
+            leftIcon={<Ionicons name="log-in-outline" size={20} color="white" />}
+            mt="2"
+            shadow={2}
+            onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+            _pressed={{
+              style: {
+                transform: [{
+                  scale: 0.99,
+                }],
+              },
+            }}
+            _loading={{
+              bg: 'primary.50',
+              _text: {
+                color: 'white',
+              },
+              alignItems: 'flex-start',
+              opacity: 1,
+            }}
+            _spinner={{
               color: 'white',
-            },
-            alignItems: 'flex-start',
-            opacity: 1,
-          }}
-          _spinner={{
-            color: 'white',
-            size: 10,
-          }}
-          colorScheme="coolGray"
-          isLoading={loading}
-          onPress={() => faceIdCheck()}
-        >
-          {translate('OAUTH_faceID')}
-        </Button>
-      )}
-    </Box>
-  </KeyboardAvoidingView>
-);
+              size: 10,
+            }}
+            colorScheme="primary"
+            isDisabled={!isValidHttpUrl(backendURL) || !isMinimumRequirement()}
+            isLoading={loading}
+            isLoadingText={translate('OAUTH_submit_button_loading')}
+            onPress={handleLogin}
+          >
+            {translate('OAUTH_submit_button_initial')}
+          </Button>
+          {faceId && (
+          <Button
+            leftIcon={<Ionicons name="ios-lock-open" size={16} color="white" />}
+            mt="2"
+            shadow={2}
+            onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+            _pressed={{
+              style: {
+                transform: [{
+                  scale: 0.99,
+                }],
+              },
+            }}
+            _loading={{
+              _text: {
+                color: 'white',
+              },
+              alignItems: 'flex-start',
+              opacity: 1,
+            }}
+            _spinner={{
+              color: 'white',
+              size: 10,
+            }}
+            colorScheme="coolGray"
+            isLoading={loading}
+            onPress={() => faceIdCheck()}
+          >
+            {translate('OAUTH_faceID')}
+          </Button>
+          )}
+        </Box>
+        <View style={{ height: 370 }} />
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+};
 
 export default Oauth;

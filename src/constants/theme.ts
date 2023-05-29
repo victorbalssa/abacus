@@ -71,7 +71,7 @@ export default {
     },
     IconButton: {
       baseStyle: {
-        borderRadius: 15,
+        borderRadius: 10,
         _icon: {
           size: 'xl',
         },
@@ -85,9 +85,14 @@ export default {
         },
       },
     },
+    Button: {
+      baseStyle: {
+        borderRadius: 10,
+      },
+    },
     Input: {
       baseStyle: {
-        borderRadius: 15,
+        borderRadius: 10,
         height: 10,
       },
     },

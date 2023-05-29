@@ -60,7 +60,7 @@ const Form = ({
     date: new Date(payload.date),
     source_name: payload.source_name,
     destination_name: payload.destination_name,
-    amount: payload.amount ? parseFloat(payload.amount).toFixed(payload.currency_decimal_places) : '',
+    amount: payload.amount ? parseFloat(payload.amount).toFixed(2) : '',
     category_id: payload.category_id,
     category_name: payload.category_name,
     budget_id: payload.budget_id,
@@ -552,7 +552,6 @@ const Form = ({
       <Button
         mt="3"
         variant="outline"
-        borderRadius={15}
         colorScheme="gray"
         onPress={() => {
           setData({
@@ -575,7 +574,6 @@ const Form = ({
       <Button
         mt="2"
         shadow={2}
-        borderRadius={15}
         _pressed={{
           style: {
             transform: [{
