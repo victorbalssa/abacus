@@ -13,7 +13,7 @@ const ToastAlert = ({
   onClose,
   onPress = () => {},
 }) => (
-  <Alert zIndex={1000} borderRadius={15} maxWidth="100%" alignSelf="center" flexDirection="row" status={status || 'info'} variant={variant}>
+  <Alert zIndex={1000} borderRadius={10} maxWidth="100%" alignSelf="center" flexDirection="row" status={status || 'info'} variant={variant}>
     <VStack space={1} flexShrink={1} w="100%">
       <HStack flexShrink={1} alignItems="center" justifyContent="space-between">
         <HStack space={2} flexShrink={1} alignItems="center">
@@ -24,6 +24,8 @@ const ToastAlert = ({
         </HStack>
 
         <IconButton
+          variant="outline"
+          colorScheme={status || 'info'}
           onPress={onClose}
           icon={<CloseIcon size="4" />}
           _icon={{

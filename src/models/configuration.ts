@@ -8,14 +8,12 @@ export type ConfigurationStateType = {
   backendURL: string,
   scrollEnabled: boolean,
   faceId: boolean,
-  displayFilter: boolean,
 }
 
 const INITIAL_STATE = {
   backendURL: 'https://',
   scrollEnabled: true,
   faceId: false,
-  displayFilter: false,
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -55,13 +53,6 @@ export default createModel<RootModel>()({
       return {
         ...state,
         defaultCurrency: payload,
-      };
-    },
-
-    setDisplayFilter(state, payload) {
-      return {
-        ...state,
-        displayFilter: payload,
       };
     },
 

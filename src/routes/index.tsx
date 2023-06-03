@@ -3,12 +3,12 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Foundation } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Svg, Path } from 'react-native-svg';
-import { Box, IconButton, useColorModeValue } from 'native-base';
+import { Box, IconButton } from 'native-base';
 import { StyleSheet, Dimensions } from 'react-native';
 
+import { BlurView } from 'expo-blur';
 import OauthContainer from '../containers/Oauth';
 import ConfigurationContainer from '../containers/Configuration';
 import HomeContainer from '../containers/Home';
@@ -16,9 +16,9 @@ import ChartContainer from '../containers/Chart';
 import TransactionsListContainer from '../containers/Transactions/List';
 import TransactionsEditContainer from '../containers/Transactions/Edit';
 import TransactionsCreateContainer from '../containers/Transactions/Create';
-import colors from '../constants/colors';
 
 import { translate } from '../i18n/locale';
+import { useThemeColors } from '../lib/common';
 
 const Stack = createNativeStackNavigator();
 const Stack2 = createStackNavigator();
@@ -31,14 +31,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    // SHADOW
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 3.22,
   },
   navigator: {
     borderTopWidth: 0,
@@ -50,7 +42,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 30,
+    height: 0,
   },
   container: {
     position: 'relative',
@@ -62,50 +54,23 @@ const styles = StyleSheet.create({
     top: 0,
   },
   button: {
-    top: -22.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 50,
-    height: 50,
-    borderRadius: 27,
-    backgroundColor: colors.brandStyle,
-  },
-  buttonIcon: {
-    fontSize: 16,
-    color: colors.tabBackgroundColor,
+    top: -10,
   },
 });
-
-// background svg which will create space
-const TabBg = () => (
-  <Svg width={75} height={81} viewBox="0 0 75 81" style={styles.background}>
-    <Path
-      d="M75.2 0v61H0V0c4.1 0 7.4 3.1 7.9 7.1C10 21.7 22.5 33 37.7 33c15.2 0 27.7-11.3 29.7-25.9.5-4 3.9-7.1 7.9-7.1h-.1z"
-      fill={colors.tabBackgroundColor}
-    />
-  </Svg>
-);
 
 // custom tabBarButton
 const TabBarAdvancedButton = ({ onPress }) => (
   <Box style={styles.container} pointerEvents="box-none">
-    <TabBg />
     <IconButton
-      variant="solid"
       _icon={{
         as: AntDesign,
         name: 'plus',
-        size: 6,
       }}
-      onPressIn={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+      onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       onPress={onPress}
       _pressed={{
         style: {
           ...styles.button,
-          transform: [{
-            scale: 0.95,
-          }],
-          opacity: 0.95,
         },
       }}
       style={styles.button}
@@ -113,7 +78,7 @@ const TabBarAdvancedButton = ({ onPress }) => (
   </Box>
 );
 
-const TransactionNavigator = () => (
+const TransactionNavigator: FC = () => (
   <Stack2.Navigator screenOptions={{ headerShown: false }}>
     <Stack2.Screen
       name="TransactionsList"
@@ -122,106 +87,113 @@ const TransactionNavigator = () => (
   </Stack2.Navigator>
 );
 
-const Home = () => (
-  <Tab.Navigator
-    tabBar={({
-      state, descriptors, navigation, insets,
-    }) => (
-      <Box style={styles.navigatorContainer}>
-        <BottomTabBar
-          state={state}
-          descriptors={descriptors}
-          navigation={navigation}
-          insets={insets}
-        />
-        <Box style={[styles.xFillLine, { backgroundColor: colors.tabBackgroundColor }]} />
-      </Box>
-    )}
-    screenOptions={() => ({
-      tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
-      tabBarActiveBackgroundColor: colors.tabBackgroundColor,
-      tabBarActiveTintColor: colors.brandStyle,
-      tabBarInactiveTintColor: colors.tabInactiveDarkLight,
-      headerShown: false,
-      tabBarShowLabel: true,
-      tabBarLazyLoad: true,
-      tabBarStyle: {
-        backgroundColor: 'transparent',
-        borderTopWidth: 0,
-        height: 75,
-      },
-      tabBarLabelStyle: {
-        fontSize: 11,
-        fontFamily: 'Montserrat_Bold',
-      },
-    })}
-  >
-    <Tab.Screen
-      name={translate('navigation_home_tab')}
-      options={{
-        tabBarIcon: (icon) => (
-          <AntDesign
-            name="home"
-            size={22}
-            color={icon.color}
+const Home: FC = () => {
+  const { colorScheme, colors } = useThemeColors();
+
+  return (
+    <Tab.Navigator
+      tabBar={({
+        state, descriptors, navigation, insets,
+      }) => (
+        <BlurView
+          intensity={100}
+          tint={colorScheme}
+          style={styles.navigatorContainer}
+        >
+          <BottomTabBar
+            state={state}
+            descriptors={descriptors}
+            navigation={navigation}
+            insets={insets}
           />
-        ),
-      }}
-      component={HomeContainer}
-    />
-    <Tab.Screen
-      name={translate('navigation_chart_tab')}
-      component={ChartContainer}
-      options={{
-        tabBarIcon: (icon) => (
-          <AntDesign
-            name="linechart"
-            size={20}
-            color={icon.color}
-          />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name={translate('navigation_create_tab')}
-      component={HomeContainer}
-      options={({ navigation }) => ({
-        tabBarButton: () => (
-          <TabBarAdvancedButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
-        ),
+        </BlurView>
+      )}
+      screenOptions={() => ({
+        tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
+        tabBarActiveBackgroundColor: colors.tabBackgroundColor,
+        tabBarActiveTintColor: colors.brandStyle,
+        tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+        headerShown: false,
+        tabBarShowLabel: true,
+        tabBarLazyLoad: true,
+        tabBarStyle: {
+          backgroundColor: 'transparent',
+          borderTopWidth: 0,
+          height: 85,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontFamily: 'Montserrat',
+        },
       })}
-    />
-    <Tab.Screen
-      name={translate('navigation_transactions_tab')}
-      component={TransactionNavigator}
-      options={{
-        tabBarIcon: (icon) => (
-          <AntDesign
-            name="bars"
-            size={25}
-            color={icon.color}
-          />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name={translate('navigation_settings_tab')}
-      component={ConfigurationContainer}
-      options={{
-        tabBarIcon: (icon) => (
-          <AntDesign
-            name="setting"
-            size={22}
-            color={icon.color}
-          />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-);
+    >
+      <Tab.Screen
+        name={translate('navigation_home_tab')}
+        options={{
+          tabBarIcon: (icon) => (
+            <Foundation
+              name="home"
+              size={24}
+              color={icon.color}
+            />
+          ),
+        }}
+        component={HomeContainer}
+      />
+      <Tab.Screen
+        name={translate('navigation_chart_tab')}
+        component={ChartContainer}
+        options={{
+          tabBarIcon: (icon) => (
+            <AntDesign
+              name="linechart"
+              size={20}
+              color={icon.color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={translate('navigation_create_tab')}
+        component={HomeContainer}
+        options={({ navigation }) => ({
+          tabBarButton: () => (
+            <TabBarAdvancedButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
+          ),
+        })}
+      />
+      <Tab.Screen
+        name={translate('navigation_transactions_tab')}
+        component={TransactionNavigator}
+        options={{
+          tabBarIcon: (icon) => (
+            <AntDesign
+              name="bars"
+              size={25}
+              color={icon.color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={translate('navigation_settings_tab')}
+        component={ConfigurationContainer}
+        options={{
+          tabBarIcon: (icon) => (
+            <AntDesign
+              name="setting"
+              size={22}
+              color={icon.color}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const Index: FC = () => {
-  const backgroundColor = useColorModeValue('#ffffff', '#1f2937');
+  const { colors } = useThemeColors();
 
   return (
     <NavigationContainer
@@ -229,7 +201,7 @@ const Index: FC = () => {
         ...DefaultTheme,
         colors: {
           ...DefaultTheme.colors,
-          background: backgroundColor,
+          background: colors.tabBackgroundColor,
         },
       }}
     >

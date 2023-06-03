@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  ScrollView,
-} from 'native-base';
+import { ScrollView } from 'native-base';
 import { View } from 'react-native';
-import Animated, { Layout } from 'react-native-reanimated';
 import AssetsHistoryChart from './Charts/AssetsHistoryChart';
-import RangeTitle from './UI/RangeTitle';
+import NavigationHeader from './UI/NavigationHeader';
 
 const Chart = ({
   loading,
@@ -16,26 +13,27 @@ const Chart = ({
   end,
   backendURL,
 }) => (
-  <>
-    <RangeTitle />
-    <Animated.View style={{ flex: 1 }} layout={Layout}>
-      <ScrollView
-        p={2}
-        bounces={false}
-      >
-        <AssetsHistoryChart
-          loading={loading}
-          fetchData={fetchData}
-          start={start}
-          end={end}
-          accounts={accounts}
-          filterData={filterData}
-          backendURL={backendURL}
-        />
-        <View style={{ height: 120 }} />
-      </ScrollView>
-    </Animated.View>
-  </>
+  <View>
+    <ScrollView
+      contentContainerStyle={{
+        paddingTop: 95,
+      }}
+      bounces={false}
+      showsVerticalScrollIndicator={false}
+    >
+      <AssetsHistoryChart
+        loading={loading}
+        fetchData={fetchData}
+        start={start}
+        end={end}
+        accounts={accounts}
+        filterData={filterData}
+        backendURL={backendURL}
+      />
+      <View style={{ height: 120 }} />
+    </ScrollView>
+    <NavigationHeader />
+  </View>
 );
 
 export default Chart;

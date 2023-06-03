@@ -7,11 +7,10 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import * as Haptics from 'expo-haptics';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
-import colors from '../constants/colors';
 import { translate } from '../i18n/locale';
+import { useThemeColors } from '../lib/common';
 
 const gap = 2;
 const iosTabVerticalSpacing = 1;
@@ -26,14 +25,13 @@ const tabControlStyles = StyleSheet.create({
     borderRadius: 5,
   },
   tabTextStyle: {
-    color: colors.brandDark,
     fontFamily: 'Montserrat_Bold',
     paddingVertical: 2 * gap,
     paddingHorizontal: 2 * gap,
     alignSelf: 'center',
   },
   activeTabStyle: {
-    backgroundColor: colors.brandPrimary,
+    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: {
       width: 1,
@@ -47,13 +45,6 @@ const tabControlStyles = StyleSheet.create({
   },
   firstTabStyle: { marginLeft: 0 },
   lastTabStyle: { marginRight: 0 },
-});
-const wrapperStyles = StyleSheet.create({
-  outerGapStyle: {
-    backgroundColor: colors.warmGray200,
-    borderRadius: 7,
-    marginHorizontal: 20,
-  },
 });
 
 const Container = ({
@@ -131,23 +122,27 @@ const IosTab = ({
   style: tabControlStyle,
   onPress,
   renderLeftSeparator,
-}) => (
-  <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-    {renderLeftSeparator && (
-    <View
-      style={{
-        height: '70%',
-        width: 1,
-        borderRadius: 5,
-        backgroundColor: colors.warmGray100,
-      }}
-    />
-    )}
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={tabControlStyle}>{children}</View>
-    </TouchableWithoutFeedback>
-  </View>
-);
+}) => {
+  const { colors } = useThemeColors();
+
+  return (
+    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+      {renderLeftSeparator && (
+      <View
+        style={{
+          height: '70%',
+          width: 1,
+          borderRadius: 5,
+          backgroundColor: colors.warmGray100,
+        }}
+      />
+      )}
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={tabControlStyle}>{children}</View>
+      </TouchableWithoutFeedback>
+    </View>
+  );
+};
 
 const Tab = ({
   label,
@@ -210,6 +205,7 @@ const SegmentedControl = ({
 );
 
 const TabControl = ({ values, onChange }) => {
+  const { colors } = useThemeColors();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleIndexChange = (index) => {
@@ -218,7 +214,14 @@ const TabControl = ({ values, onChange }) => {
   };
 
   return (
-    <View style={wrapperStyles.outerGapStyle}>
+    <View
+      style={{
+        backgroundColor: colors.warmGray200,
+        borderRadius: 7,
+        marginHorizontal: 20,
+        marginVertical: 10,
+      }}
+    >
       <SegmentedControl
         values={values}
         selectedIndex={selectedIndex}
