@@ -9,7 +9,7 @@ const Loading = () => (
       justifyContent: 'center',
     }}
   >
-    <ActivityIndicator size="small" color="black" />
+    <ActivityIndicator size="small" />
   </View>
 );
 

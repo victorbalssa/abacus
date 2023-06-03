@@ -20,9 +20,9 @@ import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
-import colors from '../../constants/colors';
 import Loading from '../UI/Loading';
 import { translate } from '../../i18n/locale';
+import { useThemeColors } from '../../lib/common';
 
 const CursorPointer = ({
   x,
@@ -30,8 +30,8 @@ const CursorPointer = ({
   stroke,
 }) => (
   <>
-    <Circle cx={x} cy={y} r="8" fill={stroke} />
-    <Circle cx={x} cy={y} r="5" fill="#fff" />
+    <Circle cx={x} cy={y} r="10" fill={stroke} />
+    <Circle cx={x} cy={y} r="7" fill="#fff" />
   </>
 );
 
@@ -39,12 +39,12 @@ const Cursor = ({
   x, y, minY, maxY, activePoints,
 }) => (
   <>
-    <VStack ml={2} h={130} top={-130} bgColor={colors.brandLight} borderTopRadius={15} mr={5}>
+    <VStack ml={2} h={100} top={-100} borderTopRadius={15} mr={5}>
       <HStack
         justifyContent="center"
         minW={100}
       >
-        <Text fontWeight={600} pt={2} fontSize={18} color={colors.brandDarkLight}>
+        <Text fontWeight={600} pt={2} fontSize={18}>
           {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString('default', {
             month: 'short',
             day: 'numeric',
@@ -82,7 +82,7 @@ const Cursor = ({
     </VStack>
     <Line
       strokeDasharray="5, 5"
-      stroke={colors.brandDarkLight}
+      stroke="#676767"
       strokeWidth={2}
       x1={x}
       x2={x}
@@ -118,6 +118,7 @@ const AssetsHistoryChart = ({
   filterData,
   backendURL,
 }) => {
+  const { colors } = useThemeColors();
   const getTickValues = () => {
     const dateArray = [];
     const currentDate = new Date(start);
@@ -133,22 +134,22 @@ const AssetsHistoryChart = ({
 
   return (
     <VStack
-      mt={2}
-      bgColor={colors.brandLight}
-      borderWidth={0.5}
-      borderColor="#E3E3E3FF"
+      mt={4}
+      mx={3}
+      bgColor={colors.tileBackgroundColor}
       justifyContent="center"
-      borderRadius={5}
+      borderRadius={10}
     >
       <HStack
         style={{
           marginTop: 10,
           paddingTop: 0,
-          paddingLeft: 15,
+          paddingHorizontal: 10,
+          justifyContent: 'space-between',
           paddingBottom: 0,
         }}
       >
-        <ScrollView height={120} indicatorStyle="black">
+        <View>
           {accounts.map((chart, index) => (
             <Pressable
               key={`key-${chart.label}`}
@@ -183,21 +184,20 @@ const AssetsHistoryChart = ({
               </HStack>
             </Pressable>
           ))}
-        </ScrollView>
+        </View>
         <IconButton
           variant="solid"
           _icon={{
             as: AntDesign,
             name: 'reload1',
           }}
-          h={10}
-          mr={2}
           onPress={fetchData}
-          onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+          onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         />
       </HStack>
+      <View style={{ height: 90 }} />
       {loading && (
-        <VStack m={2} justifyContent="center" borderRadius={15}>
+        <VStack m={2} justifyContent="center" borderRadius={10}>
           <HStack h={400} alignItems="center">
             <Loading />
           </HStack>
@@ -277,7 +277,7 @@ const AssetsHistoryChart = ({
             {translate('assetsHistoryCharts_chart_works')}
             {' '}
             <Text
-              style={{ color: 'blue' }}
+              style={{ color: colors.brandInfo }}
               onPress={() => Linking.openURL(`${backendURL}/preferences`)}
               underline
             >

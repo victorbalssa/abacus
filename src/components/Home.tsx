@@ -13,17 +13,19 @@ import {
   Progress,
   Stack,
 } from 'native-base';
-import Animated, { Layout } from 'react-native-reanimated';
+import { HoldItem, HoldMenuProvider } from 'react-native-hold-menu';
 
 import { useDispatch, useSelector } from 'react-redux';
-import colors from '../constants/colors';
-import RangeTitle from './UI/RangeTitle';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import NavigationHeader from './UI/NavigationHeader';
 import { translate } from '../i18n/locale';
-import { localNumberFormat } from '../lib/common';
+import { localNumberFormat, useThemeColors } from '../lib/common';
 import { RootDispatch, RootState } from '../store';
 import TabControl from './TabControl';
+import Filters from './UI/Filters';
 
 const InsightCategories = () => {
+  const { colors } = useThemeColors();
   const {
     categories: {
       getInsightCategories,
@@ -42,17 +44,17 @@ const InsightCategories = () => {
         />
       )}
     >
-      <Box borderTopWidth={0} borderBottomWidth={1} borderColor="gray.200">
+      <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
         {insightCategories.map((category, index) => (
           <HStack
             key={category.name}
-            mx={5}
-            py={2}
-            minH={45}
+            ml={5}
+            pr={2}
+            h={45}
             alignItems="center"
             justifyContent="space-between"
             borderBottomWidth={index + 1 === insightCategories.length ? 0 : 1}
-            borderColor="gray.200"
+            borderColor={colors.listBorderColor}
           >
             <Text>
               {category.name}
@@ -74,6 +76,7 @@ const InsightCategories = () => {
 };
 
 const InsightBudgets = () => {
+  const { colors } = useThemeColors();
   const {
     budgets: {
       getInsightBudgets,
@@ -92,38 +95,44 @@ const InsightBudgets = () => {
         />
       )}
     >
-      <Box>
-        {insightBudgets.map((budget) => (
+      <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
+        {insightBudgets.map((budget, index) => (
           <Stack
             key={budget.name}
           >
-            <HStack
-              mx={5}
-              py={2}
-              minH={45}
-              alignItems="center"
-              justifyContent="space-between"
+            <VStack
+              ml={5}
+              pr={2}
+              h={55}
+              justifyContent="center"
+              borderBottomWidth={index + 1 === insightBudgets.length ? 0 : 1}
+              borderColor={colors.listBorderColor}
             >
-              <Text>
-                {budget.name}
-              </Text>
-
-              {!loading ? (
+              <HStack
+                justifyContent="space-between"
+                alignItems="center"
+              >
                 <Text>
-                  {localNumberFormat(budget.currency_code, budget.difference_float)}
-                  /
-                  {localNumberFormat(budget.currency_code, budget.limit)}
+                  {budget.name}
                 </Text>
-              ) : (
-                <Skeleton w={140} h={5} rounded={15} />
-              )}
-            </HStack>
-            <Progress
-              colorScheme={-budget.difference_float > budget.limit ? 'danger' : 'success'}
-              value={((-budget.difference_float * 100) / budget.limit) || 0}
-              h={1}
-              mx={5}
-            />
+
+                {!loading ? (
+                  <Text>
+                    {localNumberFormat(budget.currency_code, budget.difference_float)}
+                    /
+                    {localNumberFormat(budget.currency_code, budget.limit)}
+                  </Text>
+                ) : (
+                  <Skeleton w={140} h={5} rounded={15} />
+                )}
+              </HStack>
+              <Progress
+                colorScheme={-budget.difference_float > budget.limit ? 'danger' : 'success'}
+                value={((-budget.difference_float * 100) / budget.limit) || 0}
+                h={3}
+                my={2}
+              />
+            </VStack>
           </Stack>
         ))}
       </Box>
@@ -133,6 +142,7 @@ const InsightBudgets = () => {
 };
 
 const AssetsAccounts = () => {
+  const { colors } = useThemeColors();
   const {
     accounts: {
       getAccounts,
@@ -151,17 +161,17 @@ const AssetsAccounts = () => {
         />
       )}
     >
-      <Box borderTopWidth={0} borderBottomWidth={1} borderColor="gray.200">
+      <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
         {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
           <HStack
             key={account.attributes.name}
-            mx={5}
-            py={2}
-            minH={45}
+            ml={5}
+            pr={2}
+            h={45}
             alignItems="center"
             justifyContent="space-between"
             borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 1}
-            borderColor="gray.200"
+            borderColor={colors.listBorderColor}
           >
             <Text>
               {account.attributes.name}
@@ -191,76 +201,78 @@ const Home = ({
   balance,
   loading,
 }) => {
+  const { colorScheme, colors } = useThemeColors();
+  const safeAreaInsets = useSafeAreaInsets();
   const [tab, setTab] = useState('home_accounts');
 
   return (useMemo(() => (
-    <>
-      <RangeTitle />
-      <Animated.View layout={Layout}>
-        {netWorth && netWorth[0] && (
-          <VStack pt={4} alignItems="center">
+    <HoldMenuProvider safeAreaInsets={safeAreaInsets} theme={colorScheme}>
+      <View>
+        <View style={{ height: 100 }} />
 
-            {!loading ? (
-              <Text style={{
-                fontSize: 27,
-                lineHeight: 30,
-                fontFamily: 'Montserrat_Bold',
-              }}
-              >
-                {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
-              </Text>
-            ) : (
-              <Skeleton w={170} h={8} rounded={15} />
-            )}
+        {netWorth && netWorth[0] && (
+        <VStack pt={4} alignItems="center">
+
+          {!loading ? (
             <Text style={{
-              fontSize: 13,
-              fontFamily: 'Montserrat_Light',
-              color: 'gray',
+              fontSize: 27,
+              lineHeight: 30,
+              fontFamily: 'Montserrat_Bold',
             }}
             >
-              {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
+              {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
             </Text>
-          </VStack>
+          ) : (
+            <Skeleton w={170} h={8} rounded={15} />
+          )}
+          <Text style={{
+            fontSize: 13,
+            fontFamily: 'Montserrat_Light',
+            color: 'gray',
+          }}
+          >
+            {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
+          </Text>
+        </VStack>
         )}
 
         {balance && balance[0] && (
-          <VStack p={1} pb={2} justifyContent="center" alignItems="center">
-            {!loading ? (
-              <Box style={{
-                backgroundColor: balance[0].monetary_value < 0 ? colors.brandDangerLight : colors.brandSuccessLight,
-                borderColor: balance[0].monetary_value < 0 ? colors.brandDangerLight : colors.brandSuccessLight,
-                borderRadius: 15,
-                borderRightWidth: 6,
-                borderLeftWidth: 6,
+        <VStack p={1} pb={2} justifyContent="center" alignItems="center">
+          {!loading ? (
+            <Box style={{
+              backgroundColor: balance[0].monetary_value < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
+              borderRadius: 10,
+              paddingHorizontal: 5,
+            }}
+            >
+              <Text style={{
+                fontSize: 13,
+                fontFamily: 'Montserrat_Bold',
+                textAlign: 'center',
+                color: balance[0].monetary_value < 0 ? colors.brandNeutral : colors.brandSuccess,
               }}
               >
-                <Text style={{
-                  fontSize: 13,
-                  fontFamily: 'Montserrat_Bold',
-                  textAlign: 'center',
-                  color: balance[0].monetary_value < 0 ? colors.brandDanger : colors.brandStyle3,
-                }}
-                >
-                  {`${balance[0].monetary_value > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
-                </Text>
-              </Box>
-            ) : (
-              <Skeleton w={50} h={4} rounded={15} />
-            )}
-          </VStack>
+                {`${balance[0].monetary_value > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
+              </Text>
+            </Box>
+          ) : (
+            <Skeleton w={50} h={4} rounded={15} />
+          )}
+        </VStack>
         )}
 
+        <Filters />
         <TabControl
           values={['home_accounts', 'home_categories', 'home_budgets']}
           onChange={setTab}
         />
-
         {tab === 'home_accounts' && <AssetsAccounts />}
         {tab === 'home_categories' && <InsightCategories />}
         {tab === 'home_budgets' && <InsightBudgets />}
         <View style={{ height: 240 }} />
-      </Animated.View>
-    </>
+        <NavigationHeader />
+      </View>
+    </HoldMenuProvider>
   ), [
     loading,
     netWorth,

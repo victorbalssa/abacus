@@ -1,5 +1,8 @@
 import React from 'react';
-import { FlatList, Keyboard, View } from 'react-native';
+import {
+  Keyboard,
+  View,
+} from 'react-native';
 import {
   Button,
   FormControl,
@@ -7,7 +10,6 @@ import {
   IconButton,
   Input,
   Pressable,
-  Spinner,
   Text,
   VStack,
 } from 'native-base';
@@ -19,7 +21,7 @@ import { translate } from '../../i18n/locale';
 import { AutocompleteAccount, AutocompleteDescription } from '../../models/accounts';
 import { CategoryType } from '../../models/categories';
 import { BudgetType } from '../../models/budgets';
-import colors from '../../constants/colors';
+import { useThemeColors } from '../../lib/common';
 
 type ErrorStateType = {
   description: string,
@@ -55,6 +57,7 @@ const Form = ({
   goToTransactions,
   payload,
 }) => {
+  const { colorScheme, colors } = useThemeColors();
   const [formData, setData] = React.useState({
     description: payload.description,
     date: new Date(payload.date),
@@ -138,17 +141,18 @@ const Form = ({
   };
 
   const colorItemTypes = {
-    withdrawal: 'red.600',
-    deposit: 'green.700',
-    transfer: 'blue.700',
-    'opening balance': 'blue.700',
+    withdrawal: colors.brandDangerLight,
+    deposit: colors.brandSuccessLight,
+    transfer: colors.brandInfoLight,
+    'opening balance': colors.brandInfoLight,
   };
 
   const deleteBtn = (fields: string[]) => (
     <IconButton
-      m={2}
-      p={0}
-      borderRadius={15}
+      mr={0}
+      h={8}
+      w={8}
+      variant="ghost"
       colorScheme="gray"
       _icon={{
         as: AntDesign,
@@ -158,7 +162,10 @@ const Form = ({
       }}
       onPress={() => setData({
         ...formData,
-        ...fields.reduce((acc, curr) => { acc[curr] = ''; return acc; }, {}),
+        ...fields.reduce((acc, curr) => {
+          acc[curr] = '';
+          return acc;
+        }, {}),
       })}
     />
   );
@@ -167,7 +174,7 @@ const Form = ({
     <VStack mx="3" my={3} pb={240}>
       <FormControl isRequired>
         <HStack justifyContent="center">
-          <Button.Group isAttached borderRadius={15}>
+          <Button.Group isAttached borderRadius={10}>
             {types.map(({ type, name }) => (
               <Button
                 shadow={2}
@@ -184,10 +191,10 @@ const Form = ({
                 }}
                 onTouchEnd={() => (type !== formData.type) && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
                 isDisabled={type === formData.type}
-                backgroundColor={type !== formData.type ? 'gray.400' : colorItemTypes[formData.type]}
+                backgroundColor={type !== formData.type ? colors.tabBackgroundColor : colorItemTypes[formData.type]}
                 key={type}
-                borderWidth={1}
-                borderColor="white"
+                borderWidth={0.5}
+                borderColor={colors.listBorderColor}
               >
                 {name}
               </Button>
@@ -236,7 +243,7 @@ const Form = ({
                   closeAllAutocomplete();
                 }}
                 _pressed={{
-                  borderRadius: 15,
+                  borderRadius: 10,
                   backgroundColor: 'gray.300',
                 }}
               >
@@ -294,7 +301,7 @@ const Form = ({
                   closeAllAutocomplete();
                 }}
                 _pressed={{
-                  borderRadius: 15,
+                  borderRadius: 10,
                   backgroundColor: 'gray.300',
                 }}
               >
@@ -352,7 +359,7 @@ const Form = ({
                   closeAllAutocomplete();
                 }}
                 _pressed={{
-                  borderRadius: 15,
+                  borderRadius: 10,
                   backgroundColor: 'gray.300',
                 }}
               >
@@ -377,9 +384,9 @@ const Form = ({
         </FormControl.Label>
         <DateTimePicker
           accentColor={colors.brandDark}
-          themeVariant="light"
+          themeVariant={colorScheme}
           mode="date"
-          style={{ width: 130, backgroundColor: colors.backgroundColor }}
+          style={{ width: 130 }}
           value={formData.date}
           onChange={(event, value) => setData({
             ...formData,
@@ -449,7 +456,7 @@ const Form = ({
                   closeAllAutocomplete();
                 }}
                 _pressed={{
-                  borderRadius: 15,
+                  borderRadius: 10,
                   backgroundColor: 'gray.300',
                 }}
               >
@@ -508,7 +515,7 @@ const Form = ({
                   closeAllAutocomplete();
                 }}
                 _pressed={{
-                  borderRadius: 15,
+                  borderRadius: 10,
                   backgroundColor: 'gray.300',
                 }}
               >
@@ -529,24 +536,24 @@ const Form = ({
 
       {success && !loading
         && (
-        <ToastAlert
-          title={translate('transaction_form_success_title')}
-          status="success"
-          variant="solid"
-          onClose={() => setSuccess(false)}
-          description={translate('transaction_form_success_description')}
-          onPress={goToTransactions}
-        />
+          <ToastAlert
+            title={translate('transaction_form_success_title')}
+            status="success"
+            variant="solid"
+            onClose={() => setSuccess(false)}
+            description={translate('transaction_form_success_description')}
+            onPress={goToTransactions}
+          />
         )}
       {errors.global !== '' && !loading
         && (
-        <ToastAlert
-          title={translate('transaction_form_error_title')}
-          status="error"
-          variant="solid"
-          onClose={resetErrors}
-          description={errors.global}
-        />
+          <ToastAlert
+            title={translate('transaction_form_error_title')}
+            status="error"
+            variant="solid"
+            onClose={resetErrors}
+            description={errors.global}
+          />
         )}
 
       <Button
@@ -593,7 +600,6 @@ const Form = ({
           color: 'white',
           size: 10,
         }}
-        colorScheme="primary"
         isLoading={loading}
         isLoadingText="Submitting..."
         onPress={() => {

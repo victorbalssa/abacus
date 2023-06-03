@@ -1,42 +1,47 @@
 import React from 'react';
 import {
-  Text,
   IconButton,
-  HStack,
+  Heading,
 } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import { BlurView } from 'expo-blur';
+import { useThemeColors } from '../../lib/common';
 
-const Title = ({ text, navigation }) => (
-  <HStack
-    shadow={2}
-    backgroundColor="white"
-    py={3}
-    px={5}
-    justifyContent="space-between"
-    alignItems="center"
-  >
-    <Text
-      numberOfLines={2}
+const Title = ({ text, navigation }) => {
+  const { colors } = useThemeColors();
+
+  return (
+    <BlurView
+      intensity={50}
       style={{
-        fontFamily: 'Montserrat_Bold', fontSize: 21, lineHeight: 40, maxWidth: 270,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
       }}
     >
-      {text}
-    </Text>
-    <IconButton
-      shadow={2}
-      borderRadius={15}
-      width={10}
-      variant="solid"
-      _icon={{
-        as: AntDesign,
-        name: 'arrowdown',
-      }}
-      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-      onPress={() => navigation.pop()}
-    />
-  </HStack>
-);
+      <Heading
+        numberOfLines={2}
+        fontSize={21}
+        lineHeight={20}
+        maxW={270}
+      >
+        {text}
+      </Heading>
+
+      <IconButton
+        variant="ghost"
+        _icon={{
+          as: AntDesign,
+          name: 'arrowdown',
+          size: 'md',
+        }}
+        onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+        onPress={() => navigation.pop()}
+      />
+    </BlurView>
+  );
+};
 
 export default Title;

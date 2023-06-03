@@ -1,5 +1,7 @@
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform, useColorScheme } from 'react-native';
 import { getLocales } from 'expo-localization';
+import { useColorMode } from 'native-base/src/core/color-mode/hooks';
+import colors from '../constants/colors';
 
 const { height: D_HEIGHT, width: D_WIDTH } = (() => {
   const { width, height } = Dimensions.get('window');
@@ -55,4 +57,13 @@ export const localNumberFormat = (currencyCode, string) => {
   });
 
   return formatter.format(string);
+};
+
+export const useThemeColors = () => {
+  const colorScheme = useColorScheme();
+
+  return {
+    colors: { ...colors, ...colors[colorScheme] },
+    colorScheme,
+  };
 };

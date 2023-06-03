@@ -11,6 +11,7 @@
     "orientation": "portrait",
     "icon": "./src/images/icon-abacus.png",
     "splash": {
+      "backgroundColor": "#121215",
       "image": "./src/images/splash.png",
       "resizeMode": "contain"
     },
@@ -42,6 +43,8 @@
     },
     "plugins": [
       "expo-localization"
-    ]
+    ],
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#121215"
   }
 }

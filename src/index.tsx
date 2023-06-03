@@ -6,12 +6,15 @@ import React, {
 } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import { AppState, LogBox, Image } from 'react-native';
+import {
+  AppState, LogBox, Image,
+} from 'react-native';
 import {
   AlertDialog,
   Button,
   extendTheme,
-  NativeBaseProvider, Text, useColorModeValue,
+  NativeBaseProvider,
+  Text,
 } from 'native-base';
 import { StatusBar } from 'expo-status-bar';
 import AnimatedSplash from 'react-native-animated-splash-screen';
@@ -29,6 +32,8 @@ import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
 import { translate } from './i18n/locale';
+import { useThemeColors } from './lib/common';
+import ErrorWidget from "./components/UI/ErrorWidget";
 
 const config = {
   dependencies: {
@@ -43,7 +48,7 @@ const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 const App: FC = () => {
   LogBox.ignoreAllLogs(true);
 
-  const backgroundColor = useColorModeValue('#ffffff', '#1f2937');
+  const { colors, colorScheme } = useThemeColors();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
@@ -112,12 +117,12 @@ const App: FC = () => {
       translucent
       isLoaded={fontsLoaded}
       logoImage={abacusIcon}
-      backgroundColor={backgroundColor}
+      backgroundColor={colors.backgroundColor}
       logoHeight={145}
       logoWidth={145}
     >
       <NativeBaseProvider config={config} theme={theme}>
-        <StatusBar style="dark" />
+        <StatusBar />
         <Provider store={store}>
           <PersistGate
             loading={<Loading />}
@@ -138,7 +143,7 @@ const App: FC = () => {
                       alignItems: 'center',
                     }}
                     intensity={60}
-                    tint="light"
+                    tint={colorScheme}
                   >
                     <Image
                       style={{
