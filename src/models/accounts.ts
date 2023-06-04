@@ -1,8 +1,5 @@
 import { createModel } from '@rematch/core';
-import { getLocales } from 'expo-localization';
-
 import { RootModel } from './index';
-import { localNumberFormat } from '../lib/common';
 
 export type AccountType = {
   attributes: {

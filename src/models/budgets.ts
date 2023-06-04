@@ -1,6 +1,5 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
-import { InsightCategoryType } from './categories';
 
 export type BudgetType = {
   name: string,

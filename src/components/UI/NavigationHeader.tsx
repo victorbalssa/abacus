@@ -16,7 +16,7 @@ import ErrorWidget from './ErrorWidget';
 import { useThemeColors } from '../../lib/common';
 
 type NavigationHeaderType = {
-  relative: boolean
+  relative?: boolean
 }
 
 const NavigationHeader: FC<NavigationHeaderType> = ({ relative = false }: NavigationHeaderType) => {

@@ -17,7 +17,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-import {isValidHttpUrl, useThemeColors} from '../lib/common';
+import { isValidHttpUrl, useThemeColors } from '../lib/common';
 import { translate } from '../i18n/locale';
 
 const copyToClipboard = async () => {
