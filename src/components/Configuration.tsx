@@ -44,8 +44,14 @@ const Configuration = ({
   );
 
   return (
-    <Stack safeAreaTop>
-      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={{
+        backgroundColor: colors.backgroundColor,
+      }}
+      bounces={false}
+      showsVerticalScrollIndicator={false}
+    >
+      <Stack safeAreaTop>
 
         <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_security')}</Heading>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
@@ -91,9 +97,9 @@ const Configuration = ({
           </Pressable>
         </Box>
 
-        <View style={{ height: 250 }} />
-      </ScrollView>
-    </Stack>
+        <View style={{ height: 300 }} />
+      </Stack>
+    </ScrollView>
   );
 };
 

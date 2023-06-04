@@ -141,10 +141,10 @@ const Form = ({
   };
 
   const colorItemTypes = {
-    withdrawal: colors.brandDangerLight,
-    deposit: colors.brandSuccessLight,
-    transfer: colors.brandInfoLight,
-    'opening balance': colors.brandInfoLight,
+    withdrawal: colors.red,
+    deposit: colors.green,
+    transfer: colors.blue,
+    'opening balance': colors.blue,
   };
 
   const deleteBtn = (fields: string[]) => (
@@ -177,12 +177,12 @@ const Form = ({
           <Button.Group isAttached borderRadius={10}>
             {types.map(({ type, name }) => (
               <Button
-                shadow={2}
                 onPress={() => setData({
                   ...formData,
                   type,
                 })}
                 _text={{
+                  color: type !== formData.type ? colors.text : colors.textOpposite,
                   fontFamily: 'Montserrat_Bold',
                   textTransform: 'capitalize',
                 }}
@@ -191,7 +191,7 @@ const Form = ({
                 }}
                 onTouchEnd={() => (type !== formData.type) && Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
                 isDisabled={type === formData.type}
-                backgroundColor={type !== formData.type ? colors.tabBackgroundColor : colorItemTypes[formData.type]}
+                backgroundColor={type !== formData.type ? colors.tileBackgroundColor : colorItemTypes[formData.type]}
                 key={type}
                 borderWidth={0.5}
                 borderColor={colors.listBorderColor}

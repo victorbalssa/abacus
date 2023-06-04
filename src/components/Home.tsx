@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import {
   RefreshControl,
-  View,
 } from 'react-native';
 import {
+  View,
   HStack,
   Text,
   VStack,
@@ -13,7 +13,7 @@ import {
   Progress,
   Stack,
 } from 'native-base';
-import { HoldItem, HoldMenuProvider } from 'react-native-hold-menu';
+import { HoldMenuProvider } from 'react-native-hold-menu';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -70,7 +70,7 @@ const InsightCategories = () => {
           </HStack>
         ))}
       </Box>
-      <View style={{ height: 370 }} />
+      <View style={{ height: 150 }} />
     </ScrollView>
   );
 };
@@ -103,12 +103,13 @@ const InsightBudgets = () => {
             <VStack
               ml={5}
               pr={2}
-              h={55}
+              h={60}
               justifyContent="center"
               borderBottomWidth={index + 1 === insightBudgets.length ? 0 : 1}
               borderColor={colors.listBorderColor}
             >
               <HStack
+                pt={1}
                 justifyContent="space-between"
                 alignItems="center"
               >
@@ -136,7 +137,7 @@ const InsightBudgets = () => {
           </Stack>
         ))}
       </Box>
-      <View style={{ height: 370 }} />
+      <View style={{ height: 150 }} />
     </ScrollView>
   );
 };
@@ -161,7 +162,7 @@ const AssetsAccounts = () => {
         />
       )}
     >
-      <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
+      <Box backgroundColor={colors.tileBackgroundColor} mt={1} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
         {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
           <HStack
             key={account.attributes.name}
@@ -191,7 +192,7 @@ const AssetsAccounts = () => {
           </HStack>
         ))}
       </Box>
-      <View style={{ height: 370 }} />
+      <View style={{ height: 150 }} />
     </ScrollView>
   );
 };
@@ -207,61 +208,67 @@ const Home = ({
 
   return (useMemo(() => (
     <HoldMenuProvider safeAreaInsets={safeAreaInsets} theme={colorScheme}>
-      <View>
-        <View style={{ height: 100 }} />
+      <Box
+        style={{
+          flex: 1,
+          backgroundColor: colors.backgroundColor,
+        }}
+      >
+        <NavigationHeader relative />
 
         {netWorth && netWorth[0] && (
-        <VStack pt={4} alignItems="center">
+          <VStack pt={2} alignItems="center">
 
-          {!loading ? (
+            {!loading ? (
+              <Text style={{
+                fontSize: 27,
+                lineHeight: 30,
+                fontFamily: 'Montserrat_Bold',
+              }}
+              >
+                {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
+              </Text>
+            ) : (
+              <Skeleton w={170} h={8} rounded={15} />
+            )}
             <Text style={{
-              fontSize: 27,
-              lineHeight: 30,
-              fontFamily: 'Montserrat_Bold',
+              fontSize: 13,
+              fontFamily: 'Montserrat_Light',
+              color: 'gray',
             }}
             >
-              {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
+              {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
             </Text>
-          ) : (
-            <Skeleton w={170} h={8} rounded={15} />
-          )}
-          <Text style={{
-            fontSize: 13,
-            fontFamily: 'Montserrat_Light',
-            color: 'gray',
-          }}
-          >
-            {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
-          </Text>
-        </VStack>
+          </VStack>
         )}
 
         {balance && balance[0] && (
-        <VStack p={1} pb={2} justifyContent="center" alignItems="center">
-          {!loading ? (
-            <Box style={{
-              backgroundColor: balance[0].monetary_value < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
-              borderRadius: 10,
-              paddingHorizontal: 5,
-            }}
-            >
-              <Text style={{
-                fontSize: 13,
-                fontFamily: 'Montserrat_Bold',
-                textAlign: 'center',
-                color: balance[0].monetary_value < 0 ? colors.brandNeutral : colors.brandSuccess,
+          <VStack p={1} pb={2} justifyContent="center" alignItems="center">
+            {!loading ? (
+              <Box style={{
+                backgroundColor: balance[0].monetary_value < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
+                borderRadius: 10,
+                paddingHorizontal: 5,
               }}
               >
-                {`${balance[0].monetary_value > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
-              </Text>
-            </Box>
-          ) : (
-            <Skeleton w={50} h={4} rounded={15} />
-          )}
-        </VStack>
+                <Text style={{
+                  fontSize: 13,
+                  fontFamily: 'Montserrat_Bold',
+                  textAlign: 'center',
+                  color: balance[0].monetary_value < 0 ? colors.brandNeutral : colors.brandSuccess,
+                }}
+                >
+                  {`${balance[0].monetary_value > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
+                </Text>
+              </Box>
+            ) : (
+              <Skeleton w={50} h={4} rounded={15} />
+            )}
+          </VStack>
         )}
 
         <Filters />
+
         <TabControl
           values={['home_accounts', 'home_categories', 'home_budgets']}
           onChange={setTab}
@@ -269,9 +276,7 @@ const Home = ({
         {tab === 'home_accounts' && <AssetsAccounts />}
         {tab === 'home_categories' && <InsightCategories />}
         {tab === 'home_budgets' && <InsightBudgets />}
-        <View style={{ height: 240 }} />
-        <NavigationHeader />
-      </View>
+      </Box>
     </HoldMenuProvider>
   ), [
     loading,

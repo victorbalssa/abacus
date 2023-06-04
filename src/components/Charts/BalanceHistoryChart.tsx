@@ -19,8 +19,8 @@ import { isEmpty, round } from 'lodash';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 
-import colors from '../../constants/colors';
 import Loading from '../UI/Loading';
+import { useThemeColors } from '../../lib/common';
 
 const BalanceHistoryChart = ({
   loading,
@@ -29,6 +29,7 @@ const BalanceHistoryChart = ({
   balances,
   fetchBalances,
 }) => {
+  const { colors } = useThemeColors();
   const getTickValues = () => [...Array(+range + 1).keys()];
 
   const displayTick = (x: number) => {

@@ -15,10 +15,14 @@ import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';
 import { useThemeColors } from '../../lib/common';
 
-const NavigationHeader: FC = () => {
+type NavigationHeaderType = {
+  relative: boolean
+}
+
+const NavigationHeader: FC<NavigationHeaderType> = ({ relative = false }: NavigationHeaderType) => {
   const { rangeTitle, start, end } = useSelector((state: RootState) => state.firefly);
   const dispatch = useDispatch<RootDispatch>();
-  const { colorScheme, colors } = useThemeColors();
+  const { colorScheme } = useThemeColors();
 
   return useMemo(() => (
     <>
@@ -26,7 +30,7 @@ const NavigationHeader: FC = () => {
         intensity={60}
         tint={colorScheme}
         style={{
-          position: 'absolute',
+          position: relative ? 'relative' : 'absolute',
           top: 0,
           left: 0,
           right: 0,

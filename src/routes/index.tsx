@@ -46,15 +46,12 @@ const styles = StyleSheet.create({
   },
   container: {
     position: 'relative',
-    width: 75,
+    width: 45,
     alignItems: 'center',
   },
   background: {
     position: 'absolute',
     top: 0,
-  },
-  button: {
-    top: -10,
   },
 });
 
@@ -70,10 +67,12 @@ const TabBarAdvancedButton = ({ onPress }) => (
       onPress={onPress}
       _pressed={{
         style: {
-          ...styles.button,
+          top: -15,
         },
       }}
-      style={styles.button}
+      style={{
+        top: -15,
+      }}
     />
   </Box>
 );
@@ -96,7 +95,7 @@ const Home: FC = () => {
         state, descriptors, navigation, insets,
       }) => (
         <BlurView
-          intensity={100}
+          intensity={50}
           tint={colorScheme}
           style={styles.navigatorContainer}
         >
@@ -119,11 +118,12 @@ const Home: FC = () => {
         tabBarStyle: {
           backgroundColor: 'transparent',
           borderTopWidth: 0,
-          height: 85,
+          marginTop: 10,
         },
         tabBarLabelStyle: {
           fontSize: 10,
           fontFamily: 'Montserrat',
+          paddingBottom: 10,
         },
       })}
     >

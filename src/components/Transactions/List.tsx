@@ -1,11 +1,19 @@
 import React, { useMemo } from 'react';
-import { Alert, RefreshControl, View } from 'react-native';
 import {
-  Box, HStack, Icon, Pressable, Skeleton, Text, VStack,
+  Alert,
+  RefreshControl,
+} from 'react-native';
+import {
+  Box,
+  HStack,
+  Icon,
+  Pressable,
+  Skeleton,
+  Text,
+  VStack,
 } from 'native-base';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import Animated, { Layout } from 'react-native-reanimated';
 
 import moment from 'moment';
 import * as Haptics from 'expo-haptics';
@@ -15,7 +23,6 @@ import { TransactionType } from '../../models/transactions';
 import { RootState } from '../../store';
 import { translate } from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
-import Filters from '../UI/Filters';
 
 const Basic = ({
   loadingRefresh,
@@ -82,7 +89,7 @@ const Basic = ({
     <Pressable
       h={90}
       paddingLeft={2}
-      backgroundColor={colors.backgroundColor}
+      backgroundColor={colors.tileBackgroundColor}
       borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
       onPress={() => {
@@ -176,7 +183,7 @@ const Basic = ({
       h={90}
       w="100%"
       ml="auto"
-      bg="red.500"
+      backgroundColor={colors.red}
       justifyContent="center"
       alignItems="flex-end"
       borderBottomWidth={1}
@@ -201,10 +208,10 @@ const Basic = ({
         <RefreshControl
           refreshing={false}
           onRefresh={onRefresh}
-          tintColor={colors.brandStyle}
+          tintColor={colors.tabBackgroundColor}
         />
       )}
-      initialNumToRender={2}
+      initialNumToRender={8}
       keyExtractor={(item: TransactionType) => item.id}
       showsVerticalScrollIndicator={false}
       onEndReached={() => !(loadingRefresh || loadingMore) && onEndReached()}
@@ -218,7 +225,7 @@ const Basic = ({
       disableRightSwipe
       onRightActionStatusChange={({ key, isActivated }) => (isActivated ? deleteAlert(transactions.find((t) => t.id == key), []) : null)}
       contentContainerStyle={{
-        marginTop: 50,
+        paddingTop: 100,
         paddingBottom: 250,
       }}
       ListFooterComponent={(
@@ -228,7 +235,7 @@ const Basic = ({
               <Box
                 h={90}
                 paddingLeft={2}
-                backgroundColor={colors.backgroundColor}
+                backgroundColor={colors.tileBackgroundColor}
                 borderBottomWidth={1}
                 borderColor={colors.listBorderColor}
                 justifyContent="center"
@@ -246,7 +253,7 @@ const Basic = ({
               <Box
                 h={90}
                 paddingLeft={2}
-                backgroundColor={colors.backgroundColor}
+                backgroundColor={colors.tileBackgroundColor}
                 borderBottomWidth={1}
                 borderColor={colors.listBorderColor}
                 justifyContent="center"
@@ -277,19 +284,28 @@ const Transactions = ({
   onEndReached,
   onPressItem,
   onLongPressItem,
-}) => (
-  <Box safeAreaTop>
-    <Basic
-      loadingRefresh={loadingRefresh}
-      loadingMore={loadingMore}
-      onRefresh={onRefresh}
-      onDeleteTransaction={onDeleteTransaction}
-      onEndReached={onEndReached}
-      onPressItem={onPressItem}
-      onLongPressItem={onLongPressItem}
-    />
-    <NavigationHeader />
-  </Box>
-);
+}) => {
+  const { colors } = useThemeColors();
+
+  return (
+    <Box
+      style={{
+        flex: 1,
+        backgroundColor: colors.backgroundColor,
+      }}
+    >
+      <Basic
+        loadingRefresh={loadingRefresh}
+        loadingMore={loadingMore}
+        onRefresh={onRefresh}
+        onDeleteTransaction={onDeleteTransaction}
+        onEndReached={onEndReached}
+        onPressItem={onPressItem}
+        onLongPressItem={onLongPressItem}
+      />
+      <NavigationHeader />
+    </Box>
+  );
+};
 
 export default Transactions;

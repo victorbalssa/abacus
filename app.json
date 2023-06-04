@@ -21,6 +21,7 @@
       "url": "https://u.expo.dev/292ed6dc-804c-4444-95f5-fa5d76d9913b"
     },
     "ios": {
+      "supportsTablet": true,
       "buildNumber": "0.6.2",
       "bundleIdentifier": "abacus.ios.app",
       "infoPlist": {
