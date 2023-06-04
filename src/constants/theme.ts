@@ -150,7 +150,6 @@ export default {
     Button: {
       baseStyle: {
         borderRadius: 10,
-        color: 'white',
       },
     },
     Input: {

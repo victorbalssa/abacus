@@ -12,9 +12,13 @@ export default {
   brandWarning: '#f0ad4e',
   brandDark: '#000',
   brandDarkLight: '#676767',
+  red: 'rgb(190,37,37)',
+  blue: '#18528c',
+  green: '#15803d',
 
   dark: {
     text: 'white',
+    textOpposite: 'black',
     backgroundColor: '#121215',
     tileBackgroundColor: 'rgb(29,31,33)',
     tabBackgroundColor: 'transparent',
@@ -38,11 +42,12 @@ export default {
   },
   light: {
     text: 'black',
+    textOpposite: 'white',
     backgroundColor: '#FFFFFF',
-    tileBackgroundColor: '#FFFFFF',
-    tabBackgroundColor: '#FFFFFF',
+    tileBackgroundColor: '#ececec',
+    tabBackgroundColor: 'transparent',
     tabInactiveDarkLight: 'rgba(103,103,103,0.61)',
-    listBorderColor: '#ffffff',
+    listBorderColor: '#dadada',
     listPressed: 'muted.300',
     filterBorderColor: '#606060',
 

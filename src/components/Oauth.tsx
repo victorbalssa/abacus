@@ -17,7 +17,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-import { isValidHttpUrl } from '../lib/common';
+import {isValidHttpUrl, useThemeColors} from '../lib/common';
 import { translate } from '../i18n/locale';
 
 const copyToClipboard = async () => {
@@ -36,6 +36,7 @@ const Oauth = ({
   backendURL,
   setBackendURL,
 }) => {
+  const { colors } = useThemeColors();
   const [isOauth, setIsAuth] = useState<boolean>(true);
   const toggleIsOauth = () => setIsAuth((value) => !value);
   const isMinimumRequirement = () => {
@@ -59,7 +60,13 @@ const Oauth = ({
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding">
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={{
+        flex: 1,
+        backgroundColor: colors.backgroundColor,
+      }}
+    >
       <ScrollView keyboardShouldPersistTaps="handled">
         <Box p={5} safeAreaTop>
           <FormControl isRequired>
