@@ -3,7 +3,7 @@ import moment from 'moment';
 import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import { maxBy, minBy, isEmpty } from 'lodash';
+import { maxBy, minBy } from 'lodash';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
@@ -203,8 +203,10 @@ export default createModel<RootModel>()({
       console.log('RANGE', range, rangeTitle);
       console.log('DATE', start, end);
 
-      this.setRange({ range, rangeTitle });
-      this.setData({ start, end });
+      await Promise.all([
+        dispatch.firefly.setRange({ range, rangeTitle }),
+        dispatch.firefly.setData({ start, end }),
+      ]);
 
       await Promise.all([
         dispatch.firefly.getSummaryBasic(),

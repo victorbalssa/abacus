@@ -4,13 +4,10 @@ import {
   KeyboardAvoidingView,
 } from 'native-base';
 
-import { View } from 'react-native';
-import { Simulate } from 'react-dom/test-utils';
 import Title from '../UI/Title';
 import TransactionForm from './Form';
 
 import { translate } from '../../i18n/locale';
-import mouseUp = Simulate.mouseUp;
 import { useThemeColors } from '../../lib/common';
 
 const Create = ({

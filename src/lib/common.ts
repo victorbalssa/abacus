@@ -1,6 +1,5 @@
 import { Dimensions, Platform, useColorScheme } from 'react-native';
 import { getLocales } from 'expo-localization';
-import { useColorMode } from 'native-base/src/core/color-mode/hooks';
 import colors from '../constants/colors';
 
 const { height: D_HEIGHT, width: D_WIDTH } = (() => {
