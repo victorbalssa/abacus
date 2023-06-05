@@ -1,7 +1,7 @@
 <div align="center">
     <p></p>
   <img alt="logo" src="documentation/img.png" height=120 />
-  <h1>Abacus: Firefly III iOS app</h1>
+  <h1>Abacus: Firefly III mobile application</h1>
     <div>
         <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
     </div>
@@ -24,10 +24,14 @@
 
 ### 🎙 Introduction
 
-[Firefly III](https://github.com/firefly-iii/firefly-iii) iOS application to manage your self-hosted Firefly III from
-your iPhone.
+[Firefly III](https://github.com/firefly-iii/firefly-iii) mobile application to manage your self-hosted Firefly III from
+your mobile.
 
-All Tokens are stored in **iOS Keychains**.
+Support for iPhone, iPad, Android Phone and Android Tablet.
+
+On iOS, Tokens are stored in [**iOS Keychains**](https://developer.apple.com/documentation/security/keychain_services).
+
+On Android, Tokens are stored in [SharedPreferences](https://developer.android.com/training/data-storage/shared-preferences), encrypted with [Android's Keystore system](https://developer.android.com/training/articles/keystore.html).
 
 No external API calls nor Analytics API, not even sentry / crashlytics.
 
