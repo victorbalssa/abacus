@@ -34,12 +34,9 @@
       }
     },
     "android": {
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.android.app",
-      "package": "abacus.android.app",
-      "versionCode": 1,
-      "permissions": [
-        ""
-      ]
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
+      "package": "abacus.fireflyiii.android.app",
+      "versionCode": 1
     },
     "scheme": "abacusiosapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
