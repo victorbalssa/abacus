@@ -6,9 +6,12 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { AntDesign, Foundation } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
-import { BlurView } from 'expo-blur';
+import {
+  BottomSheetAndroid,
+  ModalTransition,
+} from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
 import OauthContainer from '../containers/Oauth';
 import ConfigurationContainer from '../containers/Configuration';
 import HomeContainer from '../containers/Home';
@@ -19,6 +22,7 @@ import TransactionsCreateContainer from '../containers/Transactions/Create';
 
 import { translate } from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
+import ThemeBlurView from '../components/UI/ThemeBlurView';
 
 const Stack = createNativeStackNavigator();
 const Stack2 = createStackNavigator();
@@ -94,7 +98,7 @@ const Home: FC = () => {
       tabBar={({
         state, descriptors, navigation, insets,
       }) => (
-        <BlurView
+        <ThemeBlurView
           intensity={50}
           tint={colorScheme}
           style={styles.navigatorContainer}
@@ -105,7 +109,7 @@ const Home: FC = () => {
             navigation={navigation}
             insets={insets}
           />
-        </BlurView>
+        </ThemeBlurView>
       )}
       screenOptions={() => ({
         tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
@@ -116,9 +120,10 @@ const Home: FC = () => {
         tabBarShowLabel: true,
         tabBarLazyLoad: true,
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: Platform.OS === 'ios' ? 'transparent' : colors.backgroundColor,
           borderTopWidth: 0,
           marginTop: 10,
+          elevation: 0,
         },
         tabBarLabelStyle: {
           fontSize: 10,

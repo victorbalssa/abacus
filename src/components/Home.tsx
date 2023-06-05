@@ -21,7 +21,7 @@ import NavigationHeader from './UI/NavigationHeader';
 import { translate } from '../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../lib/common';
 import { RootDispatch, RootState } from '../store';
-import TabControl from './TabControl';
+import TabControl from './UI/TabControl';
 import Filters from './UI/Filters';
 
 const InsightCategories = () => {

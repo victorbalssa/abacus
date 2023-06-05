@@ -13,10 +13,10 @@ import { translate } from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 
 const Filters: FC = () => {
+  const { colors } = useThemeColors();
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const currentCurrency = useSelector((state: RootState) => state.currencies.current);
-  const { range } = useSelector((state: RootState) => state.firefly);
-  const { colors } = useThemeColors();
+  const range = useSelector((state: RootState) => state.firefly.range);
   const {
     firefly: {
       handleChangeRange,

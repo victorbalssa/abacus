@@ -7,7 +7,9 @@ import React, {
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import {
-  AppState, LogBox, Image,
+  AppState,
+  LogBox,
+  Image,
 } from 'react-native';
 import {
   AlertDialog,
@@ -26,13 +28,13 @@ import {
   AntDesign, Ionicons, Feather, MaterialCommunityIcons, MaterialIcons,
 } from '@expo/vector-icons';
 
-import { BlurView } from 'expo-blur';
 import { store, persistor } from './store';
 import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
 import { translate } from './i18n/locale';
 import { useThemeColors } from './lib/common';
+import ThemeBlurView from './components/UI/ThemeBlurView';
 
 const config = {
   dependencies: {
@@ -131,7 +133,7 @@ const App: FC = () => {
               <>
                 <Routes />
                 {appStateVisible !== 'active' && (
-                  <BlurView
+                  <ThemeBlurView
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -152,7 +154,7 @@ const App: FC = () => {
                       source={abacusIcon}
                     />
                     <Text>Abacus</Text>
-                  </BlurView>
+                  </ThemeBlurView>
                 )}
               </>
             )}

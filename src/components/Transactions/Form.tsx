@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Keyboard,
-  View,
+  Platform,
 } from 'react-native';
 import {
   Button,
@@ -9,19 +9,20 @@ import {
   HStack,
   IconButton,
   Input,
-  Pressable,
   Text,
   VStack,
 } from 'native-base';
 import * as Haptics from 'expo-haptics';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment/moment';
+import { useSelector } from 'react-redux';
+
 import ToastAlert from '../UI/ToastAlert';
 import { translate } from '../../i18n/locale';
-import { AutocompleteAccount, AutocompleteDescription } from '../../models/accounts';
-import { CategoryType } from '../../models/categories';
-import { BudgetType } from '../../models/budgets';
 import { useThemeColors } from '../../lib/common';
+import AutocompleteField from './Fields/AutocompleteField';
+import { RootState } from '../../store';
 
 type ErrorStateType = {
   description: string,
@@ -44,21 +45,13 @@ const INITIAL_ERROR = {
 } as ErrorStateType;
 
 const Form = ({
-  accounts = [],
-  categories = [],
-  budgets = [],
-  loading,
-  descriptions = [],
-  getAutocompleteAccounts,
-  getAutocompleteDescription,
-  getAutocompleteCategories,
-  getAutocompleteBudgets,
   submit,
   goToTransactions,
   payload,
 }) => {
   const { colorScheme, colors } = useThemeColors();
-  const [formData, setData] = React.useState({
+  const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
+  const [formData, setData] = useState({
     description: payload.description,
     date: new Date(payload.date),
     source_name: payload.source_name,
@@ -70,11 +63,9 @@ const Form = ({
     budget_name: payload.budget_name,
     type: payload.type,
   });
-  const [errors, setErrors] = React.useState(INITIAL_ERROR);
-  const [success, setSuccess] = React.useState(false);
-  const [displayAutocomplete, setDisplayAutocomplete] = React.useState({
-    budget: false, category: false, description: false, source: false, destination: false,
-  });
+  const [errors, setErrors] = useState(INITIAL_ERROR);
+  const [success, setSuccess] = useState(false);
+  const [showDateTimePicker, setShowDateTimePicker] = useState(Platform.OS === 'ios');
   const types = [
     {
       type: 'withdrawal',
@@ -91,9 +82,6 @@ const Form = ({
   ];
 
   const resetErrors = () => setErrors(INITIAL_ERROR);
-  const closeAllAutocomplete = () => setDisplayAutocomplete({
-    budget: false, category: false, description: false, source: false, destination: false,
-  });
 
   const validate = () => {
     if (formData.description === undefined) {
@@ -202,211 +190,20 @@ const Form = ({
           </Button.Group>
         </HStack>
       </FormControl>
-      <FormControl mt="1" isRequired isInvalid={errors.description !== ''}>
-        <FormControl.Label>
-          {translate('transaction_form_description_label')}
-        </FormControl.Label>
-        <Input
-          returnKeyType="done"
-          placeholder={translate('transaction_form_description_label')}
-          value={formData.description}
-          onChangeText={(value) => {
-            setData({
-              ...formData,
-              description: value,
-            });
-            getAutocompleteDescription({ query: value });
-          }}
-          onFocus={() => {
-            getAutocompleteDescription({ query: formData.description });
-            setDisplayAutocomplete({
-              ...displayAutocomplete,
-              description: true,
-            });
-          }}
-          onBlur={closeAllAutocomplete}
-          InputRightElement={deleteBtn(['description'])}
-        />
-        {'description' in errors ? <FormControl.ErrorMessage>{errors.description}</FormControl.ErrorMessage> : <></>}
 
-        {displayAutocomplete.description && (
-          <View>
-            {descriptions.map((a: AutocompleteDescription) => (
-              <Pressable
-                key={a.id}
-                mx={2}
-                onPress={() => {
-                  setData({
-                    ...formData,
-                    description: a.name,
-                  });
-                  closeAllAutocomplete();
-                }}
-                _pressed={{
-                  borderRadius: 10,
-                  backgroundColor: 'gray.300',
-                }}
-              >
-                <HStack
-                  justifyContent="space-between"
-                  mx={2}
-                  my={2}
-                >
-                  <Text underline>
-                    {a.name || 'no name'}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
-        )}
-      </FormControl>
-      <FormControl mt="1" isInvalid={errors.source_name !== ''}>
-        <FormControl.Label>
-          {translate('transaction_form_sourceAccount_label')}
-        </FormControl.Label>
-        <Input
-          returnKeyType="done"
-          placeholder={translate('transaction_form_sourceAccount_label')}
-          value={formData.source_name}
-          onChangeText={(value) => {
-            setData({
-              ...formData,
-              source_name: value,
-            });
-            getAutocompleteAccounts({ query: value, isDestination: false });
-          }}
-          onFocus={() => {
-            getAutocompleteAccounts({ query: formData.source_name, isDestination: false });
-            setDisplayAutocomplete({
-              ...displayAutocomplete,
-              source: true,
-            });
-          }}
-          onBlur={closeAllAutocomplete}
-          InputRightElement={deleteBtn(['source_name'])}
-        />
-
-        {displayAutocomplete.source && (
-          <View>
-            {accounts.map((a: AutocompleteAccount) => (
-              <Pressable
-                key={a.id}
-                mx={2}
-                onPress={() => {
-                  setData({
-                    ...formData,
-                    source_name: a.name,
-                  });
-                  closeAllAutocomplete();
-                }}
-                _pressed={{
-                  borderRadius: 10,
-                  backgroundColor: 'gray.300',
-                }}
-              >
-                <HStack
-                  justifyContent="space-between"
-                  mx={2}
-                  my={2}
-                >
-                  <Text underline>
-                    {a.name_with_balance || 'no name'}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
-        )}
-      </FormControl>
-      <FormControl mt="1" isInvalid={errors.destination_name !== ''}>
-        <FormControl.Label>
-          {translate('transaction_form_destinationAccount_label')}
-        </FormControl.Label>
-        <Input
-          returnKeyType="done"
-          placeholder={translate('transaction_form_destinationAccount_label')}
-          value={formData.destination_name}
-          onChangeText={(value) => {
-            setData({
-              ...formData,
-              destination_name: value,
-            });
-            getAutocompleteAccounts({ query: value, isDestination: true });
-          }}
-          onFocus={() => {
-            getAutocompleteAccounts({ query: formData.destination_name, isDestination: true });
-            setDisplayAutocomplete({
-              ...displayAutocomplete,
-              destination: true,
-            });
-          }}
-          onBlur={closeAllAutocomplete}
-          InputRightElement={deleteBtn(['destination_name'])}
-        />
-
-        {displayAutocomplete.destination && (
-          <View>
-            {accounts.map((a: AutocompleteAccount) => (
-              <Pressable
-                key={a.id}
-                mx={2}
-                onPress={() => {
-                  setData({
-                    ...formData,
-                    destination_name: a.name,
-                  });
-                  closeAllAutocomplete();
-                }}
-                _pressed={{
-                  borderRadius: 10,
-                  backgroundColor: 'gray.300',
-                }}
-              >
-                <HStack
-                  justifyContent="space-between"
-                  mx={2}
-                  my={2}
-                >
-                  <Text underline>
-                    {a.name_with_balance || 'no name'}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
-        )}
-
-      </FormControl>
-      <FormControl mt="1" isRequired>
-        <FormControl.Label>
-          {translate('transaction_form_date_label')}
-        </FormControl.Label>
-        <DateTimePicker
-          accentColor={colors.brandDark}
-          themeVariant={colorScheme}
-          mode="date"
-          style={{ width: 130 }}
-          value={formData.date}
-          onChange={(event, value) => setData({
-            ...formData,
-            date: value,
-          })}
-        />
-      </FormControl>
       <FormControl mt="1" isRequired isInvalid={errors.amount !== ''}>
         <FormControl.Label>
           {translate('transaction_form_amount_label')}
         </FormControl.Label>
         <Input
-          InputLeftElement={<Text px={3} color="white">*</Text>}
+          height={75}
+          variant="underlined"
           returnKeyType="done"
           keyboardType="numbers-and-punctuation"
           placeholder="0.00"
           value={formData.amount}
           textAlign="center"
-          fontStyle="gray"
-          fontSize={25}
+          fontSize={40}
           onChangeText={(value) => setData({
             ...formData,
             amount: value,
@@ -415,124 +212,140 @@ const Form = ({
         />
         {'amount' in errors ? <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage> : <></>}
       </FormControl>
-      <FormControl mt="1" isInvalid={errors.category_id !== ''}>
-        <FormControl.Label>
-          {translate('transaction_form_category_label')}
-        </FormControl.Label>
-        <Input
-          returnKeyType="done"
-          placeholder={translate('transaction_form_category_label')}
-          value={formData.category_name}
-          onChangeText={(value) => {
-            setData({
-              ...formData,
-              category_name: value,
-            });
-            getAutocompleteCategories({ query: value || '', isDestination: true });
-          }}
-          onFocus={() => {
-            getAutocompleteCategories({ query: formData.category_name || '' });
-            setDisplayAutocomplete({
-              ...displayAutocomplete,
-              category: true,
-            });
-          }}
-          onBlur={closeAllAutocomplete}
-          InputRightElement={deleteBtn(['category_id', 'category_name'])}
-        />
 
-        {displayAutocomplete.category && (
-          <View>
-            {categories.map((c: CategoryType) => (
-              <Pressable
-                key={c.id}
-                mx={2}
-                onPress={() => {
-                  setData({
-                    ...formData,
-                    category_id: c.id,
-                    category_name: c.name,
-                  });
-                  closeAllAutocomplete();
-                }}
-                _pressed={{
-                  borderRadius: 10,
-                  backgroundColor: 'gray.300',
-                }}
-              >
-                <HStack
-                  justifyContent="space-between"
-                  mx={2}
-                  my={2}
-                >
-                  <Text underline>
-                    {c.name || 'no category name'}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
+      <FormControl mt="1" isRequired>
+        <FormControl.Label>
+          {translate('transaction_form_date_label')}
+        </FormControl.Label>
+        {showDateTimePicker && (
+          <DateTimePicker
+            accentColor={colors.brandDark}
+            themeVariant={colorScheme}
+            mode="date"
+            style={{ width: 130 }}
+            value={formData.date}
+            onChange={(event, value) => {
+              setShowDateTimePicker(Platform.OS === 'ios');
+              setData({
+                ...formData,
+                date: value,
+              });
+            }}
+          />
+        )}
+        {Platform.OS === 'android' && (
+          <Button
+            height={10}
+            variant="outline"
+            onPress={() => setShowDateTimePicker(true)}
+          >
+            <Text>{moment(formData.date).format('ll')}</Text>
+          </Button>
         )}
       </FormControl>
-      <FormControl mt="1" isInvalid={errors.budget_id !== ''}>
-        <FormControl.Label>
-          {translate('transaction_form_budget_label')}
-        </FormControl.Label>
-        <Input
-          returnKeyType="done"
-          placeholder={translate('transaction_form_budget_label')}
-          value={formData.budget_name}
-          onChangeText={(value) => {
-            setData({
-              ...formData,
-              budget_name: value,
-            });
-            getAutocompleteBudgets({ query: value || '', isDestination: true });
-          }}
-          onFocus={() => {
-            getAutocompleteBudgets({ query: formData.budget_name || '' });
-            setDisplayAutocomplete({
-              ...displayAutocomplete,
-              budget: true,
-            });
-          }}
-          onBlur={closeAllAutocomplete}
-          InputRightElement={deleteBtn(['budget_id', 'budget_name'])}
-        />
 
-        {displayAutocomplete.budget && (
-          <View>
-            {budgets.map((b: BudgetType) => (
-              <Pressable
-                key={b.id}
-                mx={2}
-                onPress={() => {
-                  setData({
-                    ...formData,
-                    budget_id: b.id,
-                    budget_name: b.name,
-                  });
-                  closeAllAutocomplete();
-                }}
-                _pressed={{
-                  borderRadius: 10,
-                  backgroundColor: 'gray.300',
-                }}
-              >
-                <HStack
-                  justifyContent="space-between"
-                  mx={2}
-                  my={2}
-                >
-                  <Text underline>
-                    {b.name || 'no budget name'}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
-        )}
-      </FormControl>
+      <AutocompleteField
+        label={translate('transaction_form_description_label')}
+        placeholder={translate('transaction_form_description_label')}
+        value={formData.description}
+        isInvalid={errors.description !== ''}
+        onChangeText={(value) => {
+          setData({
+            ...formData,
+            description: value,
+          });
+        }}
+        onSelectAutocomplete={(autocomplete) => setData({
+          ...formData,
+          description: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['description'])}
+        routeApi="transactions"
+        error={errors.description}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_sourceAccount_label')}
+        placeholder={translate('transaction_form_sourceAccount_label')}
+        value={formData.source_name}
+        isInvalid={errors.source_name !== ''}
+        onChangeText={(value) => {
+          setData({
+            ...formData,
+            source_name: value,
+          });
+        }}
+        onSelectAutocomplete={(autocomplete) => setData({
+          ...formData,
+          source_name: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['source_name'])}
+        routeApi="accounts"
+        error={errors.source_name}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_destinationAccount_label')}
+        placeholder={translate('transaction_form_destinationAccount_label')}
+        value={formData.destination_name}
+        isInvalid={errors.destination_name !== ''}
+        onChangeText={(value) => {
+          setData({
+            ...formData,
+            destination_name: value,
+          });
+        }}
+        onSelectAutocomplete={(autocomplete) => setData({
+          ...formData,
+          destination_name: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['destination_name'])}
+        routeApi="accounts"
+        isDestination
+        error={errors.destination_name}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_category_label')}
+        placeholder={translate('transaction_form_category_label')}
+        value={formData.category_name}
+        isInvalid={errors.category_id !== ''}
+        onChangeText={(value) => {
+          setData({
+            ...formData,
+            category_name: value,
+          });
+        }}
+        onSelectAutocomplete={(autocomplete) => setData({
+          ...formData,
+          category_id: autocomplete.id,
+          category_name: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['category_id', 'category_name'])}
+        routeApi="categories"
+        error={errors.category_id}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_budget_label')}
+        placeholder={translate('transaction_form_budget_label')}
+        value={formData.budget_name}
+        isInvalid={errors.budget_id !== ''}
+        onChangeText={(value) => {
+          setData({
+            ...formData,
+            budget_name: value,
+          });
+        }}
+        onSelectAutocomplete={(autocomplete) => setData({
+          ...formData,
+          budget_id: autocomplete.id,
+          budget_name: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['budget_id', 'budget_name'])}
+        routeApi="budgets"
+        error={errors.budget_id}
+      />
 
       {success && !loading
         && (
@@ -579,7 +392,7 @@ const Form = ({
         {translate('transaction_form_reset_button')}
       </Button>
       <Button
-        mt="2"
+        mt="3"
         shadow={2}
         _pressed={{
           style: {

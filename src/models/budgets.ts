@@ -64,12 +64,12 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getAutocompleteBudgets(payload): Promise<void> {
+    async getAutocompleteBudgets(payload): Promise<BudgetType[]> {
       const { query } = payload;
       const limit = 10;
       const budgets = await dispatch.configuration.apiFetch({ url: `/api/v1/autocomplete/budgets?limit=${limit}&query=${query}` });
 
-      dispatch.budgets.setBudgets({ budgets });
+      return budgets;
     },
 
     /**

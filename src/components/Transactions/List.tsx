@@ -101,7 +101,7 @@ const Basic = ({
         onLongPressItem(item.attributes.transactions[0]);
       }}
     >
-      <HStack justifyContent="space-between" alignItems="start">
+      <HStack justifyContent="space-between" alignItems="flex-start">
         <HStack alignItems="center">
           <Box style={{
             backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,

@@ -102,4 +102,5 @@ export default {
   auth_create_new_oauth_client: 'Create a new Oauth client on OAuth tab, here:',
   auth_create_new_personal_access_token: 'Create a new Personal Access Token on OAuth tab, here:',
   oauth_wrong_token_error_description: 'Failed to validate accessToken, please re-check your token or backend URL.',
+  transaction_screen_edit_title: 'Edit Transaction',
 };

@@ -8,7 +8,7 @@ import { ContainerPropType } from '../types';
 
 const List: FC = ({ navigation }: ContainerPropType) => {
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
-  const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions?.getMoreTransactions || { loading: false });
+  const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions?.getMoreTransactions);
   const dispatch = useDispatch<RootDispatch>();
 
   // TODO: do not pass entire payload into this modal

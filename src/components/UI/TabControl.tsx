@@ -9,8 +9,8 @@ import {
 
 import { PanGestureHandler } from 'react-native-gesture-handler';
 
-import { translate } from '../i18n/locale';
-import { useThemeColors } from '../lib/common';
+import { translate } from '../../i18n/locale';
+import { useThemeColors } from '../../lib/common';
 
 const gap = 2;
 const iosTabVerticalSpacing = 1;
