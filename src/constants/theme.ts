@@ -115,6 +115,9 @@ export default {
     Heading: {
       baseStyle: {
         fontFamily: 'Montserrat_Bold',
+        _text: {
+          fontFamily: 'Montserrat_Bold',
+        },
       },
     },
     IconButton: {

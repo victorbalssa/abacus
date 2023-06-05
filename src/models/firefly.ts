@@ -211,7 +211,6 @@ export default createModel<RootModel>()({
       await Promise.all([
         dispatch.firefly.getSummaryBasic(),
         dispatch.firefly.getDashboardBasic(),
-        dispatch.accounts.getAccounts(),
         dispatch.transactions.getTransactions(),
         dispatch.categories.getInsightCategories(),
         dispatch.budgets.getInsightBudgets(),

@@ -5,22 +5,25 @@ import {
 } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { BlurView } from 'expo-blur';
+import { Platform } from 'react-native';
+import ThemeBlurView from './ThemeBlurView';
 
 const Title = ({ text, navigation }) => (
-  <BlurView
+  <ThemeBlurView
+    tint="dark"
     intensity={50}
     style={{
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 10,
+      paddingHorizontal: 20,
+      paddingTop: Platform.OS === 'android' ? 20 : 0,
     }}
   >
     <Heading
       numberOfLines={2}
       fontSize={21}
-      lineHeight={20}
+      lineHeight={25}
       maxW={270}
     >
       {text}
@@ -36,7 +39,7 @@ const Title = ({ text, navigation }) => (
       onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       onPress={() => navigation.pop()}
     />
-  </BlurView>
+  </ThemeBlurView>
 );
 
 export default Title;

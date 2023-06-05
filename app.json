@@ -1,11 +1,12 @@
 {
   "expo": {
     "name": "Abacus",
-    "description": "Abacus: Firefly III iOS app",
+    "description": "Abacus: Firefly III react native app",
     "slug": "abacus",
     "privacy": "public",
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ],
     "version": "0.7.0",
     "orientation": "portrait",
@@ -31,6 +32,14 @@
       "config": {
         "usesNonExemptEncryption": false
       }
+    },
+    "android": {
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.android.app",
+      "package": "abacus.android.app",
+      "versionCode": 1,
+      "permissions": [
+        ""
+      ]
     },
     "scheme": "abacusiosapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
