@@ -156,7 +156,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={0.5}
+      borderBottomWidth={1}
       borderColor={colors.listBorderColor}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -377,7 +377,7 @@ const TransactionsSwipeList: FC = () => {
         paddingBottom: 350,
       }}
       useNativeDriver
-      getItemLayout={(data, index) => ({ length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index })}
+      getItemLayout={(data, index) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
       ListFooterComponent={() => <ListFooterComponent />}
     />
   ), [transactions, loadingRefresh]);

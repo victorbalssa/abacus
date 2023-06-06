@@ -1,9 +1,8 @@
 import React, {
-  useEffect, FC, useMemo, useState,
+  useEffect, FC, useMemo, useState, useRef, useCallback,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CommonActions } from '@react-navigation/native';
-import { HoldMenuProvider } from 'react-native-hold-menu';
+import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RefreshControl } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
@@ -268,10 +267,12 @@ const NetWorth: FC = () => {
 };
 
 const HomeScreen: FC = ({ navigation }: ScreenType) => {
-  const { colorScheme, colors } = useThemeColors();
+  const { colors } = useThemeColors();
   const toast = useToast();
   const safeAreaInsets = useSafeAreaInsets();
   const { netWorth, balance } = useSelector((state: RootState) => state.firefly);
+  const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
+  const currency = useSelector((state: RootState) => state.currencies.current);
   const { backendURL, faceId } = useSelector((state: RootState) => state.configuration);
   const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const dispatch = useDispatch<RootDispatch>();
@@ -329,28 +330,62 @@ const HomeScreen: FC = ({ navigation }: ScreenType) => {
     })();
   }, []);
 
+  const prevFiltersRef = useRef<string>();
+  const scrollRef = React.useRef(null);
+
+  useScrollToTop(scrollRef);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const fetchData = async () => {
+        try {
+          if (isActive && axios.defaults.headers.Authorization) {
+            await Promise.all([
+              dispatch.firefly.getNetWorth(),
+              dispatch.accounts.getAccounts(),
+              dispatch.categories.getInsightCategories(),
+              dispatch.budgets.getInsightBudgets(),
+            ]);
+          }
+        } catch (e) {
+          // handle error
+        }
+      };
+
+      if (prevFiltersRef.current !== `${rangeDetails?.start}-${rangeDetails?.end}-${currency?.id}`) {
+        fetchData();
+        prevFiltersRef.current = `${rangeDetails?.start}-${rangeDetails?.end}-${currency?.id}`;
+      }
+
+      return () => {
+        isActive = false;
+      };
+    }, [rangeDetails, currency]),
+  );
+
   return (useMemo(() => (
-    <HoldMenuProvider safeAreaInsets={safeAreaInsets} theme={colorScheme}>
-      <Box
-        style={{
-          flex: 1,
-          paddingTop: safeAreaInsets.top + 55,
-          backgroundColor: colors.backgroundColor,
-        }}
-      >
+    <Box
+      style={{
+        flex: 1,
+        paddingTop: safeAreaInsets.top + 55,
+        backgroundColor: colors.backgroundColor,
+      }}
+    >
+      <HStack justifyContent="space-between" mx={4} mt={4} py={2} px={4} backgroundColor={colors.tileBackgroundColor} borderRadius={10} borderWidth={1} borderColor={colors.listBorderColor}>
         <NetWorth />
-
         <Filters />
+      </HStack>
 
-        <TabControl
-          values={['home_accounts', 'home_categories', 'home_budgets']}
-          onChange={setTab}
-        />
-        {tab === 'home_accounts' && <AssetsAccounts />}
-        {tab === 'home_categories' && <InsightCategories />}
-        {tab === 'home_budgets' && <InsightBudgets />}
-      </Box>
-    </HoldMenuProvider>
+      <TabControl
+        values={['home_accounts', 'home_categories', 'home_budgets']}
+        onChange={setTab}
+      />
+      {tab === 'home_accounts' && <AssetsAccounts />}
+      {tab === 'home_categories' && <InsightCategories />}
+      {tab === 'home_budgets' && <InsightBudgets />}
+    </Box>
   ), [
     loading,
     netWorth,

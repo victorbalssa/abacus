@@ -57,7 +57,7 @@ const App: FC = () => {
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const OTARef = React.createRef();
-  const [OTAOpen, setOTAOpen] = useState(true);
+  const [OTAOpen, setOTAOpen] = useState(false);
   const [fontsLoaded] = useFonts({
     /* eslint-disable global-require */
     Montserrat: require('./fonts/Montserrat-Regular.ttf'),
