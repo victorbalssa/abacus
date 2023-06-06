@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import {
   Text,
   VStack,
@@ -20,9 +20,37 @@ import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
+import { useSelector } from 'react-redux';
 import Loading from '../UI/Loading';
 import { translate } from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
+import { RootState } from '../../store';
+
+const AccountsLengthMessage:FC = () => {
+  const { colors } = useThemeColors();
+  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
+
+  return (
+    <View m={2}>
+      <Text fontSize={11}>
+        {translate('assetsHistoryCharts_chart_works')}
+        {' '}
+        <Text
+          style={{ color: colors.brandInfo }}
+          onPress={() => Linking.openURL(`${backendURL}/preferences`)}
+          underline
+        >
+          {translate('assetsHistoryCharts_change_preferences')}
+        </Text>
+        {' '}
+        {translate('assetsHistoryCharts_choose_preferences_text')}
+        {' '}
+        <Text fontFamily="Montserrat_Bold">{translate('assetsHistoryCharts_home_screen')}</Text>
+        .
+      </Text>
+    </View>
+  );
+};
 
 const CursorPointer = ({
   x,
@@ -116,7 +144,6 @@ const AssetsHistoryChart = ({
   end,
   accounts,
   filterData,
-  backendURL,
 }) => {
   const { colors } = useThemeColors();
   const getTickValues = () => {
@@ -271,26 +298,7 @@ const AssetsHistoryChart = ({
           ))}
         </VictoryChart>
       )}
-      {accounts.length > 4 && (
-        <View m={2}>
-          <Text fontSize={11}>
-            {translate('assetsHistoryCharts_chart_works')}
-            {' '}
-            <Text
-              style={{ color: colors.brandInfo }}
-              onPress={() => Linking.openURL(`${backendURL}/preferences`)}
-              underline
-            >
-              {translate('assetsHistoryCharts_change_preferences')}
-            </Text>
-            {' '}
-            {translate('assetsHistoryCharts_choose_preferences_text')}
-            {' '}
-            <Text fontFamily="Montserrat_Bold">{translate('assetsHistoryCharts_home_screen')}</Text>
-            .
-          </Text>
-        </View>
-      )}
+      {accounts.length > 4 && (<AccountsLengthMessage />)}
     </VStack>
   );
 };

@@ -7,6 +7,7 @@ export type TransactionSplitType = {
   currency_decimal_places: number,
   type: string,
   category_name: string,
+  currency_code: string,
   currency_symbol: string,
   date: string,
   source_name: string,
@@ -36,7 +37,6 @@ export type TransactionStateType = {
 }
 
 const INITIAL_STATE = {
-  transactions: [],
   page: 1,
   totalPages: 1,
 } as TransactionStateType;
@@ -48,7 +48,6 @@ export default createModel<RootModel>()({
   reducers: {
     setTransactions(state, payload): TransactionStateType {
       const {
-        transactions = state.transactions,
         page = state.page,
         totalPages = state.totalPages,
       } = payload;
@@ -57,7 +56,6 @@ export default createModel<RootModel>()({
         ...state,
         page,
         totalPages,
-        transactions,
       };
     },
 
@@ -68,15 +66,17 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get transactions list
+     * get transactions
      *
      * @returns {Promise}
      */
-    async getTransactions(_: void, rootState): Promise<void> {
+    async getTransactions(_: void, rootState): Promise<TransactionType[]> {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            start,
+            end,
+          },
         },
         currencies: {
           current,
@@ -91,25 +91,27 @@ export default createModel<RootModel>()({
       } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
       dispatch.transactions.setTransactions({
-        transactions,
         page: meta.pagination.current_page,
         totalPages: meta.pagination.total_pages,
       });
+
+      return transactions;
     },
 
     /**
-     * Get transactions list
+     * get more transactions
      *
      * @returns {Promise}
      */
-    async getMoreTransactions(_: void, rootState): Promise<void> {
+    async getMoreTransactions(_: void, rootState): Promise<TransactionType[]> {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            start,
+            end,
+          },
         },
         transactions: {
-          transactions: oldTransactions,
           page = 1,
           totalPages = 1,
         },
@@ -127,19 +129,22 @@ export default createModel<RootModel>()({
         } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
         dispatch.transactions.setTransactions({
-          transactions: (page < totalPages) ? [...oldTransactions, ...transactions] : transactions,
           page: meta.pagination.current_page,
           totalPages: meta.pagination.total_pages,
         });
+
+        return transactions;
       }
+
+      return [];
     },
 
     /**
-     * Create transactions
+     * create transaction
      *
      * @returns {Promise}
      */
-    async createTransactions(payload) {
+    async createTransaction(payload) {
       const body = {
         transactions: [{
           // TODO: Add support for:
@@ -163,11 +168,11 @@ export default createModel<RootModel>()({
     },
 
     /**
-     * Create transactions
+     * create transaction
      *
      * @returns {Promise}
      */
-    async updateTransactions(payload) {
+    async updateTransaction(payload) {
       const {
         id,
         transaction,
@@ -195,21 +200,11 @@ export default createModel<RootModel>()({
     },
 
     /**
-     * Delete transactions
+     * delete transaction by id
      *
      * @returns {Promise}
      */
-    async deleteTransaction(id, rootState) {
-      const {
-        transactions: {
-          transactions,
-        },
-      } = rootState;
-      const newTransactions = [...transactions];
-      const prevIndex = transactions.findIndex((item) => item.id === id);
-      newTransactions.splice(prevIndex, 1);
-
-      dispatch.transactions.setTransactions({ transactions: newTransactions });
+    async deleteTransaction(id) {
       dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
     },
 

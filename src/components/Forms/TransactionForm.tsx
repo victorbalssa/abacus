@@ -44,7 +44,7 @@ const INITIAL_ERROR = {
   global: '',
 } as ErrorStateType;
 
-const Form = ({
+const TransactionForm = ({
   submit,
   goToTransactions,
   payload,
@@ -426,4 +426,4 @@ const Form = ({
   );
 };
 
-export default Form;
+export default TransactionForm;

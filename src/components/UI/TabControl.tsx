@@ -16,8 +16,8 @@ const gap = 2;
 const iosTabVerticalSpacing = 1;
 const tabControlStyles = StyleSheet.create({
   tabsContainerStyle: {
-    paddingTop: gap,
-    paddingBottom: gap,
+    paddingTop: gap + 2,
+    paddingBottom: gap + 2,
   },
   tabStyle: {
     flex: 1,

@@ -49,13 +49,6 @@ export default createModel<RootModel>()({
       };
     },
 
-    setDefaultCurrency(state, payload) {
-      return {
-        ...state,
-        defaultCurrency: payload,
-      };
-    },
-
     resetState() {
       return INITIAL_STATE;
     },
@@ -75,6 +68,7 @@ export default createModel<RootModel>()({
       if (backendURL) {
         console.log('GET  ', `${backendURL}${url}`);
         const response = await axios.get(`${backendURL}${url}`, config);
+        console.log('GET  OK ------', `${backendURL}${url}`);
 
         if (response.data) return response.data;
 

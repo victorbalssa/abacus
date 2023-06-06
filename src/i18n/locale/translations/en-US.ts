@@ -95,7 +95,6 @@ export default {
   home_budgets: 'Budgets',
   configuration_ui: 'User Interface',
   configuration_color_mode: 'Dark Mode',
-  privacy_screen: 'Privacy Screen',
   auth_personal_access_token: 'Personal Access Token',
   auth_use_personal_access_token: 'Use a Personal Access Token',
   auth_external_heads_up: '❗️If you\'re using an external authentication provider like Authelia, Keycloak, Cloudflare Tunnels, etc. OAuth Clients will not work. You can use Personal Access Tokens only.',

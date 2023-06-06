@@ -25,7 +25,10 @@ import * as Updates from 'expo-updates';
 import { useFonts, loadAsync } from 'expo-font';
 
 import {
-  AntDesign, Ionicons, Feather, MaterialCommunityIcons, MaterialIcons,
+  AntDesign,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
 } from '@expo/vector-icons';
 
 import { store, persistor } from './store';
@@ -49,12 +52,12 @@ const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 const App: FC = () => {
   LogBox.ignoreAllLogs(true);
 
-  const { colors, colorScheme } = useThemeColors();
+  const { colors } = useThemeColors();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const OTARef = React.createRef();
-  const [OTAOpen, setOTAOpen] = useState(false);
+  const [OTAOpen, setOTAOpen] = useState(true);
   const [fontsLoaded] = useFonts({
     /* eslint-disable global-require */
     Montserrat: require('./fonts/Montserrat-Regular.ttf'),
@@ -67,7 +70,6 @@ const App: FC = () => {
     const fontAssets = cacheFonts([
       AntDesign.font,
       Ionicons.font,
-      Feather.font,
       MaterialCommunityIcons.font,
       MaterialIcons.font,
     ]);
@@ -144,7 +146,6 @@ const App: FC = () => {
                       alignItems: 'center',
                     }}
                     intensity={60}
-                    tint={colorScheme}
                   >
                     <Image
                       style={{

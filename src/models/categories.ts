@@ -1,11 +1,6 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-export type CategoryType = {
-  name: string,
-  id: string,
-}
-
 export type InsightCategoryType = {
   name: string,
   id: string,
@@ -16,12 +11,10 @@ export type InsightCategoryType = {
 }
 
 export type CategoriesStateType = {
-  categories: CategoryType[],
   insightCategories: InsightCategoryType[],
 }
 
 const INITIAL_STATE = {
-  categories: [],
   insightCategories: [],
 } as CategoriesStateType;
 
@@ -30,17 +23,6 @@ export default createModel<RootModel>()({
   state: INITIAL_STATE,
 
   reducers: {
-    setCategories(state, payload): CategoriesStateType {
-      const {
-        categories = state.categories,
-      } = payload;
-
-      return {
-        ...state,
-        categories,
-      };
-    },
-
     setInsightCategories(state, payload): CategoriesStateType {
       const {
         insightCategories = state.insightCategories,
@@ -59,19 +41,6 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get Autocomplete categories
-     *
-     * @returns {Promise}
-     */
-    async getAutocompleteCategories(payload): Promise<void> {
-      const { query } = payload;
-      const limit = 10;
-      const categories = await dispatch.configuration.apiFetch({ url: `/api/v1/autocomplete/categories?limit=${limit}&query=${query}` });
-
-      dispatch.categories.setCategories({ categories });
-    },
-
-    /**
      * Get Insight categories
      *
      * @returns {Promise}
@@ -79,8 +48,10 @@ export default createModel<RootModel>()({
     async getInsightCategories(_: void, rootState): Promise<void> {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            start,
+            end,
+          },
         },
         currencies: {
           current,

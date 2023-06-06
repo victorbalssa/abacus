@@ -1,6 +1,8 @@
 import { Dimensions, Platform, useColorScheme } from 'react-native';
 import { getLocales } from 'expo-localization';
+import moment from 'moment/moment';
 import colors from '../constants/colors';
+import { translate } from '../i18n/locale';
 
 const { height: D_HEIGHT, width: D_WIDTH } = (() => {
   const { width, height } = Dimensions.get('window');
@@ -65,4 +67,28 @@ export const useThemeColors = () => {
     colors: { ...colors, ...colors[colorScheme] },
     colorScheme,
   };
+};
+
+export const generateRangeTitle = (range: number, start: string, end: string): string => {
+  let title = '';
+
+  switch (range) {
+    case 1:
+      title = `${moment(end).format('MMM')} ${moment(end).year()}.`;
+      break;
+    case 3:
+      title = `${translate('home_header_time_range_q')}${moment(start).quarter()} ${moment(start).year()}.`;
+      break;
+    case 6:
+      title = `${translate('home_header_time_range_s')}${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
+      break;
+    case 12:
+      title = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
+      break;
+    default:
+      title = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
+      break;
+  }
+
+  return title;
 };

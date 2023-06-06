@@ -1,4 +1,4 @@
-export type ContainerPropType = {
+export type ScreenType = {
   navigation: { dispatch: (action) => void },
   route: { params: { payload, id: string } },
 }

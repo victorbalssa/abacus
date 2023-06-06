@@ -7,16 +7,16 @@ import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
 
-import Layout from '../components/Oauth';
-import secureKeys from '../constants/oauth';
-import { discovery, redirectUri } from '../lib/oauth';
-import { RootState, RootDispatch } from '../store';
-import { ContainerPropType, OauthConfigType } from './types';
-import ToastAlert from '../components/UI/ToastAlert';
+import OauthForm from '../Forms/OauthForm';
+import secureKeys from '../../constants/oauth';
+import { discovery, redirectUri } from '../../lib/oauth';
+import { RootState, RootDispatch } from '../../store';
+import { OauthConfigType, ScreenType } from './types';
+import ToastAlert from '../UI/ToastAlert';
 
-import { translate } from '../i18n/locale';
+import { translate } from '../../i18n/locale';
 
-const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
+const OauthScreen: FC = ({ navigation }: ScreenType) => {
   const toast = useToast();
   const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const configuration = useSelector((state: RootState) => state.configuration);
@@ -183,7 +183,7 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
   };
 
   return (
-    <Layout
+    <OauthForm
       config={config}
       loading={loading}
       faceId={faceId}
@@ -197,4 +197,4 @@ const OauthContainer: FC = ({ navigation }: ContainerPropType) => {
   );
 };
 
-export default OauthContainer;
+export default OauthScreen;
