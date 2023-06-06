@@ -58,3 +58,4 @@ web-build/
 dist/
 
 # @end expo-cli
+service-account.json
