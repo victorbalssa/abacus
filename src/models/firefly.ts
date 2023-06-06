@@ -8,7 +8,7 @@ import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
-import { translate } from '../i18n/locale';
+import { generateRangeTitle } from '../lib/common';
 
 const getCurrentDate = () => new Date().toISOString().slice(0, 10);
 
@@ -31,29 +31,33 @@ export type AssetAccountType = {
 }
 
 export type FireflyStateType = {
-  start: string,
-  end: string,
-  range: number,
-  rangeTitle: string,
+  rangeDetails: RangeDetailsType,
   netWorth: HomeDisplayType[],
   spent: HomeDisplayType[],
   earned: HomeDisplayType[],
   balance: HomeDisplayType[],
   accounts: AssetAccountType[],
-  user: null,
+}
+
+export type RangeDetailsType = {
+  title: string,
+  range: number,
+  start: string,
+  end: string,
 }
 
 const INITIAL_STATE = {
-  start: getCurrentDate(),
-  end: getCurrentDate(),
-  range: 3,
-  rangeTitle: '',
+  rangeDetails: {
+    title: '',
+    range: 3,
+    start: getCurrentDate(),
+    end: getCurrentDate(),
+  },
   netWorth: [],
   spent: [],
   earned: [],
   balance: [],
   accounts: [],
-  user: null,
 } as FireflyStateType;
 
 export default createModel<RootModel>()({
@@ -63,39 +67,23 @@ export default createModel<RootModel>()({
   reducers: {
     setData(state, payload) {
       const {
-        start = state.start,
-        end = state.end,
         netWorth = state.netWorth,
-        spent = state.spent,
-        earned = state.earned,
         balance = state.balance,
         accounts = state.accounts,
-        user = state.user,
       } = payload;
 
       return {
         ...state,
-        start,
-        end,
         netWorth,
-        spent,
-        earned,
         balance,
         accounts,
-        user,
       };
     },
 
-    setRange(state, payload) {
-      const {
-        range,
-        rangeTitle,
-      } = payload;
-
+    setRangeDetails(state, rangeDetails: RangeDetailsType) {
       return {
         ...state,
-        range,
-        rangeTitle,
+        rangeDetails,
       };
     },
 
@@ -124,11 +112,16 @@ export default createModel<RootModel>()({
      * @returns {Promise}
      */
     async handleChangeRange(payload = {}, rootState) {
+      if (rootState.firefly.rangeDetails === undefined) {
+        dispatch.firefly.resetState();
+      }
       const {
         firefly: {
-          start: oldStart,
-          end: oldEnd,
-          range: oldRange,
+          rangeDetails: {
+            range: oldRange,
+            start: oldStart,
+            end: oldEnd,
+          },
         },
       } = rootState;
       const {
@@ -139,7 +132,6 @@ export default createModel<RootModel>()({
       let end;
 
       const rangeInt = parseInt(range, 10);
-      let rangeTitle = '';
 
       if (direction !== undefined) {
         if (direction > 0) {
@@ -182,51 +174,38 @@ export default createModel<RootModel>()({
         }
       }
 
-      switch (rangeInt) {
-        case 1:
-          rangeTitle = `${moment(end).format('MMM')} ${moment(end).year()}.`;
-          break;
-        case 3:
-          rangeTitle = `${translate('home_header_time_range_q')}${moment(start).quarter()} ${moment(start).year()}.`;
-          break;
-        case 6:
-          rangeTitle = `${translate('home_header_time_range_s')}${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
-          break;
-        case 12:
-          rangeTitle = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
-          break;
-        default:
-          rangeTitle = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
-          break;
-      }
+      const title: string = generateRangeTitle(rangeInt, start, end);
 
-      console.log('RANGE', range, rangeTitle);
+      console.log('RANGE', range, title);
       console.log('DATE', start, end);
 
-      await Promise.all([
-        dispatch.firefly.setRange({ range, rangeTitle }),
-        dispatch.firefly.setData({ start, end }),
-      ]);
+      dispatch.firefly.setRangeDetails({
+        title,
+        range,
+        start,
+        end,
+      });
 
       await Promise.all([
-        dispatch.firefly.getSummaryBasic(),
-        dispatch.firefly.getDashboardBasic(),
-        dispatch.transactions.getTransactions(),
+        dispatch.firefly.getNetWorth(),
+        dispatch.accounts.getAccounts(),
         dispatch.categories.getInsightCategories(),
         dispatch.budgets.getInsightBudgets(),
       ]);
     },
 
     /**
-     * Get the dashboard summary
+     * Get home net worth
      *
      * @returns {Promise}
      */
-    async getSummaryBasic(_: void, rootState) {
+    async getNetWorth(_: void, rootState) {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            start,
+            end,
+          },
         },
         currencies: {
           current,
@@ -240,18 +219,10 @@ export default createModel<RootModel>()({
       });
       const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
       const netWorth = [];
-      const spent = [];
-      const earned = [];
       const balance = [];
       Object.keys(summary).forEach((key) => {
         if (key.includes('net-worth-in')) {
           netWorth.push(summary[key]);
-        }
-        if (key.includes('spent-in')) {
-          spent.push(summary[key]);
-        }
-        if (key.includes('earned-in')) {
-          earned.push(summary[key]);
         }
         if (key.includes('balance-in')) {
           balance.push(summary[key]);
@@ -260,8 +231,6 @@ export default createModel<RootModel>()({
 
       this.setData({
         netWorth,
-        spent,
-        earned,
         balance,
       });
     },
@@ -271,12 +240,14 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getDashboardBasic(_: void, rootState) {
+    async getAccountChart(_: void, rootState) {
       const {
         firefly: {
-          start,
-          end,
-          range,
+          rangeDetails: {
+            range,
+            start,
+            end,
+          },
         },
       } = rootState;
 

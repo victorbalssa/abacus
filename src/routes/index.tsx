@@ -1,33 +1,35 @@
 import React, { FC } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet, Dimensions, Platform } from 'react-native';
-
 import {
-  BottomSheetAndroid,
-  ModalTransition,
-} from '@react-navigation/stack/lib/typescript/src/TransitionConfigs/TransitionPresets';
-import OauthContainer from '../containers/Oauth';
-import ConfigurationContainer from '../containers/Configuration';
-import HomeContainer from '../containers/Home';
-import ChartContainer from '../containers/Chart';
-import TransactionsListContainer from '../containers/Transactions/List';
-import TransactionsEditContainer from '../containers/Transactions/Edit';
-import TransactionsCreateContainer from '../containers/Transactions/Create';
+  StyleSheet, Platform, View,
+} from 'react-native';
 
 import { translate } from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
+
+// Screens
+import OauthScreen from '../components/Screens/OauthScreen';
+import HomeScreen from '../components/Screens/HomeScreen';
+import ChartScreen from '../components/Screens/ChartScreen';
+import TransactionsScreen from '../components/Screens/TransactionsScreen';
+import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
+
+// Modals
+import TransactionCreateModal from '../components/Modals/TransactionCreateModal';
+import TransactionEditModal from '../components/Modals/TransactionEditModal';
+
+// UI components
 import ThemeBlurView from '../components/UI/ThemeBlurView';
+import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
-const Stack2 = createStackNavigator();
+const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   navigatorContainer: {
@@ -59,8 +61,7 @@ const styles = StyleSheet.create({
   },
 });
 
-// custom tabBarButton
-const TabBarAdvancedButton = ({ onPress }) => (
+const TabBarPrimaryButton = ({ onPress }) => (
   <Box style={styles.container} pointerEvents="box-none">
     <IconButton
       _icon={{
@@ -81,35 +82,32 @@ const TabBarAdvancedButton = ({ onPress }) => (
   </Box>
 );
 
-const TransactionNavigator: FC = () => (
-  <Stack2.Navigator screenOptions={{ headerShown: false }}>
-    <Stack2.Screen
-      name="TransactionsList"
-      component={TransactionsListContainer}
-    />
-  </Stack2.Navigator>
-);
+const PrimaryButtonComponent = () => <View />;
 
 const Home: FC = () => {
-  const { colorScheme, colors } = useThemeColors();
+  const { colors } = useThemeColors();
 
   return (
     <Tab.Navigator
       tabBar={({
-        state, descriptors, navigation, insets,
+        state,
+        descriptors,
+        navigation,
+        insets,
       }) => (
-        <ThemeBlurView
-          intensity={50}
-          tint={colorScheme}
-          style={styles.navigatorContainer}
-        >
-          <BottomTabBar
-            state={state}
-            descriptors={descriptors}
-            navigation={navigation}
-            insets={insets}
-          />
-        </ThemeBlurView>
+        <>
+          <ThemeBlurView
+            style={styles.navigatorContainer}
+          >
+            <BottomTabBar
+              state={state}
+              descriptors={descriptors}
+              navigation={navigation}
+              insets={insets}
+            />
+          </ThemeBlurView>
+          <NavigationHeader navigationState={state} />
+        </>
       )}
       screenOptions={() => ({
         tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
@@ -120,7 +118,7 @@ const Home: FC = () => {
         tabBarShowLabel: true,
         tabBarLazyLoad: true,
         tabBarStyle: {
-          backgroundColor: Platform.OS === 'ios' ? 'transparent' : colors.backgroundColor,
+          backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
           borderTopWidth: 0,
           marginTop: 10,
           elevation: 0,
@@ -134,6 +132,7 @@ const Home: FC = () => {
     >
       <Tab.Screen
         name={translate('navigation_home_tab')}
+        component={HomeScreen}
         options={{
           tabBarIcon: (icon) => (
             <Foundation
@@ -143,11 +142,10 @@ const Home: FC = () => {
             />
           ),
         }}
-        component={HomeContainer}
       />
       <Tab.Screen
         name={translate('navigation_chart_tab')}
-        component={ChartContainer}
+        component={ChartScreen}
         options={{
           tabBarIcon: (icon) => (
             <AntDesign
@@ -160,16 +158,16 @@ const Home: FC = () => {
       />
       <Tab.Screen
         name={translate('navigation_create_tab')}
-        component={HomeContainer}
+        component={PrimaryButtonComponent}
         options={({ navigation }) => ({
           tabBarButton: () => (
-            <TabBarAdvancedButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
+            <TabBarPrimaryButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
           ),
         })}
       />
       <Tab.Screen
         name={translate('navigation_transactions_tab')}
-        component={TransactionNavigator}
+        component={TransactionsScreen}
         options={{
           tabBarIcon: (icon) => (
             <AntDesign
@@ -182,7 +180,7 @@ const Home: FC = () => {
       />
       <Tab.Screen
         name={translate('navigation_settings_tab')}
-        component={ConfigurationContainer}
+        component={ConfigurationScreen}
         options={{
           tabBarIcon: (icon) => (
             <AntDesign
@@ -213,30 +211,27 @@ const Index: FC = () => {
       <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="oauth"
-          component={OauthContainer}
+          component={OauthScreen}
         />
         <Stack.Screen
           name="dashboard"
           component={Home}
         />
-        <Stack2.Group
+        <ModalStack.Group
           screenOptions={{
             headerShown: false,
             presentation: 'modal',
-            gestureEnabled: true,
-            gestureResponseDistance: windowHeight,
-            ...TransitionPresets.ModalPresentationIOS,
           }}
         >
-          <Stack2.Screen
-            name="TransactionsEditModal"
-            component={TransactionsEditContainer}
-          />
-          <Stack2.Screen
+          <ModalStack.Screen
             name="TransactionsCreateModal"
-            component={TransactionsCreateContainer}
+            component={TransactionCreateModal}
           />
-        </Stack2.Group>
+          <ModalStack.Screen
+            name="TransactionsEditModal"
+            component={TransactionEditModal}
+          />
+        </ModalStack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   );

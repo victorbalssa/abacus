@@ -60,19 +60,6 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get Autocomplete budgets list
-     *
-     * @returns {Promise}
-     */
-    async getAutocompleteBudgets(payload): Promise<BudgetType[]> {
-      const { query } = payload;
-      const limit = 10;
-      const budgets = await dispatch.configuration.apiFetch({ url: `/api/v1/autocomplete/budgets?limit=${limit}&query=${query}` });
-
-      return budgets;
-    },
-
-    /**
      * Get Insight budgets
      *
      * @returns {Promise}
@@ -80,8 +67,10 @@ export default createModel<RootModel>()({
     async getInsightBudgets(_: void, rootState): Promise<void> {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            start,
+            end,
+          },
         },
         currencies: {
           current,

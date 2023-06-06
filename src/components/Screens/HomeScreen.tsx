@@ -1,30 +1,38 @@
-import React, { useMemo, useState } from 'react';
-import {
-  RefreshControl,
-} from 'react-native';
-import {
-  View,
-  HStack,
-  Text,
-  VStack,
-  ScrollView,
-  Box,
-  Skeleton,
-  Progress,
-  Stack,
-} from 'native-base';
+import React, {
+  useEffect, FC, useMemo, useState,
+} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 import { HoldMenuProvider } from 'react-native-hold-menu';
-
-import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import NavigationHeader from './UI/NavigationHeader';
-import { translate } from '../i18n/locale';
-import { localNumberFormat, useThemeColors } from '../lib/common';
-import { RootDispatch, RootState } from '../store';
-import TabControl from './UI/TabControl';
-import Filters from './UI/Filters';
+import { RefreshControl } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
+import { TokenResponse } from 'expo-auth-session';
+import * as LocalAuthentication from 'expo-local-authentication';
+import {
+  Box,
+  HStack,
+  Progress,
+  ScrollView,
+  Skeleton,
+  Stack,
+  Text,
+  useToast,
+  View,
+  VStack,
+} from 'native-base';
 
-const InsightCategories = () => {
+import { RootDispatch, RootState } from '../../store';
+import secureKeys from '../../constants/oauth';
+import ToastAlert from '../UI/ToastAlert';
+import { ScreenType } from './types';
+import { translate } from '../../i18n/locale';
+import { localNumberFormat, useThemeColors } from '../../lib/common';
+import Filters from '../UI/Filters';
+import TabControl from '../UI/TabControl';
+
+const InsightCategories: FC = () => {
   const { colors } = useThemeColors();
   const {
     categories: {
@@ -75,7 +83,7 @@ const InsightCategories = () => {
   );
 };
 
-const InsightBudgets = () => {
+const InsightBudgets: FC = () => {
   const { colors } = useThemeColors();
   const {
     budgets: {
@@ -142,7 +150,7 @@ const InsightBudgets = () => {
   );
 };
 
-const AssetsAccounts = () => {
+const AssetsAccounts: FC = () => {
   const { colors } = useThemeColors();
   const {
     accounts: {
@@ -197,75 +205,140 @@ const AssetsAccounts = () => {
   );
 };
 
-const Home = ({
-  netWorth,
-  balance,
-  loading,
-}) => {
+const NetWorth: FC = () => {
+  const { colors } = useThemeColors();
+  const netWorth = useSelector((state: RootState) => state.firefly.netWorth);
+  const balance = useSelector((state: RootState) => state.firefly.balance);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNetWorth?.loading);
+
+  return (
+    <View>
+      {netWorth && netWorth[0] && (
+        <VStack pt={2} alignItems="center">
+
+          {!loading ? (
+            <Text style={{
+              fontSize: 27,
+              lineHeight: 30,
+              fontFamily: 'Montserrat_Bold',
+            }}
+            >
+              {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
+            </Text>
+          ) : (
+            <Skeleton w={170} h={8} rounded={15} />
+          )}
+          <Text style={{
+            fontSize: 13,
+            fontFamily: 'Montserrat_Light',
+            color: 'gray',
+          }}
+          >
+            {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
+          </Text>
+        </VStack>
+      )}
+
+      {balance && balance[0] && (
+        <VStack p={1} pb={2} justifyContent="center" alignItems="center">
+          {!loading ? (
+            <Box style={{
+              backgroundColor: parseFloat(balance[0].monetary_value) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
+              borderRadius: 10,
+              paddingHorizontal: 5,
+            }}
+            >
+              <Text style={{
+                fontSize: 13,
+                fontFamily: 'Montserrat_Bold',
+                textAlign: 'center',
+                color: parseFloat(balance[0].monetary_value) < 0 ? colors.brandNeutral : colors.brandSuccess,
+              }}
+              >
+                {`${parseFloat(balance[0].monetary_value) > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
+              </Text>
+            </Box>
+          ) : (
+            <Skeleton w={50} h={4} rounded={15} />
+          )}
+        </VStack>
+      )}
+    </View>
+  );
+};
+
+const HomeScreen: FC = ({ navigation }: ScreenType) => {
   const { colorScheme, colors } = useThemeColors();
+  const toast = useToast();
   const safeAreaInsets = useSafeAreaInsets();
+  const { netWorth, balance } = useSelector((state: RootState) => state.firefly);
+  const { backendURL, faceId } = useSelector((state: RootState) => state.configuration);
+  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
+  const dispatch = useDispatch<RootDispatch>();
   const [tab, setTab] = useState('home_accounts');
+
+  const goToOauth = () => navigation.dispatch(
+    CommonActions.reset({
+      index: 0,
+      routes: [
+        { name: 'oauth' },
+      ],
+    }),
+  );
+
+  const faceIdCheck = async () => {
+    if (faceId) {
+      const bioAuth = await LocalAuthentication.authenticateAsync();
+      if (!bioAuth.success) {
+        goToOauth();
+      }
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
+      const storageValue = JSON.parse(tokens);
+      if (storageValue && storageValue.accessToken && backendURL) {
+        axios.defaults.headers.Authorization = `Bearer ${storageValue.accessToken}`;
+
+        try {
+          if (!TokenResponse.isTokenFresh(storageValue)) {
+            await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
+          }
+
+          await faceIdCheck();
+          await dispatch.currencies.getCurrencies();
+          dispatch.firefly.handleChangeRange({}).catch();
+        } catch (e) {
+          toast.show({
+            render: ({ id }) => (
+              <ToastAlert
+                onClose={() => toast.close(id)}
+                title={translate('home_container_error_title')}
+                status="error"
+                variant="solid"
+                description={`${translate('home_container_error_description')}, ${e.message}`}
+              />
+            ),
+          });
+        }
+      } else {
+        goToOauth();
+      }
+    })();
+  }, []);
 
   return (useMemo(() => (
     <HoldMenuProvider safeAreaInsets={safeAreaInsets} theme={colorScheme}>
       <Box
         style={{
           flex: 1,
+          paddingTop: safeAreaInsets.top + 55,
           backgroundColor: colors.backgroundColor,
         }}
       >
-        <NavigationHeader relative />
-
-        {netWorth && netWorth[0] && (
-          <VStack pt={2} alignItems="center">
-
-            {!loading ? (
-              <Text style={{
-                fontSize: 27,
-                lineHeight: 30,
-                fontFamily: 'Montserrat_Bold',
-              }}
-              >
-                {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
-              </Text>
-            ) : (
-              <Skeleton w={170} h={8} rounded={15} />
-            )}
-            <Text style={{
-              fontSize: 13,
-              fontFamily: 'Montserrat_Light',
-              color: 'gray',
-            }}
-            >
-              {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
-            </Text>
-          </VStack>
-        )}
-
-        {balance && balance[0] && (
-          <VStack p={1} pb={2} justifyContent="center" alignItems="center">
-            {!loading ? (
-              <Box style={{
-                backgroundColor: balance[0].monetary_value < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
-                borderRadius: 10,
-                paddingHorizontal: 5,
-              }}
-              >
-                <Text style={{
-                  fontSize: 13,
-                  fontFamily: 'Montserrat_Bold',
-                  textAlign: 'center',
-                  color: balance[0].monetary_value < 0 ? colors.brandNeutral : colors.brandSuccess,
-                }}
-                >
-                  {`${balance[0].monetary_value > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
-                </Text>
-              </Box>
-            ) : (
-              <Skeleton w={50} h={4} rounded={15} />
-            )}
-          </VStack>
-        )}
+        <NetWorth />
 
         <Filters />
 
@@ -286,4 +359,4 @@ const Home = ({
   ]));
 };
 
-export default Home;
+export default HomeScreen;

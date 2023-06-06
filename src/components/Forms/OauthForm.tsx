@@ -10,22 +10,23 @@ import {
   Pressable,
   Switch,
   ScrollView,
+  KeyboardAvoidingView,
 } from 'native-base';
-import { Alert, KeyboardAvoidingView, View } from 'react-native';
+import { Alert, Platform, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
 
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
-import { isValidHttpUrl, useThemeColors } from '../lib/common';
-import { translate } from '../i18n/locale';
+import { isValidHttpUrl, useThemeColors } from '../../lib/common';
+import { translate } from '../../i18n/locale';
 
 const copyToClipboard = async () => {
   await Clipboard.setStringAsync('abacusiosapp://redirect');
   Alert.alert('abacusiosapp://redirect copied to clipboard');
 };
 
-const Oauth = ({
+const OauthForm = ({
   loading,
   faceId,
   faceIdCheck,
@@ -61,7 +62,13 @@ const Oauth = ({
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      enabled
+      h={{
+        base: '100%',
+        lg: 'auto',
+      }}
+      behavior={Platform.select({ ios: 'padding', android: null })}
+      keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
       style={{
         flex: 1,
         backgroundColor: colors.backgroundColor,
@@ -251,4 +258,4 @@ const Oauth = ({
   );
 };
 
-export default Oauth;
+export default OauthForm;

@@ -87,7 +87,9 @@ export default createModel<RootModel>()({
           current,
         },
         firefly: {
-          end,
+          rangeDetails: {
+            end,
+          },
         },
       } = rootState;
 

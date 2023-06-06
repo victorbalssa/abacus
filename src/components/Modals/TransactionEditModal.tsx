@@ -3,20 +3,45 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'native-base';
-
 import { Platform } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
+
 import Title from '../UI/Title';
-import TransactionForm from './Form';
+import TransactionForm from '../Forms/TransactionForm';
 import { useThemeColors } from '../../lib/common';
 import { translate } from '../../i18n/locale';
+import { RootDispatch } from '../../store';
+import { ScreenType } from '../Screens/types';
 
-const Edit = ({
-  payload,
-  onEdit,
-  navigation,
-  goToTransactions,
-}) => {
+const TransactionEditModal = ({ navigation, route }: ScreenType) => {
   const { colors } = useThemeColors();
+  const dispatch = useDispatch<RootDispatch>();
+
+  const { payload } = route.params;
+
+  const onEdit = async (transaction) => {
+    const { id } = route.params;
+
+    await dispatch.transactions.updateTransaction({ id, transaction });
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      await dispatch.transactions.getTransactions();
+    } catch (e) {
+      // catch 401
+    }
+  };
+
+  const goToTransactions = async () => {
+    await fetchTransactions();
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: 'Transactions',
+      }),
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -44,4 +69,4 @@ const Edit = ({
   );
 };
 
-export default Edit;
+export default TransactionEditModal;

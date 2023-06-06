@@ -7,20 +7,18 @@ const CurrentBlur = (Platform.OS === 'ios') ? BlurView : View;
 
 const ThemeBlurView = ({
   intensity = 50,
-  tint,
-  style = {},
+  style,
   children,
 }) => {
-  const { colors } = useThemeColors();
-  const backgroundColor = (Platform.OS === 'ios') ? 'transparent' : colors.backgroundColor;
+  const { colorScheme, colors } = useThemeColors();
 
   return (
     <CurrentBlur
       intensity={intensity}
-      tint={tint}
+      tint={colorScheme}
       style={{
+        backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
         ...style,
-        backgroundColor,
       }}
     >
       {children}

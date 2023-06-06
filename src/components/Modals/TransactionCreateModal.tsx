@@ -5,20 +5,30 @@ import {
 } from 'native-base';
 
 import { Platform } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { CommonActions } from '@react-navigation/native';
 import Title from '../UI/Title';
-import TransactionForm from './Form';
+import TransactionForm from '../Forms/TransactionForm';
 
 import { translate } from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
+import { RootDispatch } from '../../store';
+import { ScreenType } from '../Screens/types';
 
-const Create = ({
-  payload,
-  submit,
-  navigation,
-  goToTransactions,
-}) => {
+const TransactionCreateModal = ({ navigation, route }: ScreenType) => {
   const { colors } = useThemeColors();
+  const dispatch = useDispatch<RootDispatch>();
 
+  const { params } = route;
+  const payload = params?.payload || {};
+
+  const goToTransactions = () => {
+    navigation.dispatch(
+      CommonActions.navigate({
+        name: 'Transactions',
+      }),
+    );
+  };
   return (
     <KeyboardAvoidingView
       enabled
@@ -36,7 +46,7 @@ const Create = ({
       <Title navigation={navigation} text={translate('transaction_screen_title')} />
       <ScrollView flex={1} p={1} keyboardShouldPersistTaps="handled">
         <TransactionForm
-          submit={submit}
+          submit={dispatch.transactions.createTransaction}
           goToTransactions={goToTransactions}
           payload={{
             description: payload.description || '',
@@ -54,4 +64,4 @@ const Create = ({
   );
 };
 
-export default Create;
+export default TransactionCreateModal;

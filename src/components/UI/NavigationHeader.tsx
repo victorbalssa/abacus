@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   HStack,
   Box,
@@ -13,27 +13,30 @@ import * as Haptics from 'expo-haptics';
 
 import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';
-import { useThemeColors } from '../../lib/common';
 import ThemeBlurView from './ThemeBlurView';
+import { useThemeColors } from '../../lib/common';
 
-type NavigationHeaderType = {
-  relative?: boolean
-}
-
-const NavigationHeader: FC<NavigationHeaderType> = ({ relative = false }: NavigationHeaderType) => {
-  const { rangeTitle, start, end } = useSelector((state: RootState) => state.firefly);
+const NavigationHeader = ({
+  navigationState,
+  relative = false,
+}) => {
+  const { colors } = useThemeColors();
+  const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails || {
+    title: '', range: 3, end: '', start: '',
+  });
   const dispatch = useDispatch<RootDispatch>();
-  const { colorScheme } = useThemeColors();
+  const navigationStateIndex = navigationState.index;
 
   return useMemo(() => (
     <ThemeBlurView
       intensity={60}
-      tint={colorScheme}
       style={{
         position: relative ? 'relative' : 'absolute',
         top: 0,
         left: 0,
         right: 0,
+        backgroundColor: colors.tileBackgroundColor,
+        display: navigationState.index === 4 ? 'none' : undefined,
       }}
     >
       <Box
@@ -55,10 +58,10 @@ const NavigationHeader: FC<NavigationHeaderType> = ({ relative = false }: Naviga
 
           <VStack px={3} flex={1} justifyContent="space-between">
             <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 18, lineHeight: 18 }}>
-              {rangeTitle}
+              {rangeDetails.title}
             </Text>
             <Text style={{ fontSize: 12 }}>
-              {`${moment(start).format('ll')} - ${moment(end).format('ll')}`}
+              {`${moment(rangeDetails.start).format('ll')} - ${moment(rangeDetails.end).format('ll')}`}
             </Text>
           </VStack>
 
@@ -80,9 +83,8 @@ const NavigationHeader: FC<NavigationHeaderType> = ({ relative = false }: Naviga
       </Box>
     </ThemeBlurView>
   ), [
-    rangeTitle,
-    start,
-    end,
+    navigationStateIndex,
+    rangeDetails,
   ]);
 };
 

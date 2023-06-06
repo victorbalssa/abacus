@@ -94,8 +94,9 @@ export default createModel<RootModel>()({
      */
     async changeCurrent(id: string): Promise<void> {
       await dispatch.currencies.handleChangeCurrent(id);
+
       await Promise.all([
-        dispatch.firefly.getSummaryBasic(),
+        dispatch.firefly.getNetWorth(),
         dispatch.accounts.getAccounts(),
         dispatch.categories.getInsightCategories(),
         dispatch.budgets.getInsightBudgets(),
