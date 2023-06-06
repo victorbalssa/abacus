@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Abacus",
-    "description": "Abacus: Firefly III react native app",
+    "description": "Abacus: Firefly III mobile application.",
     "slug": "abacus",
     "privacy": "public",
     "platforms": [
