@@ -185,13 +185,6 @@ export default createModel<RootModel>()({
         start,
         end,
       });
-
-      await Promise.all([
-        dispatch.firefly.getNetWorth(),
-        dispatch.accounts.getAccounts(),
-        dispatch.categories.getInsightCategories(),
-        dispatch.budgets.getInsightBudgets(),
-      ]);
     },
 
     /**
