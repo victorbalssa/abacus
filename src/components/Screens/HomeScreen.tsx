@@ -216,11 +216,13 @@ const NetWorth: FC = () => {
         <VStack pt={2} alignItems="center">
 
           {!loading ? (
-            <Text style={{
-              fontSize: 27,
-              lineHeight: 30,
-              fontFamily: 'Montserrat_Bold',
-            }}
+            <Text
+              testID="home_screen_net_worth_text"
+              style={{
+                fontSize: 27,
+                lineHeight: 30,
+                fontFamily: 'Montserrat_Bold',
+              }}
             >
               {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
             </Text>

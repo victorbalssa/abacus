@@ -161,7 +161,7 @@ const Home: FC = () => {
         component={PrimaryButtonComponent}
         options={({ navigation }) => ({
           tabBarButton: () => (
-            <TabBarPrimaryButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
+            <TabBarPrimaryButton onPress={() => navigation.navigate('TransactionCreateModal')} />
           ),
         })}
       />
@@ -224,11 +224,11 @@ const Index: FC = () => {
           }}
         >
           <ModalStack.Screen
-            name="TransactionsCreateModal"
+            name="TransactionCreateModal"
             component={TransactionCreateModal}
           />
           <ModalStack.Screen
-            name="TransactionsEditModal"
+            name="TransactionEditModal"
             component={TransactionEditModal}
           />
         </ModalStack.Group>

@@ -56,6 +56,10 @@ buck-out/
 .expo/
 web-build/
 dist/
+.env
 
 # @end expo-cli
 service-account.json
+
+detox_test.sh
+/artifacts/

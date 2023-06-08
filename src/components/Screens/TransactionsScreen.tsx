@@ -98,7 +98,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
   // TODO: do not pass entire payload into this modal
   const goToEdit = (id, payload) => navigation.dispatch(
     CommonActions.navigate({
-      name: 'TransactionsEditModal',
+      name: 'TransactionEditModal',
       params: {
         id,
         payload,
@@ -109,7 +109,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
   // TODO: do not pass entire payload into this modal
   const goToDuplicate = (payload) => navigation.dispatch(
     CommonActions.navigate({
-      name: 'TransactionsCreateModal',
+      name: 'TransactionCreateModal',
       params: {
         payload,
       },

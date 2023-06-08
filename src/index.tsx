@@ -19,6 +19,7 @@ import {
   Text,
 } from 'native-base';
 import { StatusBar } from 'expo-status-bar';
+import * as Device from 'expo-device';
 import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Updates from 'expo-updates';
@@ -88,9 +89,12 @@ const App: FC = () => {
 
   const onCheckOTA = async () => {
     try {
-      const update = await Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        setOTAOpen(true);
+      if (Device.isDevice) {
+        const update = await Updates.checkForUpdateAsync();
+
+        if (update.isAvailable) {
+          setOTAOpen(true);
+        }
       }
     } catch (e) {
       console.error(e);

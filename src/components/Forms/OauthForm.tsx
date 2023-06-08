@@ -77,16 +77,17 @@ const OauthForm = ({
       <ScrollView keyboardShouldPersistTaps="handled">
         <Box p={5} safeAreaTop>
           <FormControl isRequired>
-            <FormControl.Label>{translate('OAUTH_fireflyInstanceMainLabel')}</FormControl.Label>
+            <FormControl.Label testID="auth_form_url_label">{translate('auth_form_url_label')}</FormControl.Label>
             <Input
               returnKeyType="done"
-              placeholder={translate('OAUTH_fireflyPlaceholder')}
+              placeholder={translate('auth_form_url_placeholder')}
               keyboardType="url"
               value={backendURL}
               onChangeText={setBackendURL}
+              testID="auth_form_url_input"
             />
             <FormControl.HelperText>
-              {translate('OAUTH_fireflyInstanceHelpLabel')}
+              {translate('auth_form_url_help')}
             </FormControl.HelperText>
           </FormControl>
 
@@ -95,7 +96,7 @@ const OauthForm = ({
           <Stack py={2}>
             <HStack py={2} minH={45} alignItems="center" justifyContent="space-between">
               <Text fontSize={12} color="gray.600">{translate('auth_use_personal_access_token')}</Text>
-              <Switch isChecked={!isOauth} onToggle={toggleIsOauth} colorScheme="primary" />
+              <Switch testID="toggle_is_oauth" isChecked={!isOauth} onToggle={toggleIsOauth} colorScheme="primary" />
             </HStack>
           </Stack>
 
@@ -106,7 +107,7 @@ const OauthForm = ({
               {' '}
               {translate('auth_create_new_oauth_client')}
             </Text>
-            <Text fontSize={12} underline>
+            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
               {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
               /profile
             </Text>
@@ -161,21 +162,22 @@ const OauthForm = ({
               {' '}
               {translate('auth_create_new_personal_access_token')}
             </Text>
-            <Text fontSize={12} underline>
+            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
               {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
               /profile
             </Text>
             <FormControl isRequired>
-              <FormControl.Label>{translate('auth_personal_access_token')}</FormControl.Label>
+              <FormControl.Label testID="auth_form_personal_access_token_label">{translate('auth_form_personal_access_token_label')}</FormControl.Label>
               <Input
                 returnKeyType="done"
                 type="password"
-                placeholder={translate('auth_personal_access_token')}
+                placeholder={translate('auth_form_personal_access_token_label')}
                 value={config.personalAccessToken}
                 onChangeText={(v) => setConfig({
                   ...config,
                   personalAccessToken: v,
                 })}
+                testID="auth_form_personal_access_token_input"
               />
               <FormControl.HelperText>
                 {translate('OAUTH_secrets_help_message')}
@@ -217,6 +219,7 @@ const OauthForm = ({
             isLoading={loading}
             isLoadingText={translate('OAUTH_submit_button_loading')}
             onPress={handleLogin}
+            testID="OAUTH_submit_button_initial"
           >
             {translate('OAUTH_submit_button_initial')}
           </Button>
