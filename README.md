@@ -1,10 +1,11 @@
 <div align="center">
     <p></p>
-  <img alt="logo" src="documentation/img.png" height=120 />
+  <img alt="logo" src=".github/img/icon.png" height=120 />
   <h1>Abacus: Firefly III mobile application</h1>
-    <div>
-        <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
-    </div>
+  <div>
+    <a href="https://apps.apple.com/us/app/1627093491"><img width="180" src=".github/img/apple.svg" /></a>
+    <a href="https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app"><img width="180" src=".github/img/google.svg" /></a>
+  </div>
   <p></p>
   <img alt="chart" src=".github/img/demo.gif" />
   <p></p>
@@ -31,7 +32,7 @@ Support for iPhone, iPad, Android Phone and Android Tablet.
 
 On iOS, Tokens are stored in [**iOS Keychains**](https://developer.apple.com/documentation/security/keychain_services).
 
-On Android, Tokens are stored in [SharedPreferences](https://developer.android.com/training/data-storage/shared-preferences), encrypted with [Android's Keystore system](https://developer.android.com/training/articles/keystore.html).
+On Android, Tokens are stored in [**SharedPreferences**](https://developer.android.com/training/data-storage/shared-preferences), encrypted with [**Android's Keystore system**](https://developer.android.com/training/articles/keystore.html).
 
 No external API calls nor Analytics API, not even sentry / crashlytics.
 
@@ -59,6 +60,7 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 - __Expo SDK 48__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
 - __Routing and navigation__ React Navigation
   V6. [https://reactnavigation.org/docs](https://reactnavigation.org/docs/getting-started)
+- __Tests__ on simulator/emulator before each EAS build with [@wix/Detox](https://github.com/wix/Detox)
 - __Redux architecture__
     - Rematch core [@rematch/core](https://github.com/rematch/rematch)
     - Rematch plugin [@rematch/loading](https://rematchjs.org/docs/plugins/loading)
@@ -75,5 +77,6 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 ### 📖 Docs
 
 - [Contributing to this project](.github/CONTRIBUTING.md)
-- [Understanding the file structure](documentation/file.md)
+- [Understanding the file structure](.github/FILE.md)
+- [Need help with Authentication?](.github/HELP.md)
 - [ReactNative.dev](https://reactnative.dev)

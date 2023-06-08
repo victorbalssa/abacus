@@ -49,7 +49,8 @@
       }
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "@config-plugins/detox"
     ],
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#121215"
