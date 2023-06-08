@@ -7,6 +7,7 @@ const testToken = DETOX_TEST_TOKEN;
 
 describe('OauthScreen', () => {
   beforeAll(async () => {
+    // reset authentication tokens
     await device.clearKeychain();
     await device.launchApp();
   });
