@@ -195,6 +195,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
             <Text
               fontSize="xs"
               alignSelf="flex-start"
+              maxW={170}
               numberOfLines={1}
             >
               {`${item.attributes.transactions[0].type === 'withdrawal' ? `${item.attributes.transactions[0].source_name}` : `${item.attributes.transactions[0].destination_name}`}`}

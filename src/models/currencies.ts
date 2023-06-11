@@ -86,14 +86,5 @@ export default createModel<RootModel>()({
         current: current || currencies.filter((c: CurrencyType) => c.attributes.default === true)[0] || null,
       });
     },
-
-    /**
-     * Effect change Current
-     *
-     * @returns {Promise}
-     */
-    async changeCurrent(id: string): Promise<void> {
-      await dispatch.currencies.handleChangeCurrent(id);
-    },
   }),
 });

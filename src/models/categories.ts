@@ -57,13 +57,15 @@ export default createModel<RootModel>()({
           current,
         },
       } = rootState;
-      const insightCategories = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/category?start=${start}&end=${end}` });
+      if (current && current.attributes.code) {
+        const insightCategories = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/category?start=${start}&end=${end}` });
 
-      const filteredCategories = insightCategories
-        .filter((category: InsightCategoryType) => category.currency_code === current.attributes.code)
-        .sort((a, b) => ((a.difference_float > b.difference_float) ? 1 : -1));
+        const filteredCategories = insightCategories
+          .filter((category: InsightCategoryType) => category.currency_code === current.attributes.code)
+          .sort((a, b) => ((a.difference_float > b.difference_float) ? 1 : -1));
 
-      dispatch.categories.setInsightCategories({ insightCategories: filteredCategories });
+        dispatch.categories.setInsightCategories({ insightCategories: filteredCategories });
+      }
     },
   }),
 });

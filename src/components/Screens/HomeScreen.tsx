@@ -312,7 +312,6 @@ const HomeScreen: FC = ({ navigation }: ScreenType) => {
 
           await faceIdCheck();
           await dispatch.currencies.getCurrencies();
-          dispatch.firefly.handleChangeRange({}).catch();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -384,6 +383,7 @@ const HomeScreen: FC = ({ navigation }: ScreenType) => {
         values={['home_accounts', 'home_categories', 'home_budgets']}
         onChange={setTab}
       />
+
       {tab === 'home_accounts' && <AssetsAccounts />}
       {tab === 'home_categories' && <InsightCategories />}
       {tab === 'home_budgets' && <InsightBudgets />}
