@@ -7,7 +7,12 @@
     <a href="https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app"><img width="180" src=".github/img/google.svg" /></a>
   </div>
   <p></p>
-  <img alt="chart" src=".github/img/demo.gif" />
+  <div>
+    <img alt="chart" src=".github/img/light-demo.gif" />
+    <h6>Light Mode</h6>
+    <img alt="chart" src=".github/img/dark-demo.gif" />
+    <h6>Dark Mode</h6>
+  </div>
   <p></p>
   <sup>
 
