@@ -21,7 +21,7 @@ const Filters: FC = () => {
       handleChangeRange,
     },
     currencies: {
-      changeCurrent,
+      handleChangeCurrent,
     },
   } = useDispatch<RootDispatch>();
 
@@ -58,9 +58,9 @@ const Filters: FC = () => {
           },
         }}
         selectedValue={currentCurrency?.id}
-        onValueChange={(v) => changeCurrent(v)}
+        onValueChange={(v) => handleChangeCurrent(v)}
       >
-        {currencies.map((currency) => <Select.Item key={currency.id} label={`${currency?.attributes.code} ${currency.attributes.symbol}`} value={currency.id} />)}
+        {currencies.map((currency) => <Select.Item key={currency.id} label={`${currency?.attributes.code} ${currency?.attributes.symbol}`} value={currency.id} />)}
       </Select>
       <Select
         my={2}
@@ -99,7 +99,7 @@ const Filters: FC = () => {
   ), [
     currencies,
     currentCurrency,
-    changeCurrent,
+    handleChangeCurrent,
     range,
     handleChangeRange,
   ]);

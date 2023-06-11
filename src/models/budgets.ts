@@ -76,30 +76,34 @@ export default createModel<RootModel>()({
           current,
         },
       } = rootState;
-      const insightBudgets = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/budget?start=${start}&end=${end}` });
-      const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` });
-      const budgetsLimits = {};
+      if (current && current.attributes.code) {
+        const insightBudgets = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/budget?start=${start}&end=${end}` });
+        const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` });
+        const budgetsLimits = {};
 
-      apiBudgetsLimits.forEach((limit) => {
-        if (limit.attributes) {
-          const {
-            budget_id: budgetId,
-            amount,
-          } = limit.attributes;
+        apiBudgetsLimits.forEach((limit) => {
+          if (limit && limit.attributes) {
+            const {
+              attributes: {
+                budget_id: budgetId,
+                amount,
+              },
+            } = limit;
 
-          budgetsLimits[budgetId] = parseFloat(amount);
-        }
-      });
+            budgetsLimits[budgetId] = parseFloat(amount);
+          }
+        });
 
-      const filteredBudgets: InsightBudgetType = insightBudgets
-        .filter((budget: InsightBudgetType) => budget.currency_code === current.attributes.code)
-        .sort((a, b) => ((a.difference_float > b.difference_float) ? 1 : -1))
-        .map((budget: InsightBudgetType) => ({
-          limit: budgetsLimits[budget.id] || 0,
-          ...budget,
-        }));
+        const filteredBudgets: InsightBudgetType = insightBudgets
+          .filter((budget: InsightBudgetType) => budget.currency_code === current.attributes.code)
+          .sort((a, b) => ((a.difference_float > b.difference_float) ? 1 : -1))
+          .map((budget: InsightBudgetType) => ({
+            limit: budgetsLimits[budget.id] || 0,
+            ...budget,
+          }));
 
-      dispatch.budgets.setInsightBudgets({ insightBudgets: filteredBudgets });
+        dispatch.budgets.setInsightBudgets({ insightBudgets: filteredBudgets });
+      }
     },
   }),
 });

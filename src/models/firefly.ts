@@ -10,8 +10,6 @@ import colors from '../constants/colors';
 import { RootModel } from './index';
 import { generateRangeTitle } from '../lib/common';
 
-const getCurrentDate = () => new Date().toISOString().slice(0, 10);
-
 export type HomeDisplayType = {
   title: string,
   value_parsed: string,
@@ -46,12 +44,41 @@ export type RangeDetailsType = {
   end: string,
 }
 
+const formatDateToYYYYMMDD = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+const getCurrentQuarterStartDate = (): string => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+  const startDate = new Date(currentYear, quarterStartMonth, 1);
+
+  return formatDateToYYYYMMDD(startDate);
+};
+
+const getCurrentQuarterEndDate = (): string => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const quarterEndMonth = Math.floor(currentMonth / 3) * 3 + 2;
+  const lastDayOfMonth = new Date(currentYear, quarterEndMonth + 1, 0).getDate();
+  const endDate = new Date(currentYear, quarterEndMonth, lastDayOfMonth);
+
+  return formatDateToYYYYMMDD(endDate);
+};
+
 const INITIAL_STATE = {
   rangeDetails: {
-    title: '',
+    title: generateRangeTitle(3, getCurrentQuarterStartDate(), getCurrentQuarterEndDate()),
     range: 3,
-    start: getCurrentDate(),
-    end: getCurrentDate(),
+    start: getCurrentQuarterStartDate(),
+    end: getCurrentQuarterEndDate(),
   },
   netWorth: [],
   spent: [],
@@ -204,28 +231,29 @@ export default createModel<RootModel>()({
           current,
         },
       } = rootState;
+      if (current && current.attributes.code) {
+        const params = new URLSearchParams({
+          start,
+          end,
+          currency_code: current?.attributes.code,
+        });
+        const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
+        const netWorth = [];
+        const balance = [];
+        Object.keys(summary).forEach((key) => {
+          if (key.includes('net-worth-in')) {
+            netWorth.push(summary[key]);
+          }
+          if (key.includes('balance-in')) {
+            balance.push(summary[key]);
+          }
+        });
 
-      const params = new URLSearchParams({
-        start,
-        end,
-        currency_code: current?.attributes.code,
-      });
-      const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
-      const netWorth = [];
-      const balance = [];
-      Object.keys(summary).forEach((key) => {
-        if (key.includes('net-worth-in')) {
-          netWorth.push(summary[key]);
-        }
-        if (key.includes('balance-in')) {
-          balance.push(summary[key]);
-        }
-      });
-
-      this.setData({
-        netWorth,
-        balance,
-      });
+        this.setData({
+          netWorth,
+          balance,
+        });
+      }
     },
 
     /**
