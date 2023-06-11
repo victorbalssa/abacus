@@ -25,7 +25,7 @@ describe('OauthScreen', () => {
   it('should login successfully', async () => {
     await element(by.id('auth_form_url_input')).replaceText(testURL);
     await element(by.id('auth_form_personal_access_token_input')).replaceText(testToken);
-    await element(by.id('OAUTH_submit_button_initial')).longPress();
+    await element(by.id('auth_form_submit_button_initial')).longPress();
 
     await waitFor(element(by.id('home_screen_net_worth_text'))).toBeVisible().withTimeout(10000);
   });

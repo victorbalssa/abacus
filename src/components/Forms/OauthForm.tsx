@@ -115,7 +115,7 @@ const OauthForm = ({
               <Text py={1} pr={1} fontSize={12}>
                 ‣
                 {' '}
-                {translate('OAUTH_set_redirect')}
+                {translate('auth_form_set_redirect')}
               </Text>
 
               <Pressable flexDirection="row" justifyContent="center" alignItems="center" onPress={copyToClipboard} backgroundColor="primary.200" borderRadius={10} py={0} px={0}>
@@ -124,11 +124,11 @@ const OauthForm = ({
               </Pressable>
             </HStack>
             <FormControl isRequired>
-              <FormControl.Label>{translate('OAUTH_oauth_clientId')}</FormControl.Label>
+              <FormControl.Label>{translate('auth_form_oauth_clientId')}</FormControl.Label>
               <Input
                 keyboardType="numeric"
                 returnKeyType="done"
-                placeholder={translate('OAUTH_oauth_clientId')}
+                placeholder={translate('auth_form_oauth_clientId')}
                 value={config.oauthClientId}
                 onChangeText={(v) => setConfig({
                   ...config,
@@ -137,11 +137,11 @@ const OauthForm = ({
               />
             </FormControl>
             <FormControl>
-              <FormControl.Label>{translate('OAUTH_oauth_client_secret')}</FormControl.Label>
+              <FormControl.Label>{translate('auth_form_oauth_client_secret')}</FormControl.Label>
               <Input
                 returnKeyType="done"
                 type="password"
-                placeholder={translate('OAUTH_oauth_client_secret')}
+                placeholder={translate('auth_form_oauth_client_secret')}
                 value={config.oauthClientSecret}
                 onChangeText={(v) => setConfig({
                   ...config,
@@ -149,7 +149,7 @@ const OauthForm = ({
                 })}
               />
               <FormControl.HelperText>
-                {translate('OAUTH_secrets_help_message')}
+                {translate('auth_form_secrets_help_message')}
               </FormControl.HelperText>
             </FormControl>
           </>
@@ -180,14 +180,14 @@ const OauthForm = ({
                 testID="auth_form_personal_access_token_input"
               />
               <FormControl.HelperText>
-                {translate('OAUTH_secrets_help_message')}
+                {translate('auth_form_secrets_help_message')}
               </FormControl.HelperText>
             </FormControl>
           </>
           )}
 
           <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
-            <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('OAUTH_need_help')}</Text>
+            <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('auth_form_need_help')}</Text>
           </Pressable>
 
           <Button
@@ -217,11 +217,11 @@ const OauthForm = ({
             colorScheme="primary"
             isDisabled={!isValidHttpUrl(backendURL) || !isMinimumRequirement()}
             isLoading={loading}
-            isLoadingText={translate('OAUTH_submit_button_loading')}
+            isLoadingText={translate('auth_form_submit_button_loading')}
             onPress={handleLogin}
-            testID="OAUTH_submit_button_initial"
+            testID="auth_form_submit_button_initial"
           >
-            {translate('OAUTH_submit_button_initial')}
+            {translate('auth_form_submit_button_initial')}
           </Button>
           {faceId && (
           <Button
@@ -251,7 +251,7 @@ const OauthForm = ({
             isLoading={loading}
             onPress={() => faceIdCheck()}
           >
-            {translate('OAUTH_faceID')}
+            {translate('auth_form_faceID')}
           </Button>
           )}
         </Box>
