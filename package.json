@@ -67,14 +67,15 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "13.4.0",
     "react-native-swipe-list-view": "^3.2.9",
-    "react-native-web": "~0.18.7",
+    "react-native-web": "~0.18.10",
     "react-redux": "^8.0.7",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "sharp-cli": "^4.1.0",
     "slash": "^3.0.0",
     "victory-native": "^36.6.10",
-    "expo-device": "~5.2.1"
+    "expo-device": "~5.2.1",
+    "@expo/webpack-config": "^18.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
