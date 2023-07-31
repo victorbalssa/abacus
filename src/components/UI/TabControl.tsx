@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 
 import { translate } from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -222,12 +222,14 @@ const TabControl = ({ values, onChange }) => {
         marginVertical: 10,
       }}
     >
-      <SegmentedControl
-        values={values}
-        selectedIndex={selectedIndex}
-        onIndexChange={handleIndexChange}
-        renderSeparators
-      />
+      <GestureHandlerRootView>
+        <SegmentedControl
+          values={values}
+          selectedIndex={selectedIndex}
+          onIndexChange={handleIndexChange}
+          renderSeparators
+        />
+      </GestureHandlerRootView>
     </View>
   );
 };

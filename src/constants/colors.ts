@@ -15,7 +15,6 @@ export default {
   red: 'rgb(190,37,37)',
   blue: '#18528c',
   green: '#15803d',
-
   dark: {
     text: 'white',
     textOpposite: 'black',

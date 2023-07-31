@@ -13,10 +13,27 @@ module.exports = {
     }
   },
   artifacts: {
+    rootDir: '.artifacts',
     plugins: {
-      log: process.env.CI ? 'failing' : undefined,
-      screenshot: 'failing',
-    },
+      log: { enabled: true },
+      screenshot: {
+        shouldTakeAutomaticSnapshots: true,
+        keepOnlyFailedTestsArtifacts: true,
+        takeWhen: {
+          testStart: false,
+          testDone: true,
+        }
+      },
+      video: {
+        enabled: true,
+        android: {
+          bitRate: 4000000,
+        },
+        simulator: {
+          codec: 'hevc',
+        }
+      }
+    }
   },
   apps: {
     'ios.debug': {

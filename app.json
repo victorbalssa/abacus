@@ -11,9 +11,7 @@
     ],
     "version": "0.8.1",
     "orientation": "portrait",
-    "icon": "./src/images/icon-abacus.png",
     "splash": {
-      "backgroundColor": "#121215",
       "image": "./src/images/splash.png",
       "resizeMode": "contain"
     },
@@ -23,6 +21,7 @@
       "url": "https://u.expo.dev/292ed6dc-804c-4444-95f5-fa5d76d9913b"
     },
     "ios": {
+      "icon": "./src/images/icon-abacus.png",
       "supportsTablet": true,
       "buildNumber": "0.8.1",
       "bundleIdentifier": "abacus.ios.app",
@@ -35,9 +34,16 @@
       }
     },
     "android": {
+      "icon": "./src/images/icon-abacus.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/images/icon-abacus-splash.png"
+      },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
       "versionCode": 3
+    },
+    "web": {
+      "bundler": "metro"
     },
     "scheme": "abacusiosapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
@@ -51,9 +57,16 @@
     },
     "plugins": [
       "expo-localization",
-      "@config-plugins/detox"
+      "@config-plugins/detox",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
-    "userInterfaceStyle": "automatic",
-    "backgroundColor": "#121215"
+    "userInterfaceStyle": "automatic"
   }
 }
