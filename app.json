@@ -36,7 +36,7 @@
     "android": {
       "icon": "./src/images/icon-abacus.png",
       "adaptiveIcon": {
-        "foregroundImage": "./src/images/icon-abacus-splash.png"
+        "foregroundImage": "./src/images/icon-abacus-foreground.png"
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
