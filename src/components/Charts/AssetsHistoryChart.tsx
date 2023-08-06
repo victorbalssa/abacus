@@ -21,6 +21,7 @@ import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
 import { useSelector } from 'react-redux';
+import * as Localization from 'expo-localization';
 import Loading from '../UI/Loading';
 import { translate } from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -73,7 +74,7 @@ const Cursor = ({
         minW={100}
       >
         <Text fontWeight={600} pt={2} fontSize={18}>
-          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString('default', {
+          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
             month: 'short',
             day: 'numeric',
             year: 'numeric',
@@ -272,7 +273,7 @@ const AssetsHistoryChart = ({
           <VictoryAxis
             offsetY={135}
             tickValues={getTickValues()}
-            tickFormat={(x) => (new Date(x).toLocaleString('default', { month: 'short' }))}
+            tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {

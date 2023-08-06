@@ -19,6 +19,7 @@ import { isEmpty, round } from 'lodash';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 
+import * as Localization from 'expo-localization';
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 
@@ -55,7 +56,7 @@ const BalanceHistoryChart = ({
         break;
     }
 
-    return currentDate.toLocaleString('default', { month: 'short' });
+    return currentDate.toLocaleString(Localization.locale, { month: 'short' });
   };
 
   if (isEmpty(balances)) {

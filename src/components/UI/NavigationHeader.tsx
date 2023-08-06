@@ -43,6 +43,8 @@ const NavigationHeader = ({
         alignItems="center"
         justifyContent="center"
         safeAreaTop
+        borderBottomWidth={1}
+        borderColor={colors.listBorderColor}
       >
         <HStack px={3} py={2} justifyContent="space-between" alignItems="center">
           <IconButton

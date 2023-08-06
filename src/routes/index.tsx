@@ -97,7 +97,11 @@ const Home: FC = () => {
       }) => (
         <>
           <ThemeBlurView
-            style={styles.navigatorContainer}
+            style={{
+              ...styles.navigatorContainer,
+              borderTopWidth: 0.5,
+              borderColor: colors.listBorderColor,
+            }}
           >
             <BottomTabBar
               state={state}

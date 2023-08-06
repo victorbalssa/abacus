@@ -47,7 +47,7 @@ const ListFooterComponent: FC = () => {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={1}
+      borderTopWidth={1}
       borderColor={colors.listBorderColor}
       justifyContent="center"
     >
@@ -65,7 +65,7 @@ const ListFooterComponent: FC = () => {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={1}
+      borderTopWidth={1}
       borderColor={colors.listBorderColor}
       justifyContent="center"
     >
@@ -152,7 +152,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={1}
+      borderTopWidth={1}
       borderColor={colors.listBorderColor}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -261,7 +261,7 @@ const RenderHiddenItem = ({ handleOnPress }) => {
       backgroundColor={colors.red}
       justifyContent="center"
       alignItems="flex-end"
-      borderBottomWidth={1}
+      borderTopWidth={1}
       borderColor={colors.listBorderColor}
       onPress={handleOnPress}
       _pressed={{

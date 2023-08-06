@@ -1,5 +1,6 @@
 import * as Localization from 'expo-localization';
 import { I18n, TranslateOptions } from 'i18n-js';
+import moment from 'moment/moment';
 import languages from './translations';
 
 const i18n = new I18n();
@@ -12,6 +13,7 @@ i18n.translations = {
 i18n.enableFallback = true;
 i18n.defaultLocale = 'en-US';
 i18n.locale = Localization.locale;
+moment.locale(Localization.locale);
 
 export function getKeyByValue(object, value: string) {
   return Object.keys(object).find((key) => object[key] === value);

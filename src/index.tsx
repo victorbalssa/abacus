@@ -24,6 +24,7 @@ import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Updates from 'expo-updates';
 import { useFonts, loadAsync } from 'expo-font';
+import moment from 'moment/moment';
 
 import {
   AntDesign,
@@ -74,6 +75,7 @@ const App: FC = () => {
       MaterialCommunityIcons.font,
       MaterialIcons.font,
     ]);
+    console.log(moment.locales());
 
     await Promise.all([fontAssets]);
   };
