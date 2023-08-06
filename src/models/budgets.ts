@@ -81,18 +81,24 @@ export default createModel<RootModel>()({
         const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` });
         const budgetsLimits = {};
 
-        apiBudgetsLimits.forEach((limit) => {
-          if (limit && limit.attributes) {
-            const {
-              attributes: {
-                budget_id: budgetId,
-                amount,
-              },
-            } = limit;
+        apiBudgetsLimits
+          .filter((limit) => limit.attributes.currency_code === current.attributes.code)
+          .forEach((limit) => {
+            if (limit && limit.attributes) {
+              const {
+                attributes: {
+                  budget_id: budgetId,
+                  amount,
+                },
+              } = limit;
 
-            budgetsLimits[budgetId] = parseFloat(amount);
-          }
-        });
+              if (budgetsLimits[budgetId] === undefined) {
+                budgetsLimits[budgetId] = 0;
+              }
+
+              budgetsLimits[budgetId] += parseFloat(amount);
+            }
+          });
 
         const filteredBudgets: InsightBudgetType = insightBudgets
           .filter((budget: InsightBudgetType) => budget.currency_code === current.attributes.code)
