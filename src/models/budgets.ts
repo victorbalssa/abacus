@@ -1,29 +1,36 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-export type BudgetType = {
-  name: string,
-  id: string,
+export type BudgetSpentType = {
+  sum: string
+  currencyId: string
+  currencyCode: string
+  currencySymbol: string
+  currencyDecimalPlaces: number
 }
 
-export type InsightBudgetType = {
-  name: string,
-  id: string,
+export type BudgetType = {
+  id: string
+  attributes: {
+    name: string
+    active: boolean
+    createdAt: string
+    updatedAt: string
+    notes: string
+    order: number
+    spent: BudgetSpentType[]
+  },
   limit?: number,
-  currency_code: string,
-  currency_id: string,
-  difference: string,
-  difference_float: number,
+  currencyCode: string,
+  differenceFloat: number,
 }
 
 export type BudgetsStateType = {
   budgets: BudgetType[],
-  insightBudgets: InsightBudgetType[],
 }
 
 const INITIAL_STATE = {
   budgets: [],
-  insightBudgets: [],
 } as BudgetsStateType;
 
 export default createModel<RootModel>()({
@@ -39,17 +46,6 @@ export default createModel<RootModel>()({
       return {
         ...state,
         budgets,
-      };
-    },
-
-    setInsightBudgets(state, payload): BudgetsStateType {
-      const {
-        insightBudgets = state.insightBudgets,
-      } = payload;
-
-      return {
-        ...state,
-        insightBudgets,
       };
     },
 
@@ -77,17 +73,17 @@ export default createModel<RootModel>()({
         },
       } = rootState;
       if (current && current.attributes.code) {
-        const insightBudgets = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/budget?start=${start}&end=${end}` });
+        const { data: budgets } = await dispatch.configuration.apiFetch({ url: `/api/v1/budgets?start=${start}&end=${end}` });
         const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` });
         const budgetsLimits = {};
 
         apiBudgetsLimits
-          .filter((limit) => limit.attributes.currency_code === current.attributes.code)
+          .filter((limit) => limit.attributes.currencyCode === current.attributes.code)
           .forEach((limit) => {
             if (limit && limit.attributes) {
               const {
                 attributes: {
-                  budget_id: budgetId,
+                  budgetId,
                   amount,
                 },
               } = limit;
@@ -100,15 +96,16 @@ export default createModel<RootModel>()({
             }
           });
 
-        const filteredBudgets: InsightBudgetType = insightBudgets
-          .filter((budget: InsightBudgetType) => budget.currency_code === current.attributes.code)
-          .sort((a, b) => ((a.difference_float > b.difference_float) ? 1 : -1))
-          .map((budget: InsightBudgetType) => ({
+        const filteredBudgets: BudgetType = budgets
+          .sort((a, b) => ((a.attributes.order > b.attributes.order) ? 1 : -1))
+          .map((budget: BudgetType) => ({
             limit: budgetsLimits[budget.id] || 0,
+            differenceFloat: budget.attributes.spent.find((budgetSpent) => budgetSpent.currencyCode === current.attributes.code)?.sum || 0,
+            currencyCode: current.attributes.code,
             ...budget,
           }));
 
-        dispatch.budgets.setInsightBudgets({ insightBudgets: filteredBudgets });
+        dispatch.budgets.setBudgets({ budgets: filteredBudgets });
       }
     },
   }),

@@ -4,14 +4,14 @@ import { RootModel } from './index';
 export type TransactionSplitType = {
   description: string,
   amount: string,
-  currency_decimal_places: number,
+  currencyDecimalPlaces: number,
   type: string,
-  category_name: string,
-  currency_code: string,
-  currency_symbol: string,
+  categoryName: string,
+  currencyCode: string,
+  currencySymbol: string,
   date: string,
-  source_name: string,
-  destination_name: string,
+  sourceName: string,
+  destinationName: string,
 }
 
 export type TransactionType = {
@@ -91,8 +91,8 @@ export default createModel<RootModel>()({
       } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
       dispatch.transactions.setTransactions({
-        page: meta.pagination.current_page,
-        totalPages: meta.pagination.total_pages,
+        page: meta.pagination.currentPage,
+        totalPages: meta.pagination.totalPages,
       });
 
       return transactions;
@@ -129,8 +129,8 @@ export default createModel<RootModel>()({
         } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
 
         dispatch.transactions.setTransactions({
-          page: meta.pagination.current_page,
-          totalPages: meta.pagination.total_pages,
+          page: meta.pagination.currentPage,
+          totalPages: meta.pagination.totalPages,
         });
 
         return transactions;
@@ -153,8 +153,16 @@ export default createModel<RootModel>()({
           /* notes: 'test abaccus notes', */
           /* currency_id: '12', */
           /* foreign_amount: '123.45', */
-          /* foreign_currency_id: '17', */
-          ...payload,
+          /* foreign_currencyId: '17', */
+          description: payload.description,
+          date: payload.date,
+          source_name: payload.sourceName,
+          destination_name: payload.destinationName,
+          category_id: payload.categoryId,
+          category_name: payload.categoryName,
+          budget_id: payload.budgetId,
+          budget_name: payload.budgetName,
+          type: payload.type,
           amount: payload.amount.replace(/,/g, '.'),
         }],
         error_if_duplicate_hash: false,
@@ -177,8 +185,8 @@ export default createModel<RootModel>()({
         id,
         transaction,
       } = payload;
-      if (transaction.category_name === '') {
-        delete transaction.category_id;
+      if (transaction.categoryName === '') {
+        delete transaction.categoryId;
       }
       const body = {
         transactions: [{
@@ -188,9 +196,17 @@ export default createModel<RootModel>()({
           /* notes: 'test abaccus notes', */
           /* currency_id: '12', */
           /* foreign_amount: '123.45', */
-          /* foreign_currency_id: '17', */
-
-          ...transaction,
+          /* foreign_currencyId: '17', */
+          description: transaction.description,
+          date: transaction.date,
+          source_name: transaction.sourceName,
+          destination_name: transaction.destinationName,
+          category_id: transaction.categoryId,
+          category_name: transaction.categoryName,
+          budget_id: transaction.budgetId,
+          budget_name: transaction.budgetName,
+          type: transaction.type,
+          amount: transaction.amount.replace(/,/g, '.'),
         }],
       };
 

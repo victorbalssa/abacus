@@ -26,21 +26,21 @@ import { RootState } from '../../store';
 
 type ErrorStateType = {
   description: string,
-  source_name: string,
-  destination_name: string,
+  sourceName: string,
+  destinationName: string,
   amount: string,
-  category_id: string,
-  budget_id: string,
+  categoryId: string,
+  budgetId: string,
   global: string,
 }
 
 const INITIAL_ERROR = {
   description: '',
   amount: '',
-  source_name: '',
-  destination_name: '',
-  category_id: '',
-  budget_id: '',
+  sourceName: '',
+  destinationName: '',
+  categoryId: '',
+  budgetId: '',
   global: '',
 } as ErrorStateType;
 
@@ -54,13 +54,13 @@ const TransactionForm = ({
   const [formData, setData] = useState({
     description: payload.description,
     date: new Date(payload.date),
-    source_name: payload.source_name,
-    destination_name: payload.destination_name,
+    sourceName: payload.sourceName,
+    destinationName: payload.destinationName,
     amount: payload.amount ? parseFloat(payload.amount).toFixed(2) : '',
-    category_id: payload.category_id,
-    category_name: payload.category_name,
-    budget_id: payload.budget_id,
-    budget_name: payload.budget_name,
+    categoryId: payload.categoryId,
+    categoryName: payload.categoryName,
+    budgetId: payload.budgetId,
+    budgetName: payload.budgetName,
     type: payload.type,
   });
   const [errors, setErrors] = useState(INITIAL_ERROR);
@@ -267,84 +267,84 @@ const TransactionForm = ({
       <AutocompleteField
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
-        value={formData.source_name}
-        isInvalid={errors.source_name !== ''}
+        value={formData.sourceName}
+        isInvalid={errors.sourceName !== ''}
         onChangeText={(value) => {
           setData({
             ...formData,
-            source_name: value,
+            sourceName: value,
           });
         }}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
-          source_name: autocomplete.name,
+          sourceName: autocomplete.name,
         })}
-        InputRightElement={deleteBtn(['source_name'])}
+        InputRightElement={deleteBtn(['sourceName'])}
         routeApi="accounts"
-        error={errors.source_name}
+        error={errors.sourceName}
       />
 
       <AutocompleteField
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
-        value={formData.destination_name}
-        isInvalid={errors.destination_name !== ''}
+        value={formData.destinationName}
+        isInvalid={errors.destinationName !== ''}
         onChangeText={(value) => {
           setData({
             ...formData,
-            destination_name: value,
+            destinationName: value,
           });
         }}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
-          destination_name: autocomplete.name,
+          destinationName: autocomplete.name,
         })}
-        InputRightElement={deleteBtn(['destination_name'])}
+        InputRightElement={deleteBtn(['destinationName'])}
         routeApi="accounts"
         isDestination
-        error={errors.destination_name}
+        error={errors.destinationName}
       />
 
       <AutocompleteField
         label={translate('transaction_form_category_label')}
         placeholder={translate('transaction_form_category_label')}
-        value={formData.category_name}
-        isInvalid={errors.category_id !== ''}
+        value={formData.categoryName}
+        isInvalid={errors.categoryId !== ''}
         onChangeText={(value) => {
           setData({
             ...formData,
-            category_name: value,
+            categoryName: value,
           });
         }}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
-          category_id: autocomplete.id,
-          category_name: autocomplete.name,
+          categoryId: autocomplete.id,
+          categoryName: autocomplete.name,
         })}
-        InputRightElement={deleteBtn(['category_id', 'category_name'])}
+        InputRightElement={deleteBtn(['categoryId', 'categoryName'])}
         routeApi="categories"
-        error={errors.category_id}
+        error={errors.categoryId}
       />
 
       <AutocompleteField
         label={translate('transaction_form_budget_label')}
         placeholder={translate('transaction_form_budget_label')}
-        value={formData.budget_name}
-        isInvalid={errors.budget_id !== ''}
+        value={formData.budgetName}
+        isInvalid={errors.budgetId !== ''}
         onChangeText={(value) => {
           setData({
             ...formData,
-            budget_name: value,
+            budgetName: value,
           });
         }}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
-          budget_id: autocomplete.id,
-          budget_name: autocomplete.name,
+          budgetId: autocomplete.id,
+          budgetName: autocomplete.name,
         })}
-        InputRightElement={deleteBtn(['budget_id', 'budget_name'])}
+        InputRightElement={deleteBtn(['budgetId', 'budgetName'])}
         routeApi="budgets"
-        error={errors.budget_id}
+        error={errors.budgetId}
       />
 
       {success && !loading
@@ -376,15 +376,15 @@ const TransactionForm = ({
         onPress={() => {
           setData({
             date: new Date(),
-            source_name: '',
-            destination_name: '',
+            sourceName: '',
+            destinationName: '',
             description: '',
             amount: '',
             type: 'withdrawal',
-            budget_id: '',
-            budget_name: '',
-            category_id: '',
-            category_name: '',
+            budgetId: '',
+            budgetName: '',
+            categoryId: '',
+            categoryName: '',
           });
           resetErrors();
         }}

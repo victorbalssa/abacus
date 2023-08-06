@@ -54,7 +54,7 @@ export const localNumberFormat = (currencyCode, string) => {
   const [local] = getLocales();
   const formatter = new Intl.NumberFormat(local.languageTag, {
     style: 'currency',
-    currency: currencyCode,
+    currency: currencyCode || 'USD',
   });
 
   return formatter.format(string);
@@ -91,4 +91,29 @@ export const generateRangeTitle = (range: number, start: string, end: string): s
   }
 
   return title;
+};
+
+const snakeToCamel = (str) => str.replace(/(_\w)/g, (match) => match[1].toUpperCase());
+
+export const convertKeysToCamelCase = (data) => {
+  if (Array.isArray(data)) {
+    return data.map((item) => convertKeysToCamelCase(item));
+  }
+  if (typeof data === 'object' && data !== null) {
+    const camelCaseData = {};
+    Object.keys(data).forEach((key) => {
+      if (Object.hasOwn(data, key)) {
+        const camelKey = snakeToCamel(key);
+        if (typeof data[key] === 'object' && data[key] !== null) {
+          camelCaseData[camelKey] = convertKeysToCamelCase(data[key]);
+        } else {
+          camelCaseData[camelKey] = data[key];
+        }
+      }
+    });
+
+    return camelCaseData;
+  }
+
+  return data;
 };

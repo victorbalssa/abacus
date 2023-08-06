@@ -8,9 +8,9 @@ export type CurrencyType = {
     name: string,
     code: string,
     symbol: string,
-    decimal_places: number,
-    created_at: string,
-    updated_at: string
+    decimalPlaces: number,
+    createdAt: string,
+    updatedAt: string
   },
   id: string,
   links: {

@@ -12,14 +12,14 @@ import { generateRangeTitle } from '../lib/common';
 
 export type HomeDisplayType = {
   title: string,
-  value_parsed: string,
-  monetary_value: string,
-  currency_code: string,
+  valueParsed: string,
+  monetaryValue: string,
+  currencyCode: string,
 }
 
 export type AssetAccountType = {
   title: string,
-  value_parsed: string,
+  valueParsed: string,
   skip: boolean,
   color: string,
   colorScheme: string,
@@ -235,7 +235,7 @@ export default createModel<RootModel>()({
         const params = new URLSearchParams({
           start,
           end,
-          currency_code: current?.attributes.code,
+          currencyCode: current?.attributes.code,
         });
         const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
         const netWorth = [];

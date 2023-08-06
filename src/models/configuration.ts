@@ -1,8 +1,9 @@
-import { createModel } from '@rematch/core';
+import {createModel} from '@rematch/core';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import secureKeys from '../constants/oauth';
-import { RootModel } from './index';
+import {RootModel} from './index';
+import {convertKeysToCamelCase} from '../lib/common';
 
 export type ConfigurationStateType = {
   backendURL: string,
@@ -69,7 +70,12 @@ export default createModel<RootModel>()({
         console.log('GET  ', `${backendURL}${url}`);
         const response = await axios.get(`${backendURL}${url}`, config);
 
-        if (response.data) return response.data;
+        if (response.data) {
+          const responseData = response.data;
+
+          // recursively convert snake_case keys to camelCase
+          return convertKeysToCamelCase(responseData);
+        }
 
         return response;
       }

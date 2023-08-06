@@ -41,49 +41,45 @@ const ListFooterComponent: FC = () => {
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
   const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions.getMoreTransactions);
 
-  return useMemo(() => (
-    <>
-      {(loadingRefresh || loadingMore) && (
-        <>
-          <Box
-            h={ITEM_HEIGHT}
-            paddingLeft={2}
-            backgroundColor={colors.tileBackgroundColor}
-            borderBottomWidth={1}
-            borderColor={colors.listBorderColor}
-            justifyContent="center"
-          >
-            <Box px={2}>
-              <HStack justifyContent="space-between" alignItems="flex-start" space={3}>
-                <HStack alignItems="flex-start">
-                  <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
-                  <Skeleton.Text w={145} lines={3} />
-                </HStack>
-                <Skeleton w={75} h={8} rounded={10} />
-              </HStack>
-            </Box>
-          </Box>
-          <Box
-            h={ITEM_HEIGHT}
-            paddingLeft={2}
-            backgroundColor={colors.tileBackgroundColor}
-            borderBottomWidth={1}
-            borderColor={colors.listBorderColor}
-            justifyContent="center"
-          >
-            <Box px={2}>
-              <HStack justifyContent="space-between" alignItems="flex-start" space={3}>
-                <HStack alignItems="flex-start">
-                  <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
-                  <Skeleton.Text w={145} lines={3} />
-                </HStack>
-                <Skeleton w={75} h={8} rounded={10} />
-              </HStack>
-            </Box>
-          </Box>
-        </>
-      )}
-    </>
+  return useMemo(() => (loadingRefresh || loadingMore) && (
+  <>
+    <Box
+      h={ITEM_HEIGHT}
+      paddingLeft={2}
+      backgroundColor={colors.tileBackgroundColor}
+      borderBottomWidth={1}
+      borderColor={colors.listBorderColor}
+      justifyContent="center"
+    >
+      <Box px={2}>
+        <HStack justifyContent="space-between" alignItems="flex-start" space={3}>
+          <HStack alignItems="flex-start">
+            <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
+            <Skeleton.Text w={145} lines={3} />
+          </HStack>
+          <Skeleton w={75} h={8} rounded={10} />
+        </HStack>
+      </Box>
+    </Box>
+    <Box
+      h={ITEM_HEIGHT}
+      paddingLeft={2}
+      backgroundColor={colors.tileBackgroundColor}
+      borderBottomWidth={1}
+      borderColor={colors.listBorderColor}
+      justifyContent="center"
+    >
+      <Box px={2}>
+        <HStack justifyContent="space-between" alignItems="flex-start" space={3}>
+          <HStack alignItems="flex-start">
+            <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
+            <Skeleton.Text w={145} lines={3} />
+          </HStack>
+          <Skeleton w={75} h={8} rounded={10} />
+        </HStack>
+      </Box>
+    </Box>
+  </>
   ), [
     loadingRefresh,
     loadingMore,
@@ -198,7 +194,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
               maxW={170}
               numberOfLines={1}
             >
-              {`${item.attributes.transactions[0].type === 'withdrawal' ? `${item.attributes.transactions[0].source_name}` : `${item.attributes.transactions[0].destination_name}`}`}
+              {`${item.attributes.transactions[0].type === 'withdrawal' ? `${item.attributes.transactions[0].sourceName}` : `${item.attributes.transactions[0].destinationName}`}`}
             </Text>
 
             <Text
@@ -207,7 +203,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
               maxW={170}
               numberOfLines={1}
             >
-              {`${moment(item.attributes.transactions[0].date).format('ll')} ${item.attributes.transactions[0].category_name ? `• ${item.attributes.transactions[0].category_name}` : ''}`}
+              {`${moment(item.attributes.transactions[0].date).format('ll')} ${item.attributes.transactions[0].categoryName ? `• ${item.attributes.transactions[0].categoryName}` : ''}`}
             </Text>
           </VStack>
         </HStack>
@@ -224,7 +220,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
             fontFamily="Montserrat_Bold"
             style={{ color: getTransactionTypeAttributes(item.attributes.transactions[0].type).color }}
           >
-            {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currency_code, item.attributes.transactions[0].amount)}`}
+            {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currencyCode, item.attributes.transactions[0].amount)}`}
           </Text>
         </Box>
       </HStack>
@@ -238,7 +234,7 @@ const deleteAlert = async (transaction: TransactionType, rowMap, closeRow, delet
     translate('transaction_list_alert_title'),
     `${translate('transaction_list_alert_text')}\n`
     + `${transaction?.attributes?.transactions[0]?.description}\n`
-    + `${moment(transaction?.attributes?.transactions[0]?.date).format('ll')} ${transaction?.attributes?.transactions[0]?.category_name ? `• ${transaction?.attributes?.transactions[0]?.category_name}` : ''}\n`,
+    + `${moment(transaction?.attributes?.transactions[0]?.date).format('ll')} ${transaction?.attributes?.transactions[0]?.categoryName ? `• ${transaction?.attributes?.transactions[0]?.categoryName}` : ''}\n`,
     [
       {
         text: translate('transaction_list_delete_button'),
@@ -384,7 +380,7 @@ const TransactionsSwipeList: FC = () => {
   ), [transactions, loadingRefresh]);
 };
 
-const TransactionsScreen = () => {
+function TransactionsScreen() {
   const { colors } = useThemeColors();
   const safeAreaInsets = useSafeAreaInsets();
 
@@ -399,6 +395,6 @@ const TransactionsScreen = () => {
       <TransactionsSwipeList />
     </View>
   );
-};
+}
 
 export default TransactionsScreen;

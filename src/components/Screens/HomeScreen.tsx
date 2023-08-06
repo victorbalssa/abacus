@@ -33,11 +33,7 @@ import TabControl from '../UI/TabControl';
 
 const InsightCategories: FC = () => {
   const { colors } = useThemeColors();
-  const {
-    categories: {
-      getInsightCategories,
-    },
-  } = useDispatch<RootDispatch>();
+  const dispatch = useDispatch<RootDispatch>();
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
   const { loading } = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories);
 
@@ -46,7 +42,10 @@ const InsightCategories: FC = () => {
       refreshControl={(
         <RefreshControl
           refreshing={false}
-          onRefresh={getInsightCategories}
+          onRefresh={() => Promise.all([
+            dispatch.categories.getInsightCategories(),
+            dispatch.firefly.getNetWorth(),
+          ])}
           tintColor={colors.brandStyle}
         />
       )}
@@ -69,7 +68,7 @@ const InsightCategories: FC = () => {
 
             {!loading ? (
               <Text>
-                {localNumberFormat(category.currency_code, category.difference_float)}
+                {localNumberFormat(category.currencyCode, category.differenceFloat)}
               </Text>
             ) : (
               <Skeleton w={70} h={5} rounded={15} />
@@ -84,12 +83,8 @@ const InsightCategories: FC = () => {
 
 const InsightBudgets: FC = () => {
   const { colors } = useThemeColors();
-  const {
-    budgets: {
-      getInsightBudgets,
-    },
-  } = useDispatch<RootDispatch>();
-  const insightBudgets = useSelector((state: RootState) => state.budgets.insightBudgets);
+  const dispatch = useDispatch<RootDispatch>();
+  const insightBudgets = useSelector((state: RootState) => state.budgets.budgets);
   const { loading } = useSelector((state: RootState) => state.loading.effects.budgets.getInsightBudgets);
 
   return (
@@ -97,7 +92,10 @@ const InsightBudgets: FC = () => {
       refreshControl={(
         <RefreshControl
           refreshing={false}
-          onRefresh={getInsightBudgets}
+          onRefresh={() => Promise.all([
+            dispatch.budgets.getInsightBudgets(),
+            dispatch.firefly.getNetWorth(),
+          ])}
           tintColor={colors.brandStyle}
         />
       )}
@@ -105,7 +103,7 @@ const InsightBudgets: FC = () => {
       <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
         {insightBudgets.map((budget, index) => (
           <Stack
-            key={budget.name}
+            key={budget.attributes.name}
           >
             <VStack
               ml={5}
@@ -121,22 +119,22 @@ const InsightBudgets: FC = () => {
                 alignItems="center"
               >
                 <Text>
-                  {budget.name}
+                  {budget.attributes.name}
                 </Text>
 
                 {!loading ? (
                   <Text>
-                    {localNumberFormat(budget.currency_code, budget.difference_float)}
+                    {localNumberFormat(budget.currencyCode, budget.differenceFloat)}
                     /
-                    {localNumberFormat(budget.currency_code, budget.limit)}
+                    {localNumberFormat(budget.currencyCode, budget.limit)}
                   </Text>
                 ) : (
                   <Skeleton w={140} h={5} rounded={15} />
                 )}
               </HStack>
               <Progress
-                colorScheme={-budget.difference_float > budget.limit ? 'danger' : 'success'}
-                value={((-budget.difference_float * 100) / budget.limit) || 0}
+                colorScheme={-budget.differenceFloat > budget.limit ? 'danger' : 'success'}
+                value={((-budget.differenceFloat * 100) / budget.limit) || 0}
                 h={3}
                 my={2}
               />
@@ -151,11 +149,7 @@ const InsightBudgets: FC = () => {
 
 const AssetsAccounts: FC = () => {
   const { colors } = useThemeColors();
-  const {
-    accounts: {
-      getAccounts,
-    },
-  } = useDispatch<RootDispatch>();
+  const dispatch = useDispatch<RootDispatch>();
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
   const { loading } = useSelector((state: RootState) => state.loading.effects.accounts.getAccounts);
 
@@ -164,7 +158,10 @@ const AssetsAccounts: FC = () => {
       refreshControl={(
         <RefreshControl
           refreshing={false}
-          onRefresh={getAccounts}
+          onRefresh={() => Promise.all([
+            dispatch.accounts.getAccounts(),
+            dispatch.firefly.getNetWorth(),
+          ])}
           tintColor={colors.brandStyle}
         />
       )}
@@ -185,13 +182,13 @@ const AssetsAccounts: FC = () => {
               {account.attributes.name}
               {' '}
               <Text style={{ fontSize: 10 }}>
-                {account.attributes.include_net_worth ? '' : '(*)'}
+                {account.attributes.includeNetWorth ? '' : '(*)'}
               </Text>
             </Text>
 
             {!loading ? (
               <Text>
-                {localNumberFormat(account.attributes.currency_code, account.attributes.current_balance)}
+                {localNumberFormat(account.attributes.currencyCode, account.attributes.currentBalance)}
               </Text>
             ) : (
               <Skeleton w={70} h={5} rounded={15} />
@@ -224,7 +221,7 @@ const NetWorth: FC = () => {
                 fontFamily: 'Montserrat_Bold',
               }}
             >
-              {localNumberFormat(netWorth[0].currency_code, netWorth[0].monetary_value)}
+              {localNumberFormat(netWorth[0].currencyCode, netWorth[0].monetaryValue)}
             </Text>
           ) : (
             <Skeleton w={170} h={8} rounded={15} />
@@ -235,7 +232,7 @@ const NetWorth: FC = () => {
             color: 'gray',
           }}
           >
-            {`${translate('home_net_worth')} (${netWorth[0].currency_code})`}
+            {`${translate('home_net_worth')} (${netWorth[0].currencyCode})`}
           </Text>
         </VStack>
       )}
@@ -244,7 +241,7 @@ const NetWorth: FC = () => {
         <VStack p={1} pb={2} justifyContent="center" alignItems="center">
           {!loading ? (
             <Box style={{
-              backgroundColor: parseFloat(balance[0].monetary_value) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
+              backgroundColor: parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
               borderRadius: 10,
               paddingHorizontal: 5,
             }}
@@ -253,10 +250,10 @@ const NetWorth: FC = () => {
                 fontSize: 13,
                 fontFamily: 'Montserrat_Bold',
                 textAlign: 'center',
-                color: parseFloat(balance[0].monetary_value) < 0 ? colors.brandNeutral : colors.brandSuccess,
+                color: parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess,
               }}
               >
-                {`${parseFloat(balance[0].monetary_value) > 0 ? '+' : ''}${localNumberFormat(balance[0].currency_code, balance[0].monetary_value)}`}
+                {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, balance[0].monetaryValue)}`}
               </Text>
             </Box>
           ) : (
