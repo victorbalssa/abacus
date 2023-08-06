@@ -39,7 +39,6 @@
     "expo-build-properties": "~0.8.3",
     "expo-clipboard": "~4.3.0",
     "expo-dev-client": "~2.4.6",
-    "expo-dev-launcher": "^2.4.9",
     "expo-device": "~5.4.0",
     "expo-font": "~11.4.0",
     "expo-haptics": "~12.4.0",
