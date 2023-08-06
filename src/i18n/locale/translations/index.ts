@@ -1,3 +1,4 @@
+import deDE from './de-DE';
 import enUS from './en-US';
 import ptBR from './pt-BR';
 import frFR from './fr-FR';
@@ -6,12 +7,14 @@ import idID from './id-ID';
 import zh from './zh';
 
 export default {
+  de: deDE,
   en: enUS,
   pt: ptBR,
   fr: frFR,
   es: esES,
   id: idID,
   zh,
+  'de-DE': deDE,
   'en-US': enUS,
   'pt-BR': ptBR,
   'fr-FR': frFR,
