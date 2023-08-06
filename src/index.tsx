@@ -75,7 +75,6 @@ const App: FC = () => {
       MaterialCommunityIcons.font,
       MaterialIcons.font,
     ]);
-    console.log(moment.locales());
 
     await Promise.all([fontAssets]);
   };
@@ -91,7 +90,7 @@ const App: FC = () => {
 
   const onCheckOTA = async () => {
     try {
-      if (Device.isDevice) {
+      if (Device.isDevice && !__DEV__) {
         const update = await Updates.checkForUpdateAsync();
 
         if (update.isAvailable) {

@@ -12,28 +12,25 @@ export type TransactionSplitType = {
   date: string,
   sourceName: string,
   destinationName: string,
+  order: number
 }
 
 export type TransactionType = {
+  id: string
+  type: string
   attributes: {
-    name: string,
-    transactions: TransactionSplitType[],
+    groupTitle: string
+    transactions: TransactionSplitType[]
+    user: string
+    createdAt: string
+    updatedAt: string
   },
-  id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
-  type: string,
 }
 
 export type TransactionStateType = {
-  transactions: TransactionType[],
-  page: number,
-  totalPages: number,
+  transactions: TransactionType[]
+  page: number
+  totalPages: number
 }
 
 const INITIAL_STATE = {

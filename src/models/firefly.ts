@@ -235,7 +235,7 @@ export default createModel<RootModel>()({
         const params = new URLSearchParams({
           start,
           end,
-          currencyCode: current?.attributes.code,
+          currency_code: current?.attributes.code,
         });
         const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
         const netWorth = [];

@@ -49,17 +49,14 @@ const ListFooterComponent: FC = () => {
       backgroundColor={colors.tileBackgroundColor}
       borderTopWidth={1}
       borderColor={colors.listBorderColor}
-      justifyContent="center"
     >
-      <Box px={2}>
-        <HStack justifyContent="space-between" alignItems="flex-start" space={3}>
-          <HStack alignItems="flex-start">
-            <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
-            <Skeleton.Text w={145} lines={3} />
-          </HStack>
-          <Skeleton w={75} h={8} rounded={10} />
+      <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
+        <HStack>
+          <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
+          <Skeleton.Text w={130} ml={2} lines={3} />
         </HStack>
-      </Box>
+        <Skeleton w={75} h={8} rounded={10} />
+      </HStack>
     </Box>
     <Box
       h={ITEM_HEIGHT}
@@ -67,17 +64,14 @@ const ListFooterComponent: FC = () => {
       backgroundColor={colors.tileBackgroundColor}
       borderTopWidth={1}
       borderColor={colors.listBorderColor}
-      justifyContent="center"
     >
-      <Box px={2}>
-        <HStack justifyContent="space-between" alignItems="flex-start" space={3}>
-          <HStack alignItems="flex-start">
-            <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
-            <Skeleton.Text w={145} lines={3} />
-          </HStack>
-          <Skeleton w={75} h={8} rounded={10} />
+      <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
+        <HStack>
+          <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
+          <Skeleton.Text w={130} ml={2} lines={3} />
         </HStack>
-      </Box>
+        <Skeleton w={75} h={8} rounded={10} />
+      </HStack>
     </Box>
   </>
   ), [
@@ -185,7 +179,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
               numberOfLines={1}
               paddingTop={3}
             >
-              {item.attributes.transactions[0].description}
+              {item.attributes.transactions.length > 1 ? item.attributes.groupTitle : item.attributes.transactions[0].description}
             </Text>
 
             <Text
@@ -220,10 +214,15 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
             fontFamily="Montserrat_Bold"
             style={{ color: getTransactionTypeAttributes(item.attributes.transactions[0].type).color }}
           >
-            {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currencyCode, item.attributes.transactions[0].amount)}`}
+            {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currencyCode, item.attributes.transactions.reduce((total, split) => total + parseFloat(split.amount), 0))}`}
           </Text>
         </Box>
       </HStack>
+      {item.attributes.transactions.length > 1 && (
+        <Text fontSize="xs">
+          {`${item.attributes.transactions.length} split(s)`}
+        </Text>
+      )}
     </Pressable>
   ), [item]);
 };
