@@ -94,7 +94,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (current && current.attributes.code) {
-        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current.attributes.code}/accounts?type=asset&date=${end}` });
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current.attributes.code}/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
 
         dispatch.accounts.setAccounts({ accounts });
       }

@@ -6,10 +6,20 @@ import secureKeys from '../constants/oauth';
 import { RootModel } from './index';
 import { convertKeysToCamelCase } from '../lib/common';
 
-export type ConfigurationStateType = {
+type ConfigurationStateType = {
   backendURL: string,
   scrollEnabled: boolean,
   faceId: boolean,
+}
+
+type FireflyIIIApiResponse = {
+  data: unknown,
+  meta?: {
+    pagination: {
+      currentPage: number
+      totalPages: number
+    }
+  },
 }
 
 const INITIAL_STATE = {
@@ -60,7 +70,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiFetch({ url, config }, rootState): Promise<AxiosResponse> {
+    async apiFetch({ url, config }, rootState): Promise<FireflyIIIApiResponse> {
       const {
         configuration: {
           backendURL,
@@ -72,10 +82,13 @@ export default createModel<RootModel>()({
         const response = await axios.get(`${backendURL}${url}`, config);
 
         if (response.data) {
-          const responseData = response.data;
+          const responseData = response.data.data || response.data;
 
           // recursively convert snake_case keys to camelCase
-          return convertKeysToCamelCase(responseData);
+          return {
+            data: convertKeysToCamelCase(responseData),
+            meta: response.data.meta,
+          };
         }
 
         return response;

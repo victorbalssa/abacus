@@ -1,31 +1,24 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-export type CurrencyType = {
+type CurrencyType = {
+  id: string
+  type: string
   attributes: {
-    enabled: boolean,
-    default: boolean,
-    name: string,
-    code: string,
-    symbol: string,
-    decimalPlaces: number,
-    createdAt: string,
+    enabled: boolean
+    default: boolean
+    name: string
+    code: string
+    symbol: string
+    decimalPlaces: number
+    createdAt: string
     updatedAt: string
   },
-  id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
-  type: string,
 }
 
-export type CurrencyStateType = {
-  currencies: CurrencyType[],
-  current: CurrencyType,
+type CurrencyStateType = {
+  currencies: CurrencyType[]
+  current: CurrencyType
 }
 
 const INITIAL_STATE = {
@@ -79,7 +72,7 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      const { data: currencies } = await dispatch.configuration.apiFetch({ url: '/api/v1/currencies' });
+      const { data: currencies } = await dispatch.configuration.apiFetch({ url: '/api/v1/currencies' }) as { data: CurrencyType[] };
 
       dispatch.currencies.setCurrencies({
         currencies: currencies.filter((c: CurrencyType) => c.attributes.enabled === true),

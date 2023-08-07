@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-export type BudgetSpentType = {
+type BudgetSpentType = {
   sum: string
   currencyId: string
   currencyCode: string
@@ -9,7 +9,7 @@ export type BudgetSpentType = {
   currencyDecimalPlaces: number
 }
 
-export type BudgetType = {
+type BudgetType = {
   id: string
   attributes: {
     name: string
@@ -25,7 +25,15 @@ export type BudgetType = {
   differenceFloat: number,
 }
 
-export type BudgetsStateType = {
+type BudgetLimitType = {
+  attributes: {
+    currencyCode: string,
+    budgetId: string
+    amount: string
+  },
+}
+
+type BudgetsStateType = {
   budgets: BudgetType[],
 }
 
@@ -73,8 +81,8 @@ export default createModel<RootModel>()({
         },
       } = rootState;
       if (current && current.attributes.code) {
-        const { data: budgets } = await dispatch.configuration.apiFetch({ url: `/api/v1/budgets?start=${start}&end=${end}` });
-        const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` });
+        const { data: budgets } = await dispatch.configuration.apiFetch({ url: `/api/v1/budgets?start=${start}&end=${end}` }) as { data: BudgetType[] };
+        const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` }) as { data: BudgetLimitType[] };
         const budgetsLimits = {};
 
         apiBudgetsLimits
@@ -96,7 +104,7 @@ export default createModel<RootModel>()({
             }
           });
 
-        const filteredBudgets: BudgetType = budgets
+        const filteredBudgets: BudgetType[] = budgets
           .sort((a, b) => ((a.attributes.order > b.attributes.order) ? 1 : -1))
           .map((budget: BudgetType) => ({
             limit: budgetsLimits[budget.id] || 0,
