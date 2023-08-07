@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import {
   Text,
   VStack,
@@ -22,12 +22,21 @@ import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
 import { useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
+import { Dimensions } from 'react-native';
 import Loading from '../UI/Loading';
 import { translate } from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import { RootState } from '../../store';
 
-const AccountsLengthMessage:FC = () => {
+const { height: D_HEIGHT, width: D_WIDTH } = (() => {
+  const { width, height } = Dimensions.get('window');
+  if (width === 0 && height === 0) {
+    return Dimensions.get('screen');
+  }
+  return { width, height };
+})();
+
+function AccountsLengthMessage() {
   const { colors } = useThemeColors();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
 
@@ -51,101 +60,109 @@ const AccountsLengthMessage:FC = () => {
       </Text>
     </View>
   );
-};
+}
 
-const CursorPointer = ({
+function CursorPointer({
   x,
   y,
   stroke,
-}) => (
-  <>
-    <Circle cx={x} cy={y} r="10" fill={stroke} />
-    <Circle cx={x} cy={y} r="7" fill="#fff" />
-  </>
-);
+}) {
+  return (
+    <>
+      <Circle cx={x} cy={y} r="10" fill={stroke} />
+      <Circle cx={x} cy={y} r="7" fill="#fff" />
+    </>
+  );
+}
 
-const Cursor = ({
-  x, y, minY, maxY, activePoints,
-}) => (
-  <>
-    <VStack ml={2} h={100} top={-100} borderTopRadius={15} mr={5}>
-      <HStack
-        justifyContent="center"
-        minW={100}
-      >
-        <Text fontWeight={600} pt={2} fontSize={18}>
-          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-          }) : '  '}`}
-        </Text>
-      </HStack>
-      <VStack
-        position="absolute"
-        left={x < 300 ? x - 35 : undefined}
-        right={0}
-        bottom={0}
-        marginLeft="auto"
-        marginRight="auto"
-        minW={100}
-      >
-        <ScrollView maxHeight={110}>
-          {activePoints.map(({
-            y: yPoint, childName, style,
-          }) => {
-            const {
-              data: {
-                stroke,
-              },
-            } = style;
+function Cursor({
+  x,
+  y,
+  minY,
+  maxY,
+  activePoints,
+}) {
+  return (
+    <>
+      <VStack ml={2} h={100} top={-100} borderTopRadius={15} mr={5}>
+        <HStack
+          justifyContent="center"
+          minW={100}
+        >
+          <Text fontWeight={600} pt={2} fontSize={18}>
+            {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            }) : '  '}`}
+          </Text>
+        </HStack>
+        <VStack
+          position="absolute"
+          left={x < Dimensions.get('window').width - 90 ? x - 35 : undefined}
+          right={0}
+          bottom={0}
+          marginLeft="auto"
+          marginRight="auto"
+          minW={100}
+        >
+          <ScrollView maxHeight={110}>
+            {activePoints.map(({
+              y: yPoint, childName, style,
+            }) => {
+              const {
+                data: {
+                  stroke,
+                },
+              } = style;
 
-            return (
-              <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontWeight={600} fontSize={12}>
-                {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
-              </Text>
-            );
-          })}
-        </ScrollView>
+              return (
+                <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontWeight={600} fontSize={12}>
+                  {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
+                </Text>
+              );
+            })}
+          </ScrollView>
+        </VStack>
       </VStack>
-    </VStack>
-    <Line
-      strokeDasharray="5, 5"
-      stroke="#676767"
-      strokeWidth={2}
-      x1={x}
-      x2={x}
-      y1={10}
-      y2={299}
-    />
-    {activePoints.map(({
-      y: yPoint, childName, style,
-    }) => {
-      const {
-        data: {
-          stroke,
-        },
-      } = style;
-      const yMinDisplay = maxY <= 0 ? 10 : 12;
-      const yMaxDisplay = minY !== 0 ? 294 : 296;
-      const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
-      const yCursorPoint = ((-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay)) || 0;
+      <Line
+        strokeDasharray="5, 5"
+        stroke="#676767"
+        strokeWidth={2}
+        x1={x}
+        x2={x}
+        y1={10}
+        y2={299}
+      />
+      {activePoints.map(({
+        y: yPoint, childName, style,
+      }) => {
+        const {
+          data: {
+            stroke,
+          },
+        } = style;
+        const yMinDisplay = maxY <= 0 ? 10 : 12;
+        const yMaxDisplay = minY !== 0 ? 294 : 296;
+        const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
+        const yCursorPoint = ((-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay)) || 0;
 
-      return (
-        <CursorPointer key={y + childName} stroke={stroke} x={x} y={yCursorPoint} />
-      );
-    })}
-  </>
-);
+        return (
+          <CursorPointer key={y + childName} stroke={stroke} x={x} y={yCursorPoint} />
+        );
+      })}
+    </>
+  );
+}
 
-const AssetsHistoryChart = ({
+export default function AssetsHistoryChart({
   loading,
   fetchData,
   start,
   end,
   accounts,
   filterData,
-}) => {
+}) {
   const { colors } = useThemeColors();
   const getTickValues = () => {
     const dateArray = [];
@@ -253,7 +270,7 @@ const AssetsHistoryChart = ({
                   maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY || 0}
                   minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY || 0}
                 />
-                )}
+              )}
             />
           )}
         >
@@ -302,6 +319,4 @@ const AssetsHistoryChart = ({
       {accounts.length > 4 && (<AccountsLengthMessage />)}
     </VStack>
   );
-};
-
-export default AssetsHistoryChart;
+}
