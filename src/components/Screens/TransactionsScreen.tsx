@@ -179,7 +179,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
               numberOfLines={1}
               paddingTop={3}
             >
-              {item.attributes.transactions.length > 1 ? item.attributes.groupTitle : item.attributes.transactions[0].description}
+              {item.attributes.transactions.length > 1 ? `${item.attributes.transactions.length} splits • ${item.attributes.groupTitle}` : item.attributes.transactions[0].description}
             </Text>
 
             <Text
@@ -218,11 +218,6 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
           </Text>
         </Box>
       </HStack>
-      {item.attributes.transactions.length > 1 && (
-        <Text fontSize="xs">
-          {`${item.attributes.transactions.length} split(s)`}
-        </Text>
-      )}
     </Pressable>
   ), [item]);
 };
