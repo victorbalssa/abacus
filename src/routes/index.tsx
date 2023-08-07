@@ -1,15 +1,21 @@
-import React, { FC } from 'react';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import React from 'react';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  useNavigation,
+  CommonActions,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  BottomTabBar,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Box, IconButton } from 'native-base';
-import {
-  StyleSheet, Platform, View,
-} from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 
-import { translate } from '../i18n/locale';
+import translate from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
 
 // Screens
@@ -61,58 +67,107 @@ const styles = StyleSheet.create({
   },
 });
 
-const TabBarPrimaryButton = ({ onPress }) => (
-  <Box style={styles.container} pointerEvents="box-none">
-    <IconButton
-      _icon={{
-        as: AntDesign,
-        name: 'plus',
-      }}
-      onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
-      onPress={onPress}
-      _pressed={{
-        style: {
+function TabBarPrimaryButton() {
+  const navigation = useNavigation();
+
+  return (
+    <Box style={styles.container} pointerEvents="box-none">
+      <IconButton
+        _icon={{
+          as: AntDesign,
+          name: 'plus',
+        }}
+        onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+        onPress={() => navigation.dispatch(CommonActions.navigate({ name: 'TransactionCreateModal' }))}
+        _pressed={{
+          style: {
+            top: -15,
+          },
+        }}
+        style={{
           top: -15,
-        },
-      }}
-      style={{
-        top: -15,
-      }}
+        }}
+      />
+    </Box>
+  );
+}
+
+function PrimaryButtonComponent() {
+  return <View />;
+}
+
+function TabBarComponent({
+  state,
+  descriptors,
+  navigation,
+  insets,
+}) {
+  return (
+    <>
+      <ThemeBlurView
+        style={{
+          ...styles.navigatorContainer,
+          borderTopWidth: 0.5,
+        }}
+      >
+        <BottomTabBar
+          state={state}
+          descriptors={descriptors}
+          navigation={navigation}
+          insets={insets}
+        />
+      </ThemeBlurView>
+      <NavigationHeader navigationState={state} />
+    </>
+  );
+}
+
+function TabBarChartScreenIcon({ color }) {
+  return (
+    <AntDesign
+      name="linechart"
+      size={20}
+      color={color}
     />
-  </Box>
-);
+  );
+}
 
-const PrimaryButtonComponent = () => <View />;
+function TabBarHomeScreenIcon({ color }) {
+  return (
+    <Foundation
+      name="home"
+      size={24}
+      color={color}
+    />
+  );
+}
 
-const Home: FC = () => {
+function TabBarTransactionScreenIcon({ color }) {
+  return (
+    <AntDesign
+      name="bars"
+      size={25}
+      color={color}
+    />
+  );
+}
+
+function TabBarConfigurationScreenIcon({ color }) {
+  return (
+    <AntDesign
+      name="setting"
+      size={22}
+      color={color}
+    />
+  );
+}
+
+function Home() {
   const { colors } = useThemeColors();
 
   return (
     <Tab.Navigator
-      tabBar={({
-        state,
-        descriptors,
-        navigation,
-        insets,
-      }) => (
-        <>
-          <ThemeBlurView
-            style={{
-              ...styles.navigatorContainer,
-              borderTopWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <BottomTabBar
-              state={state}
-              descriptors={descriptors}
-              navigation={navigation}
-              insets={insets}
-            />
-          </ThemeBlurView>
-          <NavigationHeader navigationState={state} />
-        </>
-      )}
+      tabBar={TabBarComponent}
       screenOptions={() => ({
         tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
         tabBarActiveBackgroundColor: colors.tabBackgroundColor,
@@ -138,68 +193,42 @@ const Home: FC = () => {
         name={translate('navigation_home_tab')}
         component={HomeScreen}
         options={{
-          tabBarIcon: (icon) => (
-            <Foundation
-              name="home"
-              size={24}
-              color={icon.color}
-            />
-          ),
+          tabBarIcon: TabBarHomeScreenIcon,
         }}
       />
       <Tab.Screen
         name={translate('navigation_chart_tab')}
         component={ChartScreen}
         options={{
-          tabBarIcon: (icon) => (
-            <AntDesign
-              name="linechart"
-              size={20}
-              color={icon.color}
-            />
-          ),
+          tabBarIcon: TabBarChartScreenIcon,
         }}
       />
       <Tab.Screen
         name={translate('navigation_create_tab')}
         component={PrimaryButtonComponent}
-        options={({ navigation }) => ({
-          tabBarButton: () => (
-            <TabBarPrimaryButton onPress={() => navigation.navigate('TransactionCreateModal')} />
-          ),
-        })}
+        options={{
+          tabBarButton: TabBarPrimaryButton,
+        }}
       />
       <Tab.Screen
         name={translate('navigation_transactions_tab')}
         component={TransactionsScreen}
         options={{
-          tabBarIcon: (icon) => (
-            <AntDesign
-              name="bars"
-              size={25}
-              color={icon.color}
-            />
-          ),
+          tabBarIcon: TabBarTransactionScreenIcon,
         }}
       />
       <Tab.Screen
         name={translate('navigation_settings_tab')}
         component={ConfigurationScreen}
         options={{
-          tabBarIcon: (icon) => (
-            <AntDesign
-              name="setting"
-              size={22}
-              color={icon.color}
-            />
-          ),
+          tabBarIcon: TabBarConfigurationScreenIcon,
         }}
       />
     </Tab.Navigator>
   );
-};
+}
 
-const Index: FC = () => {
+export default function Index() {
   const { colors } = useThemeColors();
 
   return (
@@ -239,6 +268,4 @@ const Index: FC = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
-
-export default Index;
+}

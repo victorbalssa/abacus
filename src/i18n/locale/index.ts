@@ -15,10 +15,6 @@ i18n.defaultLocale = 'en-US';
 i18n.locale = Localization.locale;
 moment.locale(Localization.locale);
 
-export function getKeyByValue(object, value: string) {
-  return Object.keys(object).find((key) => object[key] === value);
-}
-
-export function translate(value: string, option: TranslateOptions = null) {
+export default function translate(value: string, option: TranslateOptions = null) {
   return i18n.t(value, option);
 }

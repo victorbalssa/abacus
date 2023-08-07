@@ -1,14 +1,10 @@
 import React, {
-  useEffect, FC, useMemo, useState, useRef, useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+  useCallback,
 } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RefreshControl } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
-import axios from 'axios';
-import { TokenResponse } from 'expo-auth-session';
-import * as LocalAuthentication from 'expo-local-authentication';
 import {
   Box,
   HStack,
@@ -21,17 +17,25 @@ import {
   View,
   VStack,
 } from 'native-base';
+import { useSelector, useDispatch } from 'react-redux';
+import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { RefreshControl } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
+import { TokenResponse } from 'expo-auth-session';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 import { RootDispatch, RootState } from '../../store';
 import secureKeys from '../../constants/oauth';
 import ToastAlert from '../UI/ToastAlert';
-import { ScreenType } from './types';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 import Filters from '../UI/Filters';
 import TabControl from '../UI/TabControl';
+import { ScreenType } from './types';
 
-const InsightCategories: FC = () => {
+function InsightCategories() {
   const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
@@ -50,7 +54,13 @@ const InsightCategories: FC = () => {
         />
       )}
     >
-      <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
+      <Box
+        mt={1}
+        backgroundColor={colors.tileBackgroundColor}
+        borderTopWidth={1}
+        borderBottomWidth={1}
+        borderColor={colors.listBorderColor}
+      >
         {insightCategories.map((category, index) => (
           <HStack
             key={category.name}
@@ -79,9 +89,9 @@ const InsightCategories: FC = () => {
       <View style={{ height: 150 }} />
     </ScrollView>
   );
-};
+}
 
-const InsightBudgets: FC = () => {
+function InsightBudgets() {
   const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
   const insightBudgets = useSelector((state: RootState) => state.budgets.budgets);
@@ -100,7 +110,13 @@ const InsightBudgets: FC = () => {
         />
       )}
     >
-      <Box mt={1} backgroundColor={colors.tileBackgroundColor} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
+      <Box
+        mt={1}
+        backgroundColor={colors.tileBackgroundColor}
+        borderTopWidth={1}
+        borderBottomWidth={1}
+        borderColor={colors.listBorderColor}
+      >
         {insightBudgets.map((budget, index) => (
           <Stack
             key={budget.attributes.name}
@@ -145,9 +161,9 @@ const InsightBudgets: FC = () => {
       <View style={{ height: 150 }} />
     </ScrollView>
   );
-};
+}
 
-const AssetsAccounts: FC = () => {
+function AssetsAccounts() {
   const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
@@ -166,7 +182,13 @@ const AssetsAccounts: FC = () => {
         />
       )}
     >
-      <Box backgroundColor={colors.tileBackgroundColor} mt={1} borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor}>
+      <Box
+        backgroundColor={colors.tileBackgroundColor}
+        mt={1}
+        borderTopWidth={1}
+        borderBottomWidth={1}
+        borderColor={colors.listBorderColor}
+      >
         {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
           <HStack
             key={account.attributes.name}
@@ -199,9 +221,9 @@ const AssetsAccounts: FC = () => {
       <View style={{ height: 150 }} />
     </ScrollView>
   );
-};
+}
 
-const NetWorth: FC = () => {
+function NetWorth() {
   const { colors } = useThemeColors();
   const netWorth = useSelector((state: RootState) => state.firefly.netWorth);
   const balance = useSelector((state: RootState) => state.firefly.balance);
@@ -263,9 +285,9 @@ const NetWorth: FC = () => {
       )}
     </View>
   );
-};
+}
 
-const HomeScreen: FC = ({ navigation }: ScreenType) => {
+export default function HomeScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
   const toast = useToast();
   const safeAreaInsets = useSafeAreaInsets();
@@ -371,7 +393,17 @@ const HomeScreen: FC = ({ navigation }: ScreenType) => {
         backgroundColor: colors.backgroundColor,
       }}
     >
-      <HStack justifyContent="space-between" mx={4} mt={4} py={2} px={4} backgroundColor={colors.tileBackgroundColor} borderRadius={10} borderWidth={1} borderColor={colors.listBorderColor}>
+      <HStack
+        justifyContent="space-between"
+        mx={4}
+        mt={4}
+        py={2}
+        px={4}
+        backgroundColor={colors.tileBackgroundColor}
+        borderRadius={10}
+        borderWidth={1}
+        borderColor={colors.listBorderColor}
+      >
         <NetWorth />
         <Filters />
       </HStack>
@@ -391,6 +423,4 @@ const HomeScreen: FC = ({ navigation }: ScreenType) => {
     balance,
     tab,
   ]));
-};
-
-export default HomeScreen;
+}

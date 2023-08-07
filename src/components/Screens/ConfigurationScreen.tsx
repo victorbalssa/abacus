@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import {
   ScrollView,
   Alert,
@@ -19,16 +19,18 @@ import { Octicons, FontAwesome, AntDesign } from '@expo/vector-icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
 import { ScreenType } from './types';
 
-const Separator = ({ backgroundColor }) => (
-  <View pr={4} ml={4} style={{ height: 1 }} backgroundColor={backgroundColor} />
-);
+function Separator({ backgroundColor }) {
+  return (
+    <View pr={4} ml={4} style={{ height: 1 }} backgroundColor={backgroundColor} />
+  );
+}
 
-const ConfigurationScreen: FC<ScreenType> = ({ navigation }) => {
+export default function ConfigurationScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
   const {
     backendURL,
@@ -131,6 +133,4 @@ const ConfigurationScreen: FC<ScreenType> = ({ navigation }) => {
       </Stack>
     </ScrollView>
   );
-};
-
-export default ConfigurationScreen;
+}

@@ -2,7 +2,6 @@ import React, {
   useEffect,
   useState,
   useRef,
-  FC,
 } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
@@ -24,7 +23,6 @@ import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Updates from 'expo-updates';
 import { useFonts, loadAsync } from 'expo-font';
-import moment from 'moment/moment';
 
 import {
   AntDesign,
@@ -37,7 +35,7 @@ import { store, persistor } from './store';
 import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
-import { translate } from './i18n/locale';
+import translate from './i18n/locale';
 import { useThemeColors } from './lib/common';
 import ThemeBlurView from './components/UI/ThemeBlurView';
 
@@ -51,7 +49,7 @@ const theme = extendTheme(themeConstants);
 
 const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 
-const App: FC = () => {
+export default function App() {
   LogBox.ignoreAllLogs(true);
 
   const { colors } = useThemeColors();
@@ -189,6 +187,4 @@ const App: FC = () => {
       </NativeBaseProvider>
     </AnimatedSplash>
   );
-};
-
-export default App;
+}

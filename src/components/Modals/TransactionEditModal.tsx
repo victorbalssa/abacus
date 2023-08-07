@@ -10,11 +10,11 @@ import { CommonActions } from '@react-navigation/native';
 import Title from '../UI/Title';
 import TransactionForm from '../Forms/TransactionForm';
 import { useThemeColors } from '../../lib/common';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { RootDispatch } from '../../store';
 import { ScreenType } from '../Screens/types';
 
-const TransactionEditModal = ({ navigation, route }: ScreenType) => {
+export default function TransactionEditModal({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
 
@@ -67,6 +67,4 @@ const TransactionEditModal = ({ navigation, route }: ScreenType) => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-};
-
-export default TransactionEditModal;
+}

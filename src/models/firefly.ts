@@ -138,7 +138,7 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async handleChangeRange(payload = {}, rootState) {
+    async handleChangeRange(payload, rootState) {
       if (rootState.firefly.rangeDetails === undefined) {
         dispatch.firefly.resetState();
       }

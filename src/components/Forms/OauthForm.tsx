@@ -15,18 +15,18 @@ import {
 import { Alert, Platform, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
-
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
+
 import { isValidHttpUrl, useThemeColors } from '../../lib/common';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 
 const copyToClipboard = async () => {
   await Clipboard.setStringAsync('abacusiosapp://redirect');
   Alert.alert('abacusiosapp://redirect copied to clipboard');
 };
 
-const OauthForm = ({
+export default function OauthForm({
   loading,
   faceId,
   faceIdCheck,
@@ -36,7 +36,7 @@ const OauthForm = ({
   tokenLogin,
   backendURL,
   setBackendURL,
-}) => {
+}) {
   const { colors } = useThemeColors();
   const [isOauth, setIsAuth] = useState<boolean>(true);
   const toggleIsOauth = () => setIsAuth((value) => !value);
@@ -259,6 +259,4 @@ const OauthForm = ({
       </ScrollView>
     </KeyboardAvoidingView>
   );
-};
-
-export default OauthForm;
+}

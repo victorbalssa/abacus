@@ -2,9 +2,9 @@ import { Dimensions, Platform, useColorScheme } from 'react-native';
 import { getLocales } from 'expo-localization';
 import moment from 'moment/moment';
 import colors from '../constants/colors';
-import { translate } from '../i18n/locale';
+import translate from '../i18n/locale';
 
-const { height: D_HEIGHT, width: D_WIDTH } = (() => {
+export const { height: D_HEIGHT, width: D_WIDTH } = (() => {
   const { width, height } = Dimensions.get('window');
   if (width === 0 && height === 0) {
     return Dimensions.get('screen');

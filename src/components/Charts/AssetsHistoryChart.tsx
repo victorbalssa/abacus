@@ -22,19 +22,11 @@ import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
 import { useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
-import { Dimensions } from 'react-native';
-import Loading from '../UI/Loading';
-import { translate } from '../../i18n/locale';
-import { useThemeColors } from '../../lib/common';
-import { RootState } from '../../store';
 
-const { height: D_HEIGHT, width: D_WIDTH } = (() => {
-  const { width, height } = Dimensions.get('window');
-  if (width === 0 && height === 0) {
-    return Dimensions.get('screen');
-  }
-  return { width, height };
-})();
+import { RootState } from '../../store';
+import Loading from '../UI/Loading';
+import translate from '../../i18n/locale';
+import { D_WIDTH, useThemeColors } from '../../lib/common';
 
 function AccountsLengthMessage() {
   const { colors } = useThemeColors();
@@ -62,11 +54,7 @@ function AccountsLengthMessage() {
   );
 }
 
-function CursorPointer({
-  x,
-  y,
-  stroke,
-}) {
+function CursorPointer({ x, y, stroke }) {
   return (
     <>
       <Circle cx={x} cy={y} r="10" fill={stroke} />
@@ -99,7 +87,7 @@ function Cursor({
         </HStack>
         <VStack
           position="absolute"
-          left={x < Dimensions.get('window').width - 90 ? x - 35 : undefined}
+          left={x < D_WIDTH - 90 ? x - 35 : undefined}
           right={0}
           bottom={0}
           marginLeft="auto"

@@ -6,10 +6,9 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 
 const gap = 2;
@@ -47,13 +46,13 @@ const tabControlStyles = StyleSheet.create({
   lastTabStyle: { marginRight: 0 },
 });
 
-const Container = ({
+function Container({
   children,
   numberValues,
   style,
   activeTabIndex,
   onIndexChange,
-}) => {
+}) {
   const { tabStyle, activeTabStyle, tabsContainerStyle } = style;
   const margin = 2;
   const [moveAnimation] = useState(new Animated.Value(0));
@@ -108,7 +107,7 @@ const Container = ({
       </View>
     </PanGestureHandler>
   );
-};
+}
 
 const shouldRenderLeftSeparator = (index, selectedIndex) => {
   const isFirst = index === 0;
@@ -117,12 +116,12 @@ const shouldRenderLeftSeparator = (index, selectedIndex) => {
   return !(isFirst || isSelected || isPrevSelected);
 };
 
-const IosTab = ({
+function IosTab({
   children,
   style: tabControlStyle,
   onPress,
   renderLeftSeparator,
-}) => {
+}) {
   const { colors } = useThemeColors();
 
   return (
@@ -142,16 +141,16 @@ const IosTab = ({
       </TouchableWithoutFeedback>
     </View>
   );
-};
+}
 
-const Tab = ({
+function Tab({
   label,
   onPress,
   isActive,
   isFirst,
   isLast,
   renderLeftSeparator,
-}) => {
+}) {
   const {
     tabStyle,
     tabTextStyle,
@@ -174,37 +173,39 @@ const Tab = ({
       </Text>
     </IosTab>
   );
-};
+}
 
-const SegmentedControl = ({
+function SegmentedControl({
   values: tabValues,
   selectedIndex,
   onIndexChange,
   renderSeparators,
-}) => (
-  <Container
-    style={tabControlStyles}
-    numberValues={tabValues.length}
-    activeTabIndex={selectedIndex}
-    onIndexChange={onIndexChange}
-  >
-    {tabValues.map((tabValue, index) => (
-      <Tab
-        label={tabValue}
-        onPress={() => onIndexChange(index)}
-        isActive={selectedIndex === index}
-        isFirst={index === 0}
-        isLast={index === tabValues.length - 1}
-        renderLeftSeparator={
+}) {
+  return (
+    <Container
+      style={tabControlStyles}
+      numberValues={tabValues.length}
+      activeTabIndex={selectedIndex}
+      onIndexChange={onIndexChange}
+    >
+      {tabValues.map((tabValue, index) => (
+        <Tab
+          label={tabValue}
+          onPress={() => onIndexChange(index)}
+          isActive={selectedIndex === index}
+          isFirst={index === 0}
+          isLast={index === tabValues.length - 1}
+          renderLeftSeparator={
             renderSeparators && shouldRenderLeftSeparator(index, selectedIndex)
           }
-        key={tabValue}
-      />
-    ))}
-  </Container>
-);
+          key={tabValue}
+        />
+      ))}
+    </Container>
+  );
+}
 
-const TabControl = ({ values, onChange }) => {
+export default function TabControl({ values, onChange }) {
   const { colors } = useThemeColors();
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -232,6 +233,4 @@ const TabControl = ({ values, onChange }) => {
       </GestureHandlerRootView>
     </View>
   );
-};
-
-export default TabControl;
+}
