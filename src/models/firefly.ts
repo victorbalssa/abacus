@@ -23,7 +23,7 @@ export type AssetAccountType = {
   skip: boolean,
   color: string,
   colorScheme: string,
-  entries: { x: string, y: string }[],
+  entries: { x: number, y: number }[],
   maxY: number,
   minY: number,
 }
@@ -237,7 +237,7 @@ export default createModel<RootModel>()({
           end,
           currency_code: current?.attributes.code,
         });
-        const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
+        const { data: summary } = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
         const netWorth = [];
         const balance = [];
         Object.keys(summary).forEach((key) => {
@@ -272,7 +272,7 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      const accounts = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` });
+      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` }) as { data: AssetAccountType[] };
       let colorIndex = 0;
 
       accounts.forEach((v, index) => {

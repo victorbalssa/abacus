@@ -58,7 +58,7 @@ export default createModel<RootModel>()({
         },
       } = rootState;
       if (current && current.attributes.code) {
-        const insightCategories = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/category?start=${start}&end=${end}` });
+        const { data: insightCategories } = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/category?start=${start}&end=${end}` }) as { data: InsightCategoryType[]};
 
         const filteredCategories = insightCategories
           .filter((category: InsightCategoryType) => category.currencyCode === current.attributes.code)
