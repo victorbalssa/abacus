@@ -249,32 +249,34 @@ const deleteAlert = async (transaction: TransactionType, rowMap, closeRow, delet
   );
 };
 
-const RenderHiddenItem = ({ handleOnPress }) => {
+const RenderHiddenItem = ({ handleOnPressCopy, handleOnPressDelete }) => {
   const { colors } = useThemeColors();
 
   return useMemo(() => (
-    <Pressable
+    <HStack
       h={ITEM_HEIGHT}
-      w="100%"
-      ml="auto"
-      backgroundColor={colors.red}
-      justifyContent="center"
-      alignItems="flex-end"
+      flexDirection="row"
       borderTopWidth={1}
       borderColor={colors.listBorderColor}
-      onPress={handleOnPress}
-      _pressed={{
-        opacity: 0.8,
-      }}
     >
-      <VStack alignItems="center" px={5}>
-        <Icon as={<MaterialIcons name="delete" />} color="white" size="sm" />
-        <Text color="white" fontSize="xs" fontWeight="medium">
-          Delete
-        </Text>
-      </VStack>
-    </Pressable>
-  ), [handleOnPress]);
+      <Pressable justifyContent="center" alignItems="flex-start" flex={1} backgroundColor={colors.brandWarning} onPress={handleOnPressCopy} px={5}>
+        <VStack alignItems="center">
+          <Icon as={<MaterialIcons name="content-copy" />} color="white" size="sm" />
+          <Text color="white" fontSize="xs" fontWeight="medium">
+            Clone
+          </Text>
+        </VStack>
+      </Pressable>
+      <Pressable justifyContent="center" alignItems="flex-end" flex={1} backgroundColor={colors.red} onPress={handleOnPressDelete} px={5}>
+        <VStack alignItems="center">
+          <Icon as={<MaterialIcons name="delete" />} color="white" size="sm" />
+          <Text color="white" fontSize="xs" fontWeight="medium">
+            Delete
+          </Text>
+        </VStack>
+      </Pressable>
+    </HStack>
+  ), [handleOnPressCopy, handleOnPressDelete]);
 };
 
 const TransactionsSwipeList: FC = () => {
@@ -284,6 +286,7 @@ const TransactionsSwipeList: FC = () => {
   const currency = useSelector((state: RootState) => state.currencies.current);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const dispatch = useDispatch<RootDispatch>();
+  const navigation = useNavigation();
 
   const onRefresh = async () => {
     const effectTransactions = await dispatch.transactions.getTransactions();
@@ -339,6 +342,16 @@ const TransactionsSwipeList: FC = () => {
     setTransactions(newTransactions);
   };
 
+  // TODO: do not pass entire payload into this modal
+  const goToDuplicate = (payload) => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'TransactionCreateModal',
+      params: {
+        payload,
+      },
+    }),
+  );
+
   return useMemo(() => (
     <SwipeListView
       refreshControl={(
@@ -358,17 +371,27 @@ const TransactionsSwipeList: FC = () => {
       renderItem={({ item }) => <RenderItem item={item} />}
       renderHiddenItem={(data, rowMap) => (
         <RenderHiddenItem
-          handleOnPress={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
+          handleOnPressCopy={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            goToDuplicate(data.item.attributes.transactions[0]);
+          }}
+          handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
         />
       )}
       rightOpenValue={-80}
-      stopRightSwipe={-250}
-      rightActivationValue={-200}
-      disableRightSwipe
+      stopRightSwipe={-190}
+      rightActivationValue={-170}
       onRightActionStatusChange={({
         key,
         isActivated,
       }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
+      leftOpenValue={80}
+      stopLeftSwipe={190}
+      leftActivationValue={170}
+      onLeftActionStatusChange={({
+        key,
+        isActivated,
+      }) => (isActivated ? goToDuplicate(transactions.find((t) => t.id === key).attributes.transactions[0]) : null)}
       contentContainerStyle={{
         paddingBottom: 350,
       }}
