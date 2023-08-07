@@ -16,10 +16,7 @@ import ErrorWidget from './ErrorWidget';
 import ThemeBlurView from './ThemeBlurView';
 import { useThemeColors } from '../../lib/common';
 
-const NavigationHeader = ({
-  navigationState,
-  relative = false,
-}) => {
+export default function NavigationHeader({ navigationState, relative = false }) {
   const { colors } = useThemeColors();
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails || {
     title: '', range: 3, end: '', start: '',
@@ -88,6 +85,4 @@ const NavigationHeader = ({
     navigationStateIndex,
     rangeDetails,
   ]);
-};
-
-export default NavigationHeader;
+}

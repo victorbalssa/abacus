@@ -4,19 +4,15 @@ import {
   Heading,
 } from 'native-base';
 import { FontAwesome } from '@expo/vector-icons';
-import { Platform } from 'react-native';
-import ThemeBlurView from './ThemeBlurView';
+import { Platform, View } from 'react-native';
+
 import { useThemeColors } from '../../lib/common';
 
-const Title = ({
-  text,
-  navigation,
-}) => {
+export default function Title({ text, navigation }) {
   const { colors } = useThemeColors();
 
   return (
-    <ThemeBlurView
-      intensity={50}
+    <View
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -44,8 +40,6 @@ const Title = ({
         }}
         onPress={() => navigation.pop()}
       />
-    </ThemeBlurView>
+    </View>
   );
-};
-
-export default Title;
+}

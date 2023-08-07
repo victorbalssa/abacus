@@ -7,18 +7,18 @@ import {
   Pressable,
   Text,
 } from 'native-base';
-
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+
 import { RootState } from '../../../store';
 import { useThemeColors } from '../../../lib/common';
 
-export type AutocompleteType = {
+type AutocompleteType = {
   name: string,
   id: string,
 }
 
-const AutocompleteField = ({
+export default function AutocompleteField({
   isInvalid = false,
   label,
   placeholder,
@@ -29,7 +29,7 @@ const AutocompleteField = ({
   routeApi,
   isDestination = false,
   error,
-}) => {
+}) {
   const { colors } = useThemeColors();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const [autocompletes, setAutocompletes] = useState([]);
@@ -98,9 +98,7 @@ const AutocompleteField = ({
           ))}
         </View>
       )}
-      {error ? <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage> : <></>}
+      {error && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
     </FormControl>
   );
-};
-
-export default AutocompleteField;
+}

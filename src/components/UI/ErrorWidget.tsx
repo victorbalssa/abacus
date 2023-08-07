@@ -1,15 +1,15 @@
-import React, { FC, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useToast } from 'native-base';
 import { AxiosError } from 'axios';
 import { useNavigation, CommonActions } from '@react-navigation/native';
+import { View } from 'react-native';
 
 import { RootState } from '../../store';
 import ToastAlert from './ToastAlert';
+import translate from '../../i18n/locale';
 
-import { translate } from '../../i18n/locale';
-
-const ErrorWidget: FC = () => {
+export default function ErrorWidget() {
   const toast = useToast();
   const { error } = useSelector((state: RootState) => state.loading.global);
   const navigation = useNavigation();
@@ -43,7 +43,5 @@ const ErrorWidget: FC = () => {
     }
   }, [error]);
 
-  return <></>;
-};
-
-export default ErrorWidget;
+  return <View />;
+}

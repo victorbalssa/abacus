@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,11 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView } from 'native-base';
 
 import { RootDispatch, RootState } from '../../store';
-import { ScreenType } from './types';
 import { useThemeColors } from '../../lib/common';
 import AssetsHistoryChart from '../Charts/AssetsHistoryChart';
 
-const ChartScreen: FC<ScreenType> = () => {
+export default function ChartScreen() {
   const { colors } = useThemeColors();
   const safeAreaInsets = useSafeAreaInsets();
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
@@ -48,14 +47,6 @@ const ChartScreen: FC<ScreenType> = () => {
     }, [rangeDetails]),
   );
 
-  const filterAccount = (payload) => {
-    try {
-      filterData(payload);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
     <View
       style={{
@@ -74,12 +65,10 @@ const ChartScreen: FC<ScreenType> = () => {
           start={rangeDetails.start}
           end={rangeDetails.end}
           accounts={accounts}
-          filterData={filterAccount}
+          filterData={filterData}
         />
         <View style={{ height: 120 }} />
       </ScrollView>
     </View>
   );
-};
-
-export default ChartScreen;
+}

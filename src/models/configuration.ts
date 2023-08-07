@@ -1,9 +1,10 @@
-import {createModel} from '@rematch/core';
+import { createModel } from '@rematch/core';
 import * as SecureStore from 'expo-secure-store';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+
 import secureKeys from '../constants/oauth';
-import {RootModel} from './index';
-import {convertKeysToCamelCase} from '../lib/common';
+import { RootModel } from './index';
+import { convertKeysToCamelCase } from '../lib/common';
 
 export type ConfigurationStateType = {
   backendURL: string,
@@ -59,7 +60,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiFetch({ url, config }, rootState): Promise<any> {
+    async apiFetch({ url, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,
@@ -86,7 +87,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiPost({ url, body, config }, rootState): Promise<any> {
+    async apiPost({ url, body, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,
@@ -106,7 +107,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiPut({ url, body, config }, rootState): Promise<any> {
+    async apiPut({ url, body, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,
@@ -126,7 +127,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiDelete({ url }, rootState): Promise<any> {
+    async apiDelete({ url }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,

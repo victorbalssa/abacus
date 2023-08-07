@@ -23,13 +23,13 @@ import * as Localization from 'expo-localization';
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 
-const BalanceHistoryChart = ({
+export default function BalanceHistoryChart({
   loading,
   end,
   range,
   balances,
   fetchBalances,
-}) => {
+}) {
   const { colors } = useThemeColors();
   const getTickValues = () => [...Array(+range + 1).keys()];
 
@@ -197,6 +197,4 @@ const BalanceHistoryChart = ({
       )}
     </VStack>
   );
-};
-
-export default BalanceHistoryChart;
+}

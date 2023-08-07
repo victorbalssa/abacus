@@ -1,5 +1,4 @@
 import React, {
-  FC,
   useCallback,
   useMemo, useRef,
   useState,
@@ -18,25 +17,28 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { SwipeListView } from 'react-native-swipe-list-view';
-
+import _ from 'lodash';
 import moment from 'moment';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  CommonActions, useFocusEffect, useNavigation, useScrollToTop,
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+  useScrollToTop,
 } from '@react-navigation/native';
-import _ from 'lodash';
+
 import { TransactionType } from '../../models/transactions';
 import { RootDispatch, RootState } from '../../store';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 
 const ITEM_HEIGHT = 90;
 
-const ListFooterComponent: FC = () => {
+function ListFooterComponent() {
   const { colors } = useThemeColors();
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
   const { loading: loadingMore } = useSelector((state: RootState) => state.loading.effects.transactions.getMoreTransactions);
@@ -79,9 +81,9 @@ const ListFooterComponent: FC = () => {
     loadingMore,
     colors,
   ]);
-};
+}
 
-const RenderItem = ({ item }: { item: TransactionType }) => {
+function RenderItem({ item }: { item: TransactionType }) {
   const { colors } = useThemeColors();
   const navigation = useNavigation();
 
@@ -133,7 +135,7 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
     },
   };
 
-  const getTransactionTypeAttributes = (type: string): { bg: string, color: string, icon: any, prefix: string } => {
+  const getTransactionTypeAttributes = (type: string) => {
     if (typeof colorItemTypes[type] === 'undefined') {
       return colorItemTypes.transfer;
     }
@@ -220,9 +222,9 @@ const RenderItem = ({ item }: { item: TransactionType }) => {
       </HStack>
     </Pressable>
   ), [item]);
-};
+}
 
-const deleteAlert = async (transaction: TransactionType, rowMap, closeRow, deleteRow) => {
+async function deleteAlert(transaction: TransactionType, rowMap, closeRow, deleteRow) {
   await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
   Alert.alert(
     translate('transaction_list_alert_title'),
@@ -242,9 +244,9 @@ const deleteAlert = async (transaction: TransactionType, rowMap, closeRow, delet
       },
     ],
   );
-};
+}
 
-const RenderHiddenItem = ({ handleOnPressCopy, handleOnPressDelete }) => {
+function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
   const { colors } = useThemeColors();
 
   return useMemo(() => (
@@ -272,9 +274,9 @@ const RenderHiddenItem = ({ handleOnPressCopy, handleOnPressDelete }) => {
       </Pressable>
     </HStack>
   ), [handleOnPressCopy, handleOnPressDelete]);
-};
+}
 
-const TransactionsSwipeList: FC = () => {
+function TransactionsSwipeList() {
   const { colors } = useThemeColors();
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
@@ -298,11 +300,8 @@ const TransactionsSwipeList: FC = () => {
       let isActive = true;
 
       const fetchData = async () => {
-        try {
-          if (isActive) {
-            onRefresh();
-          }
-        } catch (e) {
+        if (isActive) {
+          onRefresh();
         }
       };
 
@@ -395,9 +394,9 @@ const TransactionsSwipeList: FC = () => {
       ListFooterComponent={() => <ListFooterComponent />}
     />
   ), [transactions, loadingRefresh]);
-};
+}
 
-function TransactionsScreen() {
+export default function TransactionsScreen() {
   const { colors } = useThemeColors();
   const safeAreaInsets = useSafeAreaInsets();
 
@@ -413,5 +412,3 @@ function TransactionsScreen() {
     </View>
   );
 }
-
-export default TransactionsScreen;

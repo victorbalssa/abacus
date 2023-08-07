@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, ActivityIndicator } from 'react-native';
+
 import { useThemeColors } from '../../lib/common';
 
-const Loading = () => {
+export default function Loading() {
   const { colors } = useThemeColors();
 
   return (
@@ -16,6 +17,4 @@ const Loading = () => {
       <ActivityIndicator size="small" color={colors.text} />
     </View>
   );
-};
-
-export default Loading;
+}

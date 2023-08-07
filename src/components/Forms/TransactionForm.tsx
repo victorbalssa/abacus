@@ -19,19 +19,19 @@ import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
 
 import ToastAlert from '../UI/ToastAlert';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
 import { RootState } from '../../store';
 
 type ErrorStateType = {
-  description: string,
-  sourceName: string,
-  destinationName: string,
-  amount: string,
-  categoryId: string,
-  budgetId: string,
-  global: string,
+  description: string
+  sourceName: string
+  destinationName: string
+  amount: string
+  categoryId: string
+  budgetId: string
+  global: string
 }
 
 const INITIAL_ERROR = {
@@ -44,11 +44,11 @@ const INITIAL_ERROR = {
   global: '',
 } as ErrorStateType;
 
-const TransactionForm = ({
+export default function TransactionForm({
   submit,
   goToTransactions,
   payload,
-}) => {
+}) {
   const { colorScheme, colors } = useThemeColors();
   const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
   const [formData, setData] = useState({
@@ -210,7 +210,7 @@ const TransactionForm = ({
           })}
           InputRightElement={deleteBtn(['amount'])}
         />
-        {'amount' in errors ? <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage> : <></>}
+        {'amount' in errors && <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage>}
       </FormControl>
 
       <FormControl mt="1" isRequired>
@@ -424,6 +424,4 @@ const TransactionForm = ({
       </Button>
     </VStack>
   );
-};
-
-export default TransactionForm;
+}

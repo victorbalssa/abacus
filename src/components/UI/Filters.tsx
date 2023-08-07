@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CheckIcon,
@@ -8,10 +8,10 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 
 import { RootDispatch, RootState } from '../../store';
-import { translate } from '../../i18n/locale';
+import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 
-const Filters: FC = () => {
+export default function Filters() {
   const { colors } = useThemeColors();
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const currentCurrency = useSelector((state: RootState) => state.currencies.current);
@@ -103,6 +103,4 @@ const Filters: FC = () => {
     range,
     handleChangeRange,
   ]);
-};
-
-export default Filters;
+}
