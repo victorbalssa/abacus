@@ -177,7 +177,7 @@ function TransactionsStack() {
           headerShown: true,
           headerTitle: 'Transactions',
           headerTitleStyle: {
-            fontFamily: 'Montserrat',
+            fontFamily: 'Montserrat_Bold',
           },
           headerLargeTitleStyle: {
             fontFamily: 'Montserrat_Bold',
@@ -186,9 +186,9 @@ function TransactionsStack() {
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerTintColor: colors.text,
-          headerSearchBarOptions: {
+/*          headerSearchBarOptions: {
             autoCapitalize: 'none',
-          },
+          },*/
           headerStyle: {
             backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
           },
