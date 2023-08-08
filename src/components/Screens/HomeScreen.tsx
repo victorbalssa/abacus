@@ -50,7 +50,6 @@ function InsightCategories() {
             dispatch.categories.getInsightCategories(),
             dispatch.firefly.getNetWorth(),
           ])}
-          tintColor={colors.brandStyle}
         />
       )}
     >
@@ -106,7 +105,6 @@ function InsightBudgets() {
             dispatch.budgets.getInsightBudgets(),
             dispatch.firefly.getNetWorth(),
           ])}
-          tintColor={colors.brandStyle}
         />
       )}
     >
@@ -178,7 +176,6 @@ function AssetsAccounts() {
             dispatch.accounts.getAccounts(),
             dispatch.firefly.getNetWorth(),
           ])}
-          tintColor={colors.brandStyle}
         />
       )}
     >

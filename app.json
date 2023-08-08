@@ -58,15 +58,8 @@
     },
     "plugins": [
       "expo-localization",
-      "@config-plugins/detox",
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "usesCleartextTraffic": true
-          }
-        }
-      ]
+      "./plugins/withAndroidManifest",
+      "@config-plugins/detox"
     ],
     "userInterfaceStyle": "automatic"
   }

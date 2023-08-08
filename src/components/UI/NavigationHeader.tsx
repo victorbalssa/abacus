@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   HStack,
   Box,
@@ -33,7 +33,7 @@ export default function NavigationHeader({ navigationState, relative = false }) 
         left: 0,
         right: 0,
         backgroundColor: colors.tileBackgroundColor,
-        display: navigationState.index === 4 ? 'none' : undefined,
+        display: [3, 4].includes(navigationStateIndex) ? 'none' : undefined,
       }}
     >
       <Box
