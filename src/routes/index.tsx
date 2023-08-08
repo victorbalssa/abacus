@@ -23,6 +23,7 @@ import OauthScreen from '../components/Screens/OauthScreen';
 import HomeScreen from '../components/Screens/HomeScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
+import TransactionDetailScreen from '../components/Screens/TransactionDetailScreen';
 import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
 
 // Modals
@@ -34,6 +35,7 @@ import ThemeBlurView from '../components/UI/ThemeBlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
+const TransactionStack = createNativeStackNavigator();
 const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -162,6 +164,58 @@ function TabBarConfigurationScreenIcon({ color }) {
   );
 }
 
+function TransactionsStack() {
+  const { colors } = useThemeColors();
+
+  return (
+    <TransactionStack.Navigator initialRouteName="TransactionsList">
+      <TransactionStack.Screen
+        name="TransactionsList"
+        component={TransactionsScreen}
+        options={{
+          headerShadowVisible: true,
+          headerShown: true,
+          headerTitle: 'Transactions',
+          headerTitleStyle: {
+            fontFamily: 'Montserrat',
+          },
+          headerLargeTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
+          headerLargeTitle: false,
+          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerTintColor: colors.text,
+          headerSearchBarOptions: {
+            autoCapitalize: 'none',
+          },
+          headerStyle: {
+            backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+          },
+        }}
+      />
+      <TransactionStack.Screen
+        name="TransactionDetailScreen"
+        component={TransactionDetailScreen}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerBackTitleVisible: true,
+          headerBackTitle: 'Back',
+          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerTintColor: colors.text,
+          headerShadowVisible: true,
+          headerStyle: {
+            backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+          },
+          animation: Platform.select({ ios: 'default', android: 'slide_from_right' }),
+        }}
+      />
+    </TransactionStack.Navigator>
+  );
+}
+
 function Home() {
   const { colors } = useThemeColors();
 
@@ -212,7 +266,7 @@ function Home() {
       />
       <Tab.Screen
         name={translate('navigation_transactions_tab')}
-        component={TransactionsScreen}
+        component={TransactionsStack}
         options={{
           tabBarIcon: TabBarTransactionScreenIcon,
         }}
@@ -237,7 +291,7 @@ export default function Index() {
         ...DefaultTheme,
         colors: {
           ...DefaultTheme.colors,
-          background: colors.tabBackgroundColor,
+          background: colors.backgroundColor,
         },
       }}
     >

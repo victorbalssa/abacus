@@ -51,7 +51,7 @@ export default function ChartScreen() {
     <View
       style={{
         flex: 1,
-        paddingTop: safeAreaInsets.top + 55,
+        paddingTop: safeAreaInsets.top + 65,
         backgroundColor: colors.backgroundColor,
       }}
     >
@@ -67,7 +67,7 @@ export default function ChartScreen() {
           accounts={accounts}
           filterData={filterData}
         />
-        <View style={{ height: 120 }} />
+        <View style={{ height: 90 }} />
       </ScrollView>
     </View>
   );

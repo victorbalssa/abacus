@@ -87,7 +87,7 @@ export default createModel<RootModel>()({
           // recursively convert snake_case keys to camelCase
           return {
             data: convertKeysToCamelCase(responseData),
-            meta: response.data.meta,
+            meta: convertKeysToCamelCase(response.data.meta),
           };
         }
 

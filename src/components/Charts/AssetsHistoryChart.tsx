@@ -167,9 +167,10 @@ export default function AssetsHistoryChart({
 
   return (
     <VStack
-      mt={4}
-      mx={3}
+      mx={1}
       bgColor={colors.tileBackgroundColor}
+      borderWidth={1}
+      borderColor={colors.listBorderColor}
       justifyContent="center"
       borderRadius={10}
     >

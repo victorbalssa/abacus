@@ -49,7 +49,7 @@ function ListFooterComponent() {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderTopWidth={1}
+      borderBottomWidth={1}
       borderColor={colors.listBorderColor}
     >
       <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
@@ -64,7 +64,7 @@ function ListFooterComponent() {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderTopWidth={1}
+      borderBottomWidth={1}
       borderColor={colors.listBorderColor}
     >
       <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
@@ -90,7 +90,7 @@ function RenderItem({ item }: { item: TransactionType }) {
   // TODO: do not pass entire payload into this modal
   const goToEdit = (id, payload) => navigation.dispatch(
     CommonActions.navigate({
-      name: 'TransactionEditModal',
+      name: 'TransactionDetailScreen',
       params: {
         id,
         payload,
@@ -148,7 +148,7 @@ function RenderItem({ item }: { item: TransactionType }) {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderTopWidth={1}
+      borderBottomWidth={1}
       borderColor={colors.listBorderColor}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -276,8 +276,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
   ), [handleOnPressCopy, handleOnPressDelete]);
 }
 
-function TransactionsSwipeList() {
-  const { colors } = useThemeColors();
+export default function TransactionsScreen() {
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
   const currency = useSelector((state: RootState) => state.currencies.current);
@@ -346,69 +345,57 @@ function TransactionsSwipeList() {
     }),
   );
 
-  return useMemo(() => (
-    <SwipeListView
-      refreshControl={(
-        <RefreshControl
-          ref={scrollRef}
-          refreshing={loadingRefresh}
-          onRefresh={onRefresh}
-          tintColor={colors.text}
-        />
-      )}
-      initialNumToRender={15}
-      maxToRenderPerBatch={15}
-      keyExtractor={(item: TransactionType) => item.id}
-      showsVerticalScrollIndicator={false}
-      onEndReached={() => (!loadingRefresh && !_.isEmpty(transactions)) && onEndReached()}
-      data={loadingRefresh ? [] : transactions}
-      renderItem={({ item }) => <RenderItem item={item} />}
-      renderHiddenItem={(data, rowMap) => (
-        <RenderHiddenItem
-          handleOnPressCopy={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-            goToDuplicate(data.item.attributes.transactions[0]);
-          }}
-          handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
-        />
-      )}
-      rightOpenValue={-80}
-      stopRightSwipe={-190}
-      rightActivationValue={-170}
-      onRightActionStatusChange={({
-        key,
-        isActivated,
-      }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
-      leftOpenValue={80}
-      stopLeftSwipe={190}
-      leftActivationValue={170}
-      onLeftActionStatusChange={({
-        key,
-        isActivated,
-      }) => (isActivated ? goToDuplicate(transactions.find((t) => t.id === key).attributes.transactions[0]) : null)}
-      contentContainerStyle={{
-        paddingBottom: 350,
-      }}
-      useNativeDriver
-      getItemLayout={(data, index) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
-      ListFooterComponent={() => <ListFooterComponent />}
-    />
-  ), [transactions, loadingRefresh]);
-}
-
-export default function TransactionsScreen() {
-  const { colors } = useThemeColors();
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        marginTop: safeAreaInsets.top + 55,
-        backgroundColor: colors.backgroundColor,
-      }}
-    >
-      <TransactionsSwipeList />
-    </View>
+  return useMemo(
+    () => (
+      <SwipeListView
+        useNativeDriver
+        contentInsetAdjustmentBehavior="automatic"
+        refreshControl={(
+          <RefreshControl
+            refreshing={false}
+            onRefresh={onRefresh}
+          />
+        )}
+        initialNumToRender={15}
+        maxToRenderPerBatch={15}
+        keyExtractor={(item: TransactionType) => item.id}
+        showsVerticalScrollIndicator
+        onEndReached={() => (!loadingRefresh && !_.isEmpty(transactions)) && onEndReached()}
+        data={loadingRefresh ? [] : transactions}
+        renderItem={({ item }) => <RenderItem item={item} />}
+        renderHiddenItem={(data, rowMap) => (
+          <RenderHiddenItem
+            handleOnPressCopy={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              goToDuplicate(data.item.attributes.transactions[0]);
+            }}
+            handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
+          />
+        )}
+        rightOpenValue={-80}
+        stopRightSwipe={-190}
+        rightActivationValue={-170}
+        onRightActionStatusChange={({
+          key,
+          isActivated,
+        }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
+        leftOpenValue={80}
+        stopLeftSwipe={190}
+        leftActivationValue={170}
+        onLeftActionStatusChange={({
+          key,
+          isActivated,
+        }) => (isActivated ? goToDuplicate(transactions.find((t) => t.id === key).attributes.transactions[0]) : null)}
+        contentContainerStyle={{
+          paddingBottom: 350,
+        }}
+        getItemLayout={(data, index) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
+        ListFooterComponent={() => <ListFooterComponent />}
+      />
+    ),
+    [
+      transactions,
+      loadingRefresh,
+    ],
   );
 }
