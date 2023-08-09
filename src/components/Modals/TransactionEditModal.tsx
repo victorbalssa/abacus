@@ -57,7 +57,6 @@ export default function TransactionEditModal({ navigation, route }: ScreenType) 
         backgroundColor: colors.backgroundColor,
       }}
     >
-      <Title navigation={navigation} text={translate('transaction_screen_edit_title')} />
       <ScrollView flex={1} p={1} keyboardShouldPersistTaps="handled">
         <TransactionForm
           payload={payload}
