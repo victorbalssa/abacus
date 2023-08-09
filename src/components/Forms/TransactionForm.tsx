@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
+import moment from 'moment/moment';
 import {
   Keyboard,
   Platform,
 } from 'react-native';
 import {
   Button,
+  CheckIcon,
   FormControl,
   HStack,
   IconButton,
   Input,
+  Select,
   Text,
+  TextArea,
   VStack,
 } from 'native-base';
 import * as Haptics from 'expo-haptics';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
 
 import ToastAlert from '../UI/ToastAlert';
@@ -31,6 +34,10 @@ type ErrorStateType = {
   amount: string
   categoryId: string
   budgetId: string
+  tags: string
+  foreignCurrencyId: string
+  foreignAmount: string
+  notes: string
   global: string
 }
 
@@ -41,6 +48,10 @@ const INITIAL_ERROR = {
   destinationName: '',
   categoryId: '',
   budgetId: '',
+  tags: '',
+  foreignCurrencyId: '',
+  foreignAmount: '',
+  notes: '',
   global: '',
 } as ErrorStateType;
 
@@ -51,6 +62,7 @@ export default function TransactionForm({
 }) {
   const { colorScheme, colors } = useThemeColors();
   const { loading } = useSelector((state: RootState) => state.loading.models.transactions);
+  const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const [formData, setData] = useState({
     description: payload.description,
     date: new Date(payload.date),
@@ -61,7 +73,11 @@ export default function TransactionForm({
     categoryName: payload.categoryName,
     budgetId: payload.budgetId,
     budgetName: payload.budgetName,
+    tags: payload.tags,
     type: payload.type,
+    foreignCurrencyId: payload.foreignCurrencyId,
+    foreignAmount: payload.foreignAmount ? parseFloat(payload.foreignAmount).toFixed(2) : '',
+    notes: payload.notes,
   });
   const [errors, setErrors] = useState(INITIAL_ERROR);
   const [success, setSuccess] = useState(false);
@@ -196,7 +212,7 @@ export default function TransactionForm({
           {translate('transaction_form_amount_label')}
         </FormControl.Label>
         <Input
-          height={75}
+          height={60}
           variant="underlined"
           returnKeyType="done"
           keyboardType="numbers-and-punctuation"
@@ -211,6 +227,65 @@ export default function TransactionForm({
           InputRightElement={deleteBtn(['amount'])}
         />
         {'amount' in errors && <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage>}
+      </FormControl>
+
+      <FormControl mt="1" isInvalid={errors.foreignAmount !== ''}>
+        <FormControl.Label>
+          {translate('transaction_form_foreign_amount_label')}
+        </FormControl.Label>
+        <HStack
+          justifyContent="center"
+          alignItems="center"
+          borderColor={colors.listBorderColor}
+          borderWidth={1}
+          borderRadius={10}
+        >
+          <Select
+            borderWidth={0}
+            width={90}
+            placeholder={translate('transaction_form_foreign_amount_label')}
+            dropdownIcon={<FontAwesome name="angle-down" size={20} style={{ marginRight: 0 }} color={colors.text} />}
+            _selectedItem={{
+              bg: 'primary.600',
+              borderRadius: 10,
+              endIcon: <CheckIcon size={5} color="white" />,
+              _text: {
+                fontFamily: 'Montserrat',
+                color: 'white',
+              },
+            }}
+            _item={{
+              borderRadius: 10,
+              _text: {
+                fontFamily: 'Montserrat',
+                color: colors.text,
+              },
+            }}
+            selectedValue={formData.foreignCurrencyId}
+            onValueChange={(value) => setData({
+              ...formData,
+              foreignCurrencyId: value,
+            })}
+          >
+            {currencies.map((currency) => <Select.Item key={currency.id} label={`${currency?.attributes.code} ${currency?.attributes.symbol}`} value={currency.id} />)}
+          </Select>
+          <Input
+            flex={1}
+            variant="unstyled"
+            returnKeyType="done"
+            keyboardType="numbers-and-punctuation"
+            placeholder="0.00"
+            value={formData.foreignAmount}
+            textAlign="center"
+            fontSize={20}
+            onChangeText={(value) => setData({
+              ...formData,
+              foreignAmount: value,
+            })}
+            InputRightElement={deleteBtn(['foreignAmount', 'foreignCurrencyId'])}
+          />
+        </HStack>
+        {'foreignAmount' in errors && <FormControl.ErrorMessage>{errors.foreignAmount}</FormControl.ErrorMessage>}
       </FormControl>
 
       <FormControl mt="1" isRequired>
@@ -269,12 +344,10 @@ export default function TransactionForm({
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
         isInvalid={errors.sourceName !== ''}
-        onChangeText={(value) => {
-          setData({
-            ...formData,
-            sourceName: value,
-          });
-        }}
+        onChangeText={(value) => setData({
+          ...formData,
+          sourceName: value,
+        })}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
           sourceName: autocomplete.name,
@@ -289,12 +362,10 @@ export default function TransactionForm({
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}
         isInvalid={errors.destinationName !== ''}
-        onChangeText={(value) => {
-          setData({
-            ...formData,
-            destinationName: value,
-          });
-        }}
+        onChangeText={(value) => setData({
+          ...formData,
+          destinationName: value,
+        })}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
           destinationName: autocomplete.name,
@@ -310,12 +381,10 @@ export default function TransactionForm({
         placeholder={translate('transaction_form_category_label')}
         value={formData.categoryName}
         isInvalid={errors.categoryId !== ''}
-        onChangeText={(value) => {
-          setData({
-            ...formData,
-            categoryName: value,
-          });
-        }}
+        onChangeText={(value) => setData({
+          ...formData,
+          categoryName: value,
+        })}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
           categoryId: autocomplete.id,
@@ -331,12 +400,10 @@ export default function TransactionForm({
         placeholder={translate('transaction_form_budget_label')}
         value={formData.budgetName}
         isInvalid={errors.budgetId !== ''}
-        onChangeText={(value) => {
-          setData({
-            ...formData,
-            budgetName: value,
-          });
-        }}
+        onChangeText={(value) => setData({
+          ...formData,
+          budgetName: value,
+        })}
         onSelectAutocomplete={(autocomplete) => setData({
           ...formData,
           budgetId: autocomplete.id,
@@ -346,6 +413,43 @@ export default function TransactionForm({
         routeApi="budgets"
         error={errors.budgetId}
       />
+
+      <AutocompleteField
+        multiple
+        InputRightElement={null}
+        label={translate('transaction_form_tags_label')}
+        placeholder={translate('transaction_form_tags_label')}
+        value={formData.tags}
+        isInvalid={errors.tags !== ''}
+        onChangeText={() => {}}
+        onDeleteMultiple={(item) => setData({
+          ...formData,
+          tags: formData.tags.filter((tag) => tag !== item),
+        })}
+        onSelectAutocomplete={(autocomplete) => setData({
+          ...formData,
+          tags: Array.from(new Set([...formData.tags, autocomplete.name])),
+        })}
+        routeApi="tags"
+        error={errors.tags}
+      />
+
+      <FormControl mt="1">
+        <FormControl.Label>
+          {translate('transaction_form_notes_label')}
+        </FormControl.Label>
+        <TextArea
+          h={20}
+          autoCompleteType
+          value={formData.notes}
+          onChangeText={(value) => setData({
+            ...formData,
+            notes: value,
+          })}
+          placeholder={translate('transaction_form_notes_label')}
+          InputRightElement={deleteBtn(['notes'])}
+        />
+      </FormControl>
 
       {success && !loading
         && (
@@ -383,8 +487,12 @@ export default function TransactionForm({
             type: 'withdrawal',
             budgetId: '',
             budgetName: '',
+            tags: [],
             categoryId: '',
             categoryName: '',
+            foreignAmount: '',
+            foreignCurrencyId: '',
+            notes: '',
           });
           resetErrors();
         }}

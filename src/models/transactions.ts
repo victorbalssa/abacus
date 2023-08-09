@@ -146,11 +146,11 @@ export default createModel<RootModel>()({
         transactions: [{
           // TODO: Add support for:
           /* piggy_bank_id: '2', */
-          /* tags: 'test abaccus', */
-          /* notes: 'test abaccus notes', */
           /* currency_id: '12', */
-          /* foreign_amount: '123.45', */
-          /* foreign_currencyId: '17', */
+          tags: payload.tags,
+          notes: payload.notes,
+          foreign_amount: payload.foreignAmount,
+          foreign_currency_id: payload.foreignCurrencyId,
           description: payload.description,
           date: payload.date,
           source_name: payload.sourceName,
@@ -189,11 +189,11 @@ export default createModel<RootModel>()({
         transactions: [{
           // TODO: Add support for:
           /* piggy_bank_id: '2', */
-          /* tags: 'test abaccus', */
-          /* notes: 'test abaccus notes', */
           /* currency_id: '12', */
-          /* foreign_amount: '123.45', */
-          /* foreign_currencyId: '17', */
+          tags: transaction.tags,
+          notes: transaction.notes,
+          foreign_amount: transaction.foreignAmount,
+          foreign_currency_id: transaction.foreignCurrencyId,
           description: transaction.description,
           date: transaction.date,
           source_name: transaction.sourceName,
