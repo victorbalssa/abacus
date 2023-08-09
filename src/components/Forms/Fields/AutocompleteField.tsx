@@ -6,10 +6,14 @@ import {
   Input,
   Pressable,
   Text,
+  Badge,
+  IconButton,
+  ScrollView,
 } from 'native-base';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
+import { AntDesign } from '@expo/vector-icons';
 import { RootState } from '../../../store';
 import { useThemeColors } from '../../../lib/common';
 
@@ -27,14 +31,16 @@ export default function AutocompleteField({
   onSelectAutocomplete,
   InputRightElement,
   routeApi,
-  isDestination = false,
   error,
+  onDeleteMultiple = (item: string) => {},
+  isDestination = false,
+  multiple = false,
 }) {
   const { colors } = useThemeColors();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const [autocompletes, setAutocompletes] = useState([]);
   const [displayAutocomplete, setDisplayAutocomplete] = useState(false);
-  const getAutocompleteBudgets = async (query) => {
+  const refreshAutocomplete = async (query) => {
     const limit = 10;
     const type = isDestination ? 'Expense%20account' : 'Revenue%20account';
     const types = routeApi === 'accounts' ? `&types=Asset%20account,${type},Loan,Debt,Mortgage` : '';
@@ -43,8 +49,10 @@ export default function AutocompleteField({
   };
 
   const handleChangeText = (text) => {
-    onChangeText(text);
-    getAutocompleteBudgets(text);
+    if (!multiple) {
+      onChangeText(text);
+    }
+    refreshAutocomplete(text);
   };
   const handleSelectAutocomplete = (autocomplete) => {
     onSelectAutocomplete(autocomplete);
@@ -52,7 +60,7 @@ export default function AutocompleteField({
   };
   const handleFocus = () => {
     setDisplayAutocomplete(true);
-    getAutocompleteBudgets(value || '');
+    refreshAutocomplete(value || '');
   };
   const handleBlur = () => {
     setDisplayAutocomplete(false);
@@ -63,10 +71,41 @@ export default function AutocompleteField({
       <FormControl.Label>
         {label}
       </FormControl.Label>
+      {multiple && (
+      <ScrollView horizontal>
+        {value.map((item, index) => (
+          <Badge
+            mr={1}
+            my={2}
+            py={1}
+            borderRadius={10}
+            key={`${index + 1}${item}`}
+            rightIcon={(
+              <IconButton
+                mr={0}
+                h={1}
+                w={1}
+                variant="ghost"
+                colorScheme="gray"
+                _icon={{
+                  as: AntDesign,
+                  name: 'closecircle',
+                  size: 19,
+                }}
+                onPress={() => onDeleteMultiple(item)}
+              />
+            )}
+          >
+            {item}
+          </Badge>
+        ))}
+      </ScrollView>
+      )}
       <Input
         returnKeyType="done"
+        onSubmitEditing={({ nativeEvent: { text } }) => (multiple ? handleSelectAutocomplete({ name: text }) : null)}
         placeholder={placeholder}
-        value={value}
+        value={!multiple && value}
         onChangeText={handleChangeText}
         onFocus={handleFocus}
         onBlur={handleBlur}
