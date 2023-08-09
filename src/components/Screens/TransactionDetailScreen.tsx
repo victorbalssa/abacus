@@ -21,21 +21,9 @@ export default function TransactionDetailScreen({ navigation, route }: ScreenTyp
     await dispatch.transactions.updateTransaction({ id, transaction });
   };
 
-  const fetchTransactions = async () => {
-    try {
-      await dispatch.transactions.getTransactions();
-    } catch (e) {
-      // catch 401
-    }
-  };
-
   const goToTransactions = async () => {
-    await fetchTransactions();
-    navigation.dispatch(
-      CommonActions.navigate({
-        name: 'Transactions',
-      }),
-    );
+    navigation.dispatch(CommonActions.goBack());
+    await dispatch.transactions.getTransactions();
   };
 
   return (

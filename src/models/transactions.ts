@@ -144,9 +144,6 @@ export default createModel<RootModel>()({
     async createTransaction(payload) {
       const body = {
         transactions: [{
-          // TODO: Add support for:
-          /* piggy_bank_id: '2', */
-          /* currency_id: '12', */
           tags: payload.tags,
           notes: payload.notes,
           foreign_amount: payload.foreignAmount,
@@ -187,9 +184,6 @@ export default createModel<RootModel>()({
       }
       const body = {
         transactions: [{
-          // TODO: Add support for:
-          /* piggy_bank_id: '2', */
-          /* currency_id: '12', */
           tags: transaction.tags,
           notes: transaction.notes,
           foreign_amount: transaction.foreignAmount,

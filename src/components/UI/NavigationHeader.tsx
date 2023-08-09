@@ -26,14 +26,14 @@ export default function NavigationHeader({ navigationState, relative = false }) 
 
   return useMemo(() => (
     <ThemeBlurView
-      intensity={60}
+      intensity={80}
       style={{
         position: relative ? 'relative' : 'absolute',
         top: 0,
         left: 0,
         right: 0,
         backgroundColor: colors.tileBackgroundColor,
-        display: [3, 4].includes(navigationStateIndex) ? 'none' : undefined,
+        display: [2, 3, 4].includes(navigationStateIndex) ? 'none' : undefined,
       }}
     >
       <Box

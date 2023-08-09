@@ -7,28 +7,28 @@ import {
 import { Platform } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-import Title from '../UI/Title';
 import TransactionForm from '../Forms/TransactionForm';
 
-import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch } from '../../store';
-import { ScreenType } from '../Screens/types';
+import { ScreenType } from './types';
 
-export default function TransactionCreateModal({ navigation, route }: ScreenType) {
+export default function TransactionCreateScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
 
   const { params } = route;
   const payload = params?.payload || {};
 
-  const goToTransactions = () => {
+  const goToTransactions = async () => {
     navigation.dispatch(
       CommonActions.navigate({
         name: 'Transactions',
       }),
     );
+    await dispatch.transactions.getTransactions();
   };
+
   return (
     <KeyboardAvoidingView
       enabled
@@ -43,19 +43,22 @@ export default function TransactionCreateModal({ navigation, route }: ScreenType
         backgroundColor: colors.backgroundColor,
       }}
     >
-      <Title navigation={navigation} text={translate('transaction_screen_title')} />
       <ScrollView flex={1} p={1} keyboardShouldPersistTaps="handled">
         <TransactionForm
           submit={dispatch.transactions.createTransaction}
           goToTransactions={goToTransactions}
           payload={{
-            description: payload.description || '',
             date: new Date(),
+            description: payload.description || '',
             source_name: payload.source_name || '',
             destination_name: payload.destination_name || '',
             category_name: payload.category_name || '',
             budget_name: payload.budget_name || '',
             amount: payload.amount || '',
+            tags: payload.tags || [],
+            foreignCurrencyId: payload.foreignCurrencyId || '',
+            foreignAmount: payload.foreignAmount || '',
+            notes: payload.notes || '',
             type: payload.type || 'withdrawal',
           }}
         />

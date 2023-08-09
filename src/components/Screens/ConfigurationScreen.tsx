@@ -2,13 +2,12 @@ import React from 'react';
 import {
   ScrollView,
   Alert,
+  Text,
 } from 'react-native';
 import {
   Box,
   Stack,
-  Text,
   HStack,
-  Heading,
   View,
   Switch,
   Pressable,
@@ -81,50 +80,83 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
     >
       <Stack safeAreaTop>
 
-        <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_security')}</Heading>
+        <Text
+          style={{
+            fontFamily: 'Montserrat_Bold',
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingTop: 5,
+            color: colors.text,
+            fontSize: 15,
+          }}
+        >
+          {translate('configuration_security')}
+        </Text>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" borderBottomWidth={1} borderColor={colors.listBorderColor}>
-            <Text>URL</Text>
-            <Text style={{ color: colors.brandInfo }} onPress={() => Linking.openURL(backendURL)} underline>{backendURL}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>URL</Text>
+            <Text style={{ fontFamily: 'Montserrat', textDecorationLine: 'underline', color: colors.brandInfo }} onPress={() => Linking.openURL(backendURL)}>{backendURL}</Text>
           </HStack>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between">
-            <Text>{translate('configuration_biometry')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_biometry')}</Text>
             <Switch isChecked={faceId} onToggle={setFaceId} colorScheme="primary" />
           </HStack>
         </Box>
 
-        <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_about')}</Heading>
+        <Text
+          style={{
+            fontFamily: 'Montserrat_Bold',
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingTop: 5,
+            color: colors.text,
+            fontSize: 15,
+          }}
+        >
+          {translate('configuration_about')}
+        </Text>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between">
-            <Text>{translate('configuration_app_version')}</Text>
-            <Text>{Application.nativeApplicationVersion}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_app_version')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{Application.nativeApplicationVersion}</Text>
           </HStack>
           <Separator backgroundColor={colors.listBorderColor} />
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/')} pr={4} pl={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text>{translate('configuration_share_feedback')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_share_feedback')}</Text>
             <Octicons name="cross-reference" size={20} color="gray" />
           </Pressable>
           <Separator backgroundColor={colors.listBorderColor} />
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/issues/new')} pr={4} pl={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text>{translate('configuration_report_issue')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_report_issue')}</Text>
             <Octicons name="issue-opened" size={20} color="gray" />
           </Pressable>
           <Separator backgroundColor={colors.listBorderColor} />
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} px={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text>{translate('configuration_sources')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_sources')}</Text>
             <AntDesign name="github" size={20} color="gray" />
           </Pressable>
         </Box>
 
-        <Heading mx={2} py={2} pt={5} size="sm">{translate('configuration_debug')}</Heading>
+        <Text
+          style={{
+            fontFamily: 'Montserrat_Bold',
+            marginVertical: 10,
+            paddingHorizontal: 10,
+            paddingTop: 5,
+            color: colors.text,
+            fontSize: 15,
+          }}
+        >
+          {translate('configuration_debug')}
+        </Text>
         <Box borderTopWidth={1} borderBottomWidth={1} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} pr={4} pl={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text>{translate('configuration_get_help')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_get_help')}</Text>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
           <Separator backgroundColor={colors.listBorderColor} />
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showAlert} px={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text>{translate('configuration_clear_option')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_clear_option')}</Text>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
         </Box>

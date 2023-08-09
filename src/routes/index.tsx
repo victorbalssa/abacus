@@ -2,12 +2,10 @@ import React from 'react';
 import {
   NavigationContainer,
   DefaultTheme,
-  useNavigation,
-  CommonActions,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  BottomTabBar,
+  BottomTabBar, BottomTabBarButtonProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation } from '@expo/vector-icons';
@@ -22,12 +20,12 @@ import { useThemeColors } from '../lib/common';
 import OauthScreen from '../components/Screens/OauthScreen';
 import HomeScreen from '../components/Screens/HomeScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
+import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
 import TransactionDetailScreen from '../components/Screens/TransactionDetailScreen';
 import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
 
 // Modals
-import TransactionCreateModal from '../components/Modals/TransactionCreateModal';
 import TransactionEditModal from '../components/Modals/TransactionEditModal';
 
 // UI components
@@ -69,9 +67,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function TabBarPrimaryButton() {
-  const navigation = useNavigation();
-
+function TabBarPrimaryButton({ onPress }: BottomTabBarButtonProps) {
   return (
     <Box style={styles.container} pointerEvents="box-none">
       <IconButton
@@ -79,8 +75,7 @@ function TabBarPrimaryButton() {
           as: AntDesign,
           name: 'plus',
         }}
-        onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
-        onPress={() => navigation.dispatch(CommonActions.navigate({ name: 'TransactionCreateModal' }))}
+        onPress={onPress}
         _pressed={{
           style: {
             top: -15,
@@ -92,10 +87,6 @@ function TabBarPrimaryButton() {
       />
     </Box>
   );
-}
-
-function PrimaryButtonComponent() {
-  return <View />;
 }
 
 function TabBarComponent({
@@ -186,9 +177,9 @@ function TransactionsStack() {
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerTintColor: colors.text,
-/*          headerSearchBarOptions: {
+          /*          headerSearchBarOptions: {
             autoCapitalize: 'none',
-          },*/
+          }, */
           headerStyle: {
             backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
           },
@@ -202,6 +193,9 @@ function TransactionsStack() {
           headerTitle: '',
           headerBackTitleVisible: true,
           headerBackTitle: 'Back',
+          headerBackTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerTintColor: colors.text,
@@ -259,9 +253,19 @@ function Home() {
       />
       <Tab.Screen
         name={translate('navigation_create_tab')}
-        component={PrimaryButtonComponent}
+        component={TransactionCreateScreen}
         options={{
           tabBarButton: TabBarPrimaryButton,
+          headerShown: true,
+          headerTitle: translate('transaction_screen_title'),
+          headerTintColor: colors.text,
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: colors.tileBackgroundColor,
+          },
+          headerTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
         }}
       />
       <Tab.Screen
@@ -310,10 +314,6 @@ export default function Index() {
             presentation: 'modal',
           }}
         >
-          <ModalStack.Screen
-            name="TransactionCreateModal"
-            component={TransactionCreateModal}
-          />
           <ModalStack.Screen
             name="TransactionEditModal"
             component={TransactionEditModal}
