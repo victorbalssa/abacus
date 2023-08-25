@@ -105,7 +105,7 @@ function Cursor({
               } = style;
 
               return (
-                <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontWeight={600} fontSize={12}>
+                <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontSize={12}>
                   {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
                 </Text>
               );
@@ -167,9 +167,9 @@ export default function AssetsHistoryChart({
 
   return (
     <VStack
-      mx={1}
+      mx={1.5}
       bgColor={colors.tileBackgroundColor}
-      borderWidth={1}
+      borderWidth={0.5}
       borderColor={colors.listBorderColor}
       justifyContent="center"
       borderRadius={10}
@@ -210,7 +210,6 @@ export default function AssetsHistoryChart({
                   numberOfLines={1}
                   ml={1}
                   color={chart.color}
-                  fontWeight={600}
                   fontSize={15}
                 >
                   {chart.label}
@@ -271,8 +270,8 @@ export default function AssetsHistoryChart({
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
-                fill: colors.brandDarkLight,
-                fontWeight: 600,
+                fill: colors.text,
+                fontWeight: 200,
               },
             }}
           />
@@ -283,8 +282,8 @@ export default function AssetsHistoryChart({
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
-                fill: colors.brandDarkLight,
-                fontWeight: 600,
+                fill: colors.text,
+                fontWeight: 200,
                 angle: getTickValues().length > 7 ? -40 : 0,
               },
             }}

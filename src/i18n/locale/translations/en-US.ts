@@ -35,6 +35,7 @@ export default {
   transaction_form_tags_label: 'Tags',
   transaction_form_reset_button: 'Reset',
   transaction_form_submit_button: 'Submit',
+  transaction_form_new_split_button: 'New Split',
   transaction_list_alert_title: 'Are you sure?',
   transaction_list_alert_text: 'This transaction will be permanently removed:',
   transaction_list_delete_button: 'Delete',
@@ -105,4 +106,10 @@ export default {
   auth_create_new_personal_access_token: 'Create a new Personal Access Token on OAuth tab, here:',
   oauth_wrong_token_error_description: 'Failed to validate accessToken, please re-check your token or backend URL.',
   transaction_screen_edit_title: 'Edit Transaction',
+
+  // from 0.9.0
+  transaction_form_foreign_currency_label: 'Foreign currency',
+  transaction_form_group_title_label: 'Description of the split transaction',
+  transaction_form_group_title_placeholder: 'Title',
+  transaction_form_group_title_helper: 'If you create a split transaction, there must be a global description for all splits of the transaction.',
 };

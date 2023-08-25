@@ -1,0 +1,471 @@
+import React, { useState } from 'react';
+import moment from 'moment/moment';
+import { Platform } from 'react-native';
+import {
+  Button,
+  CheckIcon,
+  FormControl,
+  HStack,
+  IconButton,
+  Input,
+  Select,
+  Text,
+  TextArea,
+  VStack,
+} from 'native-base';
+import * as Haptics from 'expo-haptics';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useSelector } from 'react-redux';
+
+import translate from '../../i18n/locale';
+import { localNumberFormat, useThemeColors } from '../../lib/common';
+import AutocompleteField from './Fields/AutocompleteField';
+import { RootState } from '../../store';
+import { ErrorStateType, TransactionSplitType } from '../../models/transactions';
+
+const INITIAL_ERROR = {
+  description: '',
+  amount: '',
+  sourceName: '',
+  destinationName: '',
+  categoryId: '',
+  budgetId: '',
+  tags: '',
+  foreignCurrencyId: '',
+  foreignAmount: '',
+  notes: '',
+} as ErrorStateType;
+
+const INITIAL_SPLIT = {
+  type: 'withdrawal',
+  amount: '',
+  currencyCode: '',
+  currencySymbol: '',
+  date: new Date(),
+  description: '',
+  foreignCurrencyId: '',
+  foreignAmount: '',
+  sourceName: '',
+  destinationName: '',
+  categoryName: '',
+  categoryId: '',
+  budgetName: '',
+  budgetId: '',
+  tags: [],
+  notes: '',
+} as TransactionSplitType;
+
+export default function TransactionSplitForm({
+  index,
+  handleChange,
+  handleDelete,
+  errors = INITIAL_ERROR,
+  resetErrors,
+  transaction = INITIAL_SPLIT,
+}) {
+  const { colorScheme, colors } = useThemeColors();
+  const currencies = useSelector((state: RootState) => state.currencies.currencies);
+  const [formData, setData] = useState<TransactionSplitType>({
+    ...transaction,
+    date: new Date(transaction.date),
+    amount: transaction.amount ? parseFloat(transaction.amount).toFixed(2) : '',
+    foreignAmount: transaction.foreignAmount ? parseFloat(transaction.foreignAmount).toFixed(2) : '',
+  });
+  const [showDatePicker, setShowDatePicker] = useState(Platform.OS === 'ios');
+  const [showTimePicker, setShowTimePicker] = useState(false);
+
+  const setTransaction = (data: TransactionSplitType) => {
+    setData(data);
+    handleChange(data);
+  };
+
+  const types = [
+    {
+      type: 'withdrawal',
+      name: translate('transaction_form_type_withdraw'),
+    },
+    {
+      type: 'deposit',
+      name: translate('transaction_form_type_deposit'),
+    },
+    {
+      type: 'transfer',
+      name: translate('transaction_form_type_transfer'),
+    },
+  ];
+
+  const colorItemTypes = {
+    withdrawal: colors.red,
+    deposit: colors.green,
+    transfer: colors.blue,
+    'opening balance': colors.blue,
+  };
+
+  const deleteBtn = (fields: string[]) => (
+    <IconButton
+      mr={0}
+      h={8}
+      w={8}
+      variant="ghost"
+      colorScheme="gray"
+      _icon={{
+        as: AntDesign,
+        name: 'closecircle',
+        size: 19,
+        color: 'gray.500',
+      }}
+      onPress={() => setTransaction({
+        ...formData,
+        ...fields.reduce((acc, curr) => {
+          acc[curr] = '';
+          return acc;
+        }, {}),
+      })}
+    />
+  );
+
+  return (
+    <VStack
+      p={3}
+      my={2}
+      borderWidth={0.5}
+      bgColor={colors.tileBackgroundColor}
+      borderColor={colors.listBorderColor}
+      borderRadius={10}
+    >
+      {index !== 0 && (
+        <IconButton
+          variant="ghost"
+          _pressed={{
+            alignSelf: 'flex-end',
+          }}
+          style={{
+            alignSelf: 'flex-end',
+          }}
+          _icon={{
+            as: AntDesign,
+            name: 'closecircle',
+            size: 23,
+            color: 'gray.100',
+          }}
+          onPress={handleDelete}
+        />
+      )}
+      <FormControl isRequired>
+        <HStack justifyContent="center">
+          <Button.Group isAttached borderRadius={10}>
+            {types.map(({ type, name }) => (
+              <Button
+                onPress={() => {
+                  if (type !== formData.type) {
+                    setTransaction({
+                      ...formData,
+                      type,
+                    });
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  }
+                }}
+                _text={{
+                  color: type !== formData.type ? colors.text : colors.textOpposite,
+                  fontFamily: 'Montserrat_Bold',
+                  textTransform: 'capitalize',
+                }}
+                _disabled={{
+                  opacity: 1,
+                }}
+                isDisabled={type === formData.type}
+                backgroundColor={type !== formData.type ? colors.tileBackgroundColor : colorItemTypes[formData.type]}
+                key={type}
+                borderWidth={type === formData.type ? 0 : 0.5}
+                borderColor={colors.listBorderColor}
+              >
+                {name}
+              </Button>
+            ))}
+          </Button.Group>
+        </HStack>
+      </FormControl>
+
+      <FormControl mt="1" isRequired isInvalid={errors.amount !== ''}>
+        <FormControl.Label>
+          {translate('transaction_form_amount_label')}
+        </FormControl.Label>
+        <Input
+          height={60}
+          variant="outline"
+          returnKeyType="done"
+          keyboardType="numbers-and-punctuation"
+          placeholder={localNumberFormat(formData.currencyCode, 10.00)}
+          value={formData.amount}
+          textAlign="center"
+          fontSize={30}
+          onChangeText={(value) => setTransaction({
+            ...formData,
+            amount: value,
+          })}
+          InputRightElement={deleteBtn(['amount'])}
+          InputLeftElement={(<Text pl={3} fontSize={12}>{`${formData.currencyCode} ${formData.currencySymbol}`}</Text>)}
+        />
+        {'amount' in errors && <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage>}
+      </FormControl>
+
+      <FormControl mt="1" isInvalid={errors.foreignAmount !== ''}>
+        <FormControl.Label>
+          {translate('transaction_form_foreign_amount_label')}
+        </FormControl.Label>
+        <VStack>
+          <AutocompleteField
+            label=""
+            small
+            placeholder={translate('transaction_form_foreign_currency_label')}
+            value={formData.foreignCurrencyCode}
+            isInvalid={errors.foreignCurrencyId !== ''}
+            onSelectAutocomplete={(autocomplete) => setTransaction({
+              ...formData,
+              foreignCurrencyId: autocomplete.id,
+              foreignCurrencyCode: autocomplete.code,
+            })}
+            InputRightElement={null}
+            routeApi="currencies-with-code"
+            error={errors.foreignCurrencyId}
+          />
+          <Input
+            variant="outline"
+            returnKeyType="done"
+            keyboardType="numbers-and-punctuation"
+            placeholder={localNumberFormat(formData.foreignCurrencyCode, 0.00)}
+            value={formData.foreignAmount}
+            textAlign="center"
+            fontSize={20}
+            onChangeText={(value) => setTransaction({
+              ...formData,
+              foreignAmount: value,
+            })}
+            InputRightElement={deleteBtn(['foreignAmount', 'foreignCurrencyId', 'foreignCurrencyCode'])}
+          />
+        </VStack>
+        {'foreignAmount' in errors && <FormControl.ErrorMessage>{errors.foreignAmount}</FormControl.ErrorMessage>}
+      </FormControl>
+
+      <FormControl mt="1" isRequired>
+        <FormControl.Label>
+          {translate('transaction_form_date_label')}
+        </FormControl.Label>
+        {showDatePicker && (
+          <DateTimePicker
+            accentColor={colors.brandDark}
+            themeVariant={colorScheme}
+            mode={Platform.select({ android: 'date', ios: 'datetime' })}
+            style={{ width: 235, alignSelf: 'center' }}
+            value={(formData.date instanceof Date) ? formData.date : new Date(formData.date)}
+            onChange={(event, value) => {
+              setShowDatePicker(Platform.OS === 'ios');
+              setTransaction({
+                ...formData,
+                date: value,
+              });
+            }}
+          />
+        )}
+        {showTimePicker && Platform.OS === 'android' && (
+          <DateTimePicker
+            accentColor={colors.brandDark}
+            themeVariant={colorScheme}
+            mode="time"
+            style={{ width: 235, alignSelf: 'center' }}
+            value={(formData.date instanceof Date) ? formData.date : new Date(formData.date)}
+            onChange={(event, value) => {
+              setShowTimePicker(false);
+              setTransaction({
+                ...formData,
+                date: value,
+              });
+            }}
+          />
+        )}
+        {Platform.OS === 'android' && (
+          <HStack justifyContent="center">
+            <Button
+              mx={2}
+              variant="outline"
+              onPress={() => setShowDatePicker(true)}
+            >
+              <Text>{moment(formData.date).format('ll')}</Text>
+            </Button>
+            <Button
+              mx={2}
+              variant="outline"
+              onPress={() => setShowTimePicker(true)}
+            >
+              <Text>{moment(formData.date).format('hh:mm a')}</Text>
+            </Button>
+          </HStack>
+        )}
+      </FormControl>
+
+      <AutocompleteField
+        label={translate('transaction_form_description_label')}
+        placeholder={translate('transaction_form_description_label')}
+        value={formData.description}
+        isInvalid={errors.description !== ''}
+        onChangeText={(value) => {
+          setTransaction({
+            ...formData,
+            description: value,
+          });
+        }}
+        onSelectAutocomplete={(autocomplete) => setTransaction({
+          ...formData,
+          description: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['description'])}
+        routeApi="transactions"
+        error={errors.description}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_sourceAccount_label')}
+        placeholder={translate('transaction_form_sourceAccount_label')}
+        value={formData.sourceName}
+        isInvalid={errors.sourceName !== ''}
+        onChangeText={(value) => setTransaction({
+          ...formData,
+          sourceName: value,
+        })}
+        onSelectAutocomplete={(autocomplete) => setTransaction({
+          ...formData,
+          sourceName: autocomplete.name,
+          currencyCode: autocomplete.currencyCode,
+          currencySymbol: autocomplete.currencySymbol,
+        })}
+        InputRightElement={deleteBtn(['sourceName', 'currencyCode', 'currencySymbol'])}
+        routeApi="accounts"
+        error={errors.sourceName}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_destinationAccount_label')}
+        placeholder={translate('transaction_form_destinationAccount_label')}
+        value={formData.destinationName}
+        isInvalid={errors.destinationName !== ''}
+        onChangeText={(value) => setTransaction({
+          ...formData,
+          destinationName: value,
+        })}
+        onSelectAutocomplete={(autocomplete) => setTransaction({
+          ...formData,
+          destinationName: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['destinationName'])}
+        routeApi="accounts"
+        isDestination
+        error={errors.destinationName}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_category_label')}
+        placeholder={translate('transaction_form_category_label')}
+        value={formData.categoryName}
+        isInvalid={errors.categoryId !== ''}
+        onChangeText={(value) => setTransaction({
+          ...formData,
+          categoryName: value,
+        })}
+        onSelectAutocomplete={(autocomplete) => setTransaction({
+          ...formData,
+          categoryId: autocomplete.id,
+          categoryName: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['categoryId', 'categoryName'])}
+        routeApi="categories"
+        error={errors.categoryId}
+      />
+
+      <AutocompleteField
+        label={translate('transaction_form_budget_label')}
+        placeholder={translate('transaction_form_budget_label')}
+        value={formData.budgetName}
+        isInvalid={errors.budgetId !== ''}
+        onChangeText={(value) => setTransaction({
+          ...formData,
+          budgetName: value,
+        })}
+        onSelectAutocomplete={(autocomplete) => setTransaction({
+          ...formData,
+          budgetId: autocomplete.id,
+          budgetName: autocomplete.name,
+        })}
+        InputRightElement={deleteBtn(['budgetId', 'budgetName'])}
+        routeApi="budgets"
+        error={errors.budgetId}
+      />
+
+      <AutocompleteField
+        multiple
+        InputRightElement={null}
+        label={translate('transaction_form_tags_label')}
+        placeholder={translate('transaction_form_tags_label')}
+        value={formData.tags}
+        isInvalid={errors.tags !== ''}
+        onChangeText={() => {}}
+        onDeleteMultiple={(item) => setTransaction({
+          ...formData,
+          tags: formData.tags.filter((tag) => tag !== item),
+        })}
+        onSelectAutocomplete={(autocomplete) => setTransaction({
+          ...formData,
+          tags: Array.from(new Set([...formData.tags, autocomplete.name])),
+        })}
+        routeApi="tags"
+        error={errors.tags}
+      />
+
+      <FormControl mt="1">
+        <FormControl.Label>
+          {translate('transaction_form_notes_label')}
+        </FormControl.Label>
+        <TextArea
+          h={20}
+          autoCompleteType
+          value={formData.notes}
+          onChangeText={(value) => setTransaction({
+            ...formData,
+            notes: value,
+          })}
+          placeholder={translate('transaction_form_notes_label')}
+          InputRightElement={deleteBtn(['notes'])}
+        />
+      </FormControl>
+
+      <Button
+        mt="3"
+        variant="outline"
+        colorScheme="gray"
+        onPress={() => {
+          setTransaction({
+            date: new Date(),
+            sourceName: '',
+            destinationName: '',
+            description: '',
+            amount: '',
+            type: 'withdrawal',
+            budgetId: '',
+            budgetName: '',
+            tags: [],
+            categoryId: '',
+            categoryName: '',
+            foreignAmount: '',
+            foreignCurrencyId: '',
+            notes: '',
+            currencySymbol: '',
+            currencyCode: '',
+          });
+          resetErrors();
+        }}
+      >
+        {translate('transaction_form_reset_button')}
+      </Button>
+    </VStack>
+  );
+}

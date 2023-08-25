@@ -56,8 +56,8 @@ function InsightCategories() {
       <Box
         mt={1}
         backgroundColor={colors.tileBackgroundColor}
-        borderTopWidth={1}
-        borderBottomWidth={1}
+        borderTopWidth={0.5}
+        borderBottomWidth={0.5}
         borderColor={colors.listBorderColor}
       >
         {insightCategories.map((category, index) => (
@@ -68,7 +68,7 @@ function InsightCategories() {
             h={45}
             alignItems="center"
             justifyContent="space-between"
-            borderBottomWidth={index + 1 === insightCategories.length ? 0 : 1}
+            borderBottomWidth={index + 1 === insightCategories.length ? 0 : 0.5}
             borderColor={colors.listBorderColor}
           >
             <Text>
@@ -111,8 +111,8 @@ function InsightBudgets() {
       <Box
         mt={1}
         backgroundColor={colors.tileBackgroundColor}
-        borderTopWidth={1}
-        borderBottomWidth={1}
+        borderTopWidth={0.5}
+        borderBottomWidth={0.5}
         borderColor={colors.listBorderColor}
       >
         {insightBudgets.map((budget, index) => (
@@ -124,7 +124,7 @@ function InsightBudgets() {
               pr={2}
               h={60}
               justifyContent="center"
-              borderBottomWidth={index + 1 === insightBudgets.length ? 0 : 1}
+              borderBottomWidth={index + 1 === insightBudgets.length ? 0 : 0.5}
               borderColor={colors.listBorderColor}
             >
               <HStack
@@ -182,8 +182,8 @@ function AssetsAccounts() {
       <Box
         backgroundColor={colors.tileBackgroundColor}
         mt={1}
-        borderTopWidth={1}
-        borderBottomWidth={1}
+        borderTopWidth={0.5}
+        borderBottomWidth={0.5}
         borderColor={colors.listBorderColor}
       >
         {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
@@ -194,7 +194,7 @@ function AssetsAccounts() {
             h={45}
             alignItems="center"
             justifyContent="space-between"
-            borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 1}
+            borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 0.5}
             borderColor={colors.listBorderColor}
           >
             <Text>
@@ -398,7 +398,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
         px={4}
         backgroundColor={colors.tileBackgroundColor}
         borderRadius={10}
-        borderWidth={1}
+        borderWidth={0.5}
         borderColor={colors.listBorderColor}
       >
         <NetWorth />

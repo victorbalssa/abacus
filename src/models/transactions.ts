@@ -2,17 +2,25 @@ import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
 export type TransactionSplitType = {
+  order?: number
   description: string,
   amount: string,
-  currencyDecimalPlaces: number,
   type: string,
+  categoryId: string,
   categoryName: string,
+  budgetId: string,
+  budgetName: string,
   currencyCode: string,
   currencySymbol: string,
-  date: string,
+  currencyDecimalPlaces?: number,
+  date: string | Date,
   sourceName: string,
   destinationName: string,
-  order: number
+  tags: string[],
+  notes: string,
+  foreignAmount: string,
+  foreignCurrencyId: string,
+  foreignCurrencyCode?: string,
 }
 
 export type TransactionType = {
@@ -31,6 +39,19 @@ export type TransactionStateType = {
   transactions: TransactionType[]
   page: number
   totalPages: number
+}
+
+export type ErrorStateType = {
+  description: string
+  sourceName: string
+  destinationName: string
+  amount: string
+  categoryId: string
+  budgetId: string
+  tags: string
+  foreignCurrencyId: string
+  foreignAmount: string
+  notes: string
 }
 
 const INITIAL_STATE = {
@@ -141,24 +162,24 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async createTransaction(payload) {
+    async createTransaction({ transactions }) {
       const body = {
-        transactions: [{
-          tags: payload.tags,
-          notes: payload.notes,
-          foreign_amount: payload.foreignAmount,
-          foreign_currency_id: payload.foreignCurrencyId,
-          description: payload.description,
-          date: payload.date,
-          source_name: payload.sourceName,
-          destination_name: payload.destinationName,
-          category_id: payload.categoryId,
-          category_name: payload.categoryName,
-          budget_id: payload.budgetId,
-          budget_name: payload.budgetName,
-          type: payload.type,
-          amount: payload.amount.replace(/,/g, '.'),
-        }],
+        transactions: transactions.map((transaction) => ({
+          tags: transaction.tags,
+          notes: transaction.notes,
+          foreign_amount: transaction.foreignAmount ? transaction.foreignAmount.replace(/,/g, '.') : 0,
+          foreign_currency_id: transaction.foreignCurrencyId,
+          description: transaction.description,
+          date: transaction.date,
+          source_name: transaction.sourceName,
+          destination_name: transaction.destinationName,
+          category_id: transaction.categoryName === '' ? undefined : transaction.categoryId,
+          category_name: transaction.categoryName,
+          budget_id: transaction.budgetId,
+          budget_name: transaction.budgetName,
+          type: transaction.type,
+          amount: transaction.amount.replace(/,/g, '.'),
+        })),
         error_if_duplicate_hash: false,
         apply_rules: true,
         fire_webhooks: true,
@@ -174,16 +195,9 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async updateTransaction(payload) {
-      const {
-        id,
-        transaction,
-      } = payload;
-      if (transaction.categoryName === '') {
-        delete transaction.categoryId;
-      }
+    async updateTransaction({ id, transactions }) {
       const body = {
-        transactions: [{
+        transactions: transactions.map((transaction: TransactionSplitType) => ({
           tags: transaction.tags,
           notes: transaction.notes,
           foreign_amount: transaction.foreignAmount,
@@ -192,13 +206,13 @@ export default createModel<RootModel>()({
           date: transaction.date,
           source_name: transaction.sourceName,
           destination_name: transaction.destinationName,
-          category_id: transaction.categoryId,
+          category_id: transaction.categoryName === '' ? undefined : transaction.categoryId,
           category_name: transaction.categoryName,
           budget_id: transaction.budgetId,
           budget_name: transaction.budgetName,
           type: transaction.type,
           amount: transaction.amount.replace(/,/g, '.'),
-        }],
+        })),
       };
 
       const data = await dispatch.configuration.apiPut({ url: `/api/v1/transactions/${id}`, body });
