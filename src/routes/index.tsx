@@ -249,7 +249,7 @@ function Home() {
         }}
       />
       <Tab.Screen
-        name={translate('navigation_create_tab')}
+        name="TransactionCreateScreen"
         component={TransactionCreateScreen}
         options={{
           tabBarButton: TabBarPrimaryButton,
@@ -271,7 +271,7 @@ function Home() {
         component={TransactionsStack}
         options={{
           tabBarIcon: TabBarTransactionScreenIcon,
-          title: translate('navigation_transactions_tab')
+          title: translate('navigation_transactions_tab'),
         }}
       />
       <Tab.Screen

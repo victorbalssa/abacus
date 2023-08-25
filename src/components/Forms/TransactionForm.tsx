@@ -1,72 +1,38 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Keyboard, Platform, View } from 'react-native';
 import {
-  Button, FormControl, Input, KeyboardAvoidingView, VStack,
+  Button,
+  KeyboardAvoidingView,
 } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
+import * as Crypto from 'expo-crypto';
 
 import { useThemeColors } from '../../lib/common';
 import TransactionSplitForm from '../Forms/TransactionSplitForm';
 import { RootDispatch, RootState } from '../../store';
-import { ErrorStateType, TransactionSplitType } from '../../models/transactions';
 import translate from '../../i18n/locale';
 import ToastAlert from '../UI/ToastAlert';
-
-const INITIAL_ERROR = {
-  description: '',
-  amount: '',
-  sourceName: '',
-  destinationName: '',
-  categoryId: '',
-  budgetId: '',
-  tags: '',
-  foreignCurrencyId: '',
-  foreignAmount: '',
-  notes: '',
-} as ErrorStateType;
-
-const INITIAL_SPLIT = {
-  type: 'withdrawal',
-  amount: '',
-  currencyCode: '',
-  currencySymbol: '',
-  date: new Date(),
-  description: '',
-  foreignCurrencyId: '',
-  foreignAmount: '',
-  sourceName: '',
-  destinationName: '',
-  categoryName: '',
-  categoryId: '',
-  budgetName: '',
-  budgetId: '',
-  tags: [],
-  notes: '',
-} as TransactionSplitType;
+import GroupTitle from './Fields/GroupTitle';
 
 export default function TransactionForm({
   navigation,
   title,
-  splits = [INITIAL_SPLIT],
+  splits = [],
   id = null,
 }) {
   const { colors } = useThemeColors();
-  const transactionSplits = splits ? [...splits] : [];
   const effect = useSelector((state: RootState) => state.loading.effects.transactions[id ? 'updateTransaction' : 'createTransaction']);
   const dispatch = useDispatch<RootDispatch>();
 
-  const [splitNumber, setSplitNumber] = useState<number[]>(splits.map((split, i) => i) || [0]);
-  const [groupTitle, setGroupTitle] = useState<string>(title || 'Default title');
-  const [transactions, setTransactions] = useState<TransactionSplitType[]>(splits.length ? transactionSplits.map((split) => ({
-    ...split,
-    date: new Date(split.date),
-    amount: split.amount ? parseFloat(split.amount).toFixed(2) : '',
-    foreignAmount: split.foreignAmount ? parseFloat(split.foreignAmount).toFixed(2) : '',
-  })) : [{ ...INITIAL_SPLIT }]);
+  const [splitNumber, setSplitNumber] = useState<string[]>([]);
   const [globalError, setGlobalError] = useState('');
-  const [errors, setErrors] = useState(splits.length ? [...splits].map(() => ({ ...INITIAL_ERROR })) : [{ ...INITIAL_ERROR }]);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    dispatch.transactions.resetTransaction({ splits, title });
+    setSplitNumber(splits.length ? splits.map(() => Crypto.randomUUID()) : [Crypto.randomUUID()]);
+  }, []);
 
   const goToTransactions = async () => {
     navigation.navigate('Transactions', {
@@ -78,69 +44,34 @@ export default function TransactionForm({
     });
   };
 
-  const resetAllErrors = () => {
-    setErrors(errors.map(() => ({ ...INITIAL_ERROR })));
-    setGlobalError('');
-  };
-
-  const resetErrors = (i) => {
-    errors[i] = { ...INITIAL_ERROR };
-    setErrors(errors);
-  };
-
-  const validate = () => {
-    let errorCount = 0;
-    const newErrors = errors.map(() => ({ ...INITIAL_ERROR }));
-    transactions.forEach((transaction: TransactionSplitType, i) => {
-      if (transaction.description === undefined || transaction.description.length < 1) {
-        newErrors[i].description = translate('transaction_form_description_short');
-        errorCount += 1;
-      }
-      if (transaction.amount === undefined || transaction.amount.length < 1) {
-        newErrors[i].amount = translate('transaction_form_amount_required');
-        errorCount += 1;
-      }
-    });
-    setErrors(newErrors);
-
-    return errorCount === 0;
-  };
-
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    if (validate()) {
-      try {
-        resetAllErrors();
-        if (id === null) {
-          await dispatch.transactions.createTransaction({ transactions, groupTitle });
-        } else {
-          await dispatch.transactions.updateTransaction({ id, transactions, groupTitle });
-        }
-        setSuccess(true);
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } catch (e) {
-        setSuccess(false);
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        if (e.response) {
-          setGlobalError(e.response.data.message);
-        }
+    try {
+      setGlobalError('');
+      if (id === null) {
+        await dispatch.transactions.createTransaction();
+      } else {
+        await dispatch.transactions.updateTransaction({ id });
+      }
+      setSuccess(true);
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (e) {
+      setSuccess(false);
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      if (e.response) {
+        setGlobalError(e.response.data.message);
       }
     }
   };
 
   const addTransactionSplit = () => {
-    setErrors(errors.concat(INITIAL_ERROR));
-    setTransactions([
-      ...transactions,
-      INITIAL_SPLIT,
-    ]);
-    setSplitNumber((prevState) => [...prevState, prevState[prevState.length - 1] + 1]);
+    dispatch.transactions.addTransactionSplit();
+    setSplitNumber((prevState) => [...prevState, Crypto.randomUUID()]);
   };
 
   const deleteTransactionSplit = (index: number) => {
     setSplitNumber((prevState) => prevState.filter((_, i) => i !== index));
-    setErrors((prevState) => prevState.filter((_, i) => i !== index));
-    setTransactions((prevState) => prevState.filter((_, i) => i !== index));
+    dispatch.transactions.deleteTransactionSplit(index);
   };
 
   return useMemo(
@@ -161,32 +92,12 @@ export default function TransactionForm({
           <TransactionSplitForm
             key={e}
             index={i}
-            transaction={transactionSplits[i]}
-            handleChange={(data) => {
-              const newTransactions = [...transactions];
-              newTransactions[i] = data;
-              setTransactions(newTransactions);
-            }}
-            errors={errors[i]}
-            resetErrors={() => resetErrors(i)}
+            total={splitNumber.length}
+            transaction={splits[i]}
             handleDelete={() => deleteTransactionSplit(i)}
           />
         ))}
-        {splitNumber.length > 1 && (
-          <FormControl mt="1" isInvalid={!groupTitle}>
-            <FormControl.Label>
-              {translate('transaction_form_group_title_label')}
-            </FormControl.Label>
-            <Input
-              variant="outline"
-              returnKeyType="done"
-              placeholder={translate('transaction_form_group_title_placeholder')}
-              value={groupTitle}
-              onChangeText={(value) => setGroupTitle(value)}
-            />
-            <FormControl.HelperText>{translate('transaction_form_group_title_helper')}</FormControl.HelperText>
-          </FormControl>
-        )}
+        {splitNumber.length > 1 && (<GroupTitle title={title || 'Default title'} />)}
         {success && !effect?.loading
           && (
             <ToastAlert
@@ -253,11 +164,9 @@ export default function TransactionForm({
     ),
     [
       splitNumber,
-      errors,
       effect,
       globalError,
       success,
-      groupTitle,
     ],
   );
 }

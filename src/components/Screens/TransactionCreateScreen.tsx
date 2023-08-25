@@ -19,7 +19,8 @@ export default function TransactionCreateScreen({ navigation, route }: ScreenTyp
     >
       <TransactionForm
         navigation={navigation}
-        splits={payload}
+        splits={payload?.splits}
+        title={payload?.groupTitle}
       />
     </ScrollView>
   );

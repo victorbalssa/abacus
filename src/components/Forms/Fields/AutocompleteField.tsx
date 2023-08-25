@@ -24,6 +24,7 @@ type AutocompleteType = {
 
 export default function AutocompleteField({
   isInvalid = false,
+  isRequired = false,
   label,
   placeholder,
   value,
@@ -31,7 +32,7 @@ export default function AutocompleteField({
   onSelectAutocomplete,
   InputRightElement,
   routeApi,
-  error,
+  error = null,
   onDeleteMultiple = (item: string) => {},
   isDestination = false,
   multiple = false,
@@ -39,6 +40,7 @@ export default function AutocompleteField({
 }) {
   const { colors } = useThemeColors();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
+  const [multipleValue, setMultipleValue] = useState('');
   const [autocompletes, setAutocompletes] = useState([]);
   const [displayAutocomplete, setDisplayAutocomplete] = useState(false);
   const refreshAutocomplete = async (query) => {
@@ -50,9 +52,12 @@ export default function AutocompleteField({
   };
 
   const handleChangeText = (text) => {
-    if (!multiple) {
+    if (multiple) {
+      setMultipleValue(text);
+    } else {
       onChangeText(text);
     }
+
     refreshAutocomplete(text);
   };
   const handleSelectAutocomplete = (autocomplete) => {
@@ -68,7 +73,7 @@ export default function AutocompleteField({
   };
 
   return (
-    <FormControl mt="1" isInvalid={isInvalid}>
+    <FormControl mt="1" isRequired={isRequired} isInvalid={isInvalid}>
       {!small && (
         <FormControl.Label>
           {label}
@@ -79,7 +84,7 @@ export default function AutocompleteField({
         {value.map((item, index) => (
           <Badge
             mr={1}
-            my={2}
+            mb={2}
             py={1}
             borderRadius={10}
             key={`${index + 1}${item}`}
@@ -106,9 +111,9 @@ export default function AutocompleteField({
       )}
       <Input
         returnKeyType="done"
-        onSubmitEditing={({ nativeEvent: { text } }) => (multiple ? handleSelectAutocomplete({ name: text }) : null)}
+        onSubmitEditing={({ nativeEvent: { text } }) => ((multiple && text !== '') ? handleSelectAutocomplete({ name: text }) : null)}
         placeholder={placeholder}
-        value={!multiple ? value : ''}
+        value={!multiple ? value : multipleValue}
         onChangeText={handleChangeText}
         onFocus={handleFocus}
         onBlur={handleBlur}

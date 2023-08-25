@@ -101,7 +101,7 @@ function RenderItem({ item }: { item: TransactionType }) {
   // TODO: do not pass entire payload into this modal
   const goToDuplicate = (payload) => navigation.dispatch(
     CommonActions.navigate({
-      name: 'TransactionCreateModal',
+      name: 'TransactionCreateScreen',
       params: {
         payload,
       },
@@ -151,7 +151,6 @@ function RenderItem({ item }: { item: TransactionType }) {
       borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
       onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         goToEdit(item.id, {
           splits: item.attributes.transactions,
           groupTitle: item.attributes.groupTitle,
@@ -159,7 +158,10 @@ function RenderItem({ item }: { item: TransactionType }) {
       }}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        goToDuplicate(item.attributes.transactions);
+        goToDuplicate({
+          splits: item.attributes.transactions,
+          groupTitle: item.attributes.groupTitle,
+        });
       }}
     >
       <HStack justifyContent="space-between" alignItems="flex-start">
@@ -202,7 +204,7 @@ function RenderItem({ item }: { item: TransactionType }) {
               maxW={170}
               numberOfLines={1}
             >
-              {`${moment(item.attributes.transactions[0].date).format('ll')} ${item.attributes.transactions[0].categoryName ? `• ${item.attributes.transactions[0].categoryName}` : ''}`}
+              {`${moment(item.attributes.transactions[0].date).format('ll - hh:mm a')} ${item.attributes.transactions[0].categoryName ? `• ${item.attributes.transactions[0].categoryName}` : ''}`}
             </Text>
           </VStack>
         </HStack>
