@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 
 import { AntDesign } from '@expo/vector-icons';
 import { RootState } from '../../../store';
-import { useThemeColors } from '../../../lib/common';
+import { convertKeysToCamelCase, useThemeColors } from '../../../lib/common';
 
 type AutocompleteType = {
   name: string,
@@ -27,7 +27,7 @@ export default function AutocompleteField({
   label,
   placeholder,
   value,
-  onChangeText,
+  onChangeText = (item: string) => {},
   onSelectAutocomplete,
   InputRightElement,
   routeApi,
@@ -35,6 +35,7 @@ export default function AutocompleteField({
   onDeleteMultiple = (item: string) => {},
   isDestination = false,
   multiple = false,
+  small = false,
 }) {
   const { colors } = useThemeColors();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
@@ -45,7 +46,7 @@ export default function AutocompleteField({
     const type = isDestination ? 'Expense%20account' : 'Revenue%20account';
     const types = routeApi === 'accounts' ? `&types=Asset%20account,${type},Loan,Debt,Mortgage` : '';
     const response = await axios.get(`${backendURL}/api/v1/autocomplete/${routeApi}?limit=${limit}${types}&query=${encodeURIComponent(query)}`);
-    setAutocompletes(response.data);
+    setAutocompletes(convertKeysToCamelCase(response.data));
   };
 
   const handleChangeText = (text) => {
@@ -60,7 +61,7 @@ export default function AutocompleteField({
   };
   const handleFocus = () => {
     setDisplayAutocomplete(true);
-    refreshAutocomplete(value || '');
+    refreshAutocomplete(value && !small && !multiple ? value : '');
   };
   const handleBlur = () => {
     setDisplayAutocomplete(false);
@@ -68,9 +69,11 @@ export default function AutocompleteField({
 
   return (
     <FormControl mt="1" isInvalid={isInvalid}>
-      <FormControl.Label>
-        {label}
-      </FormControl.Label>
+      {!small && (
+        <FormControl.Label>
+          {label}
+        </FormControl.Label>
+      )}
       {multiple && (
       <ScrollView horizontal>
         {value.map((item, index) => (
@@ -105,7 +108,7 @@ export default function AutocompleteField({
         returnKeyType="done"
         onSubmitEditing={({ nativeEvent: { text } }) => (multiple ? handleSelectAutocomplete({ name: text }) : null)}
         placeholder={placeholder}
-        value={!multiple && value}
+        value={!multiple ? value : ''}
         onChangeText={handleChangeText}
         onFocus={handleFocus}
         onBlur={handleBlur}

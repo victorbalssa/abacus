@@ -112,14 +112,6 @@ export default {
         shadow: 2,
       },
     },
-    Heading: {
-      baseStyle: {
-        fontFamily: 'Montserrat_Bold',
-        _text: {
-          fontFamily: 'Montserrat_Bold',
-        },
-      },
-    },
     IconButton: {
       defaultProps: {
         size: 'lg',

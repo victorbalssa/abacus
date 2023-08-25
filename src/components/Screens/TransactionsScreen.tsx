@@ -1,12 +1,12 @@
 import React, {
   useCallback,
-  useMemo, useRef,
+  useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
   Alert,
   RefreshControl,
-  View,
 } from 'react-native';
 import {
   Box,
@@ -23,7 +23,6 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CommonActions,
   useFocusEffect,
@@ -35,6 +34,7 @@ import { TransactionType } from '../../models/transactions';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
+import { ScreenType } from './types';
 
 const ITEM_HEIGHT = 90;
 
@@ -49,7 +49,7 @@ function ListFooterComponent() {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={1}
+      borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
     >
       <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
@@ -64,7 +64,7 @@ function ListFooterComponent() {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={1}
+      borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
     >
       <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
@@ -148,15 +148,15 @@ function RenderItem({ item }: { item: TransactionType }) {
       h={ITEM_HEIGHT}
       paddingLeft={2}
       backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={1}
+      borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        goToEdit(item.id, item.attributes.transactions[0]);
+        goToEdit(item.id, item.attributes.transactions);
       }}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        goToDuplicate(item.attributes.transactions[0]);
+        goToDuplicate(item.attributes.transactions);
       }}
     >
       <HStack justifyContent="space-between" alignItems="flex-start">
@@ -253,7 +253,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
     <HStack
       h={ITEM_HEIGHT}
       flexDirection="row"
-      borderTopWidth={1}
+      borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
     >
       <Pressable justifyContent="center" alignItems="flex-start" flex={1} backgroundColor={colors.brandWarning} onPress={handleOnPressCopy} px={5}>
@@ -276,13 +276,13 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
   ), [handleOnPressCopy, handleOnPressDelete]);
 }
 
-export default function TransactionsScreen() {
+export default function TransactionsScreen({ navigation, route }: ScreenType) {
+  const { params } = route;
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
   const currency = useSelector((state: RootState) => state.currencies.current);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const dispatch = useDispatch<RootDispatch>();
-  const navigation = useNavigation();
 
   const onRefresh = async () => {
     const effectTransactions = await dispatch.transactions.getTransactions();
@@ -304,15 +304,20 @@ export default function TransactionsScreen() {
         }
       };
 
-      if (prevFiltersRef.current !== `${rangeDetails.start}-${rangeDetails.end}-${currency.id}`) {
+      if (prevFiltersRef.current !== `${rangeDetails.start}-${rangeDetails.end}-${currency.id}` || params?.forceRefresh === true) {
         fetchData();
         prevFiltersRef.current = `${rangeDetails.start}-${rangeDetails.end}-${currency.id}`;
       }
 
       return () => {
         isActive = false;
+        navigation.setParams({ forceRefresh: null });
       };
-    }, [rangeDetails, currency]),
+    }, [
+      params,
+      rangeDetails,
+      currency,
+    ]),
   );
 
   const onEndReached = async () => {
@@ -352,7 +357,7 @@ export default function TransactionsScreen() {
         contentInsetAdjustmentBehavior="automatic"
         refreshControl={(
           <RefreshControl
-            refreshing={false}
+            refreshing={loadingRefresh}
             onRefresh={onRefresh}
           />
         )}

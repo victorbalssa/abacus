@@ -26,7 +26,7 @@ export default function NavigationHeader({ navigationState, relative = false }) 
 
   return useMemo(() => (
     <ThemeBlurView
-      intensity={80}
+      intensity={90}
       style={{
         position: relative ? 'relative' : 'absolute',
         top: 0,
@@ -40,10 +40,10 @@ export default function NavigationHeader({ navigationState, relative = false }) 
         alignItems="center"
         justifyContent="center"
         safeAreaTop
-        borderBottomWidth={1}
+        borderBottomWidth={0.5}
         borderColor={colors.listBorderColor}
       >
-        <HStack px={3} py={2} justifyContent="space-between" alignItems="center">
+        <HStack px={2} py={1} justifyContent="space-between" alignItems="center">
           <IconButton
             variant="ghost"
             _icon={{
