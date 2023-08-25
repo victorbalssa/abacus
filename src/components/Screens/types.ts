@@ -7,7 +7,10 @@ export type ScreenType = {
   },
   route?: {
     params?: {
-      payload?: TransactionSplitType[]
+      payload?: {
+        splits?: TransactionSplitType[]
+        groupTitle?: string
+      }
       id?: string
       forceRefresh?: boolean | undefined
     }

@@ -152,7 +152,10 @@ function RenderItem({ item }: { item: TransactionType }) {
       borderColor={colors.listBorderColor}
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        goToEdit(item.id, item.attributes.transactions);
+        goToEdit(item.id, {
+          splits: item.attributes.transactions,
+          groupTitle: item.attributes.groupTitle,
+        });
       }}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);

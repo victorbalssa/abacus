@@ -162,8 +162,9 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async createTransaction({ transactions }) {
+    async createTransaction({ transactions, groupTitle }) {
       const body = {
+        group_title: groupTitle,
         transactions: transactions.map((transaction) => ({
           tags: transaction.tags,
           notes: transaction.notes,
@@ -195,8 +196,9 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async updateTransaction({ id, transactions }) {
+    async updateTransaction({ id, transactions, groupTitle }) {
       const body = {
+        group_title: groupTitle,
         transactions: transactions.map((transaction: TransactionSplitType) => ({
           tags: transaction.tags,
           notes: transaction.notes,

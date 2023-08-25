@@ -45,14 +45,19 @@ const INITIAL_SPLIT = {
   notes: '',
 } as TransactionSplitType;
 
-export default function TransactionForm({ navigation, splits = [INITIAL_SPLIT], id = null }) {
+export default function TransactionForm({
+  navigation,
+  title,
+  splits = [INITIAL_SPLIT],
+  id = null,
+}) {
   const { colors } = useThemeColors();
   const transactionSplits = splits ? [...splits] : [];
   const effect = useSelector((state: RootState) => state.loading.effects.transactions[id ? 'updateTransaction' : 'createTransaction']);
   const dispatch = useDispatch<RootDispatch>();
 
   const [splitNumber, setSplitNumber] = useState<number[]>(splits.map((split, i) => i) || [0]);
-  const [groupTitle, setGroupTitle] = useState<string>('');
+  const [groupTitle, setGroupTitle] = useState<string>(title || 'Default title');
   const [transactions, setTransactions] = useState<TransactionSplitType[]>(splits.length ? transactionSplits.map((split) => ({
     ...split,
     date: new Date(split.date),
@@ -107,9 +112,9 @@ export default function TransactionForm({ navigation, splits = [INITIAL_SPLIT], 
       try {
         resetAllErrors();
         if (id === null) {
-          await dispatch.transactions.createTransaction({ transactions });
+          await dispatch.transactions.createTransaction({ transactions, groupTitle });
         } else {
-          await dispatch.transactions.updateTransaction({ id, transactions });
+          await dispatch.transactions.updateTransaction({ id, transactions, groupTitle });
         }
         setSuccess(true);
         await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -168,7 +173,7 @@ export default function TransactionForm({ navigation, splits = [INITIAL_SPLIT], 
           />
         ))}
         {splitNumber.length > 1 && (
-          <FormControl mt="1" isInvalid={groupTitle.length < 1}>
+          <FormControl mt="1" isInvalid={!groupTitle}>
             <FormControl.Label>
               {translate('transaction_form_group_title_label')}
             </FormControl.Label>
@@ -252,6 +257,7 @@ export default function TransactionForm({ navigation, splits = [INITIAL_SPLIT], 
       effect,
       globalError,
       success,
+      groupTitle,
     ],
   );
 }
