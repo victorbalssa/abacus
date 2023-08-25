@@ -16,12 +16,12 @@ import {
 import * as Haptics from 'expo-haptics';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
-import { RootState } from '../../store';
+import {RootDispatch, RootState} from '../../store';
 import { ErrorStateType, TransactionSplitType } from '../../models/transactions';
 
 const INITIAL_ERROR = {
@@ -58,14 +58,12 @@ const INITIAL_SPLIT = {
 
 export default function TransactionSplitForm({
   index,
-  handleChange,
+  total,
   handleDelete,
-  errors = INITIAL_ERROR,
-  resetErrors,
   transaction = INITIAL_SPLIT,
 }) {
+  const dispatch = useDispatch<RootDispatch>();
   const { colorScheme, colors } = useThemeColors();
-  const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const [formData, setData] = useState<TransactionSplitType>({
     ...transaction,
     date: new Date(transaction.date),
@@ -77,7 +75,7 @@ export default function TransactionSplitForm({
 
   const setTransaction = (data: TransactionSplitType) => {
     setData(data);
-    handleChange(data);
+    dispatch.transactions.setTransactionSplitByIndex(index, data);
   };
 
   const types = [
@@ -135,22 +133,33 @@ export default function TransactionSplitForm({
       borderRadius={10}
     >
       {index !== 0 && (
-        <IconButton
-          variant="ghost"
-          _pressed={{
-            alignSelf: 'flex-end',
-          }}
-          style={{
-            alignSelf: 'flex-end',
-          }}
-          _icon={{
-            as: AntDesign,
-            name: 'closecircle',
-            size: 23,
-            color: 'gray.100',
-          }}
-          onPress={handleDelete}
-        />
+        <HStack justifyContent="space-between">
+          <Text
+            textAlign="center"
+            justifyContent="center"
+            width={10}
+            height={10}
+            pt={2}
+            borderWidth={1}
+            borderRadius={10}
+            borderColor={colors.warmGray200}
+            color={colors.warmGray200}
+          >
+            {index + 1}
+            /
+            {total}
+          </Text>
+          <IconButton
+            variant="outline"
+            colorScheme="gray"
+            _icon={{
+              as: AntDesign,
+              name: 'delete',
+              size: 22,
+            }}
+            onPress={handleDelete}
+          />
+        </HStack>
       )}
       <FormControl isRequired>
         <HStack justifyContent="center">
@@ -187,7 +196,7 @@ export default function TransactionSplitForm({
         </HStack>
       </FormControl>
 
-      <FormControl mt="1" isRequired isInvalid={errors.amount !== ''}>
+      <FormControl mt="1" isRequired isInvalid={formData.amount === ''}>
         <FormControl.Label>
           {translate('transaction_form_amount_label')}
         </FormControl.Label>
@@ -207,10 +216,9 @@ export default function TransactionSplitForm({
           InputRightElement={deleteBtn(['amount'])}
           InputLeftElement={(<Text pl={3} fontSize={12}>{`${formData.currencyCode} ${formData.currencySymbol}`}</Text>)}
         />
-        {'amount' in errors && <FormControl.ErrorMessage>{errors.amount}</FormControl.ErrorMessage>}
       </FormControl>
 
-      <FormControl mt="1" isInvalid={errors.foreignAmount !== ''}>
+      <FormControl mt="1">
         <FormControl.Label>
           {translate('transaction_form_foreign_amount_label')}
         </FormControl.Label>
@@ -220,7 +228,6 @@ export default function TransactionSplitForm({
             small
             placeholder={translate('transaction_form_foreign_currency_label')}
             value={formData.foreignCurrencyCode}
-            isInvalid={errors.foreignCurrencyId !== ''}
             onSelectAutocomplete={(autocomplete) => setTransaction({
               ...formData,
               foreignCurrencyId: autocomplete.id,
@@ -228,7 +235,6 @@ export default function TransactionSplitForm({
             })}
             InputRightElement={null}
             routeApi="currencies-with-code"
-            error={errors.foreignCurrencyId}
           />
           <Input
             variant="outline"
@@ -245,7 +251,7 @@ export default function TransactionSplitForm({
             InputRightElement={deleteBtn(['foreignAmount', 'foreignCurrencyId', 'foreignCurrencyCode'])}
           />
         </VStack>
-        {'foreignAmount' in errors && <FormControl.ErrorMessage>{errors.foreignAmount}</FormControl.ErrorMessage>}
+        {(formData.foreignCurrencyId && formData.foreignAmount === '') && <FormControl.ErrorMessage>{translate('transaction_form_foreign_amount_error')}</FormControl.ErrorMessage>}
       </FormControl>
 
       <FormControl mt="1" isRequired>
@@ -305,10 +311,11 @@ export default function TransactionSplitForm({
       </FormControl>
 
       <AutocompleteField
+        isRequired
         label={translate('transaction_form_description_label')}
         placeholder={translate('transaction_form_description_label')}
         value={formData.description}
-        isInvalid={errors.description !== ''}
+        isInvalid={formData.description === ''}
         onChangeText={(value) => {
           setTransaction({
             ...formData,
@@ -321,14 +328,14 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['description'])}
         routeApi="transactions"
-        error={errors.description}
       />
 
       <AutocompleteField
+        isRequired
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
-        isInvalid={errors.sourceName !== ''}
+        isInvalid={formData.sourceName === ''}
         onChangeText={(value) => setTransaction({
           ...formData,
           sourceName: value,
@@ -341,14 +348,14 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['sourceName', 'currencyCode', 'currencySymbol'])}
         routeApi="accounts"
-        error={errors.sourceName}
       />
 
       <AutocompleteField
+        isRequired
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}
-        isInvalid={errors.destinationName !== ''}
+        isInvalid={formData.destinationName === ''}
         onChangeText={(value) => setTransaction({
           ...formData,
           destinationName: value,
@@ -360,14 +367,12 @@ export default function TransactionSplitForm({
         InputRightElement={deleteBtn(['destinationName'])}
         routeApi="accounts"
         isDestination
-        error={errors.destinationName}
       />
 
       <AutocompleteField
         label={translate('transaction_form_category_label')}
         placeholder={translate('transaction_form_category_label')}
         value={formData.categoryName}
-        isInvalid={errors.categoryId !== ''}
         onChangeText={(value) => setTransaction({
           ...formData,
           categoryName: value,
@@ -379,14 +384,12 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['categoryId', 'categoryName'])}
         routeApi="categories"
-        error={errors.categoryId}
       />
 
       <AutocompleteField
         label={translate('transaction_form_budget_label')}
         placeholder={translate('transaction_form_budget_label')}
         value={formData.budgetName}
-        isInvalid={errors.budgetId !== ''}
         onChangeText={(value) => setTransaction({
           ...formData,
           budgetName: value,
@@ -398,7 +401,6 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['budgetId', 'budgetName'])}
         routeApi="budgets"
-        error={errors.budgetId}
       />
 
       <AutocompleteField
@@ -407,7 +409,6 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_tags_label')}
         placeholder={translate('transaction_form_tags_label')}
         value={formData.tags}
-        isInvalid={errors.tags !== ''}
         onChangeText={() => {}}
         onDeleteMultiple={(item) => setTransaction({
           ...formData,
@@ -418,7 +419,6 @@ export default function TransactionSplitForm({
           tags: Array.from(new Set([...formData.tags, autocomplete.name])),
         })}
         routeApi="tags"
-        error={errors.tags}
       />
 
       <FormControl mt="1">
@@ -461,7 +461,6 @@ export default function TransactionSplitForm({
             currencySymbol: '',
             currencyCode: '',
           });
-          resetErrors();
         }}
       >
         {translate('transaction_form_reset_button')}

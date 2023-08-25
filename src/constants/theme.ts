@@ -121,13 +121,13 @@ export default {
         width: 10,
         height: 10,
         borderRadius: 10,
-        shadowColor: '#000',
+/*        shadowColor: '#000',
         shadowOffset: {
           width: 0,
           height: 1,
         },
         shadowOpacity: 0.20,
-        shadowRadius: 1.41,
+        shadowRadius: 1.41,*/
         _icon: {
           size: 'lg',
         },
