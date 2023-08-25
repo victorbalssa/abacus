@@ -17,7 +17,8 @@ export default function TransactionDetailScreen({ navigation, route }: ScreenTyp
     >
       <TransactionForm
         navigation={navigation}
-        splits={payload}
+        splits={payload?.splits}
+        title={payload?.groupTitle}
         id={route.params.id}
       />
     </ScrollView>
