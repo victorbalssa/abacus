@@ -2,7 +2,7 @@ import React from 'react';
 import {
   ScrollView,
   Alert,
-  Text,
+  Text, Platform,
 } from 'react-native';
 import {
   Box,
@@ -14,7 +14,13 @@ import {
 } from 'native-base';
 import * as Linking from 'expo-linking';
 import * as Application from 'expo-application';
-import { Octicons, FontAwesome, AntDesign } from '@expo/vector-icons';
+import {
+  Octicons,
+  FontAwesome,
+  AntDesign,
+  Ionicons,
+} from '@expo/vector-icons';
+import * as StoreReview from 'expo-store-review';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
@@ -35,6 +41,12 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
       resetAllStorage,
     },
   } = useDispatch<RootDispatch>();
+
+  const reviewApp = async () => {
+    if (await StoreReview.isAvailableAsync()) {
+      await StoreReview.requestReview();
+    }
+  };
 
   const resetApp = async () => {
     await resetAllStorage();
@@ -122,9 +134,13 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_report_issue')}</Text>
             <Octicons name="issue-opened" size={20} color="gray" />
           </Pressable>
-          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
+          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_sources')}</Text>
-            <AntDesign name="github" size={20} color="gray" />
+            <AntDesign name="github" size={22} color="gray" />
+          </Pressable>
+          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={reviewApp} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</Text>
+            <Ionicons name={Platform.select({ ios: 'ios-logo-apple-appstore', android: 'ios-logo-google-playstore' })} size={23} color="gray" />
           </Pressable>
         </Box>
 

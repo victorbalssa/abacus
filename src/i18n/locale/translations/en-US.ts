@@ -112,4 +112,6 @@ export default {
   transaction_form_group_title_label: 'Description of the split transaction',
   transaction_form_group_title_placeholder: 'Title',
   transaction_form_group_title_helper: 'If you create a split transaction, there must be a global description for all splits of the transaction.',
+  configuration_review_app_ios: 'Review Abacus on the AppStore',
+  configuration_review_app_android: 'Review Abacus on Google Play',
 };

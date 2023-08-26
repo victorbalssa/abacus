@@ -207,35 +207,34 @@ export default function TransactionSplitForm({
         <FormControl.Label>
           {translate('transaction_form_foreign_amount_label')}
         </FormControl.Label>
-        <VStack>
-          <AutocompleteField
-            label=""
-            small
-            placeholder={translate('transaction_form_foreign_currency_label')}
-            value={formData.foreignCurrencyCode}
-            onSelectAutocomplete={(autocomplete) => setTransaction({
-              ...formData,
-              foreignCurrencyId: autocomplete.id,
-              foreignCurrencyCode: autocomplete.code,
-            })}
-            InputRightElement={null}
-            routeApi="currencies-with-code"
-          />
-          <Input
-            variant="outline"
-            returnKeyType="done"
-            keyboardType="numbers-and-punctuation"
-            placeholder={localNumberFormat(formData.foreignCurrencyCode, 0.00)}
-            value={formData.foreignAmount}
-            textAlign="center"
-            fontSize={20}
-            onChangeText={(value) => setTransaction({
-              ...formData,
-              foreignAmount: value,
-            })}
-            InputRightElement={deleteBtn(['foreignAmount', 'foreignCurrencyId', 'foreignCurrencyCode'])}
-          />
-        </VStack>
+        <AutocompleteField
+          label=""
+          small
+          placeholder={translate('transaction_form_foreign_currency_label')}
+          value={formData.foreignCurrencyCode}
+          onSelectAutocomplete={(autocomplete) => setTransaction({
+            ...formData,
+            foreignCurrencyId: autocomplete.id,
+            foreignCurrencyCode: autocomplete.code,
+          })}
+          InputRightElement={null}
+          routeApi="currencies-with-code"
+        />
+        <FormControl.Label />
+        <Input
+          variant="outline"
+          returnKeyType="done"
+          keyboardType="numbers-and-punctuation"
+          placeholder={localNumberFormat(formData.foreignCurrencyCode, 0.00)}
+          value={formData.foreignAmount}
+          textAlign="center"
+          fontSize={20}
+          onChangeText={(value) => setTransaction({
+            ...formData,
+            foreignAmount: value,
+          })}
+          InputRightElement={deleteBtn(['foreignAmount', 'foreignCurrencyId', 'foreignCurrencyCode'])}
+        />
         {(formData.foreignCurrencyId && formData.foreignAmount === '') && <FormControl.ErrorMessage>{translate('transaction_form_foreign_amount_error')}</FormControl.ErrorMessage>}
       </FormControl>
 
