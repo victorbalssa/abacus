@@ -293,8 +293,6 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      console.log('create transactions', transactions);
-
       const body = {
         group_title: title,
         transactions: transactions.map((transaction) => ({

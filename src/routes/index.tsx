@@ -151,7 +151,7 @@ function TabBarConfigurationScreenIcon({ color }) {
   );
 }
 
-function headerRight() {
+function headerRightComp() {
   const navigation = useNavigation();
 
   return (
@@ -332,7 +332,7 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
-              headerRight,
+              headerRight: headerRightComp,
               headerShadowVisible: true,
               headerTitleStyle: {
                 fontFamily: 'Montserrat_Bold',
