@@ -23,12 +23,6 @@ import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
 import { ScreenType } from './types';
 
-function Separator({ backgroundColor }) {
-  return (
-    <View pr={4} ml={4} style={{ height: 0.5 }} backgroundColor={backgroundColor} />
-  );
-}
-
 export default function ConfigurationScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
   const {

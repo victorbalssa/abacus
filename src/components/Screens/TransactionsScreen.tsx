@@ -9,6 +9,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import {
+  Badge,
   Box,
   HStack,
   Icon,
@@ -17,7 +18,7 @@ import {
   Text,
   VStack,
 } from 'native-base';
-import _ from 'lodash';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
@@ -184,7 +185,7 @@ function RenderItem({ item }: { item: TransactionType }) {
               fontFamily="Montserrat_Bold"
               maxW={200}
               numberOfLines={1}
-              paddingTop={3}
+              paddingTop={2}
             >
               {item.attributes.transactions.length > 1 ? `${item.attributes.transactions.length} splits • ${item.attributes.groupTitle}` : item.attributes.transactions[0].description}
             </Text>
@@ -204,8 +205,22 @@ function RenderItem({ item }: { item: TransactionType }) {
               maxW={170}
               numberOfLines={1}
             >
-              {`${moment(item.attributes.transactions[0].date).format('ll - hh:mm a')} ${item.attributes.transactions[0].categoryName ? `• ${item.attributes.transactions[0].categoryName}` : ''}`}
+              {`${moment(item.attributes.transactions[0].date).format('ll')} ${item.attributes.transactions[0].categoryName ? `• ${item.attributes.transactions[0].categoryName}` : ''}`}
             </Text>
+            <HStack alignSelf="flex-start">
+              {item.attributes.transactions[0].tags.filter((_, index) => index < 2).map((tag) => (
+                <Badge
+                  p={0}
+                  mx={0.5}
+                  px={0.5}
+                  my={0}
+                  key={tag}
+                  borderRadius={5}
+                >
+                  <Text fontSize={10} color={colors.textOpposite} numberOfLines={1} maxW={90}>{tag}</Text>
+                </Badge>
+              ))}
+            </HStack>
           </VStack>
         </HStack>
         <Box style={{
@@ -348,7 +363,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
   // TODO: do not pass entire payload into this modal
   const goToDuplicate = (payload) => navigation.dispatch(
     CommonActions.navigate({
-      name: 'TransactionCreateModal',
+      name: 'TransactionCreateScreen',
       params: {
         payload,
       },
@@ -370,14 +385,17 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         maxToRenderPerBatch={15}
         keyExtractor={(item: TransactionType) => item.id}
         showsVerticalScrollIndicator
-        onEndReached={() => (!loadingRefresh && !_.isEmpty(transactions)) && onEndReached()}
+        onEndReached={() => (!loadingRefresh && !isEmpty(transactions)) && onEndReached()}
         data={loadingRefresh ? [] : transactions}
         renderItem={({ item }) => <RenderItem item={item} />}
         renderHiddenItem={(data, rowMap) => (
           <RenderHiddenItem
             handleOnPressCopy={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-              goToDuplicate(data.item.attributes.transactions[0]);
+              goToDuplicate({
+                splits: data.item.attributes.transactions,
+                groupTitle: data.item.attributes.groupTitle,
+              });
             }}
             handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
           />
@@ -395,7 +413,10 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         onLeftActionStatusChange={({
           key,
           isActivated,
-        }) => (isActivated ? goToDuplicate(transactions.find((t) => t.id === key).attributes.transactions[0]) : null)}
+        }) => (isActivated ? goToDuplicate({
+          splits: transactions.find((t) => t.id === key).attributes.transactions,
+          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle,
+        }) : null)}
         contentContainerStyle={{
           paddingBottom: 350,
         }}
