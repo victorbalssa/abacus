@@ -152,6 +152,10 @@ export default function TransactionForm({
 
   useEffect(() => {
     dispatch.transactions.resetTransaction({ splits, title });
+
+    return () => {
+      dispatch.transactions.resetStatus();
+    };
   }, []);
 
   const handleSubmit = async () => {

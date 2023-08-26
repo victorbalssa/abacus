@@ -78,7 +78,9 @@
     "redux-persist": "^6.0.0",
     "sharp-cli": "^4.1.1",
     "slash": "^3.0.0",
-    "victory-native": "^36.6.11"
+    "victory-native": "^36.6.11",
+    "expo-store-review": "~6.4.0",
+    "expo-linking": "~5.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
