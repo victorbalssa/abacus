@@ -3,39 +3,24 @@ import moment from 'moment/moment';
 import { Platform } from 'react-native';
 import {
   Button,
-  CheckIcon,
   FormControl,
   HStack,
   IconButton,
   Input,
-  Select,
   Text,
   TextArea,
   VStack,
 } from 'native-base';
 import * as Haptics from 'expo-haptics';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
-import {RootDispatch, RootState} from '../../store';
-import { ErrorStateType, TransactionSplitType } from '../../models/transactions';
-
-const INITIAL_ERROR = {
-  description: '',
-  amount: '',
-  sourceName: '',
-  destinationName: '',
-  categoryId: '',
-  budgetId: '',
-  tags: '',
-  foreignCurrencyId: '',
-  foreignAmount: '',
-  notes: '',
-} as ErrorStateType;
+import { RootDispatch } from '../../store';
+import { TransactionSplitType } from '../../models/transactions';
 
 const INITIAL_SPLIT = {
   type: 'withdrawal',

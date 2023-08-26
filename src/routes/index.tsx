@@ -1,16 +1,16 @@
 import React from 'react';
 import {
   NavigationContainer,
-  DefaultTheme,
+  DefaultTheme, useNavigation,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  BottomTabBar, BottomTabBarButtonProps,
+  BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { AntDesign, Foundation } from '@expo/vector-icons';
+import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 
 import translate from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function TabBarPrimaryButton({ onPress }: BottomTabBarButtonProps) {
+function TabBarPrimaryButton({ onPress }) {
   return (
     <Box style={styles.container} pointerEvents="box-none">
       <IconButton
@@ -151,6 +151,22 @@ function TabBarConfigurationScreenIcon({ color }) {
   );
 }
 
+function headerRight() {
+  const navigation = useNavigation();
+
+  return (
+    <IconButton
+      variant="ghost"
+      _icon={{
+        as: FontAwesome,
+        name: 'angle-down',
+        paddingLeft: 1,
+      }}
+      onPress={navigation.goBack}
+    />
+  );
+}
+
 function TransactionsStack() {
   const { colors } = useThemeColors();
 
@@ -174,9 +190,9 @@ function TransactionsStack() {
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerTintColor: colors.text,
-/*          headerSearchBarOptions: {
+          /*          headerSearchBarOptions: {
             autoCapitalize: 'none',
-          },*/
+          }, */
           headerStyle: {
             backgroundColor: Platform.select({ ios: colors.tileBackgroundColor, android: colors.tileBackgroundColor }),
           },
@@ -205,6 +221,10 @@ function TransactionsStack() {
       />
     </TransactionStack.Navigator>
   );
+}
+
+function PrimaryButtonComponent() {
+  return <View />;
 }
 
 function Home() {
@@ -249,22 +269,13 @@ function Home() {
         }}
       />
       <Tab.Screen
-        name="TransactionCreateScreen"
-        component={TransactionCreateScreen}
-        options={{
-          tabBarButton: TabBarPrimaryButton,
-          headerShown: true,
-          headerTitle: translate('transaction_screen_title'),
-          headerShadowVisible: false,
-          headerTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerTransparent: Platform.select({ ios: false, android: false }),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: Platform.select({ ios: colors.tileBackgroundColor, android: colors.tileBackgroundColor }),
-          },
-        }}
+        name="TransactionCreateBtn"
+        component={PrimaryButtonComponent}
+        options={({ navigation }) => ({
+          tabBarButton: () => (
+            <TabBarPrimaryButton onPress={() => navigation.navigate('TransactionCreateScreen')} />
+          ),
+        })}
       />
       <Tab.Screen
         name="Transactions"
@@ -307,6 +318,32 @@ export default function Index() {
           name="dashboard"
           component={Home}
         />
+        <ModalStack.Group
+          screenOptions={{
+            headerShown: false,
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}
+        >
+          <ModalStack.Screen
+            name="TransactionCreateScreen"
+            component={TransactionCreateScreen}
+            options={{
+              headerShown: true,
+              headerBackVisible: false,
+              headerTitle: translate('transaction_screen_title'),
+              headerRight,
+              headerShadowVisible: true,
+              headerTitleStyle: {
+                fontFamily: 'Montserrat_Bold',
+              },
+              headerTintColor: colors.text,
+              headerStyle: {
+                backgroundColor: colors.tileBackgroundColor,
+              },
+            }}
+          />
+        </ModalStack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   );

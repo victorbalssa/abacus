@@ -43,6 +43,8 @@ export type TransactionStateType = {
   },
   page: number
   totalPages: number
+  error: string
+  success: boolean
 }
 
 export type ErrorStateType = {
@@ -81,6 +83,8 @@ const INITIAL_STATE = {
   page: 1,
   totalPages: 1,
   transactionPayload: null,
+  error: '',
+  success: false,
 } as TransactionStateType;
 
 export default createModel<RootModel>()({
@@ -189,6 +193,26 @@ export default createModel<RootModel>()({
             foreignAmount: split.foreignAmount ? parseFloat(split.foreignAmount).toFixed(2) : '',
           })) : [{ ...INITIAL_SPLIT }],
         },
+      };
+    },
+    setErrorStatus(state, error): TransactionStateType {
+      return {
+        ...state,
+        error,
+        success: false,
+      };
+    },
+    setSuccessStatus(state): TransactionStateType {
+      return {
+        ...state,
+        success: true,
+      };
+    },
+    resetStatus(state): TransactionStateType {
+      return {
+        ...state,
+        error: '',
+        success: false,
       };
     },
     resetState() {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import {
   FormControl,
@@ -51,19 +51,24 @@ export default function AutocompleteField({
     setAutocompletes(convertKeysToCamelCase(response.data));
   };
 
-  const handleChangeText = (text) => {
+  const handleChangeText = useCallback((text) => {
     if (multiple) {
       setMultipleValue(text);
     } else {
       onChangeText(text);
     }
-
     refreshAutocomplete(text);
-  };
-  const handleSelectAutocomplete = (autocomplete) => {
+  }, [multiple, onChangeText]);
+
+  const handleSelectAutocomplete = useCallback((autocomplete) => {
     onSelectAutocomplete(autocomplete);
     setDisplayAutocomplete(false);
-  };
+  }, [onSelectAutocomplete]);
+
+  const handleDeleteMultiple = useCallback((item) => {
+    onDeleteMultiple(item);
+  }, [onDeleteMultiple]);
+
   const handleFocus = () => {
     setDisplayAutocomplete(true);
     refreshAutocomplete(value && !small && !multiple ? value : '');
@@ -72,55 +77,56 @@ export default function AutocompleteField({
     setDisplayAutocomplete(false);
   };
 
-  return (
-    <FormControl mt="1" isRequired={isRequired} isInvalid={isInvalid}>
-      {!small && (
+  return useMemo(
+    () => (
+      <FormControl mt="1" isRequired={isRequired} isInvalid={isInvalid}>
+        {!small && (
         <FormControl.Label>
           {label}
         </FormControl.Label>
-      )}
-      {multiple && (
-      <ScrollView horizontal>
-        {value.map((item, index) => (
-          <Badge
-            mr={1}
-            mb={2}
-            py={1}
-            borderRadius={10}
-            key={`${index + 1}${item}`}
-            rightIcon={(
-              <IconButton
-                mr={0}
-                h={1}
-                w={1}
-                variant="ghost"
-                colorScheme="gray"
-                _icon={{
-                  as: AntDesign,
-                  name: 'closecircle',
-                  size: 19,
-                }}
-                onPress={() => onDeleteMultiple(item)}
-              />
-            )}
-          >
-            {item}
-          </Badge>
-        ))}
-      </ScrollView>
-      )}
-      <Input
-        returnKeyType="done"
-        onSubmitEditing={({ nativeEvent: { text } }) => ((multiple && text !== '') ? handleSelectAutocomplete({ name: text }) : null)}
-        placeholder={placeholder}
-        value={!multiple ? value : multipleValue}
-        onChangeText={handleChangeText}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        InputRightElement={InputRightElement}
-      />
+        )}
+        {multiple && (
+        <ScrollView horizontal>
+          {value.map((item, index) => (
+            <Badge
+              mr={1}
+              mb={2}
+              py={1}
+              borderRadius={10}
+              key={`${index + 1}${item}`}
+              rightIcon={(
+                <IconButton
+                  mr={0}
+                  h={1}
+                  w={1}
+                  variant="ghost"
+                  colorScheme="gray"
+                  _icon={{
+                    as: AntDesign,
+                    name: 'closecircle',
+                    size: 19,
+                  }}
+                  onPress={() => handleDeleteMultiple(item)}
+                />
+                  )}
+            >
+              {item}
+            </Badge>
+          ))}
+        </ScrollView>
+        )}
+        <Input
+          returnKeyType="done"
+          onSubmitEditing={({ nativeEvent: { text } }) => ((multiple && text !== '') ? handleSelectAutocomplete({ name: text }) : null)}
+          placeholder={placeholder}
+          value={!multiple ? value : multipleValue}
+          onChangeText={handleChangeText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          InputRightElement={InputRightElement}
+        />
 
-      {displayAutocomplete && (
+        {displayAutocomplete && (
         <View>
           {autocompletes.map((autocomplete: AutocompleteType) => (
             <Pressable
@@ -144,8 +150,23 @@ export default function AutocompleteField({
             </Pressable>
           ))}
         </View>
-      )}
-      {error && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
-    </FormControl>
+        )}
+        {error && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
+      </FormControl>
+    ),
+    [
+      isInvalid,
+      isRequired,
+      label,
+      placeholder,
+      multiple,
+      value,
+      error,
+      isDestination,
+      small,
+      multipleValue,
+      autocompletes,
+      displayAutocomplete,
+    ],
   );
 }
