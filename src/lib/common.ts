@@ -50,7 +50,7 @@ export const isValidHttpUrl = (string) => {
   return !!pattern.test(string);
 };
 
-export const localNumberFormat = (currencyCode, string) => {
+export const localNumberFormat = (currencyCode: string, string: number | bigint) => {
   const [local] = getLocales();
   const formatter = new Intl.NumberFormat(local.languageTag, {
     style: 'currency',
