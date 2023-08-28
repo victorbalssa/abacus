@@ -17,7 +17,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDispatch } from 'react-redux';
 
 import translate from '../../i18n/locale';
-import { localNumberFormat, useThemeColors } from '../../lib/common';
+import { useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
 import { RootDispatch } from '../../store';
 import { TransactionSplitType } from '../../models/transactions';
@@ -63,6 +63,20 @@ export default function TransactionSplitForm({
     dispatch.transactions.setTransactionSplitByIndex(index, data);
   };
 
+  const resetTransaction = (fields: string[]) => {
+    setData((split: TransactionSplitType) => {
+      const newSplit = {
+        ...split,
+        ...fields.reduce((acc, curr) => {
+          acc[curr] = '';
+          return acc;
+        }, {}),
+      };
+      dispatch.transactions.setTransactionSplitByIndex(index, newSplit);
+      return newSplit;
+    });
+  };
+
   const types = [
     {
       type: 'withdrawal',
@@ -98,13 +112,7 @@ export default function TransactionSplitForm({
         size: 19,
         color: 'gray.500',
       }}
-      onPress={() => setTransaction({
-        ...formData,
-        ...fields.reduce((acc, curr) => {
-          acc[curr] = '';
-          return acc;
-        }, {}),
-      })}
+      onPress={() => resetTransaction(fields)}
     />
   );
 
@@ -181,7 +189,7 @@ export default function TransactionSplitForm({
         </HStack>
       </FormControl>
 
-      <FormControl mt="1" isRequired isInvalid={formData.amount === ''}>
+      <FormControl mt="1" isRequired>
         <FormControl.Label>
           {translate('transaction_form_amount_label')}
         </FormControl.Label>
@@ -190,7 +198,7 @@ export default function TransactionSplitForm({
           variant="outline"
           returnKeyType="done"
           keyboardType="numbers-and-punctuation"
-          placeholder={localNumberFormat(formData.currencyCode, 10.00)}
+          placeholder="0.00"
           value={formData.amount}
           textAlign="center"
           fontSize={30}
@@ -225,7 +233,7 @@ export default function TransactionSplitForm({
           variant="outline"
           returnKeyType="done"
           keyboardType="numbers-and-punctuation"
-          placeholder={localNumberFormat(formData.foreignCurrencyCode, 0.00)}
+          placeholder="0.00"
           value={formData.foreignAmount}
           textAlign="center"
           fontSize={20}
@@ -299,7 +307,6 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_description_label')}
         placeholder={translate('transaction_form_description_label')}
         value={formData.description}
-        isInvalid={formData.description === ''}
         onChangeText={(value) => {
           setTransaction({
             ...formData,
@@ -319,7 +326,6 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
-        isInvalid={formData.sourceName === ''}
         onChangeText={(value) => setTransaction({
           ...formData,
           sourceName: value,
@@ -335,11 +341,9 @@ export default function TransactionSplitForm({
       />
 
       <AutocompleteField
-        isRequired
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}
-        isInvalid={formData.destinationName === ''}
         onChangeText={(value) => setTransaction({
           ...formData,
           destinationName: value,

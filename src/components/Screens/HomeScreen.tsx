@@ -207,7 +207,7 @@ function AssetsAccounts() {
 
             {!loading ? (
               <Text>
-                {localNumberFormat(account.attributes.currencyCode, account.attributes.currentBalance)}
+                {localNumberFormat(account.attributes.currencyCode, parseFloat(account.attributes.currentBalance))}
               </Text>
             ) : (
               <Skeleton w={70} h={5} rounded={15} />
@@ -240,7 +240,7 @@ function NetWorth() {
                 fontFamily: 'Montserrat_Bold',
               }}
             >
-              {localNumberFormat(netWorth[0].currencyCode, netWorth[0].monetaryValue)}
+              {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue))}
             </Text>
           ) : (
             <Skeleton w={170} h={8} rounded={15} />
@@ -272,7 +272,7 @@ function NetWorth() {
                 color: parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess,
               }}
               >
-                {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, balance[0].monetaryValue)}`}
+                {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, parseFloat(balance[0].monetaryValue))}`}
               </Text>
             </Box>
           ) : (
