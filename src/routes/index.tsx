@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   NavigationContainer,
-  DefaultTheme, useNavigation,
+  DefaultTheme, useNavigation, CommonActions,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  BottomTabBar,
+  BottomTabBar, BottomTabBarButtonProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
@@ -63,7 +63,9 @@ const styles = StyleSheet.create({
   },
 });
 
-function TabBarPrimaryButton({ onPress }) {
+function TabBarPrimaryButton(_: BottomTabBarButtonProps) {
+  const navigation = useNavigation();
+
   return (
     <Box style={styles.container} pointerEvents="box-none">
       <IconButton
@@ -71,7 +73,11 @@ function TabBarPrimaryButton({ onPress }) {
           as: AntDesign,
           name: 'plus',
         }}
-        onPress={onPress}
+        onPress={() => navigation.dispatch(
+          CommonActions.navigate({
+            name: 'TransactionCreateScreen',
+          }),
+        )}
         _pressed={{
           style: {
             top: -15,
@@ -187,14 +193,12 @@ function TransactionsStack() {
             fontFamily: 'Montserrat_Bold',
           },
           headerLargeTitle: false,
-          headerTransparent: Platform.select({ ios: true, android: false }),
-          headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerTintColor: colors.text,
           /*          headerSearchBarOptions: {
             autoCapitalize: 'none',
           }, */
           headerStyle: {
-            backgroundColor: Platform.select({ ios: colors.tileBackgroundColor, android: colors.tileBackgroundColor }),
+            backgroundColor: colors.tileBackgroundColor,
           },
         }}
       />
@@ -271,11 +275,9 @@ function Home() {
       <Tab.Screen
         name="TransactionCreateBtn"
         component={PrimaryButtonComponent}
-        options={({ navigation }) => ({
-          tabBarButton: () => (
-            <TabBarPrimaryButton onPress={() => navigation.navigate('TransactionCreateScreen')} />
-          ),
-        })}
+        options={{
+          tabBarButton: TabBarPrimaryButton,
+        }}
       />
       <Tab.Screen
         name="Transactions"
