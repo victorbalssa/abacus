@@ -27,8 +27,9 @@ function MultipleTransactionSplitForm({ splits, title }) {
   }, [splits]);
 
   const addTransactionSplit = () => {
-    dispatch.transactions.addTransactionSplit();
     setSplitNumber((prevState) => [...prevState, Crypto.randomUUID()]);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+    dispatch.transactions.addTransactionSplit();
   };
 
   const deleteTransactionSplit = (index: number) => {
@@ -55,7 +56,6 @@ function MultipleTransactionSplitForm({ splits, title }) {
         mt="3"
         leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
         shadow={2}
-        onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         _pressed={{
           style: {
             transform: [{
@@ -64,6 +64,7 @@ function MultipleTransactionSplitForm({ splits, title }) {
           },
         }}
         onPress={addTransactionSplit}
+        colorScheme="coolGray"
       >
         {translate('transaction_form_new_split_button')}
       </Button>
