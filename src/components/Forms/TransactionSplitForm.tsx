@@ -15,6 +15,7 @@ import * as Haptics from 'expo-haptics';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useDispatch } from 'react-redux';
+import { getLocales } from 'expo-localization';
 
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -47,6 +48,7 @@ export default function TransactionSplitForm({
   handleDelete,
   transaction = INITIAL_SPLIT,
 }) {
+  const [locale] = getLocales();
   const dispatch = useDispatch<RootDispatch>();
   const { colorScheme, colors } = useThemeColors();
   const [formData, setData] = useState<TransactionSplitType>({
@@ -254,6 +256,7 @@ export default function TransactionSplitForm({
           <DateTimePicker
             accentColor={colors.brandDark}
             themeVariant={colorScheme}
+            locale={locale.languageCode}
             mode={Platform.select({ android: 'date', ios: 'datetime' })}
             style={{ width: 235, alignSelf: 'center' }}
             value={(formData.date instanceof Date) ? formData.date : new Date(formData.date)}
