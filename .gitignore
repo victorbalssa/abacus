@@ -8,6 +8,8 @@ npm-debug.*
 *.mobileprovision
 /.tmp/
 eas.json
+.dccache
+eslint-results.sarif
 
 # Xcode
 #
@@ -47,9 +49,17 @@ buck-out/
 # CocoaPods
 /ios/
 
+# Android files
+/android/
+
 # Expo
 .expo/
 web-build/
 dist/
+.env
 
 # @end expo-cli
+service-account.json
+
+detox_test.sh
+.artifacts/

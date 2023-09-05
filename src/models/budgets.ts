@@ -1,35 +1,52 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-export type BudgetType = {
-  attributes: {
-    name: string,
-  },
-  id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
-  type: string,
+type BudgetSpentType = {
+  sum: string
+  currencyId: string
+  currencyCode: string
+  currencySymbol: string
+  currencyDecimalPlaces: number
 }
 
-export type BudgetStateType = {
+type BudgetType = {
+  id: string
+  attributes: {
+    name: string
+    active: boolean
+    createdAt: string
+    updatedAt: string
+    notes: string
+    order: number
+    spent: BudgetSpentType[]
+  },
+  limit?: number,
+  currencyCode: string,
+  differenceFloat: number,
+}
+
+type BudgetLimitType = {
+  attributes: {
+    currencyCode: string,
+    budgetId: string
+    amount: string
+  },
+}
+
+type BudgetsStateType = {
   budgets: BudgetType[],
 }
 
 const INITIAL_STATE = {
   budgets: [],
-} as BudgetStateType;
+} as BudgetsStateType;
 
 export default createModel<RootModel>()({
 
   state: INITIAL_STATE,
 
   reducers: {
-    setBudgets(state, payload): BudgetStateType {
+    setBudgets(state, payload): BudgetsStateType {
       const {
         budgets = state.budgets,
       } = payload;
@@ -47,14 +64,57 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get budgets list
+     * Get Insight budgets
      *
      * @returns {Promise}
      */
-    async getBudgets(): Promise<void> {
-      const { data: budgets } = await dispatch.configuration.apiFetch({ url: '/api/v1/budgets' });
+    async getInsightBudgets(_: void, rootState): Promise<void> {
+      const {
+        firefly: {
+          rangeDetails: {
+            start,
+            end,
+          },
+        },
+        currencies: {
+          current,
+        },
+      } = rootState;
+      if (current && current.attributes.code) {
+        const { data: budgets } = await dispatch.configuration.apiFetch({ url: `/api/v1/budgets?start=${start}&end=${end}` }) as { data: BudgetType[] };
+        const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` }) as { data: BudgetLimitType[] };
+        const budgetsLimits = {};
 
-      dispatch.budgets.setBudgets({ budgets });
+        apiBudgetsLimits
+          .filter((limit) => limit.attributes.currencyCode === current.attributes.code)
+          .forEach((limit) => {
+            if (limit && limit.attributes) {
+              const {
+                attributes: {
+                  budgetId,
+                  amount,
+                },
+              } = limit;
+
+              if (budgetsLimits[budgetId] === undefined) {
+                budgetsLimits[budgetId] = 0;
+              }
+
+              budgetsLimits[budgetId] += parseFloat(amount);
+            }
+          });
+
+        const filteredBudgets: BudgetType[] = budgets
+          .sort((a, b) => ((a.attributes.order > b.attributes.order) ? 1 : -1))
+          .map((budget: BudgetType) => ({
+            limit: budgetsLimits[budget.id] || 0,
+            differenceFloat: budget.attributes.spent.find((budgetSpent) => budgetSpent.currencyCode === current.attributes.code)?.sum || 0,
+            currencyCode: current.attributes.code,
+            ...budget,
+          }));
+
+        dispatch.budgets.setBudgets({ budgets: filteredBudgets });
+      }
     },
   }),
 });

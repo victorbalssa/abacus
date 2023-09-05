@@ -1,41 +1,37 @@
 import React from 'react';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  DefaultTheme, useNavigation, CommonActions,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign, Feather } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
-import { Svg, Path } from 'react-native-svg';
+import {
+  BottomTabBar, BottomTabBarButtonProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
 import { Box, IconButton } from 'native-base';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 
-import OauthContainer from '../containers/Oauth';
-import ConfigurationContainer from '../containers/Configuration';
-import HomeContainer from '../containers/Home';
-import ChartContainer from '../containers/Chart';
-import TransactionsListContainer from '../containers/Transactions/List';
-import TransactionsEditContainer from '../containers/Transactions/Edit';
-import TransactionsCreateContainer from '../containers/Transactions/Create';
-import colors from '../constants/colors';
+import translate from '../i18n/locale';
+import { useThemeColors } from '../lib/common';
+
+// Screens
+import OauthScreen from '../components/Screens/OauthScreen';
+import HomeScreen from '../components/Screens/HomeScreen';
+import ChartScreen from '../components/Screens/ChartScreen';
+import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
+import TransactionsScreen from '../components/Screens/TransactionsScreen';
+import TransactionDetailScreen from '../components/Screens/TransactionDetailScreen';
+import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
+
+// UI components
+import ThemeBlurView from '../components/UI/ThemeBlurView';
+import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
-const Stack2 = createStackNavigator();
+const TransactionStack = createNativeStackNavigator();
+const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const windowHeight = Dimensions.get('window').height;
-
-const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'rgb(255,255,255)',
-  },
-};
-
-const tabIconConfig = {
-  Home: 'home',
-  Chart: 'linechart',
-  Settings: 'setting',
-};
 
 const styles = StyleSheet.create({
   navigatorContainer: {
@@ -43,14 +39,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    // SHADOW
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 3.22,
   },
   navigator: {
     borderTopWidth: 0,
@@ -62,183 +50,303 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 30,
+    height: 0,
   },
   container: {
     position: 'relative',
-    width: 75,
+    width: 45,
     alignItems: 'center',
   },
   background: {
     position: 'absolute',
     top: 0,
   },
-  button: {
-    top: -22.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 50,
-    height: 50,
-    borderRadius: 27,
-    backgroundColor: colors.brandStyle,
-  },
-  buttonIcon: {
-    fontSize: 16,
-    color: colors.tabBackgroundColor,
-  },
 });
 
-// background svg which will create space
-const TabBg = () => (
-  <Svg width={75} height={81} viewBox="0 0 75 81" style={styles.background}>
-    <Path
-      d="M75.2 0v61H0V0c4.1 0 7.4 3.1 7.9 7.1C10 21.7 22.5 33 37.7 33c15.2 0 27.7-11.3 29.7-25.9.5-4 3.9-7.1 7.9-7.1h-.1z"
-      fill={colors.tabBackgroundColor}
-    />
-  </Svg>
-);
+function TabBarPrimaryButton(_: BottomTabBarButtonProps) {
+  const navigation = useNavigation();
 
-// custom tabBarButton
-const TabBarAdvancedButton = ({ onPress }) => (
-  <Box style={styles.container} pointerEvents="box-none">
-    <TabBg />
-    <IconButton
-      variant="solid"
-      _icon={{
-        as: AntDesign,
-        name: 'edit',
-        size: 'xl',
-      }}
-      onPress={onPress}
-      onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-      _pressed={{
-        style: {
-          ...styles.button,
-          transform: [{
-            scale: 0.95,
-          }],
-          opacity: 0.95,
-        },
-      }}
-      style={styles.button}
-    />
-  </Box>
-);
+  return (
+    <Box style={styles.container} pointerEvents="box-none">
+      <IconButton
+        _icon={{
+          as: AntDesign,
+          name: 'plus',
+        }}
+        onPress={() => navigation.dispatch(
+          CommonActions.navigate({
+            name: 'TransactionCreateScreen',
+          }),
+        )}
+        _pressed={{
+          style: {
+            top: -15,
+          },
+        }}
+        style={{
+          top: -15,
+        }}
+      />
+    </Box>
+  );
+}
 
-const TransactionNavigator = () => (
-  <Stack2.Navigator screenOptions={{ headerShown: false }}>
-    <Stack2.Screen
-      name="TransactionsList"
-      component={TransactionsListContainer}
-    />
-  </Stack2.Navigator>
-);
-
-const Home = () => (
-  <Tab.Navigator
-    tabBar={({
-      state, descriptors, navigation, insets,
-    }) => (
-      <Box style={styles.navigatorContainer}>
+function TabBarComponent({
+  state,
+  descriptors,
+  navigation,
+  insets,
+}) {
+  return (
+    <>
+      <ThemeBlurView
+        style={{
+          ...styles.navigatorContainer,
+          borderTopWidth: 0.5,
+        }}
+      >
         <BottomTabBar
           state={state}
           descriptors={descriptors}
           navigation={navigation}
           insets={insets}
         />
-        <Box style={[styles.xFillLine, { backgroundColor: colors.tabBackgroundColor }]} />
-      </Box>
-    )}
-    screenOptions={({ route }) => ({
-      tabBarIcon: (icon) => (
-        <AntDesign
-          name={tabIconConfig[route.name]}
-          size={22}
-          color={icon.color}
-        />
-      ),
-      tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
-      tabBarActiveBackgroundColor: colors.tabBackgroundColor,
-      tabBarActiveTintColor: colors.brandStyle,
-      tabBarInactiveTintColor: colors.tabInactiveDarkLight,
-      headerShown: false,
-      tabBarShowLabel: true,
-      tabBarLazyLoad: true,
-      tabBarStyle: {
-        backgroundColor: 'transparent',
-        borderTopWidth: 0,
-        height: 75,
-      },
-      tabBarLabelStyle: {
-        fontSize: 11,
-        fontFamily: 'Montserrat_Bold',
-      },
-    })}
-  >
-    <Tab.Screen
-      name="Home"
-      component={HomeContainer}
+      </ThemeBlurView>
+      <NavigationHeader navigationState={state} />
+    </>
+  );
+}
+
+function TabBarChartScreenIcon({ color }) {
+  return (
+    <AntDesign
+      name="linechart"
+      size={20}
+      color={color}
     />
-    <Tab.Screen
-      name="Chart"
-      component={ChartContainer}
+  );
+}
+
+function TabBarHomeScreenIcon({ color }) {
+  return (
+    <Foundation
+      name="home"
+      size={24}
+      color={color}
     />
-    <Tab.Screen
-      name="Create"
-      component={HomeContainer}
-      options={({ navigation }) => ({
-        tabBarButton: () => (
-          <TabBarAdvancedButton onPress={() => navigation.navigate('TransactionsCreateModal')} />
-        ),
-      })}
+  );
+}
+
+function TabBarTransactionScreenIcon({ color }) {
+  return (
+    <AntDesign
+      name="bars"
+      size={25}
+      color={color}
     />
-    <Tab.Screen
-      name="Transactions"
-      component={TransactionNavigator}
-      options={{
-        tabBarIcon: (icon) => (
-          <Feather name="list" size={25} color={icon.color} />
-        ),
+  );
+}
+
+function TabBarConfigurationScreenIcon({ color }) {
+  return (
+    <AntDesign
+      name="setting"
+      size={22}
+      color={color}
+    />
+  );
+}
+
+function headerRightComp() {
+  const navigation = useNavigation();
+
+  return (
+    <IconButton
+      variant="ghost"
+      _icon={{
+        as: FontAwesome,
+        name: 'angle-down',
+        paddingLeft: 1,
       }}
+      onPress={navigation.goBack}
     />
-    <Tab.Screen
-      name="Settings"
-      component={ConfigurationContainer}
-    />
-  </Tab.Navigator>
-);
+  );
+}
 
-const Index = (
-  <NavigationContainer theme={MyTheme}>
-    <Stack.Navigator initialRouteName="oauth" screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name="oauth"
-        component={OauthContainer}
-      />
-      <Stack.Screen
-        name="dashboard"
-        component={Home}
-      />
-      <Stack2.Group
-        screenOptions={{
-          headerShown: false,
-          presentation: 'modal',
-          gestureEnabled: true,
-          gestureResponseDistance: windowHeight,
-          ...TransitionPresets.ModalPresentationIOS,
+function TransactionsStack() {
+  const { colors } = useThemeColors();
+
+  return (
+    <TransactionStack.Navigator initialRouteName="TransactionsScreen">
+      <TransactionStack.Screen
+        name="TransactionsScreen"
+        component={TransactionsScreen}
+        initialParams={{ forceRefresh: false }}
+        options={{
+          headerShadowVisible: true,
+          headerShown: true,
+          headerTitle: 'Transactions',
+          headerTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
+          headerLargeTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
+          headerLargeTitle: false,
+          headerTintColor: colors.text,
+          /*          headerSearchBarOptions: {
+            autoCapitalize: 'none',
+          }, */
+          headerStyle: {
+            backgroundColor: colors.tileBackgroundColor,
+          },
         }}
-      >
-        <Stack2.Screen
-          name="TransactionsEditModal"
-          component={TransactionsEditContainer}
-        />
-        <Stack2.Screen
-          name="TransactionsCreateModal"
-          component={TransactionsCreateContainer}
-        />
-      </Stack2.Group>
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+      />
+      <TransactionStack.Screen
+        name="TransactionDetailScreen"
+        component={TransactionDetailScreen}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerBackTitleVisible: true,
+          headerBackTitle: 'Back',
+          headerBackTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
+          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerTintColor: colors.text,
+          headerShadowVisible: true,
+          headerStyle: {
+            backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+          },
+          animation: Platform.select({ ios: 'default', android: 'slide_from_right' }),
+        }}
+      />
+    </TransactionStack.Navigator>
+  );
+}
 
-export default Index;
+function PrimaryButtonComponent() {
+  return <View />;
+}
+
+function Home() {
+  const { colors } = useThemeColors();
+
+  return (
+    <Tab.Navigator
+      tabBar={TabBarComponent}
+      screenOptions={() => ({
+        tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
+        tabBarActiveBackgroundColor: colors.tabBackgroundColor,
+        tabBarActiveTintColor: colors.brandStyle,
+        tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+        headerShown: false,
+        tabBarShowLabel: true,
+        tabBarLazyLoad: true,
+        tabBarStyle: {
+          backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+          borderTopWidth: 0,
+          marginTop: 10,
+          elevation: 0,
+        },
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontFamily: 'Montserrat',
+          paddingBottom: 10,
+        },
+      })}
+    >
+      <Tab.Screen
+        name={translate('navigation_home_tab')}
+        component={HomeScreen}
+        options={{
+          tabBarIcon: TabBarHomeScreenIcon,
+        }}
+      />
+      <Tab.Screen
+        name={translate('navigation_chart_tab')}
+        component={ChartScreen}
+        options={{
+          tabBarIcon: TabBarChartScreenIcon,
+        }}
+      />
+      <Tab.Screen
+        name="TransactionCreateBtn"
+        component={PrimaryButtonComponent}
+        options={{
+          tabBarButton: TabBarPrimaryButton,
+        }}
+      />
+      <Tab.Screen
+        name="Transactions"
+        component={TransactionsStack}
+        options={{
+          tabBarIcon: TabBarTransactionScreenIcon,
+          title: translate('navigation_transactions_tab'),
+        }}
+      />
+      <Tab.Screen
+        name={translate('navigation_settings_tab')}
+        component={ConfigurationScreen}
+        options={{
+          tabBarIcon: TabBarConfigurationScreenIcon,
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+export default function Index() {
+  const { colors } = useThemeColors();
+
+  return (
+    <NavigationContainer
+      theme={{
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: colors.backgroundColor,
+        },
+      }}
+    >
+      <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="oauth"
+          component={OauthScreen}
+        />
+        <Stack.Screen
+          name="dashboard"
+          component={Home}
+        />
+        <ModalStack.Group
+          screenOptions={{
+            headerShown: false,
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}
+        >
+          <ModalStack.Screen
+            name="TransactionCreateScreen"
+            component={TransactionCreateScreen}
+            options={{
+              headerShown: true,
+              headerBackVisible: false,
+              headerTitle: translate('transaction_screen_title'),
+              headerRight: headerRightComp,
+              headerShadowVisible: true,
+              headerTitleStyle: {
+                fontFamily: 'Montserrat_Bold',
+              },
+              headerTintColor: colors.text,
+              headerStyle: {
+                backgroundColor: colors.tileBackgroundColor,
+              },
+            }}
+          />
+        </ModalStack.Group>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

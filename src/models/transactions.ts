@@ -1,31 +1,90 @@
 import { createModel } from '@rematch/core';
+import { AxiosResponse } from 'axios';
 import { RootModel } from './index';
 
-export type TransactionType = {
-  attributes: {
-    name: string,
-  },
-  id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
+export type TransactionSplitType = {
+  order?: number
+  description: string,
+  amount: string,
   type: string,
+  categoryId: string,
+  categoryName: string,
+  budgetId: string,
+  budgetName: string,
+  currencyCode: string,
+  currencySymbol: string,
+  currencyDecimalPlaces?: number,
+  date: string | Date,
+  sourceName: string,
+  destinationName: string,
+  tags: string[],
+  notes: string,
+  foreignAmount: string,
+  foreignCurrencyId: string,
+  foreignCurrencyCode?: string,
+}
+
+export type TransactionType = {
+  id: string
+  type: string
+  attributes: {
+    groupTitle: string
+    transactions: TransactionSplitType[]
+    user: string
+    createdAt: string
+    updatedAt: string
+  },
 }
 
 export type TransactionStateType = {
-  transactions: TransactionType[],
-  page: number,
-  totalPages: number,
+  transactionPayload: {
+    title: string
+    transactions: TransactionSplitType[]
+  },
+  page: number
+  totalPages: number
+  error: string
+  success: boolean
 }
 
+export type ErrorStateType = {
+  description: string
+  sourceName: string
+  destinationName: string
+  amount: string
+  categoryId: string
+  budgetId: string
+  tags: string
+  foreignCurrencyId: string
+  foreignAmount: string
+  notes: string
+}
+
+export const initialSplit = () => ({
+  type: 'withdrawal',
+  amount: '',
+  currencyCode: '',
+  currencySymbol: '',
+  date: new Date(),
+  description: '',
+  foreignCurrencyId: '',
+  foreignAmount: '',
+  sourceName: '',
+  destinationName: '',
+  categoryName: '',
+  categoryId: '',
+  budgetName: '',
+  budgetId: '',
+  tags: [],
+  notes: '',
+}) as TransactionSplitType;
+
 const INITIAL_STATE = {
-  transactions: [],
   page: 1,
   totalPages: 1,
+  transactionPayload: null,
+  error: '',
+  success: false,
 } as TransactionStateType;
 
 export default createModel<RootModel>()({
@@ -33,9 +92,8 @@ export default createModel<RootModel>()({
   state: INITIAL_STATE,
 
   reducers: {
-    setTransactions(state, payload): TransactionStateType {
+    setMetaPagination(state, payload): TransactionStateType {
       const {
-        transactions = state.transactions,
         page = state.page,
         totalPages = state.totalPages,
       } = payload;
@@ -44,70 +102,215 @@ export default createModel<RootModel>()({
         ...state,
         page,
         totalPages,
-        transactions,
       };
     },
+    setGroupTitle(state, title): TransactionStateType {
+      const {
+        transactionPayload,
+      } = state;
 
+      return {
+        ...state,
+        transactionPayload: {
+          ...transactionPayload,
+          title,
+        },
+      };
+    },
+    setTransactionSplitByIndex(state, index, split): TransactionStateType {
+      const {
+        transactionPayload,
+      } = state;
+
+      const newTransactions = [...transactionPayload.transactions];
+      newTransactions[index] = split;
+
+      return {
+        ...state,
+        transactionPayload: {
+          ...transactionPayload,
+          transactions: newTransactions,
+        },
+      };
+    },
+    addTransactionSplit(state): TransactionStateType {
+      const {
+        transactionPayload,
+      } = state;
+
+      return {
+        ...state,
+        transactionPayload: {
+          ...transactionPayload,
+          transactions: [
+            ...transactionPayload.transactions,
+            initialSplit(),
+          ],
+        },
+      };
+    },
+    deleteTransactionSplit(state, index): TransactionStateType {
+      const {
+        transactionPayload,
+      } = state;
+
+      return {
+        ...state,
+        transactionPayload: {
+          ...transactionPayload,
+          transactions: transactionPayload.transactions.filter((_, i) => i !== index),
+        },
+      };
+    },
+    setTransaction(state, payload): TransactionStateType {
+      const {
+        splits,
+        title,
+      } = payload;
+
+      return {
+        ...state,
+        transactionPayload: {
+          title,
+          transactions: splits,
+        },
+      };
+    },
+    resetTransaction(state, payload): TransactionStateType {
+      const {
+        splits,
+        title,
+      } = payload;
+
+      return {
+        ...state,
+        transactionPayload: {
+          title,
+          transactions: splits.length ? splits.map((split) => ({
+            ...split,
+            date: new Date(split.date),
+            amount: split.amount ? parseFloat(split.amount).toFixed(2) : '',
+            foreignAmount: split.foreignAmount ? parseFloat(split.foreignAmount).toFixed(2) : '',
+          })) : [{ ...initialSplit() }],
+        },
+      };
+    },
+    setErrorStatus(state, error): TransactionStateType {
+      return {
+        ...state,
+        error,
+        success: false,
+      };
+    },
+    setSuccessStatus(state): TransactionStateType {
+      return {
+        ...state,
+        success: true,
+      };
+    },
+    resetStatus(state): TransactionStateType {
+      return {
+        ...state,
+        error: '',
+        success: false,
+      };
+    },
     resetState() {
       return INITIAL_STATE;
     },
   },
 
   effects: (dispatch) => ({
-    /**
-     * Get transactions list
-     *
-     * @returns {Promise}
-     */
-    async getTransactions({ endReached = false }, rootState): Promise<void> {
+    async getTransactions(_: void, rootState): Promise<TransactionType[]> {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            start,
+            end,
+          },
         },
-        transactions: {
-          transactions: oldTransactions,
-          page = 1,
-          totalPages = 1,
+        currencies: {
+          current,
         },
       } = rootState;
 
       const type = 'all';
-      const currentPage = (endReached && page < totalPages) ? page + 1 : 1;
-      if (page < totalPages || !endReached) {
+      const currentPage = 1;
+      const {
+        data: transactions,
+        meta,
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+
+      dispatch.transactions.setMetaPagination({
+        page: meta.pagination.currentPage,
+        totalPages: meta.pagination.totalPages,
+      });
+
+      return transactions;
+    },
+    async getMoreTransactions(_: void, rootState): Promise<TransactionType[]> {
+      const {
+        firefly: {
+          rangeDetails: {
+            start,
+            end,
+          },
+        },
+        transactions: {
+          page = 1,
+          totalPages = 1,
+        },
+        currencies: {
+          current,
+        },
+      } = rootState;
+
+      const type = 'all';
+      const currentPage = (page < totalPages) ? page + 1 : 1;
+      if (page < totalPages) {
         const {
           data: transactions,
           meta,
-        } = await dispatch.configuration.apiFetch({ url: `/api/v1/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` });
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
-        dispatch.transactions.setTransactions({
-          transactions: (endReached && page < totalPages) ? [...oldTransactions, ...transactions] : transactions,
-          page: meta.pagination.current_page,
-          totalPages: meta.pagination.total_pages,
+        dispatch.transactions.setMetaPagination({
+          page: meta.pagination.currentPage,
+          totalPages: meta.pagination.totalPages,
         });
-      }
-    },
 
-    /**
-     * Create transactions
-     *
-     * @returns {Promise}
-     */
-    async createTransactions(payload, rootState) {
+        return transactions;
+      }
+
+      return [];
+    },
+    async createTransaction(_: void, rootState): Promise<AxiosResponse> {
+      const {
+        transactions: {
+          transactionPayload: {
+            title,
+            transactions,
+          },
+        },
+      } = rootState;
+
       const body = {
-        transactions: [{
-          // TODO: Add support for:
-          /* budget_id: '4', */
-          /* category_id: '43', */
-          /* piggy_bank_id: '2', */
-          /* tags: 'test abaccus', */
-          /* notes: 'test abaccus notes', */
-          /* currency_id: '12', */
-          /* foreign_amount: '123.45', */
-          /* foreign_currency_id: '17', */
-          ...payload,
-          amount: payload.amount.replace(/,/g, '.'),
-        }],
+        group_title: title,
+        transactions: transactions.map((transaction) => ({
+          tags: transaction.tags,
+          notes: transaction.notes,
+          foreign_amount: transaction.foreignAmount ? transaction.foreignAmount.replace(/,/g, '.') : 0,
+          foreign_currency_id: transaction.foreignCurrencyId,
+          description: transaction.description,
+          date: transaction.date,
+          source_name: transaction.sourceName,
+          destination_name: transaction.destinationName,
+          category_id: transaction.categoryName === '' ? undefined : transaction.categoryId,
+          category_name: transaction.categoryName,
+          budget_id: transaction.budgetId,
+          budget_name: transaction.budgetName,
+          type: transaction.type,
+          amount: transaction.amount.replace(/,/g, '.'),
+        })),
         error_if_duplicate_hash: false,
         apply_rules: true,
         fire_webhooks: true,
@@ -117,59 +320,44 @@ export default createModel<RootModel>()({
 
       return data;
     },
-
-    /**
-     * Create transactions
-     *
-     * @returns {Promise}
-     */
-    async updateTransactions(payload, rootState) {
+    async updateTransaction({ id }, rootState): Promise<AxiosResponse> {
       const {
-        id,
-        transaction,
-      } = payload;
-      const body = {
-        transactions: [{
-          // TODO: Add support for:
-          /* budget_id: '4', */
-          /* category_id: '43', */
-          /* piggy_bank_id: '2', */
-          /* tags: 'test abaccus', */
-          /* notes: 'test abaccus notes', */
-          /* currency_id: '12', */
-          /* foreign_amount: '123.45', */
-          /* foreign_currency_id: '17', */
+        transactions: {
+          transactionPayload: {
+            title,
+            transactions,
+          },
+        },
+      } = rootState;
 
-          ...transaction,
-        }],
+      const body = {
+        group_title: title,
+        transactions: transactions.map((transaction: TransactionSplitType) => ({
+          tags: transaction.tags,
+          notes: transaction.notes,
+          foreign_amount: transaction.foreignAmount,
+          foreign_currency_id: transaction.foreignCurrencyId,
+          description: transaction.description,
+          date: transaction.date,
+          source_name: transaction.sourceName,
+          destination_name: transaction.destinationName,
+          category_id: transaction.categoryName === '' ? undefined : transaction.categoryId,
+          category_name: transaction.categoryName,
+          budget_id: transaction.budgetId,
+          budget_name: transaction.budgetName,
+          type: transaction.type,
+          amount: transaction.amount.replace(/,/g, '.'),
+        })),
       };
 
       const data = await dispatch.configuration.apiPut({ url: `/api/v1/transactions/${id}`, body });
 
       return data;
     },
-
-    /**
-     * Delete transactions
-     *
-     * @returns {Promise}
-     */
-    async deleteTransaction(id, rootState) {
-      const {
-        transactions: {
-          transactions,
-        },
-      } = rootState;
-      const newTransactions = [...transactions];
-      const prevIndex = transactions.findIndex((item) => item.id === id);
-      newTransactions.splice(prevIndex, 1);
-
+    async deleteTransaction(id): Promise<AxiosResponse> {
       const data = await dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
-
-      dispatch.transactions.setTransactions({ transactions: newTransactions });
 
       return data;
     },
-
   }),
 });

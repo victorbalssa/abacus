@@ -8,49 +8,83 @@ import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
-
-const getCurrentDate = () => new Date().toISOString().slice(0, 10);
+import { generateRangeTitle } from '../lib/common';
 
 export type HomeDisplayType = {
   title: string,
-  value_parsed: string,
+  valueParsed: string,
+  monetaryValue: string,
+  currencyCode: string,
 }
 
 export type AssetAccountType = {
   title: string,
-  value_parsed: string,
+  valueParsed: string,
   skip: boolean,
   color: string,
   colorScheme: string,
-  entries: { x: string, y: string }[],
+  entries: { x: number, y: number }[],
   maxY: number,
   minY: number,
 }
 
 export type FireflyStateType = {
-  start: string,
-  end: string,
-  range: number,
-  rangeTitle: string,
+  rangeDetails: RangeDetailsType,
   netWorth: HomeDisplayType[],
   spent: HomeDisplayType[],
   earned: HomeDisplayType[],
   balance: HomeDisplayType[],
   accounts: AssetAccountType[],
-  user: null,
 }
 
+export type RangeDetailsType = {
+  title: string,
+  range: number,
+  start: string,
+  end: string,
+}
+
+const formatDateToYYYYMMDD = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+const getCurrentQuarterStartDate = (): string => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+  const startDate = new Date(currentYear, quarterStartMonth, 1);
+
+  return formatDateToYYYYMMDD(startDate);
+};
+
+const getCurrentQuarterEndDate = (): string => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+  const quarterEndMonth = Math.floor(currentMonth / 3) * 3 + 2;
+  const lastDayOfMonth = new Date(currentYear, quarterEndMonth + 1, 0).getDate();
+  const endDate = new Date(currentYear, quarterEndMonth, lastDayOfMonth);
+
+  return formatDateToYYYYMMDD(endDate);
+};
+
 const INITIAL_STATE = {
-  start: getCurrentDate(),
-  end: getCurrentDate(),
-  range: 3,
-  rangeTitle: '',
+  rangeDetails: {
+    title: generateRangeTitle(3, getCurrentQuarterStartDate(), getCurrentQuarterEndDate()),
+    range: 3,
+    start: getCurrentQuarterStartDate(),
+    end: getCurrentQuarterEndDate(),
+  },
   netWorth: [],
   spent: [],
   earned: [],
   balance: [],
   accounts: [],
-  user: null,
 } as FireflyStateType;
 
 export default createModel<RootModel>()({
@@ -60,39 +94,23 @@ export default createModel<RootModel>()({
   reducers: {
     setData(state, payload) {
       const {
-        start = state.start,
-        end = state.end,
         netWorth = state.netWorth,
-        spent = state.spent,
-        earned = state.earned,
         balance = state.balance,
         accounts = state.accounts,
-        user = state.user,
       } = payload;
 
       return {
         ...state,
-        start,
-        end,
         netWorth,
-        spent,
-        earned,
         balance,
         accounts,
-        user,
       };
     },
 
-    setRange(state, payload) {
-      const {
-        range,
-        rangeTitle,
-      } = payload;
-
+    setRangeDetails(state, rangeDetails: RangeDetailsType) {
       return {
         ...state,
-        range,
-        rangeTitle,
+        rangeDetails,
       };
     },
 
@@ -120,12 +138,17 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async handleChangeRange(payload = {}, rootState) {
+    async handleChangeRange(payload, rootState) {
+      if (rootState.firefly.rangeDetails === undefined) {
+        dispatch.firefly.resetState();
+      }
       const {
         firefly: {
-          start: oldStart,
-          end: oldEnd,
-          range: oldRange,
+          rangeDetails: {
+            range: oldRange,
+            start: oldStart,
+            end: oldEnd,
+          },
         },
       } = rootState;
       const {
@@ -136,7 +159,6 @@ export default createModel<RootModel>()({
       let end;
 
       const rangeInt = parseInt(range, 10);
-      let rangeTitle = '';
 
       if (direction !== undefined) {
         if (direction > 0) {
@@ -155,17 +177,17 @@ export default createModel<RootModel>()({
         switch (rangeInt) {
           case 1:
             start = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-01`;
-            end = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-30`;
+            end = `${today.getFullYear()}-${(month + 1).toString().padStart(2, '0')}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 3:
-            start = `${today.getFullYear()}-0${(quarter * 3) + 1}-01`;
-            end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-30`;
+            start = `${today.getFullYear()}-${((quarter * 3) + 1).toString().padStart(2, '0')}-01`;
+            end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 6:
             start = `${today.getFullYear()}-${semi === 1 ? '01' : '07'}-01`;
-            end = `${today.getFullYear()}-${semi === 1 ? '06' : '12'}-30`;
+            end = `${today.getFullYear()}-${semi === 1 ? '06' : '12'}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 12:
@@ -179,33 +201,59 @@ export default createModel<RootModel>()({
         }
       }
 
-      switch (rangeInt) {
-        case 1:
-          rangeTitle = `${moment(end).format('MMM')} ${moment(end).year()}.`;
-          break;
-        case 3:
-          rangeTitle = `Q${moment(start).quarter()} ${moment(start).year()}.`;
-          break;
-        case 6:
-          rangeTitle = `S${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
-          break;
-        case 12:
-          rangeTitle = `${moment(start).year()} Year.`;
-          break;
-        default:
-          rangeTitle = `${moment(start).year()} Year.`;
-          break;
-      }
+      const title: string = generateRangeTitle(rangeInt, start, end);
 
-      console.log('RANGE', range, rangeTitle);
+      console.log('RANGE', range, title);
       console.log('DATE', start, end);
 
-      dispatch.firefly.setRange({ range, rangeTitle });
-      dispatch.firefly.setData({ start, end });
+      dispatch.firefly.setRangeDetails({
+        title,
+        range,
+        start,
+        end,
+      });
+    },
 
-      dispatch.firefly.getSummaryBasic();
-      dispatch.firefly.getDashboardBasic();
-      dispatch.transactions.getTransactions({ endReached: false });
+    /**
+     * Get home net worth
+     *
+     * @returns {Promise}
+     */
+    async getNetWorth(_: void, rootState) {
+      const {
+        firefly: {
+          rangeDetails: {
+            start,
+            end,
+          },
+        },
+        currencies: {
+          current,
+        },
+      } = rootState;
+      if (current && current.attributes.code) {
+        const params = new URLSearchParams({
+          start,
+          end,
+          currency_code: current?.attributes.code,
+        });
+        const { data: summary } = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
+        const netWorth = [];
+        const balance = [];
+        Object.keys(summary).forEach((key) => {
+          if (key.includes('net-worth-in')) {
+            netWorth.push(summary[key]);
+          }
+          if (key.includes('balance-in')) {
+            balance.push(summary[key]);
+          }
+        });
+
+        this.setData({
+          netWorth,
+          balance,
+        });
+      }
     },
 
     /**
@@ -213,56 +261,18 @@ export default createModel<RootModel>()({
      *
      * @returns {Promise}
      */
-    async getSummaryBasic(_: void, rootState) {
+    async getAccountChart(_: void, rootState) {
       const {
         firefly: {
-          start,
-          end,
+          rangeDetails: {
+            range,
+            start,
+            end,
+          },
         },
       } = rootState;
 
-      const summary = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?start=${start}&end=${end}` });
-      const netWorth = [];
-      const spent = [];
-      const earned = [];
-      const balance = [];
-      Object.keys(summary).forEach((key) => {
-        if (key.includes('net-worth-in')) {
-          netWorth.push(summary[key]);
-        }
-        if (key.includes('spent-in')) {
-          spent.push(summary[key]);
-        }
-        if (key.includes('earned-in')) {
-          earned.push(summary[key]);
-        }
-        if (key.includes('balance-in')) {
-          balance.push(summary[key]);
-        }
-      });
-
-      this.setData({
-        netWorth,
-        spent,
-        earned,
-        balance,
-      });
-    },
-
-    /**
-     * Get the dashboard summary
-     *
-     * @returns {Promise}
-     */
-    async getDashboardBasic(_: void, rootState) {
-      const {
-        firefly: {
-          start,
-          end,
-        },
-      } = rootState;
-
-      const accounts = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` });
+      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` }) as { data: AssetAccountType[] };
       let colorIndex = 0;
 
       accounts.forEach((v, index) => {
@@ -273,9 +283,21 @@ export default createModel<RootModel>()({
         accounts[index].color = colors[`brandStyle${colorIndex}`];
         accounts[index].colorScheme = `chart${colorIndex}`;
         colorIndex += 1;
-        accounts[index].entries = Object.keys(v.entries)
+        accounts[index].entries = range > 3 ? Object.keys(v.entries)
+          .filter((e, i) => i % 2 === 0)
+          .filter((e, i) => i % 2 === 0)
+          .filter((e, i) => i % 2 === 0)
           .map((key) => {
-            const value = accounts[index].entries[key];
+            const value = parseFloat(accounts[index].entries[key]);
+            const date = new Date(key);
+
+            return {
+              x: +date,
+              y: value,
+            };
+          })
+          : Object.keys(v.entries).map((key) => {
+            const value = parseFloat(accounts[index].entries[key]);
             const date = new Date(key);
 
             return {
@@ -283,8 +305,8 @@ export default createModel<RootModel>()({
               y: value,
             };
           });
-        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
-        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
+        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
+        accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
       });
 
       this.setData({ accounts });

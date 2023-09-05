@@ -1,42 +1,36 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-export type CategoryType = {
-  attributes: {
-    name: string,
-  },
+export type InsightCategoryType = {
+  name: string,
   id: string,
-  links: {
-    0: {
-      rel: string,
-      uri: string,
-    },
-    self: string,
-  },
-  type: string,
+  currencyCode: string,
+  currencyId: string,
+  difference: string,
+  differenceFloat: number,
 }
 
-export type CategoryStateType = {
-  categories: CategoryType[],
+export type CategoriesStateType = {
+  insightCategories: InsightCategoryType[],
 }
 
 const INITIAL_STATE = {
-  categories: [],
-} as CategoryStateType;
+  insightCategories: [],
+} as CategoriesStateType;
 
 export default createModel<RootModel>()({
 
   state: INITIAL_STATE,
 
   reducers: {
-    setCategories(state, payload): CategoryStateType {
+    setInsightCategories(state, payload): CategoriesStateType {
       const {
-        categories = state.categories,
+        insightCategories = state.insightCategories,
       } = payload;
 
       return {
         ...state,
-        categories,
+        insightCategories,
       };
     },
 
@@ -47,14 +41,31 @@ export default createModel<RootModel>()({
 
   effects: (dispatch) => ({
     /**
-     * Get categories list
+     * Get Insight categories
      *
      * @returns {Promise}
      */
-    async getCategories(): Promise<void> {
-      const { data: categories } = await dispatch.configuration.apiFetch({ url: '/api/v1/categories' });
+    async getInsightCategories(_: void, rootState): Promise<void> {
+      const {
+        firefly: {
+          rangeDetails: {
+            start,
+            end,
+          },
+        },
+        currencies: {
+          current,
+        },
+      } = rootState;
+      if (current && current.attributes.code) {
+        const { data: insightCategories } = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/category?start=${start}&end=${end}` }) as { data: InsightCategoryType[]};
 
-      dispatch.categories.setCategories({ categories });
+        const filteredCategories = insightCategories
+          .filter((category: InsightCategoryType) => category.currencyCode === current.attributes.code)
+          .sort((a, b) => ((a.differenceFloat > b.differenceFloat) ? 1 : -1));
+
+        dispatch.categories.setInsightCategories({ insightCategories: filteredCategories });
+      }
     },
   }),
 });

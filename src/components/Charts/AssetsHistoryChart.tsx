@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Stack,
   Text,
   VStack,
   Checkbox,
   HStack,
   Pressable,
+  ScrollView,
+  IconButton,
+  View,
 } from 'native-base';
 import {
   VictoryAxis,
@@ -15,62 +17,141 @@ import {
 } from 'victory-native';
 import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
-import colors from '../../constants/colors';
+import { AntDesign } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+import * as Linking from 'expo-linking';
+import { useSelector } from 'react-redux';
+import * as Localization from 'expo-localization';
 
-const CursorPointer = ({
+import { RootState } from '../../store';
+import Loading from '../UI/Loading';
+import translate from '../../i18n/locale';
+import { D_WIDTH, useThemeColors } from '../../lib/common';
+
+function AccountsLengthMessage() {
+  const { colors } = useThemeColors();
+  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
+
+  return (
+    <View m={2}>
+      <Text fontSize={11}>
+        {translate('assetsHistoryCharts_chart_works')}
+        {' '}
+        <Text
+          style={{ color: colors.brandInfo }}
+          onPress={() => Linking.openURL(`${backendURL}/preferences`)}
+          underline
+        >
+          {translate('assetsHistoryCharts_change_preferences')}
+        </Text>
+        {' '}
+        {translate('assetsHistoryCharts_choose_preferences_text')}
+        {' '}
+        <Text fontFamily="Montserrat_Bold">{translate('assetsHistoryCharts_home_screen')}</Text>
+        .
+      </Text>
+    </View>
+  );
+}
+
+function CursorPointer({ x, y, stroke }) {
+  return (
+    <>
+      <Circle cx={x} cy={y} r="10" fill={stroke} />
+      <Circle cx={x} cy={y} r="7" fill="#fff" />
+    </>
+  );
+}
+
+function Cursor({
   x,
   y,
-  stroke,
-}) => (
-  <>
-    <Circle cx={x} cy={y} r="6" fill={stroke} />
-    <Circle cx={x} cy={y} r="4" fill="#fff" />
-  </>
-);
+  minY,
+  maxY,
+  activePoints,
+}) {
+  return (
+    <>
+      <VStack ml={2} h={100} top={-100} borderTopRadius={15} mr={5}>
+        <HStack
+          justifyContent="center"
+          minW={100}
+        >
+          <Text fontWeight={600} pt={2} fontSize={18}>
+            {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            }) : '  '}`}
+          </Text>
+        </HStack>
+        <VStack
+          position="absolute"
+          left={x < D_WIDTH - 90 ? x - 35 : undefined}
+          right={0}
+          bottom={0}
+          marginLeft="auto"
+          marginRight="auto"
+          minW={100}
+        >
+          <ScrollView maxHeight={110}>
+            {activePoints.map(({
+              y: yPoint, childName, style,
+            }) => {
+              const {
+                data: {
+                  stroke,
+                },
+              } = style;
 
-const Cursor = ({
-  x, y, minY, maxY, activePoints,
-}) => (
-  <>
-    <Line
-      strokeDasharray="5, 5"
-      stroke={colors.brandDarkLight}
-      strokeWidth={3}
-      x1={x}
-      x2={x}
-      y1={0}
-      y2={223}
-    />
-    {activePoints.map(({
-      y: yPoint, childName, style,
-    }) => {
-      const {
-        data: {
-          stroke,
-        },
-      } = style;
-      const yMinDisplay = maxY <= 0 ? 0 : 2;
-      const yMaxDisplay = minY !== 0 ? 218 : 220;
-      const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
-      const yCursorPoint = (-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay);
+              return (
+                <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontSize={12}>
+                  {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
+                </Text>
+              );
+            })}
+          </ScrollView>
+        </VStack>
+      </VStack>
+      <Line
+        strokeDasharray="5, 5"
+        stroke="#676767"
+        strokeWidth={2}
+        x1={x}
+        x2={x}
+        y1={10}
+        y2={299}
+      />
+      {activePoints.map(({
+        y: yPoint, childName, style,
+      }) => {
+        const {
+          data: {
+            stroke,
+          },
+        } = style;
+        const yMinDisplay = maxY <= 0 ? 10 : 12;
+        const yMaxDisplay = minY !== 0 ? 294 : 296;
+        const zeroPos = (-((minY / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay;
+        const yCursorPoint = ((-((yPoint / (maxY - minY)) - 1) * (yMaxDisplay - yMinDisplay)) + yMinDisplay - (zeroPos - yMaxDisplay)) || 0;
 
-      return (
-        <CursorPointer key={y + childName} stroke={stroke} x={x} y={yCursorPoint} />
-      );
-    })}
-  </>
-);
+        return (
+          <CursorPointer key={y + childName} stroke={stroke} x={x} y={yCursorPoint} />
+        );
+      })}
+    </>
+  );
+}
 
-const AssetsHistoryChart = ({
+export default function AssetsHistoryChart({
+  loading,
+  fetchData,
   start,
   end,
   accounts,
   filterData,
-  disableScroll,
-  enableScroll,
-}) => {
-  const [points, setPoints] = useState([]);
-
+}) {
+  const { colors } = useThemeColors();
   const getTickValues = () => {
     const dateArray = [];
     const currentDate = new Date(start);
@@ -86,102 +167,128 @@ const AssetsHistoryChart = ({
 
   return (
     <VStack
-      mt={2}
-      maxW={330}
-      bgColor={colors.brandLight}
-      rounded="15"
+      mx={1.5}
+      bgColor={colors.tileBackgroundColor}
+      borderWidth={0.5}
+      borderColor={colors.listBorderColor}
+      justifyContent="center"
+      borderRadius={10}
     >
-      <Stack
+      <HStack
         style={{
           marginTop: 10,
           paddingTop: 0,
-          paddingLeft: 15,
+          paddingHorizontal: 10,
+          justifyContent: 'space-between',
           paddingBottom: 0,
         }}
       >
-        <VStack>
-          {accounts.map((chart, index) => {
-            let value = '';
-            if (points.filter((v) => v.childName === chart.label).length) {
-              value = points.filter((v) => v.childName === chart.label)[0].y;
-            }
-
-            return (
-              <Pressable
-                key={`key-${chart.label}`}
-                onPress={() => filterData({ index })}
-                isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                _disabled={{
-                  style: {
-                    opacity: 0.4,
-                  },
-                }}
-              >
-                <HStack p={1} key={`key-${chart.label}`}>
-                  <Checkbox
-                    accessibilityLabel={`key-${chart.color}`}
-                    key={`key-${chart.label}`}
-                    colorScheme={chart.colorScheme}
-                    isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                    isChecked={!chart.skip}
-                    value={index}
-                    onChange={() => filterData({ index })}
-                  />
-                  <Text ml={1} color={chart.color} fontWeight={600} fontSize={15}>
-                    {` ${chart.label} ${value ? (chart.currency_symbol + value) : ''}`}
-                  </Text>
-                </HStack>
-              </Pressable>
-            );
-          })}
-          <Text fontWeight={600} fontSize={17}>
-            {`${points.length !== 0 ? new Date(points[0]?.x).toLocaleString('default', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            }) : '  '}`}
-          </Text>
-        </VStack>
-      </Stack>
-      <VictoryChart
-        padding={{
-          left: 40,
-          right: 40,
-          bottom: 30,
-        }}
-        width={350}
-        height={250}
-        domainPadding={2}
-        containerComponent={(
-          <VictoryVoronoiContainer
-            voronoiDimension="x"
-            onActivated={setPoints}
-            onTouchStart={() => disableScroll()}
-            onTouchEnd={() => {
-              setPoints([]);
-              enableScroll();
-            }}
-            labels={({ datum }) => datum.childName}
-            labelComponent={(
-              <Cursor
-                x
-                y
-                activePoints
-                maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY}
-                minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY}
-              />
-            )}
-          />
-        )}
-      >
-        <VictoryAxis
-          dependentAxis
-          tickCount={6}
-          tickFormat={(x) => (`${x !== 0 ? (Math.round(x) / 1000) : '0'}k`)}
+        <View>
+          {accounts.map((chart, index) => (
+            <Pressable
+              key={`key-${chart.label}`}
+              onPress={() => filterData({ index })}
+              isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
+              _disabled={{
+                style: {
+                  opacity: 0.4,
+                },
+              }}
+            >
+              <HStack p={1} key={`key-${chart.label}`}>
+                <Checkbox
+                  accessibilityLabel={`key-${chart.color}`}
+                  key={`key-${chart.label}`}
+                  colorScheme={chart.colorScheme}
+                  isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
+                  isChecked={!chart.skip}
+                  value={index}
+                  onChange={() => filterData({ index })}
+                />
+                <Text
+                  maxW={200}
+                  numberOfLines={1}
+                  ml={1}
+                  color={chart.color}
+                  fontSize={15}
+                >
+                  {chart.label}
+                </Text>
+              </HStack>
+            </Pressable>
+          ))}
+        </View>
+        <IconButton
+          variant="solid"
+          _icon={{
+            as: AntDesign,
+            name: 'reload1',
+          }}
+          onPress={fetchData}
+          onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         />
-        {accounts
-          .filter((v) => !v.skip)
-          .map((chart) => (
+      </HStack>
+      <View style={{ height: 90 }} />
+      {loading && (
+        <VStack m={2} justifyContent="center" borderRadius={10}>
+          <HStack h={400} alignItems="center">
+            <Loading />
+          </HStack>
+        </VStack>
+      )}
+      {!loading && (
+        <VictoryChart
+          padding={{
+            top: 10,
+            left: 50,
+            right: 35,
+            bottom: 135,
+          }}
+          height={430}
+          domainPadding={2}
+          containerComponent={(
+            <VictoryVoronoiContainer
+              voronoiDimension="x"
+              labels={({ datum }) => datum.childName}
+              labelComponent={(
+                <Cursor
+                  x
+                  y
+                  activePoints
+                  maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY || 0}
+                  minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY || 0}
+                />
+              )}
+            />
+          )}
+        >
+          <VictoryAxis
+            dependentAxis
+            crossAxis={false}
+            tickCount={6}
+            tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
+            style={{
+              axis: { stroke: colors.brandLight },
+              tickLabels: {
+                fill: colors.text,
+                fontWeight: 200,
+              },
+            }}
+          />
+          <VictoryAxis
+            offsetY={135}
+            tickValues={getTickValues()}
+            tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
+            style={{
+              axis: { stroke: colors.brandLight },
+              tickLabels: {
+                fill: colors.text,
+                fontWeight: 200,
+                angle: getTickValues().length > 7 ? -40 : 0,
+              },
+            }}
+          />
+          {accounts.filter((v) => !v.skip).map((chart) => chart.entries.length > 0 && (
             <VictoryLine
               key={chart.label}
               style={{
@@ -190,19 +297,14 @@ const AssetsHistoryChart = ({
                   strokeWidth: 2,
                 },
               }}
-              interpolation="linear"
+              interpolation="monotoneX"
               data={chart.entries}
-              name={chart.label}
+              name={`${chart.label} (${chart.currency_symbol})`}
             />
           ))}
-        <VictoryAxis
-          tickValues={getTickValues()}
-          tickFormat={(x) => (new Date(x).toLocaleString('default', { month: 'short' }))}
-          style={{ tickLabels: { angle: getTickValues().length > 5 ? -60 : 0 } }}
-        />
-      </VictoryChart>
+        </VictoryChart>
+      )}
+      {accounts.length > 4 && (<AccountsLengthMessage />)}
     </VStack>
   );
-};
-
-export default AssetsHistoryChart;
+}

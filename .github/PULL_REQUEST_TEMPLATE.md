@@ -2,7 +2,7 @@
 name: Pull request
 about: Suggest an idea for this project
 title: FEATURE_
-labels: enhancement
+labels: feature
 assignees: victorbalssa
 
 ---

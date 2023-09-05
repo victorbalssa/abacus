@@ -1,17 +1,29 @@
 import { createModel } from '@rematch/core';
 import * as SecureStore from 'expo-secure-store';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+
 import secureKeys from '../constants/oauth';
 import { RootModel } from './index';
+import { convertKeysToCamelCase } from '../lib/common';
 
-export type ConfigurationStateType = {
+type ConfigurationStateType = {
   backendURL: string,
   scrollEnabled: boolean,
   faceId: boolean,
 }
 
+type FireflyIIIApiResponse = {
+  data: unknown,
+  meta?: {
+    pagination: {
+      currentPage: number
+      totalPages: number
+    }
+  },
+}
+
 const INITIAL_STATE = {
-  backendURL: '',
+  backendURL: 'https://',
   scrollEnabled: true,
   faceId: false,
 } as ConfigurationStateType;
@@ -49,13 +61,6 @@ export default createModel<RootModel>()({
       };
     },
 
-    setDefaultCurrency(state, payload) {
-      return {
-        ...state,
-        defaultCurrency: payload,
-      };
-    },
-
     resetState() {
       return INITIAL_STATE;
     },
@@ -65,7 +70,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiFetch({ url, config }, rootState): Promise<any> {
+    async apiFetch({ url, config }, rootState): Promise<FireflyIIIApiResponse> {
       const {
         configuration: {
           backendURL,
@@ -76,7 +81,15 @@ export default createModel<RootModel>()({
         console.log('GET  ', `${backendURL}${url}`);
         const response = await axios.get(`${backendURL}${url}`, config);
 
-        if (response.data) return response.data;
+        if (response.data) {
+          const responseData = response.data.data || response.data;
+
+          // recursively convert snake_case keys to camelCase
+          return {
+            data: convertKeysToCamelCase(responseData),
+            meta: convertKeysToCamelCase(response.data.meta),
+          };
+        }
 
         return response;
       }
@@ -87,7 +100,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiPost({ url, body, config }, rootState): Promise<any> {
+    async apiPost({ url, body, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,
@@ -107,7 +120,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiPut({ url, body, config }, rootState): Promise<any> {
+    async apiPut({ url, body, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,
@@ -127,7 +140,7 @@ export default createModel<RootModel>()({
     /**
      * @returns {Promise}
      */
-    async apiDelete({ url }, rootState): Promise<any> {
+    async apiDelete({ url }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
           backendURL,
@@ -135,6 +148,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
+        console.log('DELETE  ', `${backendURL}${url}`);
         const { data } = await axios.delete(`${backendURL}${url}`);
 
         return data;
@@ -152,14 +166,14 @@ export default createModel<RootModel>()({
       await Promise.all([
         SecureStore.deleteItemAsync(secureKeys.tokens),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
+        dispatch.accounts.resetState(),
+        dispatch.budgets.resetState(),
+        dispatch.categories.resetState(),
+        dispatch.configuration.resetState(),
+        dispatch.currencies.resetState(),
+        dispatch.firefly.resetState(),
+        dispatch.transactions.resetState(),
       ]);
-      dispatch.accounts.resetState();
-      dispatch.budgets.resetState();
-      dispatch.categories.resetState();
-      dispatch.configuration.resetState();
-      dispatch.currencies.resetState();
-      dispatch.firefly.resetState();
-      dispatch.transactions.resetState();
     },
   }),
 });

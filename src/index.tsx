@@ -1,24 +1,43 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import { LogBox } from 'react-native';
+import {
+  AppState,
+  LogBox,
+  Image,
+} from 'react-native';
 import {
   AlertDialog,
   Button,
   extendTheme,
   NativeBaseProvider,
+  Text,
 } from 'native-base';
 import { StatusBar } from 'expo-status-bar';
+import * as Device from 'expo-device';
 import AnimatedSplash from 'react-native-animated-splash-screen';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Updates from 'expo-updates';
-import { useFonts } from 'expo-font';
+import { useFonts, loadAsync } from 'expo-font';
+
+import {
+  AntDesign,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 
 import { store, persistor } from './store';
-import colors from './constants/colors';
+import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
-import ErrorWidget from "./components/UI/ErrorWidget";
+import translate from './i18n/locale';
+import { useThemeColors } from './lib/common';
+import ThemeBlurView from './components/UI/ThemeBlurView';
 
 const config = {
   dependencies: {
@@ -26,109 +45,37 @@ const config = {
   },
 };
 
-const theme = extendTheme({
-  colors: {
-    primary: {
-      50: colors.brandStyleSecond,
-      100: colors.brandStyleSecond,
-      200: colors.brandStyleSecond,
-      300: colors.brandStyleSecond,
-      400: colors.brandStyleSecond,
-      500: colors.brandStyle,
-      600: colors.brandStyle,
-      700: colors.brandStyle,
-      800: colors.brandStyle,
-      900: colors.brandStyle,
-    },
-    chart0: {
-      600: colors.brandStyle0,
-    },
-    chart1: {
-      600: colors.brandStyle1,
-    },
-    chart2: {
-      600: colors.brandStyle2,
-    },
-    chart3: {
-      600: colors.brandStyle3,
-    },
-    chart4: {
-      600: colors.brandStyle4,
-    },
-  },
-  fontConfig: {
-    Montserrat: {
-      100: {
-        normal: 'Montserrat_Light',
-      },
-      200: {
-        normal: 'Montserrat_Light',
-      },
-      300: {
-        normal: 'Montserrat',
-      },
-      400: {
-        normal: 'Montserrat',
-      },
-      500: {
-        normal: 'Montserrat_Bold',
-      },
-      600: {
-        normal: 'Montserrat_Bold',
-      },
-    },
-  },
-  fonts: {
-    heading: 'Montserrat',
-    body: 'Montserrat',
-    mono: 'Montserrat',
-  },
-  components: {
-    Alert: {
-      baseStyle: {
-        m: '3',
-        shadow: 2,
-      },
-    },
-    Heading: {
-      baseStyle: {
-        fontFamily: 'Montserrat_Bold',
-      },
-    },
-    IconButton: {
-      baseStyle: {
-        _icon: {
-          size: 'xl',
-        },
-        _pressed: {
-          style: {
-            transform: [{
-              scale: 0.95,
-            }],
-            opacity: 0.95,
-          },
-        },
-      },
-    },
-    Input: {
-      baseStyle: {
-        borderRadius: 15,
-        height: 10,
-      },
-    },
-  },
-});
+const theme = extendTheme(themeConstants);
 
-const App: FC = () => {
+const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
+
+export default function App() {
   LogBox.ignoreAllLogs(true);
+
+  const { colors } = useThemeColors();
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const OTARef = React.createRef();
   const [OTAOpen, setOTAOpen] = useState(false);
   const [fontsLoaded] = useFonts({
+    /* eslint-disable global-require */
     Montserrat: require('./fonts/Montserrat-Regular.ttf'),
     Montserrat_Light: require('./fonts/Montserrat-Light.ttf'),
     Montserrat_Bold: require('./fonts/Montserrat-Bold.ttf'),
+    /* eslint-enable global-require */
   });
+
+  const cache = async () => {
+    const fontAssets = cacheFonts([
+      AntDesign.font,
+      Ionicons.font,
+      MaterialCommunityIcons.font,
+      MaterialIcons.font,
+    ]);
+
+    await Promise.all([fontAssets]);
+  };
 
   const onOTAUpdate = async () => {
     try {
@@ -141,55 +88,97 @@ const App: FC = () => {
 
   const onCheckOTA = async () => {
     try {
-      const update = await Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        setOTAOpen(true);
+      if (Device.isDevice && !__DEV__) {
+        const update = await Updates.checkForUpdateAsync();
+
+        if (update.isAvailable) {
+          setOTAOpen(true);
+        }
       }
     } catch (e) {
       console.error(e);
     }
   };
 
+  const _handleAppStateChange = (nextAppState) => {
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
+  };
+
   useEffect(() => {
     (async () => {
-      await onCheckOTA();
+      await Promise.all([cache(), onCheckOTA()]);
     })();
+    const subscription = AppState.addEventListener('change', _handleAppStateChange);
+    return () => {
+      subscription.remove();
+    };
   }, []);
+
+  /* eslint-disable-next-line @typescript-eslint/no-var-requires,global-require */
+  const abacusIcon = require('./images/icon-abacus-splash.png');
 
   return (
     <AnimatedSplash
       translucent
       isLoaded={fontsLoaded}
-      logoImage={require('./images/icon-abacus-splash.png')}
+      logoImage={abacusIcon}
       backgroundColor={colors.backgroundColor}
       logoHeight={145}
       logoWidth={145}
     >
       <NativeBaseProvider config={config} theme={theme}>
-        <StatusBar style="dark" />
+        <StatusBar />
         <Provider store={store}>
           <PersistGate
             loading={<Loading />}
             persistor={persistor}
           >
-            {fontsLoaded && Routes}
+            {fontsLoaded && (
+              <>
+                <Routes />
+                {appStateVisible !== 'active' && (
+                  <ThemeBlurView
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                    intensity={60}
+                  >
+                    <Image
+                      style={{
+                        width: 100,
+                        height: 100,
+                      }}
+                      source={abacusIcon}
+                    />
+                    <Text>Abacus</Text>
+                  </ThemeBlurView>
+                )}
+              </>
+            )}
           </PersistGate>
         </Provider>
 
         <AlertDialog leastDestructiveRef={OTARef} isOpen={OTAOpen} onClose={() => setOTAOpen(false)}>
           <AlertDialog.Content>
             <AlertDialog.CloseButton />
-            <AlertDialog.Header>New Update Available</AlertDialog.Header>
+            <AlertDialog.Header>{translate('layout_new_update_header')}</AlertDialog.Header>
             <AlertDialog.Body>
-              You can always update later in Settings tab.
+              {translate('layout_new_update_body_text')}
             </AlertDialog.Body>
             <AlertDialog.Footer>
               <Button.Group>
                 <Button variant="unstyled" colorScheme="coolGray" onPress={() => setOTAOpen(false)} ref={OTARef}>
-                  Cancel
+                  {translate('layout_new_update_cancel_button')}
                 </Button>
                 <Button colorScheme="primary" onPress={onOTAUpdate}>
-                  Update now
+                  {translate('layout_new_update_update_button')}
                 </Button>
               </Button.Group>
             </AlertDialog.Footer>
@@ -198,6 +187,4 @@ const App: FC = () => {
       </NativeBaseProvider>
     </AnimatedSplash>
   );
-};
-
-export default App;
+}

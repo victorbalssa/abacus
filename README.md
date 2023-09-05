@@ -1,22 +1,27 @@
 <div align="center">
     <p></p>
-  <img alt="logo" src="documentation/img.png" height=120 />
-  <h1>🔥 Abacus: Firefly III iOS app 🔥</h1>
-    <div>
-        <a href="https://apps.apple.com/us/app/1627093491"><img src="documentation/apple.svg" /></a>
-    </div>
+  <img alt="logo" src=".github/img/icon.png" height=120 />
+  <h1>Abacus: Firefly III mobile application</h1>
+  <div>
+    <a href="https://apps.apple.com/us/app/1627093491"><img width="180" src=".github/img/apple.svg" /></a>
+    <a href="https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app"><img width="180" src=".github/img/google.svg" /></a>
+  </div>
   <p></p>
-  <img alt="gif" src="https://i.imgur.com/9yOebcP.gif" height="500" />
-  <img alt="chart" src=".github/img/chart.jpeg" height="500" />
-  <img alt="transaction-list" src=".github/img/transactions-list.jpeg" height="500" />
-    <p></p>
+  <div>
+    <img alt="chart" src=".github/img/light-demo.gif" />
+    <h6>Light Mode</h6>
+    <img alt="chart" src=".github/img/dark-demo.gif" />
+    <h6>Dark Mode</h6>
+  </div>
+  <p></p>
   <sup>
 
 ![size](https://img.shields.io/github/repo-size/victorbalssa/abacus?style=for-the-badge)
 ![licence](https://img.shields.io/github/license/victorbalssa/abacus?style=for-the-badge)
 ![stars](https://img.shields.io/github/stars/victorbalssa/abacus?style=for-the-badge)
-[![sdk](https://img.shields.io/badge/SDK-46.0.0-blue?style=for-the-badge)](https://www.npmjs.com/package/expo)
-[![sdk](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![sdk](https://img.shields.io/badge/SDK-49.0.0-purple?style=for-the-badge&label=EXPO%20SDK)](https://www.npmjs.com/package/expo)
+[![pr](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![sponsor](https://img.shields.io/github/sponsors/victorbalssa?style=for-the-badge&color=ff69b4)](https://github.com/sponsors/victorbalssa)
 
   </sup>
 </div>
@@ -25,10 +30,14 @@
 
 ### 🎙 Introduction
 
-[Firefly III](https://github.com/firefly-iii/firefly-iii) iOS application to manage your self-hosted Firefly III from
-your iPhone.
+[Firefly III](https://github.com/firefly-iii/firefly-iii) mobile application to manage your self-hosted Firefly III from
+your mobile.
 
-All Tokens are stored in **iOS Keychains**.
+Support for iPhone, iPad, Android Phone and Android Tablet.
+
+On iOS, Tokens are stored in [**iOS Keychains**](https://developer.apple.com/documentation/security/keychain_services).
+
+On Android, Tokens are stored in [**SharedPreferences**](https://developer.android.com/training/data-storage/shared-preferences), encrypted with [**Android's Keystore system**](https://developer.android.com/training/articles/keystore.html).
 
 No external API calls nor Analytics API, not even sentry / crashlytics.
 
@@ -45,19 +54,18 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 | Balance                      |     ✅     |
 | Earned                       |     ✅     |
 | Time range selector          |     ✅     |
-| Budgets                      |    🚧     |
-| Categories                   |    🚧     |
-| Tags                         |    🚧     |
-| Translations                 |    🚧     |
-| Net Worth history chart      |    🚧     | 
+| Budgets                      |     ✅     |
+| Categories                   |     ✅     |
+| Translations                 |   ✅(@carvalholeo)    |
 
 ---
 
 ### 📡 Technologies
 
-- __Expo SDK 46__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
+- __Expo SDK 49__ Framework and a Platform for universal React applications. [docs.expo.io](https://docs.expo.io/)
 - __Routing and navigation__ React Navigation
   V6. [https://reactnavigation.org/docs](https://reactnavigation.org/docs/getting-started)
+- __Tests__ on simulator/emulator before each EAS build with [@wix/Detox](https://github.com/wix/Detox)
 - __Redux architecture__
     - Rematch core [@rematch/core](https://github.com/rematch/rematch)
     - Rematch plugin [@rematch/loading](https://rematchjs.org/docs/plugins/loading)
@@ -74,5 +82,6 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 ### 📖 Docs
 
 - [Contributing to this project](.github/CONTRIBUTING.md)
-- [Understanding the file structure](documentation/file.md)
+- [Understanding the file structure](.github/FILE.md)
+- [Need help with Authentication?](.github/HELP.md)
 - [ReactNative.dev](https://reactnative.dev)

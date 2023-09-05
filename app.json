@@ -1,15 +1,16 @@
 {
   "expo": {
     "name": "Abacus",
-    "description": "🔥 Abacus: Firefly III iOS app 🔥",
+    "description": "Abacus: Firefly III mobile application.",
     "slug": "abacus",
-    "privacy": "hidden",
+    "privacy": "public",
     "platforms": [
-      "ios"
+      "ios",
+      "android",
+      "web"
     ],
-    "version": "0.2.2",
+    "version": "0.9.1",
     "orientation": "portrait",
-    "icon": "./src/images/icon-abacus.png",
     "splash": {
       "image": "./src/images/splash.png",
       "resizeMode": "contain"
@@ -20,19 +21,46 @@
       "url": "https://u.expo.dev/292ed6dc-804c-4444-95f5-fa5d76d9913b"
     },
     "ios": {
-      "buildNumber": "0.2.2",
+      "icon": "./src/images/icon-abacus.png",
+      "supportsTablet": true,
+      "buildNumber": "0.9.1",
       "bundleIdentifier": "abacus.ios.app",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID"
+        "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID",
+        "NSLocalNetworkUsageDescription": "Abacus use Local Network to connect to your local instance of Firefly III"
       },
       "config": {
         "usesNonExemptEncryption": false
       }
     },
+    "android": {
+      "icon": "./src/images/icon-abacus.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/images/icon-abacus-foreground.png",
+        "backgroundImage": "./src/images/icon-abacus-background.png"
+      },
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
+      "package": "abacus.fireflyiii.android.app",
+      "versionCode": 7
+    },
+    "web": {
+      "bundler": "metro"
+    },
     "scheme": "abacusiosapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "292ed6dc-804c-4444-95f5-fa5d76d9913b"
+      }
+    },
+    "plugins": [
+      "expo-localization",
+      "./plugins/withAndroidManifest",
+      "@config-plugins/detox"
+    ],
+    "userInterfaceStyle": "automatic"
   }
 }
