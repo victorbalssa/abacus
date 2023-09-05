@@ -305,8 +305,8 @@ export default createModel<RootModel>()({
               y: value,
             };
           });
-        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
-        accounts[index].minY = minBy(accounts[index].entries, (o: { x: string, y: string }) => (o.y)).y;
+        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
+        accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
       });
 
       this.setData({ accounts });

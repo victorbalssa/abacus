@@ -60,7 +60,7 @@ export type ErrorStateType = {
   notes: string
 }
 
-const INITIAL_SPLIT = {
+export const initialSplit = () => ({
   type: 'withdrawal',
   amount: '',
   currencyCode: '',
@@ -77,7 +77,7 @@ const INITIAL_SPLIT = {
   budgetId: '',
   tags: [],
   notes: '',
-} as TransactionSplitType;
+}) as TransactionSplitType;
 
 const INITIAL_STATE = {
   page: 1,
@@ -144,7 +144,7 @@ export default createModel<RootModel>()({
           ...transactionPayload,
           transactions: [
             ...transactionPayload.transactions,
-            INITIAL_SPLIT,
+            initialSplit(),
           ],
         },
       };
@@ -191,7 +191,7 @@ export default createModel<RootModel>()({
             date: new Date(split.date),
             amount: split.amount ? parseFloat(split.amount).toFixed(2) : '',
             foreignAmount: split.foreignAmount ? parseFloat(split.foreignAmount).toFixed(2) : '',
-          })) : [{ ...INITIAL_SPLIT }],
+          })) : [{ ...initialSplit() }],
         },
       };
     },

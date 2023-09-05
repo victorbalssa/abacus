@@ -251,7 +251,7 @@ export default function OauthForm({
             isLoading={loading}
             onPress={() => faceIdCheck()}
           >
-            {translate('auth_form_faceID')}
+            {translate('auth_form_biometrics_lock')}
           </Button>
           )}
         </Box>

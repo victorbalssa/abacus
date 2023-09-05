@@ -17,6 +17,7 @@ import ToastAlert from '../UI/ToastAlert';
 import GroupTitle from './Fields/GroupTitle';
 
 import Loading from '../UI/Loading';
+import { initialSplit } from '../../models/transactions';
 
 function MultipleTransactionSplitForm({ splits, title }) {
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
@@ -48,7 +49,7 @@ function MultipleTransactionSplitForm({ splits, title }) {
           key={e}
           index={i}
           total={splitNumber.length}
-          transaction={splits[i]}
+          transaction={splits[i] || initialSplit()}
           handleDelete={() => deleteTransactionSplit(i)}
         />
       ))}
