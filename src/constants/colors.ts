@@ -9,7 +9,7 @@ export default {
   brandStyle2: '#BEA6A0',
   brandStyle3: '#3FA500',
   brandStyle4: '#007000',
-  brandWarning: '#c9940e',
+  brandWarning: '#d9870d',
   brandDark: '#000',
   brandDarkLight: '#676767',
   red: 'rgb(190,37,37)',

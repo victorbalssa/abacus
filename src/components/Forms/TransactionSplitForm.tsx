@@ -23,30 +23,11 @@ import AutocompleteField from './Fields/AutocompleteField';
 import { RootDispatch } from '../../store';
 import { TransactionSplitType } from '../../models/transactions';
 
-const INITIAL_SPLIT = {
-  type: 'withdrawal',
-  amount: '',
-  currencyCode: '',
-  currencySymbol: '',
-  date: new Date(),
-  description: '',
-  foreignCurrencyId: '',
-  foreignAmount: '',
-  sourceName: '',
-  destinationName: '',
-  categoryName: '',
-  categoryId: '',
-  budgetName: '',
-  budgetId: '',
-  tags: [],
-  notes: '',
-} as TransactionSplitType;
-
 export default function TransactionSplitForm({
   index,
   total,
   handleDelete,
-  transaction = INITIAL_SPLIT,
+  transaction,
 }) {
   const [locale] = getLocales();
   const dispatch = useDispatch<RootDispatch>();

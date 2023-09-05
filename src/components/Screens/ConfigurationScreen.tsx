@@ -104,7 +104,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             <Text style={{ fontFamily: 'Montserrat', textDecorationLine: 'underline', color: colors.brandInfo }} onPress={() => Linking.openURL(backendURL)}>{backendURL}</Text>
           </HStack>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between">
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_biometry')}</Text>
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('auth_form_biometrics_lock')}</Text>
             <Switch isChecked={faceId} onToggle={setFaceId} colorScheme="primary" />
           </HStack>
         </Box>
