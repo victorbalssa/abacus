@@ -194,7 +194,7 @@ export default function TransactionForm({
       >
         <MultipleTransactionSplitForm title={title} splits={splits} />
         <TransactionFormButtons navigation={navigation} id={id} handleSubmit={handleSubmit} />
-        <View style={{ height: 240 }} />
+        <View style={{ height: 350 }} />
       </KeyboardAvoidingView>
     ),
     [],
