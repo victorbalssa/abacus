@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "0.9.0",
+    "version": "0.9.1",
     "orientation": "portrait",
     "splash": {
       "image": "./src/images/splash.png",
@@ -23,7 +23,7 @@
     "ios": {
       "icon": "./src/images/icon-abacus.png",
       "supportsTablet": true,
-      "buildNumber": "0.9.0",
+      "buildNumber": "0.9.1",
       "bundleIdentifier": "abacus.ios.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID",
@@ -41,7 +41,7 @@
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
-      "versionCode": 6
+      "versionCode": 7
     },
     "web": {
       "bundler": "metro"
