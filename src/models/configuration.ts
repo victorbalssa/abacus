@@ -5,7 +5,6 @@ import axios, { AxiosResponse } from 'axios';
 import secureKeys from '../constants/oauth';
 import { RootModel } from './index';
 import { convertKeysToCamelCase } from '../lib/common';
-import { InsightCategoryType } from './categories';
 
 type ConfigurationStateType = {
   backendURL: string
