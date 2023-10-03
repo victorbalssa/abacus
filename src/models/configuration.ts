@@ -7,9 +7,11 @@ import { RootModel } from './index';
 import { convertKeysToCamelCase } from '../lib/common';
 
 type ConfigurationStateType = {
-  backendURL: string,
-  scrollEnabled: boolean,
-  faceId: boolean,
+  backendURL: string
+  scrollEnabled: boolean
+  faceId: boolean
+  apiVersion: string
+  serverVersion: string
 }
 
 type FireflyIIIApiResponse = {
@@ -22,10 +24,19 @@ type FireflyIIIApiResponse = {
   },
 }
 
+type AboutType = {
+  data?: {
+    apiVersion: string
+    version: string
+  }
+}
+
 const INITIAL_STATE = {
   backendURL: 'https://',
   scrollEnabled: true,
   faceId: false,
+  apiVersion: '',
+  serverVersion: '',
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -37,6 +48,14 @@ export default createModel<RootModel>()({
       return {
         ...state,
         backendURL: payload,
+      };
+    },
+
+    setVersions(state, { apiVersion, serverVersion }) {
+      return {
+        ...state,
+        apiVersion,
+        serverVersion,
       };
     },
 
@@ -155,6 +174,22 @@ export default createModel<RootModel>()({
       }
 
       throw new Error('No backend URL defined.');
+    },
+
+    /**
+     * Test the accessToken
+     *
+     * @returns {Promise}
+     */
+    async testAccessToken(): Promise<void> {
+      const { data } = await dispatch.configuration.apiFetch({ url: '/api/v1/about' }) as AboutType;
+
+      if (data.apiVersion && data.version) {
+        dispatch.configuration.setVersions({
+          apiVersion: data.apiVersion,
+          serverVersion: data.version,
+        });
+      }
     },
 
     /**

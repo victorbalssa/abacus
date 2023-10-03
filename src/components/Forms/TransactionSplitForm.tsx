@@ -60,6 +60,17 @@ export default function TransactionSplitForm({
     });
   };
 
+  const resetTagTransaction = (item: string) => {
+    setData((split: TransactionSplitType) => {
+      const newSplit = {
+        ...split,
+        tags: split.tags.filter((tag) => tag !== item),
+      };
+      dispatch.transactions.setTransactionSplitByIndex(index, newSplit);
+      return newSplit;
+    });
+  };
+
   const types = [
     {
       type: 'withdrawal',
@@ -382,10 +393,7 @@ export default function TransactionSplitForm({
         placeholder={translate('transaction_form_tags_label')}
         value={formData.tags}
         onChangeText={() => {}}
-        onDeleteMultiple={(item) => setTransaction({
-          ...formData,
-          tags: formData.tags.filter((tag) => tag !== item),
-        })}
+        onDeleteMultiple={resetTagTransaction}
         onSelectAutocomplete={(autocomplete) => setTransaction({
           ...formData,
           tags: Array.from(new Set([...formData.tags, autocomplete.name])),

@@ -11,6 +11,7 @@ import {
 import {
   Badge,
   Box,
+  Button,
   HStack,
   Icon,
   Pressable,
@@ -20,7 +21,7 @@ import {
 } from 'native-base';
 import moment from 'moment';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -37,11 +38,17 @@ import { ScreenType } from './types';
 
 const ITEM_HEIGHT = 90;
 
-function ListFooterComponent() {
+const resetTransactionsDates = (transactions: TransactionSplitType[]) => transactions.map((t) => ({
+  ...t,
+  date: new Date().toISOString(),
+}));
+
+function ListFooterComponent({ loadMore }) {
   const { colors } = useThemeColors();
   const { loading } = useSelector((state: RootState) => state.loading.effects.transactions.getMoreTransactions);
+  const { page, totalPages } = useSelector((state: RootState) => state.transactions);
 
-  return useMemo(() => (
+  return useMemo(() => (loading || (page < totalPages)) && (
     <Box
       h={ITEM_HEIGHT}
       paddingLeft={2}
@@ -49,6 +56,7 @@ function ListFooterComponent() {
       borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
     >
+      {(loading) && (
       <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
         <HStack>
           <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
@@ -56,6 +64,17 @@ function ListFooterComponent() {
         </HStack>
         <Skeleton w={75} h={8} rounded={10} />
       </HStack>
+      )}
+      {(!loading && (page < totalPages)) && (
+      <HStack justifyContent="center" alignItems="center" px={3} py={3}>
+        <Button
+          leftIcon={<Ionicons name="cloud-download" size={20} color="white" />}
+          onPress={loadMore}
+        >
+          Load More
+        </Button>
+      </HStack>
+      )}
     </Box>
   ), [
     loading,
@@ -136,8 +155,8 @@ function RenderItem({ item }: { item: TransactionType }) {
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
         goToDuplicate({
-          splits: item.attributes.transactions,
-          groupTitle: item.attributes.groupTitle,
+          splits: resetTransactionsDates(item.attributes.transactions),
+          groupTitle: item.attributes.groupTitle || 'Default title',
         });
       }}
     >
@@ -289,7 +308,6 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
 export default function TransactionsScreen({ navigation, route }: ScreenType) {
   const { params } = route;
   const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
-  const { page, totalPages } = useSelector((state: RootState) => state.transactions);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
   const currency = useSelector((state: RootState) => state.currencies.current);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
@@ -323,18 +341,16 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         navigation.setParams({ forceRefresh: null });
       };
     }, [
-      /* params, */
+      params,
       rangeDetails,
       currency,
     ]),
   );
 
-  const onEndReached = useCallback(async () => {
-    if (page < totalPages) {
-      const effectTransactions = await getMoreTransactions();
-      setTransactions([...transactions, ...effectTransactions]);
-    }
-  }, [page, totalPages, transactions, getMoreTransactions]);
+  const loadMore = useCallback(async () => {
+    const effectTransactions = await getMoreTransactions();
+    setTransactions([...transactions, ...effectTransactions]);
+  }, [transactions, getMoreTransactions]);
 
   const closeRow = (rowKey: string | number, rowMap: { [x: string]: { closeRow: () => void; }; }) => {
     if (rowMap[rowKey]) {
@@ -372,16 +388,14 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         keyExtractor={(item: TransactionType) => item.id}
         data={transactions}
         showsVerticalScrollIndicator
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.5}
         renderItem={({ item }) => <RenderItem item={item} />}
         renderHiddenItem={(data, rowMap) => (
           <RenderHiddenItem
             handleOnPressCopy={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
               goToDuplicate({
-                splits: data.item.attributes.transactions,
-                groupTitle: data.item.attributes.groupTitle,
+                splits: resetTransactionsDates(data.item.attributes.transactions),
+                groupTitle: data.item.attributes.groupTitle || 'Default title',
               });
             }}
             handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
@@ -401,12 +415,12 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
           key,
           isActivated,
         }) => (isActivated ? goToDuplicate({
-          splits: transactions.find((t) => t.id === key).attributes.transactions,
-          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle,
+          splits: resetTransactionsDates(transactions.find((t) => t.id === key).attributes.transactions),
+          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || 'Default title',
         }) : null)}
         contentContainerStyle={{ paddingBottom: 100 }}
         getItemLayout={(_, index: number) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
-        ListFooterComponent={() => <ListFooterComponent />}
+        ListFooterComponent={() => <ListFooterComponent loadMore={loadMore} />}
       />
     ),
     [

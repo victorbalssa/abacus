@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,14 +8,16 @@ import { ScrollView } from 'native-base';
 import { RootDispatch, RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
 import AssetsHistoryChart from '../Charts/AssetsHistoryChart';
+import BalanceHistoryChart from '../Charts/BalanceHistoryChart';
+import TabControl from '../UI/TabControl';
 
 export default function ChartScreen() {
   const { colors } = useThemeColors();
   const safeAreaInsets = useSafeAreaInsets();
-  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
+  const [tab, setTab] = useState('assets_history_chart');
+
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
-  const accounts = useSelector((state: RootState) => state.firefly.accounts);
-  const { firefly: { getAccountChart, filterData } } = useDispatch<RootDispatch>();
+  const { firefly: { getAccountChart, getBalanceChart } } = useDispatch<RootDispatch>();
 
   const prevFiltersRef = useRef<string>();
   const scrollRef = React.useRef(null);
@@ -29,7 +31,7 @@ export default function ChartScreen() {
       const fetchData = async () => {
         try {
           if (isActive) {
-            getAccountChart();
+            await Promise.all([getAccountChart(), getBalanceChart()]);
           }
         } catch (e) {
           // catch error
@@ -51,7 +53,7 @@ export default function ChartScreen() {
     <View
       style={{
         flex: 1,
-        paddingTop: safeAreaInsets.top + 65,
+        paddingTop: safeAreaInsets.top + 55,
         backgroundColor: colors.backgroundColor,
       }}
     >
@@ -59,15 +61,15 @@ export default function ChartScreen() {
         bounces={false}
         showsVerticalScrollIndicator={false}
       >
-        <AssetsHistoryChart
-          loading={loading}
-          fetchData={getAccountChart}
-          start={rangeDetails.start}
-          end={rangeDetails.end}
-          accounts={accounts}
-          filterData={filterData}
+        <TabControl
+          values={['assets_history_chart', 'balance_history_chart']}
+          onChange={setTab}
         />
-        <View style={{ height: 90 }} />
+
+        {tab === 'assets_history_chart' && <AssetsHistoryChart />}
+        {tab === 'balance_history_chart' && <BalanceHistoryChart />}
+
+        <View style={{ height: 100 }} />
       </ScrollView>
     </View>
   );

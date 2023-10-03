@@ -20,10 +20,10 @@ import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Linking from 'expo-linking';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
 
-import { RootState } from '../../store';
+import { RootDispatch, RootState } from '../../store';
 import Loading from '../UI/Loading';
 import translate from '../../i18n/locale';
 import { D_WIDTH, useThemeColors } from '../../lib/common';
@@ -143,15 +143,13 @@ function Cursor({
   );
 }
 
-export default function AssetsHistoryChart({
-  loading,
-  fetchData,
-  start,
-  end,
-  accounts,
-  filterData,
-}) {
+export default function AssetsHistoryChart() {
   const { colors } = useThemeColors();
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
+  const { start, end } = useSelector((state: RootState) => state.firefly.rangeDetails);
+  const accounts = useSelector((state: RootState) => state.firefly.accounts);
+  const { firefly: { filterData, getAccountChart } } = useDispatch<RootDispatch>();
+
   const getTickValues = () => {
     const dateArray = [];
     const currentDate = new Date(start);
@@ -202,7 +200,7 @@ export default function AssetsHistoryChart({
                   colorScheme={chart.colorScheme}
                   isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
                   isChecked={!chart.skip}
-                  value={index}
+                  value={`${index}`}
                   onChange={() => filterData({ index })}
                 />
                 <Text
@@ -224,7 +222,7 @@ export default function AssetsHistoryChart({
             as: AntDesign,
             name: 'reload1',
           }}
-          onPress={fetchData}
+          onPress={() => getAccountChart()}
           onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         />
       </HStack>
@@ -299,7 +297,7 @@ export default function AssetsHistoryChart({
               }}
               interpolation="monotoneX"
               data={chart.entries}
-              name={`${chart.label} (${chart.currency_symbol})`}
+              name={`${chart.label} (${chart.currencySymbol})`}
             />
           ))}
         </VictoryChart>

@@ -1,7 +1,7 @@
 {
   "name": "abacus",
   "homepage": "https://github.com/victorbalssa/abacus",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": true,
   "jest": {
     "preset": "jest-expo",
@@ -52,7 +52,7 @@
     "expo-status-bar": "~1.6.0",
     "expo-store-review": "~6.4.0",
     "expo-system-ui": "~2.4.0",
-    "expo-updates": "~0.18.12",
+    "expo-updates": "~0.18.14",
     "expo-web-browser": "~12.3.2",
     "globally": "^0.0.0",
     "i18n-js": "^4.1.1",
@@ -64,7 +64,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-helmet": "^5.2.1",
-    "react-native": "0.72.4",
+    "react-native": "0.72.5",
     "react-native-animated-splash-screen": "^2.0.5",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-gradle-plugin": "^0.71.19",
@@ -78,6 +78,7 @@
     "react-redux": "^8.1.2",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
+    "semver": "^7.5.4",
     "sharp-cli": "^4.1.1",
     "slash": "^3.0.0",
     "victory-native": "^36.6.11"
