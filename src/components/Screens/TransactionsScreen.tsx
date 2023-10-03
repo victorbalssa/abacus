@@ -341,7 +341,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         navigation.setParams({ forceRefresh: null });
       };
     }, [
-      /* params, */
+      params,
       rangeDetails,
       currency,
     ]),
