@@ -64,23 +64,29 @@ function InsightCategories() {
           <HStack
             key={category.name}
             ml={5}
-            pr={2}
+            pr={5}
             h={45}
             alignItems="center"
             justifyContent="space-between"
             borderBottomWidth={index + 1 === insightCategories.length ? 0 : 0.5}
             borderColor={colors.listBorderColor}
           >
-            <Text>
+            <Text
+              maxW="70%"
+              numberOfLines={1}
+            >
               {category.name}
             </Text>
 
             {!loading ? (
-              <Text>
-                {localNumberFormat(category.currencyCode, category.differenceFloat)}
+              <Text
+                maxW="30%"
+                numberOfLines={1}
+              >
+                {localNumberFormat(category.currencyCode, (category.differenceFloat * -1))}
               </Text>
             ) : (
-              <Skeleton w={70} h={5} rounded={15} />
+              <Skeleton w={70} h={5} rounded={10} />
             )}
           </HStack>
         ))}
@@ -121,7 +127,7 @@ function InsightBudgets() {
           >
             <VStack
               ml={5}
-              pr={2}
+              pr={5}
               h={60}
               justifyContent="center"
               borderBottomWidth={index + 1 === insightBudgets.length ? 0 : 0.5}
@@ -132,25 +138,44 @@ function InsightBudgets() {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Text>
+                <Text
+                  maxW="40%"
+                  numberOfLines={1}
+                >
                   {budget.attributes.name}
                 </Text>
 
                 {!loading ? (
-                  <Text>
-                    {localNumberFormat(budget.currencyCode, budget.differenceFloat)}
-                    /
-                    {localNumberFormat(budget.currencyCode, budget.limit)}
-                  </Text>
+                  <VStack
+                    maxW="70%"
+                    justifyContent="center"
+                    alignItems="flex-end"
+                  >
+                    <Text numberOfLines={1}>
+                      {localNumberFormat(budget.currencyCode, budget.differenceFloat < 0 ? (budget.differenceFloat * -1) : budget.differenceFloat)}
+                      /
+                      {localNumberFormat(budget.currencyCode, budget.limit)}
+                    </Text>
+                    <Text numberOfLines={1} color={-budget.differenceFloat > budget.limit ? colors.red : colors.green}>
+                      {`${(budget.limit > 0 ? (((budget.differenceFloat * -1) * 100) / budget.limit).toFixed(0) : 0)}%`}
+                    </Text>
+                  </VStack>
                 ) : (
-                  <Skeleton w={140} h={5} rounded={15} />
+                  <VStack
+                    maxW="70%"
+                    justifyContent="center"
+                    alignItems="flex-end"
+                  >
+                    <Skeleton w={140} h={4} rounded={5} />
+                    <Skeleton w={10} h={4} rounded={5} />
+                  </VStack>
                 )}
               </HStack>
               <Progress
                 colorScheme={-budget.differenceFloat > budget.limit ? 'danger' : 'success'}
                 value={((-budget.differenceFloat * 100) / budget.limit) || 0}
                 h={3}
-                my={2}
+                mb={1}
               />
             </VStack>
           </Stack>
@@ -190,14 +215,17 @@ function AssetsAccounts() {
           <HStack
             key={account.attributes.name}
             ml={5}
-            pr={2}
+            pr={5}
             h={45}
             alignItems="center"
             justifyContent="space-between"
             borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 0.5}
             borderColor={colors.listBorderColor}
           >
-            <Text>
+            <Text
+              maxW="60%"
+              numberOfLines={1}
+            >
               {account.attributes.name}
               {' '}
               <Text style={{ fontSize: 10 }}>
@@ -206,15 +234,21 @@ function AssetsAccounts() {
             </Text>
 
             {!loading ? (
-              <Text>
+              <Text
+                maxW="39%"
+                numberOfLines={1}
+              >
                 {localNumberFormat(account.attributes.currencyCode, parseFloat(account.attributes.currentBalance))}
               </Text>
             ) : (
-              <Skeleton w={70} h={5} rounded={15} />
+              <Skeleton w={70} h={5} rounded={10} />
             )}
           </HStack>
         ))}
       </Box>
+      <Text style={{ fontSize: 10, paddingHorizontal: 10 }}>
+        {translate('account_not_included_in_net_worth')}
+      </Text>
       <View style={{ height: 150 }} />
     </ScrollView>
   );
@@ -243,7 +277,7 @@ function NetWorth() {
               {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue))}
             </Text>
           ) : (
-            <Skeleton w={170} h={8} rounded={15} />
+            <Skeleton w={150} h={7} rounded={10} />
           )}
           <Text style={{
             fontSize: 13,
@@ -261,7 +295,7 @@ function NetWorth() {
           {!loading ? (
             <Box style={{
               backgroundColor: parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
-              borderRadius: 10,
+              borderRadius: 5,
               paddingHorizontal: 5,
             }}
             >
@@ -276,7 +310,7 @@ function NetWorth() {
               </Text>
             </Box>
           ) : (
-            <Skeleton w={50} h={4} rounded={15} />
+            <Skeleton w={50} h={4} rounded={10} />
           )}
         </VStack>
       )}
@@ -305,15 +339,6 @@ export default function HomeScreen({ navigation }: ScreenType) {
     }),
   );
 
-  const faceIdCheck = async () => {
-    if (faceId) {
-      const bioAuth = await LocalAuthentication.authenticateAsync();
-      if (!bioAuth.success) {
-        goToOauth();
-      }
-    }
-  };
-
   useEffect(() => {
     (async () => {
       const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
@@ -326,8 +351,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
             await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
           }
 
-          await faceIdCheck();
-          await dispatch.currencies.getCurrencies();
+          await Promise.all([dispatch.currencies.getCurrencies(), dispatch.configuration.testAccessToken()]);
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -391,11 +415,11 @@ export default function HomeScreen({ navigation }: ScreenType) {
       }}
     >
       <HStack
-        justifyContent="space-between"
+        justifyContent="space-around"
         mx={4}
-        mt={4}
-        py={2}
-        px={4}
+        my={1}
+        py={1}
+        px={2}
         backgroundColor={colors.tileBackgroundColor}
         borderRadius={10}
         borderWidth={0.5}

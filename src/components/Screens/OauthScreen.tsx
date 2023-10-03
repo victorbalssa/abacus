@@ -7,6 +7,7 @@ import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
 
+import * as LocalAuthentication from 'expo-local-authentication';
 import OauthForm from '../Forms/OauthForm';
 import secureKeys from '../../constants/oauth';
 import { discovery, redirectUri } from '../../lib/oauth';
@@ -56,6 +57,17 @@ export default function OauthScreen({ navigation }: ScreenType) {
     }),
   );
 
+  const faceIdCheck = async () => {
+    if (faceId) {
+      const bioAuth = await LocalAuthentication.authenticateAsync();
+      if (bioAuth.success) {
+        goToHome();
+      }
+    } else {
+      goToHome();
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
@@ -64,9 +76,7 @@ export default function OauthScreen({ navigation }: ScreenType) {
         axios.defaults.headers.Authorization = `Bearer ${storageValue.accessToken}`;
 
         try {
-          if (!TokenResponse.isTokenFresh(storageValue)) {
-            await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
-          }
+          await faceIdCheck();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -112,7 +122,6 @@ export default function OauthScreen({ navigation }: ScreenType) {
           Keyboard.dismiss();
 
           await dispatch.firefly.getNewAccessToken(payload);
-          await dispatch.firefly.testAccessToken();
 
           toast.show({
             render: ({ id }) => (
@@ -188,7 +197,7 @@ export default function OauthScreen({ navigation }: ScreenType) {
       loading={loading}
       faceId={faceId}
       backendURL={backendURL}
-      faceIdCheck={goToHome}
+      faceIdCheck={faceIdCheck}
       setConfig={setConfig}
       oauthLogin={() => promptAsync()}
       tokenLogin={tokenLogin}

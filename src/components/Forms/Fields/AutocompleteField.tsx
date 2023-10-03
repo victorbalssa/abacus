@@ -127,29 +127,29 @@ export default function AutocompleteField({
         />
 
         {displayAutocomplete && (
-        <View>
-          {autocompletes.map((autocomplete: AutocompleteType) => (
-            <Pressable
-              key={autocomplete.id}
-              mx={2}
-              onPress={() => handleSelectAutocomplete(autocomplete)}
-              _pressed={{
-                borderRadius: 10,
-                backgroundColor: colors.tileBackgroundColor,
-              }}
-            >
-              <HStack
-                justifyContent="space-between"
+          <View>
+            {autocompletes.map((autocomplete: AutocompleteType) => (
+              <Pressable
+                key={autocomplete.id}
                 mx={2}
-                my={2}
+                onPress={() => handleSelectAutocomplete(autocomplete)}
+                _pressed={{
+                  borderRadius: 10,
+                  backgroundColor: colors.tileBackgroundColor,
+                }}
               >
-                <Text underline>
-                  {autocomplete.name || '-'}
-                </Text>
-              </HStack>
-            </Pressable>
-          ))}
-        </View>
+                <HStack
+                  justifyContent="space-between"
+                  mx={2}
+                  my={2}
+                >
+                  <Text maxW="90%" numberOfLines={1} underline>
+                    {autocomplete.name || '-'}
+                  </Text>
+                </HStack>
+              </Pressable>
+            ))}
+          </View>
         )}
         {error && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
       </FormControl>

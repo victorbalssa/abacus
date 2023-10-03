@@ -65,7 +65,7 @@ export default function Filters() {
       <Select
         my={2}
         height={35}
-        width={120}
+        width={100}
         backgroundColor={colors.brandNeutralLight}
         borderColor={colors.filterBorderColor}
         borderWidth={1}

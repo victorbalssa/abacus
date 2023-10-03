@@ -1,9 +1,6 @@
 import React from 'react';
 import {
-  View,
   Text,
-} from 'react-native';
-import {
   VStack,
   HStack,
   IconButton,
@@ -18,75 +15,60 @@ import {
 import { isEmpty, round } from 'lodash';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-
 import * as Localization from 'expo-localization';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
+import { RootDispatch, RootState } from '../../store';
+import translate from '../../i18n/locale';
 
-export default function BalanceHistoryChart({
-  loading,
-  end,
-  range,
-  balances,
-  fetchBalances,
-}) {
+export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
-  const getTickValues = () => [...Array(+range + 1).keys()];
+  const dispatch = useDispatch<RootDispatch>();
+  const { start, end } = useSelector((state: RootState) => state.firefly.rangeDetails);
+  const { loading } = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart);
+  const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart || []);
+  const spentChart = useSelector((state: RootState) => state.firefly.spentChart || []);
 
-  const displayTick = (x: number) => {
-    const currentDate = new Date(end);
-    const quarter = Math.floor((currentDate.getMonth() + 3) / 3) - 1;
-    const semi = Math.floor((currentDate.getMonth() + 6) / 6);
-    currentDate.setDate(1);
-    switch (+range) {
-      case 1:
-        currentDate.setMonth(x - 1);
-        break;
-      case 3:
-        currentDate.setMonth(x + (+range * (quarter)) - 1);
-        break;
-      case 6:
-        currentDate.setMonth(x + (+range * (semi - 1)) - 1);
-        break;
-      case 12:
-        currentDate.setMonth(x - 1);
-        break;
-      default:
-        currentDate.setMonth(x - 1);
-        break;
+  const getTickValues = () => {
+    const dateArray = [];
+    const currentDate = new Date(start);
+    currentDate.setDate(currentDate.getDate() + 14);
+
+    while (currentDate <= new Date(end)) {
+      dateArray.push(+new Date(currentDate));
+      currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
-    return currentDate.toLocaleString(Localization.locale, { month: 'short' });
+    return dateArray;
   };
-
-  if (isEmpty(balances)) {
-    return <View><Text>No Data/Endpoint</Text></View>;
-  }
 
   return (
     <VStack
-      mt={2}
-      bgColor={colors.brandLight}
+      mx={1.5}
+      bgColor={colors.tileBackgroundColor}
       borderWidth={0.5}
-      borderColor="#E3E3E3FF"
+      borderColor={colors.listBorderColor}
       justifyContent="center"
-      borderRadius={5}
+      borderRadius={10}
     >
       <HStack
         justifyContent="flex-end"
         style={{
           marginTop: 10,
           paddingTop: 0,
-          paddingLeft: 15,
+          paddingHorizontal: 10,
           paddingBottom: 0,
         }}
       >
         <IconButton
+          variant="solid"
           _icon={{
             as: AntDesign,
             name: 'reload1',
           }}
-          onPress={fetchBalances}
+          onPress={() => dispatch.firefly.getBalanceChart()}
           onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
         />
       </HStack>
@@ -97,7 +79,7 @@ export default function BalanceHistoryChart({
           </HStack>
         </VStack>
       )}
-      {!loading && (
+      {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
         <VictoryChart
           padding={{
             top: 10,
@@ -127,7 +109,7 @@ export default function BalanceHistoryChart({
             offsetY={135}
             minDomain={{ x: 0 }}
             tickValues={getTickValues()}
-            tickFormat={(x) => displayTick(x)}
+            tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
@@ -147,7 +129,7 @@ export default function BalanceHistoryChart({
                 width: 15,
               },
             }}
-            data={balances[0]}
+            data={earnedChart}
             name="gain"
           />
           <VictoryBar
@@ -159,7 +141,7 @@ export default function BalanceHistoryChart({
                 width: 15,
               },
             }}
-            data={balances[1].map((d) => -d)}
+            data={spentChart}
             name="loose"
           />
           <VictoryLine
@@ -171,7 +153,7 @@ export default function BalanceHistoryChart({
               },
             }}
             interpolation="monotoneX"
-            data={balances[0].map((d, i) => d - balances[1][i])}
+            data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
             name="lineBalance"
           />
           <VictoryScatter
@@ -179,21 +161,24 @@ export default function BalanceHistoryChart({
             style={{
               data: {
                 fill: colors.brandPrimary,
-                stroke: ({ datum }) => ((datum._y < 0) ? colors.brandDanger : colors.brandSuccess),
+                stroke: ({ datum }) => ((datum.y < 0) ? colors.red : colors.green),
                 strokeWidth: 5,
               },
               labels: {
                 fontSize: 12,
                 fontWeight: 600,
-                fill: ({ datum }) => ((datum._y < 0) ? colors.brandDanger : colors.brandSuccess),
+                fill: colors.text,
               },
             }}
             size={7}
-            labels={({ datum }) => (datum._y !== 0 ? `${(round(datum._y / 1000, 1))}k` : '')}
-            data={balances[0].map((d, i) => d - balances[1][i])}
+            labels={({ datum }) => (datum.y !== 0 ? `${(round(datum.y / 1000, 1))}k` : '')}
+            data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
             name="ptsBalance"
           />
         </VictoryChart>
+      )}
+      {!loading && (isEmpty(spentChart) || isEmpty(earnedChart)) && (
+        <Text p={2}>{translate('balance_history_chart_no_data')}</Text>
       )}
     </VStack>
   );

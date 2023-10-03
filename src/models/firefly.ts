@@ -4,6 +4,7 @@ import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { maxBy, minBy } from 'lodash';
+import semver from 'semver';
 import secureKeys from '../constants/oauth';
 import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
@@ -19,6 +20,8 @@ export type HomeDisplayType = {
 
 export type AssetAccountType = {
   title: string,
+  label: string,
+  currencySymbol: string,
   valueParsed: string,
   skip: boolean,
   color: string,
@@ -28,6 +31,12 @@ export type AssetAccountType = {
   minY: number,
 }
 
+export type BalanceType = {
+  label: 'earned' | 'spent',
+  currencyCode: string,
+  entries: { [timestamp: string]:string }[],
+}
+
 export type FireflyStateType = {
   rangeDetails: RangeDetailsType,
   netWorth: HomeDisplayType[],
@@ -35,6 +44,8 @@ export type FireflyStateType = {
   earned: HomeDisplayType[],
   balance: HomeDisplayType[],
   accounts: AssetAccountType[],
+  earnedChart: { x: number, y: number }[],
+  spentChart:{ x: number, y: number }[],
 }
 
 export type RangeDetailsType = {
@@ -85,6 +96,8 @@ const INITIAL_STATE = {
   earned: [],
   balance: [],
   accounts: [],
+  earnedChart: [],
+  spentChart: [],
 } as FireflyStateType;
 
 export default createModel<RootModel>()({
@@ -97,6 +110,8 @@ export default createModel<RootModel>()({
         netWorth = state.netWorth,
         balance = state.balance,
         accounts = state.accounts,
+        earnedChart = state.earnedChart,
+        spentChart = state.spentChart,
       } = payload;
 
       return {
@@ -104,6 +119,8 @@ export default createModel<RootModel>()({
         netWorth,
         balance,
         accounts,
+        earnedChart,
+        spentChart,
       };
     },
 
@@ -313,12 +330,71 @@ export default createModel<RootModel>()({
     },
 
     /**
-     * Test the accessToken
+     * Get balance chart data
      *
      * @returns {Promise}
      */
-    async testAccessToken() {
-      return dispatch.configuration.apiFetch({ url: '/api/v1/about/user' });
+    async getBalanceChart(_: void, rootState): Promise<void> {
+      const {
+        firefly: {
+          rangeDetails: {
+            start,
+            end,
+          },
+        },
+        currencies: {
+          current,
+        },
+        accounts: {
+          accounts,
+        },
+        configuration: {
+          apiVersion,
+        },
+      } = rootState;
+
+      const apiSemverMinimum = '2.0.9';
+      if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
+        this.setData({ earnedChart: [], spentChart: [] });
+        return;
+      }
+
+      const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
+      const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
+
+      const earnedChartEntries = balances.filter((balance) => balance.currencyCode === current.attributes.code && balance.label === 'earned')[0]?.entries;
+
+      if (earnedChartEntries) {
+        this.setData({
+          earnedChart: Object.keys(earnedChartEntries).map((key) => {
+            const value = parseFloat(earnedChartEntries[key]);
+
+            return {
+              x: key,
+              y: value,
+            };
+          }),
+        });
+      } else {
+        this.setData({ earnedChart: [] });
+      }
+
+      const spentChartEntries = balances.filter((balance) => balance.currencyCode === current.attributes.code && balance.label === 'spent')[0]?.entries;
+
+      if (spentChartEntries) {
+        this.setData({
+          spentChart: Object.keys(spentChartEntries).map((key) => {
+            const value = parseFloat(spentChartEntries[key]);
+
+            return {
+              x: key,
+              y: value,
+            };
+          }),
+        });
+      } else {
+        this.setData({ spentChart: [] });
+      }
     },
 
     /**

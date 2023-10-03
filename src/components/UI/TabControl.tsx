@@ -62,7 +62,7 @@ function Container({
     const leftVal = (containerWidth / numberValues) * activeTabIndex;
     Animated.timing(moveAnimation, {
       toValue: leftVal,
-      duration: 250,
+      duration: 150,
       useNativeDriver: false,
     }).start();
   }, [containerWidth, activeTabIndex]);
@@ -219,8 +219,8 @@ export default function TabControl({ values, onChange }) {
       style={{
         backgroundColor: colors.warmGray200,
         borderRadius: 7,
-        marginHorizontal: 20,
-        marginVertical: 10,
+        marginHorizontal: 15,
+        marginVertical: 5,
       }}
     >
       <GestureHandlerRootView>

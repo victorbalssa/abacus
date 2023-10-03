@@ -311,7 +311,7 @@ export default function Index() {
         },
       }}
     >
-      <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="oauth" screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="oauth"
           component={OauthScreen}

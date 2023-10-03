@@ -113,4 +113,11 @@ export default {
   transaction_form_group_title_helper: 'If you create a split transaction, there must be a global description for all splits of the transaction.',
   configuration_review_app_ios: 'Review Abacus on the AppStore',
   configuration_review_app_android: 'Review Abacus on Google Play',
+
+  // from 0.9.2
+  assets_history_chart: 'Accounts',
+  balance_history_chart: 'Net Worth',
+  balance_history_chart_no_data: 'To access this chart, please update FireflyIII to the last version.',
+  account_not_included_in_net_worth: '* Account not included in Net Worth.',
+
 };
