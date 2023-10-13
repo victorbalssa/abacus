@@ -30,12 +30,4 @@ export default {
   id: idID,
   zh: zhCN,
   it: itIT,
-  'de-DE': deDE,
-  'en-US': enUS,
-  'pt-BR': ptBR,
-  'fr-FR': frFR,
-  'es-ES': esES,
-  'id-ID': idID,
-  'zh-CN': zhCN,
-  'it-IT': itIT,
 };
