@@ -324,7 +324,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
   const { netWorth, balance } = useSelector((state: RootState) => state.firefly);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
   const currency = useSelector((state: RootState) => state.currencies.current);
-  const { backendURL, faceId } = useSelector((state: RootState) => state.configuration);
+  const { backendURL } = useSelector((state: RootState) => state.configuration);
   const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const dispatch = useDispatch<RootDispatch>();
   const [tab, setTab] = useState('home_accounts');
