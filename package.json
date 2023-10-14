@@ -80,11 +80,11 @@
     "redux-persist": "^6.0.0",
     "semver": "^7.5.4",
     "sharp-cli": "^4.1.1",
-    "slash": "^3.0.0",
+    "slash": "^5.1.0",
     "victory-native": "^36.6.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
+    "@babel/core": "^7.23.2",
     "@config-plugins/detox": "^6.0.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/jest": "^29.5.2",
