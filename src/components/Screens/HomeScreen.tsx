@@ -24,7 +24,6 @@ import { RefreshControl } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { TokenResponse } from 'expo-auth-session';
-import * as LocalAuthentication from 'expo-local-authentication';
 
 import { RootDispatch, RootState } from '../../store';
 import secureKeys from '../../constants/oauth';

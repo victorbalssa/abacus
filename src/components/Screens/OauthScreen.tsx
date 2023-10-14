@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import { useAuthRequest, TokenResponse } from 'expo-auth-session';
+import { useAuthRequest } from 'expo-auth-session';
 import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
