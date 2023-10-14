@@ -84,7 +84,7 @@
     "victory-native": "^36.6.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
+    "@babel/core": "^7.23.2",
     "@config-plugins/detox": "^6.0.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/jest": "^29.5.2",
