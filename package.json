@@ -63,7 +63,7 @@
     "prop-types": "^15.7.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-helmet": "^5.2.1",
+    "react-helmet": "^6.1.0",
     "react-native": "0.72.5",
     "react-native-animated-splash-screen": "^2.0.5",
     "react-native-gesture-handler": "~2.12.0",
