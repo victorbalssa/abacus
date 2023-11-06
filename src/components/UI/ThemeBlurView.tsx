@@ -8,7 +8,7 @@ import { useThemeColors } from '../../lib/common';
 const CurrentBlur = (Platform.OS === 'ios' && Device.isDevice) ? BlurView : View;
 
 export default function ThemeBlurView({
-  intensity = 70,
+  intensity = 50,
   style = {},
   children,
 }) {

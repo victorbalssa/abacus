@@ -97,7 +97,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('GET  ', `${backendURL}${url}`);
+        // console.log('GET  ', `${backendURL}${url}`);
         const response = await axios.get(`${backendURL}${url}`, config);
 
         if (response.data) {
@@ -127,7 +127,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('POST  ', `${backendURL}${url}`);
+        // console.log('POST  ', `${backendURL}${url}`);
         const { data } = await axios.post(`${backendURL}${url}`, body, config);
 
         return data;
@@ -147,7 +147,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('PUT  ', `${backendURL}${url}`);
+        // console.log('PUT  ', `${backendURL}${url}`);
         const { data } = await axios.put(`${backendURL}${url}`, body, config);
 
         return data;
@@ -167,7 +167,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('DELETE  ', `${backendURL}${url}`);
+        // console.log('DELETE  ', `${backendURL}${url}`);
         const { data } = await axios.delete(`${backendURL}${url}`);
 
         return data;

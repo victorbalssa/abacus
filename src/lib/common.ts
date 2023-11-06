@@ -75,19 +75,19 @@ export const generateRangeTitle = (range: number, start: string, end: string): s
 
   switch (range) {
     case 1:
-      title = `${moment(end).format('MMM')} ${moment(end).year()}.`;
+      title = `${moment(end).format('MMM')} ${moment(end).year()}`;
       break;
     case 3:
-      title = `${translate('home_header_time_range_q')}${moment(start).quarter()} ${moment(start).year()}.`;
+      title = `${translate('home_header_time_range_q')}${moment(start).quarter()} ${moment(start).year()}`;
       break;
     case 6:
-      title = `${translate('home_header_time_range_s')}${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}.`;
+      title = `${translate('home_header_time_range_s')}${moment(start).quarter() < 3 ? 1 : 2} ${moment(start).year()}`;
       break;
     case 12:
-      title = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
+      title = `${moment(start).year()}`;
       break;
     default:
-      title = `${moment(start).year()} ${translate('home_header_time_range_year')}.`;
+      title = `${moment(start).year()}`;
       break;
   }
 

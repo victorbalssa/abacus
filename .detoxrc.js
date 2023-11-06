@@ -61,10 +61,16 @@ module.exports = {
     }
   },
   devices: {
-    iPhone14: {
+    iPhone15: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone 14'
+        type: 'iPhone 15'
+      }
+    },
+    iPhoneSE: {
+      type: 'ios.simulator',
+      device: {
+        type: 'iPhone SE (2nd generation)'
       }
     },
     iPadmini: {
@@ -93,6 +99,10 @@ module.exports = {
     },
     'ios.sim.release.iPhone14': {
       device: 'iPhone14',
+      app: 'ios.release'
+    },
+    'ios.sim.release.iPhoneSE': {
+      device: 'iPhoneSE',
       app: 'ios.release'
     },
     'ios.sim.release.iPadmini': {

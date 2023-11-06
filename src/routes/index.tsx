@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  BottomTabBar, BottomTabBarButtonProps,
+  BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ import { useThemeColors } from '../lib/common';
 // Screens
 import OauthScreen from '../components/Screens/OauthScreen';
 import HomeScreen from '../components/Screens/HomeScreen';
+import FiltersScreen from '../components/Screens/FiltersScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function TabBarPrimaryButton(_: BottomTabBarButtonProps) {
+function TabBarPrimaryButton() {
   const navigation = useNavigation();
 
   return (
@@ -112,7 +113,7 @@ function TabBarComponent({
           insets={insets}
         />
       </ThemeBlurView>
-      <NavigationHeader navigationState={state} />
+      <NavigationHeader navigation={navigation} />
     </>
   );
 }
@@ -182,25 +183,7 @@ function TransactionsStack() {
         name="TransactionsScreen"
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
-        options={{
-          headerShadowVisible: true,
-          headerShown: true,
-          headerTitle: 'Transactions',
-          headerTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerLargeTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerLargeTitle: false,
-          headerTintColor: colors.text,
-          /*          headerSearchBarOptions: {
-            autoCapitalize: 'none',
-          }, */
-          headerStyle: {
-            backgroundColor: colors.tileBackgroundColor,
-          },
-        }}
+        options={{ headerShown: false }}
       />
       <TransactionStack.Screen
         name="TransactionDetailScreen"
@@ -311,7 +294,10 @@ export default function Index() {
         },
       }}
     >
-      <Stack.Navigator initialRouteName="oauth" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName="oauth"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen
           name="oauth"
           component={OauthScreen}
@@ -334,6 +320,24 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
+              headerRight: headerRightComp,
+              headerShadowVisible: true,
+              headerTitleStyle: {
+                fontFamily: 'Montserrat_Bold',
+              },
+              headerTintColor: colors.text,
+              headerStyle: {
+                backgroundColor: colors.tileBackgroundColor,
+              },
+            }}
+          />
+          <ModalStack.Screen
+            name="FiltersScreen"
+            component={FiltersScreen}
+            options={{
+              headerShown: true,
+              headerBackVisible: false,
+              headerTitle: 'Filters',
               headerRight: headerRightComp,
               headerShadowVisible: true,
               headerTitleStyle: {

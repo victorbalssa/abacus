@@ -27,7 +27,7 @@ export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
   const { start, end } = useSelector((state: RootState) => state.firefly.rangeDetails);
-  const { loading } = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly?.getBalanceChart?.loading) || false;
   const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart || []);
   const spentChart = useSelector((state: RootState) => state.firefly.spentChart || []);
 
@@ -46,13 +46,23 @@ export default function BalanceHistoryChart() {
 
   return (
     <VStack
-      mx={1.5}
       bgColor={colors.tileBackgroundColor}
-      borderWidth={0.5}
+      borderTopWidth={0.5}
+      borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
       justifyContent="center"
-      borderRadius={10}
     >
+      <Text
+        style={{
+          fontFamily: 'Montserrat_Bold',
+          margin: 15,
+          color: colors.text,
+          fontSize: 25,
+          lineHeight: 25,
+        }}
+      >
+        {translate('balance_history_chart')}
+      </Text>
       <HStack
         justifyContent="flex-end"
         style={{
@@ -73,7 +83,7 @@ export default function BalanceHistoryChart() {
         />
       </HStack>
       {loading && (
-        <VStack m={2} justifyContent="center" borderRadius={10}>
+        <VStack justifyContent="center">
           <HStack h={400} alignItems="center">
             <Loading />
           </HStack>
@@ -85,9 +95,9 @@ export default function BalanceHistoryChart() {
             top: 10,
             left: 50,
             right: 35,
-            bottom: 135,
+            bottom: 105,
           }}
-          height={430}
+          height={400}
           domainPadding={10}
           minDomain={{ x: 0.5 }}
         >
@@ -106,7 +116,7 @@ export default function BalanceHistoryChart() {
           />
 
           <VictoryAxis
-            offsetY={135}
+            offsetY={105}
             minDomain={{ x: 0 }}
             tickValues={getTickValues()}
             tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}

@@ -10,6 +10,7 @@ import { discovery, redirectUri } from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
 import { generateRangeTitle } from '../lib/common';
+import { AccountType } from './accounts';
 
 export type HomeDisplayType = {
   title: string,
@@ -149,13 +150,7 @@ export default createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-
-    /**
-     * Change the range
-     *
-     * @returns {Promise}
-     */
-    async handleChangeRange(payload, rootState) {
+    async handleChangeRange(payload, rootState): Promise<void> {
       if (rootState.firefly.rangeDetails === undefined) {
         dispatch.firefly.resetState();
       }
@@ -172,8 +167,9 @@ export default createModel<RootModel>()({
         range = oldRange,
         direction,
       } = payload;
-      let start;
-      let end;
+
+      let start: string;
+      let end: string;
 
       const rangeInt = parseInt(range, 10);
 
@@ -220,8 +216,8 @@ export default createModel<RootModel>()({
 
       const title: string = generateRangeTitle(rangeInt, start, end);
 
-      console.log('RANGE', range, title);
-      console.log('DATE', start, end);
+      // console.log('RANGE', range, title);
+      // console.log('DATE', start, end);
 
       dispatch.firefly.setRangeDetails({
         title,
@@ -231,12 +227,7 @@ export default createModel<RootModel>()({
       });
     },
 
-    /**
-     * Get home net worth
-     *
-     * @returns {Promise}
-     */
-    async getNetWorth(_: void, rootState) {
+    async getNetWorth(_: void, rootState): Promise<void> {
       const {
         firefly: {
           rangeDetails: {
@@ -266,19 +257,14 @@ export default createModel<RootModel>()({
           }
         });
 
-        this.setData({
+        dispatch.firefly.setData({
           netWorth,
           balance,
         });
       }
     },
 
-    /**
-     * Get the dashboard summary
-     *
-     * @returns {Promise}
-     */
-    async getAccountChart(_: void, rootState) {
+    async getAccountChart(_: void, rootState): Promise<void> {
       const {
         firefly: {
           rangeDetails: {
@@ -326,14 +312,9 @@ export default createModel<RootModel>()({
         accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
       });
 
-      this.setData({ accounts });
+      dispatch.firefly.setData({ accounts });
     },
 
-    /**
-     * Get balance chart data
-     *
-     * @returns {Promise}
-     */
     async getBalanceChart(_: void, rootState): Promise<void> {
       const {
         firefly: {
@@ -345,15 +326,13 @@ export default createModel<RootModel>()({
         currencies: {
           current,
         },
-        accounts: {
-          accounts,
-        },
         configuration: {
           apiVersion,
         },
       } = rootState;
 
       const apiSemverMinimum = '2.0.9';
+      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
       if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
         this.setData({ earnedChart: [], spentChart: [] });
         return;
@@ -397,12 +376,7 @@ export default createModel<RootModel>()({
       }
     },
 
-    /**
-     * Get a fresh accessToken from refreshToken
-     *
-     * @returns {Promise}
-     */
-    async getFreshAccessToken(payload, rootState) {
+    async getFreshAccessToken(payload, rootState): Promise<void> {
       const {
         configuration: {
           backendURL,
@@ -428,17 +402,12 @@ export default createModel<RootModel>()({
         throw new Error('Failed to get accessToken with the refresh token. Please restart the Sign In process.');
       }
 
+      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
       const newStorageValue = JSON.stringify(response);
       await SecureStore.setItemAsync(secureKeys.tokens, newStorageValue);
-      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
     },
 
-    /**
-     * Get a new accessToken from authorization code
-     *
-     * @returns {Promise}
-     */
-    async getNewAccessToken(payload, rootState) {
+    async getNewAccessToken(payload, rootState): Promise<void> {
       const {
         configuration: {
           backendURL,
