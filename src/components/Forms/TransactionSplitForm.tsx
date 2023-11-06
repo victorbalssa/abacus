@@ -26,6 +26,7 @@ import { TransactionSplitType } from '../../models/transactions';
 export default function TransactionSplitForm({
   index,
   total,
+  isNew,
   handleDelete,
   transaction,
 }) {
@@ -148,6 +149,7 @@ export default function TransactionSplitForm({
           />
         </HStack>
       )}
+      {isNew && (
       <FormControl isRequired>
         <HStack justifyContent="center">
           <Button.Group isAttached borderRadius={10}>
@@ -182,6 +184,7 @@ export default function TransactionSplitForm({
           </Button.Group>
         </HStack>
       </FormControl>
+      )}
 
       <FormControl mt="1" isRequired>
         <FormControl.Label>

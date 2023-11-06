@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { ScreenType } from './types';
 import Filters from '../UI/Filters';
 
-export default function TransactionCreateScreen({ navigation, route }: ScreenType) {
+export default function TransactionCreateScreen() {
   return (
     <View>
       <Filters />

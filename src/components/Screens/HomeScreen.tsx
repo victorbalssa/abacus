@@ -292,8 +292,9 @@ function InsightBudgets() {
   );
 }
 
-function NetWorth({ currencyCode, setHideBalance, hideBalance }) {
+function NetWorth({ currencyCode }) {
   const { colors } = useThemeColors();
+  const [hideBalance, setHideBalance] = useState<boolean>(false);
   const netWorth = useSelector((state: RootState) => state.firefly.netWorth);
   const balance = useSelector((state: RootState) => state.firefly.balance);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNetWorth?.loading);
@@ -387,7 +388,6 @@ export default function HomeScreen({ navigation }: ScreenType) {
   const { backendURL } = useSelector((state: RootState) => state.configuration);
   const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
   const dispatch = useDispatch<RootDispatch>();
-  const [hideBalance, setHideBalance] = useState<boolean>(false);
   const renderIcons = [
     <Ionicons key="ios-wallet" name="ios-wallet" size={22} color={colors.text} />,
     <Ionicons key="ios-pricetag" name="ios-pricetags" size={22} color={colors.text} />,
@@ -493,7 +493,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
           alignItems="center"
         >
 
-          <NetWorth currencyCode={currency?.attributes?.code} hideBalance={hideBalance} setHideBalance={setHideBalance} />
+          <NetWorth currencyCode={currency?.attributes?.code} />
 
           <Pagination
             renderIcons={renderIcons}
@@ -545,7 +545,6 @@ export default function HomeScreen({ navigation }: ScreenType) {
 
     </Box>
   ), [
-    hideBalance,
     loading,
     netWorth,
     balance,

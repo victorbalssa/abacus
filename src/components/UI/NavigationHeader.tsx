@@ -11,22 +11,21 @@ import moment from 'moment';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Platform, TouchableOpacity } from 'react-native';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 
-import { NativeStackHeaderProps } from '@react-navigation/native-stack';
 import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';
 import ThemeBlurView from './ThemeBlurView';
 import { useThemeColors } from '../../lib/common';
-import {BottomTabHeaderProps} from "@react-navigation/bottom-tabs";
 
-export default function NavigationHeader({ navigation }: NativeStackHeaderProps | BottomTabHeaderProps): React.ReactNode {
+export default function NavigationHeader({ navigation, relative = false }): React.ReactNode {
   const { colors } = useThemeColors();
   const currentCurrency = useSelector((state: RootState) => state.currencies.current);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails || {
     title: '', range: 3, end: '', start: '',
   });
   const dispatch = useDispatch<RootDispatch>();
+  const navigationStateIndex = navigation.getState().index;
 
   return (
     <ThemeBlurView
@@ -36,7 +35,8 @@ export default function NavigationHeader({ navigation }: NativeStackHeaderProps 
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: Platform.select({ ios: colors.tabBackgroundColor, android: colors.blurBackground }),
+        backgroundColor: Platform.select({ ios: colors.tabBackgroundColor, android: relative ? colors.tileBackgroundColor : colors.tabBackgroundColor }),
+        display: [0, 1].includes(navigationStateIndex) ? undefined : 'none',
       }}
     >
       <Box
@@ -49,11 +49,12 @@ export default function NavigationHeader({ navigation }: NativeStackHeaderProps 
           <IconButton
             variant="ghost"
             _icon={{
-              color: 'white',
+              color: colors.text,
               as: FontAwesome,
               name: 'angle-left',
               px: 2,
             }}
+            colorScheme="black"
             onPress={() => dispatch.firefly.handleChangeRange({ direction: -1 })}
             onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
           />
@@ -69,7 +70,7 @@ export default function NavigationHeader({ navigation }: NativeStackHeaderProps 
               <HStack style={{
                 alignSelf: 'flex-start',
                 borderWidth: 0.5,
-                borderColor: 'white',
+                borderColor: colors.text,
                 borderRadius: 10,
                 paddingHorizontal: 5,
                 marginHorizontal: 1,
@@ -88,7 +89,7 @@ export default function NavigationHeader({ navigation }: NativeStackHeaderProps 
               <HStack style={{
                 alignSelf: 'flex-start',
                 borderWidth: 0.5,
-                borderColor: 'white',
+                borderColor: colors.text,
                 borderRadius: 10,
                 paddingHorizontal: 5,
                 marginHorizontal: 1,
@@ -112,7 +113,6 @@ export default function NavigationHeader({ navigation }: NativeStackHeaderProps 
               margin: 5,
               padding: 5,
               borderRadius: 10,
-              borderColor: 'white',
             }}
             onPress={() => navigation.dispatch(
               CommonActions.navigate({
@@ -128,12 +128,13 @@ export default function NavigationHeader({ navigation }: NativeStackHeaderProps 
           <IconButton
             variant="ghost"
             _icon={{
-              color: 'white',
+              color: colors.text,
               as: FontAwesome,
               name: 'angle-right',
               size: 'lg',
               px: 2,
             }}
+            colorScheme="black"
             onPress={() => dispatch.firefly.handleChangeRange({ direction: 1 })}
             onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
           />

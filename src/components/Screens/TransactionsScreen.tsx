@@ -35,6 +35,7 @@ import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { D_WIDTH, localNumberFormat, useThemeColors } from '../../lib/common';
 import { ScreenType } from './types';
+import NavigationHeader from '../UI/NavigationHeader';
 
 const ITEM_HEIGHT = 90;
 
@@ -333,14 +334,13 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
 
       if (prevFiltersRef.current !== `${rangeDetails.start}-${rangeDetails.end}-${currency.id}` || params?.forceRefresh === true) {
         if (isActive) {
-          onRefresh().then();
+          onRefresh().then(() => navigation.setParams({ forceRefresh: false }));
         }
         prevFiltersRef.current = `${rangeDetails.start}-${rangeDetails.end}-${currency.id}`;
       }
 
       return () => {
         isActive = false;
-        navigation.setParams({ forceRefresh: null });
       };
     }, [
       params,
@@ -376,56 +376,59 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
 
   return useMemo(
     () => (
-      <SwipeListView
-        useNativeDriver
-        contentInsetAdjustmentBehavior="automatic"
-        refreshControl={(
-          <RefreshControl
-            refreshing={loadingRefresh}
-            onRefresh={onRefresh}
-            progressViewOffset={100}
-          />
+      <>
+        <SwipeListView
+          useNativeDriver
+          contentInsetAdjustmentBehavior="automatic"
+          refreshControl={(
+            <RefreshControl
+              refreshing={loadingRefresh}
+              onRefresh={onRefresh}
+              progressViewOffset={100}
+            />
         )}
-        contentInset={{ top: 60 }}
-        initialNumToRender={15}
-        maxToRenderPerBatch={10}
-        keyExtractor={(item: TransactionType) => item.id}
-        data={transactions}
-        showsVerticalScrollIndicator
-        renderItem={({ item }) => <RenderItem item={item} />}
-        renderHiddenItem={(data, rowMap) => (
-          <RenderHiddenItem
-            handleOnPressCopy={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
-              goToDuplicate({
-                splits: resetTransactionsDates(data.item.attributes.transactions),
-                groupTitle: data.item.attributes.groupTitle || '',
-              });
-            }}
-            handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
-          />
-        )}
-        rightOpenValue={-90}
-        stopRightSwipe={-190}
-        rightActivationValue={-170}
-        onRightActionStatusChange={({
-          key,
-          isActivated,
-        }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
-        leftOpenValue={90}
-        stopLeftSwipe={190}
-        leftActivationValue={170}
-        onLeftActionStatusChange={({
-          key,
-          isActivated,
-        }) => (isActivated ? goToDuplicate({
-          splits: resetTransactionsDates(transactions.find((t) => t.id === key).attributes.transactions),
-          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || '',
-        }) : null)}
-        contentContainerStyle={{ paddingBottom: 100, paddingTop: Platform.select({ android: 90, default: 0 }) }}
-        getItemLayout={(_, index: number) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
-        ListFooterComponent={() => <ListFooterComponent loadMore={loadMore} />}
-      />
+          contentInset={{ top: 60 }}
+          initialNumToRender={15}
+          maxToRenderPerBatch={10}
+          keyExtractor={(item: TransactionType) => item.id}
+          data={transactions}
+          showsVerticalScrollIndicator
+          renderItem={({ item }) => <RenderItem item={item} />}
+          renderHiddenItem={(data, rowMap) => (
+            <RenderHiddenItem
+              handleOnPressCopy={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
+                goToDuplicate({
+                  splits: resetTransactionsDates(data.item.attributes.transactions),
+                  groupTitle: data.item.attributes.groupTitle || '',
+                });
+              }}
+              handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
+            />
+          )}
+          rightOpenValue={-90}
+          stopRightSwipe={-190}
+          rightActivationValue={-170}
+          onRightActionStatusChange={({
+            key,
+            isActivated,
+          }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
+          leftOpenValue={90}
+          stopLeftSwipe={190}
+          leftActivationValue={170}
+          onLeftActionStatusChange={({
+            key,
+            isActivated,
+          }) => (isActivated ? goToDuplicate({
+            splits: resetTransactionsDates(transactions.find((t) => t.id === key).attributes.transactions),
+            groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || '',
+          }) : null)}
+          contentContainerStyle={{ paddingBottom: 100, paddingTop: Platform.select({ android: 90, default: 0 }) }}
+          getItemLayout={(_, index: number) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
+          ListFooterComponent={() => <ListFooterComponent loadMore={loadMore} />}
+        />
+        <NavigationHeader navigation={navigation} relative />
+      </>
     ),
     [
       transactions,

@@ -31,7 +31,6 @@ import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
-const ChartStack = createNativeStackNavigator();
 const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -114,7 +113,7 @@ function TabBarComponent({
           insets={insets}
         />
       </ThemeBlurView>
-      {/* <NavigationHeader navigationState={state} /> */}
+      <NavigationHeader navigation={navigation} />
     </>
   );
 }
@@ -184,10 +183,7 @@ function TransactionsStack() {
         name="TransactionsScreen"
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
-        options={{
-          headerShown: true,
-          header: NavigationHeader,
-        }}
+        options={{ headerShown: false }}
       />
       <TransactionStack.Screen
         name="TransactionDetailScreen"
@@ -211,21 +207,6 @@ function TransactionsStack() {
         }}
       />
     </TransactionStack.Navigator>
-  );
-}
-
-function ChartsStack() {
-  return (
-    <ChartStack.Navigator initialRouteName="ChartScreen">
-      <ChartStack.Screen
-        name="ChartScreen"
-        component={ChartScreen}
-        options={{
-          headerShown: true,
-          header: NavigationHeader,
-        }}
-      />
-    </ChartStack.Navigator>
   );
 }
 
@@ -265,13 +246,11 @@ function Home() {
         component={HomeScreen}
         options={{
           tabBarIcon: TabBarHomeScreenIcon,
-          headerShown: true,
-          header: NavigationHeader,
         }}
       />
       <Tab.Screen
         name={translate('navigation_chart_tab')}
-        component={ChartsStack}
+        component={ChartScreen}
         options={{
           tabBarIcon: TabBarChartScreenIcon,
         }}

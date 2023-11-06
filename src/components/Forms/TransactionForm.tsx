@@ -19,7 +19,7 @@ import GroupTitle from './Fields/GroupTitle';
 import Loading from '../UI/Loading';
 import { initialSplit } from '../../models/transactions';
 
-function MultipleTransactionSplitForm({ splits, title }) {
+function MultipleTransactionSplitForm({ isNew, splits, title }) {
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -48,6 +48,7 @@ function MultipleTransactionSplitForm({ splits, title }) {
         <TransactionSplitForm
           key={e}
           index={i}
+          isNew={isNew}
           total={splitNumber.length}
           transaction={splits[i] || initialSplit()}
           handleDelete={() => deleteTransactionSplit(i)}
@@ -192,7 +193,7 @@ export default function TransactionForm({
           backgroundColor: colors.backgroundColor,
         }}
       >
-        <MultipleTransactionSplitForm title={title} splits={splits} />
+        <MultipleTransactionSplitForm isNew={id === null} title={title} splits={splits} />
         <TransactionFormButtons navigation={navigation} id={id} handleSubmit={handleSubmit} />
         <View style={{ height: 350 }} />
       </KeyboardAvoidingView>
