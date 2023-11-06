@@ -1,26 +1,36 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { Animated, View } from 'react-native';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView } from 'native-base';
+import { Box } from 'native-base';
+import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
+import { Entypo, Feather } from '@expo/vector-icons';
 
 import { RootDispatch, RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
 import AssetsHistoryChart from '../Charts/AssetsHistoryChart';
 import BalanceHistoryChart from '../Charts/BalanceHistoryChart';
-import TabControl from '../UI/TabControl';
+import Pagination from '../UI/Pagination';
+
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 export default function ChartScreen() {
   const { colors } = useThemeColors();
   const safeAreaInsets = useSafeAreaInsets();
-  const [tab, setTab] = useState('assets_history_chart');
 
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
   const { firefly: { getAccountChart, getBalanceChart } } = useDispatch<RootDispatch>();
 
   const prevFiltersRef = useRef<string>();
   const scrollRef = React.useRef(null);
+  const viewPagerRef = useRef<PagerView>();
+  const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
+  const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
+  const renderIcons = [
+    <Entypo key="line-graph" name="line-graph" size={20} color={colors.text} />,
+    <Feather key="bar-chart-2" name="bar-chart-2" size={20} color={colors.text} />,
+  ];
 
   useScrollToTop(scrollRef);
 
@@ -53,24 +63,44 @@ export default function ChartScreen() {
     <View
       style={{
         flex: 1,
-        paddingTop: safeAreaInsets.top + 55,
+        paddingTop: safeAreaInsets.top + 53,
         backgroundColor: colors.backgroundColor,
+        justifyContent: 'center',
       }}
     >
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-      >
-        <TabControl
-          values={['assets_history_chart', 'balance_history_chart']}
-          onChange={setTab}
+      <Box alignItems="center" p={2}>
+        <Pagination
+          renderIcons={renderIcons}
+          handlePress={(index) => viewPagerRef?.current?.setPage(index)}
+          scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
+          positionAnimatedValue={positionAnimatedValue}
         />
+      </Box>
 
-        {tab === 'assets_history_chart' && <AssetsHistoryChart />}
-        {tab === 'balance_history_chart' && <BalanceHistoryChart />}
+      <AnimatedPagerView
+        ref={viewPagerRef}
+        initialPage={0}
+        style={{ flex: 1 }}
+        onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
+          [
+            {
+              nativeEvent: {
+                offset: scrollOffsetAnimatedValue,
+                position: positionAnimatedValue,
+              },
+            },
+          ],
+          {
+            useNativeDriver: true,
+          },
+        )}
+      >
+        <AssetsHistoryChart key="1" />
+        <BalanceHistoryChart key="2" />
+      </AnimatedPagerView>
 
-        <View style={{ height: 100 }} />
-      </ScrollView>
+      <View style={{ height: 100 }} />
+
     </View>
   );
 }

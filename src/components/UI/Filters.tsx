@@ -1,11 +1,8 @@
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  CheckIcon,
-  Select,
-  Stack,
-} from 'native-base';
-import { FontAwesome } from '@expo/vector-icons';
+import { HStack, VStack } from 'native-base';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
@@ -13,6 +10,7 @@ import { useThemeColors } from '../../lib/common';
 
 export default function Filters() {
   const { colors } = useThemeColors();
+  const navigation = useNavigation();
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const currentCurrency = useSelector((state: RootState) => state.currencies.current);
   const range = useSelector((state: RootState) => state.firefly.rangeDetails?.range || 1);
@@ -26,76 +24,93 @@ export default function Filters() {
   } = useDispatch<RootDispatch>();
 
   return useMemo(() => (
-    <Stack
+    <VStack
       py={1}
-      alignItems="flex-end"
+      alignItems="center"
       justifyContent="center"
       backgroundColor={colors.tabBackgroundColor}
     >
-      <Select
-        my={2}
-        height={35}
-        backgroundColor={colors.brandNeutralLight}
-        borderColor={colors.filterBorderColor}
-        width={100}
-        borderWidth={1}
-        borderRadius={10}
-        dropdownIcon={<FontAwesome name="angle-down" size={20} style={{ marginRight: 10 }} color={colors.text} />}
-        _selectedItem={{
-          bg: 'primary.600',
-          borderRadius: 10,
-          endIcon: <CheckIcon size={5} color="white" />,
-          _text: {
-            fontFamily: 'Montserrat',
-            color: 'white',
-          },
+
+      <Text
+        style={{
+          fontFamily: 'Montserrat_Bold',
+          margin: 15,
+          color: colors.text,
+          fontSize: 15,
+          lineHeight: 15,
         }}
-        _item={{
-          borderRadius: 10,
-          _text: {
-            fontFamily: 'Montserrat',
-            color: colors.text,
-          },
-        }}
-        selectedValue={currentCurrency?.id}
-        onValueChange={(v) => handleChangeCurrent(v)}
       >
-        {currencies.map((currency) => <Select.Item key={currency.id} label={`${currency?.attributes.code} ${currency?.attributes.symbol}`} value={currency.id} />)}
-      </Select>
-      <Select
-        my={2}
-        height={35}
-        width={100}
-        backgroundColor={colors.brandNeutralLight}
-        borderColor={colors.filterBorderColor}
-        borderWidth={1}
-        borderRadius={10}
-        dropdownIcon={<FontAwesome name="angle-down" size={20} style={{ marginRight: 10 }} color={colors.text} />}
-        _selectedItem={{
-          bg: 'primary.600',
-          borderRadius: 10,
-          endIcon: <CheckIcon size={5} color="white" />,
-          _text: {
-            fontFamily: 'Montserrat',
-            color: 'white',
-          },
+        {translate('currency')}
+      </Text>
+
+      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+        {currencies.map((currency) => (
+          <TouchableOpacity
+            disabled={currentCurrency.id === currency.id}
+            key={currency.id}
+            onPress={() => {
+              handleChangeCurrent(currency.id);
+              navigation.goBack();
+            }}
+          >
+            <View style={{
+              backgroundColor: currentCurrency.id === currency.id ? colors.brandStyle : colors.filterBorderColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              width: 80,
+              height: 35,
+              margin: 2,
+            }}
+            >
+              <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+                {`${currency?.attributes.code} ${currency?.attributes.symbol}`}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </HStack>
+
+      <Text
+        style={{
+          fontFamily: 'Montserrat_Bold',
+          margin: 15,
+          color: colors.text,
+          fontSize: 15,
+          lineHeight: 15,
         }}
-        _item={{
-          borderRadius: 10,
-          _text: {
-            fontFamily: 'Montserrat',
-            color: colors.text,
-          },
-        }}
-        selectedValue={`${range}`}
-        onValueChange={(v) => handleChangeRange({ range: v })}
       >
-        <Select.Item key="1" label={translate('period_switcher_monthly')} value="1" />
-        <Select.Item key="3" label={translate('period_switcher_quarterly')} value="3" />
-        <Select.Item key="6" label={translate('period_switcher_semiannually')} value="6" />
-        <Select.Item key="12" label={translate('period_switcher_yearly')} value="12" />
-      </Select>
-    </Stack>
+        {translate('period')}
+      </Text>
+
+      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+        {[1, 3, 6, 12].map((period) => (
+          <TouchableOpacity
+            disabled={range === period}
+            key={period}
+            onPress={() => {
+              handleChangeRange({ range: period });
+              navigation.goBack();
+            }}
+          >
+            <View style={{
+              backgroundColor: range === period ? colors.brandStyle : colors.filterBorderColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 25,
+              width: 60,
+              height: 40,
+              margin: 2,
+            }}
+            >
+              <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+                {`${period}M`}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </HStack>
+    </VStack>
   ), [
     currencies,
     currentCurrency,

@@ -165,13 +165,24 @@ export default function AssetsHistoryChart() {
 
   return (
     <VStack
-      mx={1.5}
       bgColor={colors.tileBackgroundColor}
-      borderWidth={0.5}
+      borderTopWidth={0.5}
+      borderBottomWidth={0.5}
       borderColor={colors.listBorderColor}
       justifyContent="center"
-      borderRadius={10}
     >
+      <Text
+        style={{
+          paddingTop: 15,
+          fontFamily: 'Montserrat_Bold',
+          margin: 15,
+          color: colors.text,
+          fontSize: 25,
+          lineHeight: 25,
+        }}
+      >
+        {translate('assets_history_chart')}
+      </Text>
       <HStack
         style={{
           marginTop: 10,
@@ -228,7 +239,7 @@ export default function AssetsHistoryChart() {
       </HStack>
       <View style={{ height: 90 }} />
       {loading && (
-        <VStack m={2} justifyContent="center" borderRadius={10}>
+        <VStack justifyContent="center">
           <HStack h={400} alignItems="center">
             <Loading />
           </HStack>
@@ -240,9 +251,9 @@ export default function AssetsHistoryChart() {
             top: 10,
             left: 50,
             right: 35,
-            bottom: 135,
+            bottom: 105,
           }}
-          height={430}
+          height={400}
           domainPadding={2}
           containerComponent={(
             <VictoryVoronoiContainer
@@ -274,7 +285,7 @@ export default function AssetsHistoryChart() {
             }}
           />
           <VictoryAxis
-            offsetY={135}
+            offsetY={105}
             tickValues={getTickValues()}
             tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
             style={{

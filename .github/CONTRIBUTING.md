@@ -12,7 +12,7 @@ Please follow [Airbnb's Name Conventions](https://github.com/airbnb/javascript#n
   - Follow the existing file structure
 - __Files__
   - Should be `lowercase`, with words separated by hyphens (`-`) eg. `logo-cropped.jpg`
-  - With the exception of Containers and Components, which should be `PascalCase` - eg. `TicketView.js`
+  - Except Containers and Components, which should be `PascalCase` - eg. `TicketView.js`
 - __Directories__
   - Folder names should be `lowercase,` with words separated by a hyphen (`-`) - eg. `/components/case-studies`
   - Folders and files can be named singular or plural - do what sounds right
