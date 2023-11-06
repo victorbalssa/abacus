@@ -91,7 +91,7 @@
     "@types/lodash": "^4.14.197",
     "@types/react": "~18.2.14",
     "@typescript-eslint/eslint-plugin": "^5.30.0",
-    "@typescript-eslint/parser": "^5.30.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "babel-preset-expo": "^9.5.0",
     "detox": "20.13.1",
     "dotenv": "^16.3.1",
