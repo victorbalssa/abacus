@@ -47,7 +47,7 @@ export default function Pagination({
       {renderIcons.map((item, index) => (
         <TouchableOpacity
           onPress={() => handlePress(index)}
-          key={index}
+          key={`${item.key}`}
           style={{
             width: DOT_SIZE,
             alignItems: 'center',

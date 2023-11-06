@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   HStack,
   Box,
@@ -11,7 +11,7 @@ import moment from 'moment';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Platform, TouchableOpacity } from 'react-native';
-import { CommonActions, getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
 import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';

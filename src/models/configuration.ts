@@ -97,7 +97,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('GET  ', `${backendURL}${url}`);
+        // console.log('GET  ', `${backendURL}${url}`);
         const response = await axios.get(`${backendURL}${url}`, config);
 
         if (response.data) {

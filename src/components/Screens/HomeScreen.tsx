@@ -21,7 +21,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  RefreshControl, TouchableOpacity, Animated, Dimensions,
+  RefreshControl, TouchableOpacity, Animated,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
@@ -36,7 +36,7 @@ import secureKeys from '../../constants/oauth';
 import ToastAlert from '../UI/ToastAlert';
 import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
-import Filters from '../UI/Filters';
+
 import { ScreenType } from './types';
 import Pagination from '../UI/Pagination';
 

@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  BottomTabBar, BottomTabBarButtonProps,
+  BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function TabBarPrimaryButton(_: BottomTabBarButtonProps) {
+function TabBarPrimaryButton() {
   const navigation = useNavigation();
 
   return (
