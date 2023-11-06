@@ -5,7 +5,7 @@ import React, {
   useState,
 } from 'react';
 import {
-  Alert,
+  Alert, Platform,
   RefreshControl,
 } from 'react-native';
 import {
@@ -33,7 +33,7 @@ import {
 import { TransactionSplitType, TransactionType } from '../../models/transactions';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
-import { localNumberFormat, useThemeColors } from '../../lib/common';
+import { D_WIDTH, localNumberFormat, useThemeColors } from '../../lib/common';
 import { ScreenType } from './types';
 
 const ITEM_HEIGHT = 90;
@@ -45,7 +45,7 @@ const resetTransactionsDates = (transactions: TransactionSplitType[]) => transac
 
 function ListFooterComponent({ loadMore }) {
   const { colors } = useThemeColors();
-  const { loading } = useSelector((state: RootState) => state.loading.effects.transactions.getMoreTransactions);
+  const loading = useSelector((state: RootState) => state.loading.effects.transactions.getMoreTransactions?.loading);
   const { page, totalPages } = useSelector((state: RootState) => state.transactions);
 
   return useMemo(() => (loading || (page < totalPages)) && (
@@ -77,6 +77,8 @@ function ListFooterComponent({ loadMore }) {
       )}
     </Box>
   ), [
+    page,
+    totalPages,
     loading,
   ]);
 }
@@ -108,13 +110,13 @@ function RenderItem({ item }: { item: TransactionType }) {
     withdrawal: {
       bg: colors.brandNeutralLight,
       color: colors.brandNeutral,
-      icon: 'arrow-up',
+      icon: 'arrow-down',
       prefix: '-',
     },
     deposit: {
       bg: colors.brandSuccessLight,
       color: colors.brandSuccess,
-      icon: 'arrow-down',
+      icon: 'arrow-up',
       prefix: '+',
     },
     transfer: {
@@ -156,7 +158,7 @@ function RenderItem({ item }: { item: TransactionType }) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
         goToDuplicate({
           splits: resetTransactionsDates(item.attributes.transactions),
-          groupTitle: item.attributes.groupTitle || 'Default title',
+          groupTitle: item.attributes.groupTitle || '',
         });
       }}
     >
@@ -178,7 +180,7 @@ function RenderItem({ item }: { item: TransactionType }) {
           <VStack>
             <Text
               fontFamily="Montserrat_Bold"
-              maxW={200}
+              maxW={D_WIDTH - 175}
               numberOfLines={1}
               paddingTop={2}
             >
@@ -188,7 +190,7 @@ function RenderItem({ item }: { item: TransactionType }) {
             <Text
               fontSize="xs"
               alignSelf="flex-start"
-              maxW={170}
+              maxW={D_WIDTH - 175}
               numberOfLines={1}
             >
               {`${item.attributes.transactions[0].type === 'withdrawal' ? `${item.attributes.transactions[0].sourceName}` : `${item.attributes.transactions[0].destinationName}`}`}
@@ -197,7 +199,7 @@ function RenderItem({ item }: { item: TransactionType }) {
             <Text
               fontSize="xs"
               alignSelf="flex-start"
-              maxW={170}
+              maxW={D_WIDTH - 175}
               numberOfLines={1}
             >
               {`${moment(item.attributes.transactions[0].date).format('ll')} • ${item.attributes.transactions[0].categoryName || ''}`}
@@ -307,7 +309,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
 
 export default function TransactionsScreen({ navigation, route }: ScreenType) {
   const { params } = route;
-  const { loading: loadingRefresh } = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions);
+  const loadingRefresh = useSelector((state: RootState) => state.loading.effects.transactions.getTransactions?.loading);
   const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
   const currency = useSelector((state: RootState) => state.currencies.current);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
@@ -381,8 +383,10 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
           <RefreshControl
             refreshing={loadingRefresh}
             onRefresh={onRefresh}
+            progressViewOffset={100}
           />
         )}
+        contentInset={{ top: 60 }}
         initialNumToRender={15}
         maxToRenderPerBatch={10}
         keyExtractor={(item: TransactionType) => item.id}
@@ -395,7 +399,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
               goToDuplicate({
                 splits: resetTransactionsDates(data.item.attributes.transactions),
-                groupTitle: data.item.attributes.groupTitle || 'Default title',
+                groupTitle: data.item.attributes.groupTitle || '',
               });
             }}
             handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
@@ -416,9 +420,9 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
           isActivated,
         }) => (isActivated ? goToDuplicate({
           splits: resetTransactionsDates(transactions.find((t) => t.id === key).attributes.transactions),
-          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || 'Default title',
+          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || '',
         }) : null)}
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 100, paddingTop: Platform.select({ android: 90, default: 0 }) }}
         getItemLayout={(_, index: number) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
         ListFooterComponent={() => <ListFooterComponent loadMore={loadMore} />}
       />

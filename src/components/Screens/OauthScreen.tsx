@@ -19,7 +19,7 @@ import translate from '../../i18n/locale';
 
 export default function OauthScreen({ navigation }: ScreenType) {
   const toast = useToast();
-  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNewAccessToken?.loading);
   const configuration = useSelector((state: RootState) => state.configuration);
   const dispatch = useDispatch<RootDispatch>();
 

@@ -69,13 +69,13 @@ function MultipleTransactionSplitForm({ splits, title }) {
       >
         {translate('transaction_form_new_split_button')}
       </Button>
-      {splitNumber.length > 1 && (<GroupTitle title={title || 'Default title'} />)}
+      {splitNumber.length > 1 && (<GroupTitle title={title || ''} />)}
     </View>
   );
 }
 
 function TransactionFormButtons({ navigation, id, handleSubmit }) {
-  const { loading } = useSelector((state: RootState) => state.loading.effects.transactions[id ? 'updateTransaction' : 'createTransaction']);
+  const loading = useSelector((state: RootState) => state.loading.effects.transactions[id ? 'updateTransaction' : 'createTransaction']?.loading);
   const error = useSelector((state: RootState) => state.transactions.error);
   const success = useSelector((state: RootState) => state.transactions.success);
   const dispatch = useDispatch<RootDispatch>();

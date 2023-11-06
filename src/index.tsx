@@ -82,7 +82,7 @@ export default function App() {
       await Updates.fetchUpdateAsync();
       await Updates.reloadAsync();
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   };
 
@@ -96,7 +96,7 @@ export default function App() {
         }
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   };
 

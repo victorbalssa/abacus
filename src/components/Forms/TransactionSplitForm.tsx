@@ -173,7 +173,7 @@ export default function TransactionSplitForm({
                 isDisabled={type === formData.type}
                 backgroundColor={type !== formData.type ? colors.tileBackgroundColor : colorItemTypes[formData.type]}
                 key={type}
-                borderWidth={type === formData.type ? 0 : 0.5}
+                borderWidth={0.5}
                 borderColor={colors.listBorderColor}
               >
                 {name}

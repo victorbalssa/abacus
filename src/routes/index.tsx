@@ -18,6 +18,7 @@ import { useThemeColors } from '../lib/common';
 // Screens
 import OauthScreen from '../components/Screens/OauthScreen';
 import HomeScreen from '../components/Screens/HomeScreen';
+import FiltersScreen from '../components/Screens/FiltersScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
@@ -30,6 +31,7 @@ import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
+const ChartStack = createNativeStackNavigator();
 const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -112,7 +114,7 @@ function TabBarComponent({
           insets={insets}
         />
       </ThemeBlurView>
-      <NavigationHeader navigationState={state} />
+      {/* <NavigationHeader navigationState={state} /> */}
     </>
   );
 }
@@ -183,23 +185,8 @@ function TransactionsStack() {
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
         options={{
-          headerShadowVisible: true,
           headerShown: true,
-          headerTitle: 'Transactions',
-          headerTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerLargeTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerLargeTitle: false,
-          headerTintColor: colors.text,
-          /*          headerSearchBarOptions: {
-            autoCapitalize: 'none',
-          }, */
-          headerStyle: {
-            backgroundColor: colors.tileBackgroundColor,
-          },
+          header: NavigationHeader,
         }}
       />
       <TransactionStack.Screen
@@ -224,6 +211,21 @@ function TransactionsStack() {
         }}
       />
     </TransactionStack.Navigator>
+  );
+}
+
+function ChartsStack() {
+  return (
+    <ChartStack.Navigator initialRouteName="ChartScreen">
+      <ChartStack.Screen
+        name="ChartScreen"
+        component={ChartScreen}
+        options={{
+          headerShown: true,
+          header: NavigationHeader,
+        }}
+      />
+    </ChartStack.Navigator>
   );
 }
 
@@ -263,11 +265,13 @@ function Home() {
         component={HomeScreen}
         options={{
           tabBarIcon: TabBarHomeScreenIcon,
+          headerShown: true,
+          header: NavigationHeader,
         }}
       />
       <Tab.Screen
         name={translate('navigation_chart_tab')}
-        component={ChartScreen}
+        component={ChartsStack}
         options={{
           tabBarIcon: TabBarChartScreenIcon,
         }}
@@ -311,7 +315,10 @@ export default function Index() {
         },
       }}
     >
-      <Stack.Navigator initialRouteName="oauth" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName="oauth"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen
           name="oauth"
           component={OauthScreen}
@@ -334,6 +341,24 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
+              headerRight: headerRightComp,
+              headerShadowVisible: true,
+              headerTitleStyle: {
+                fontFamily: 'Montserrat_Bold',
+              },
+              headerTintColor: colors.text,
+              headerStyle: {
+                backgroundColor: colors.tileBackgroundColor,
+              },
+            }}
+          />
+          <ModalStack.Screen
+            name="FiltersScreen"
+            component={FiltersScreen}
+            options={{
+              headerShown: true,
+              headerBackVisible: false,
+              headerTitle: 'Filters',
               headerRight: headerRightComp,
               headerShadowVisible: true,
               headerTitleStyle: {
