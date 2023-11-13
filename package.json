@@ -21,7 +21,7 @@
     "@expo/config-plugins": "~7.2.5",
     "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "1.18.2",
-    "@react-native-community/datetimepicker": "7.2.0",
+    "@react-native-community/datetimepicker": "7.6.1",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.9.13",
