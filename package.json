@@ -38,7 +38,7 @@
     "expo-blur": "~12.4.1",
     "expo-build-properties": "~0.8.3",
     "expo-clipboard": "~4.3.1",
-    "expo-crypto": "~12.4.1",
+    "expo-crypto": "~12.6.0",
     "expo-device": "~5.4.0",
     "expo-font": "~11.4.0",
     "expo-haptics": "~12.4.0",
