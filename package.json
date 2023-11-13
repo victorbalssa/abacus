@@ -49,7 +49,7 @@
     "expo-random": "~13.2.0",
     "expo-secure-store": "~12.3.1",
     "expo-splash-screen": "~0.20.5",
-    "expo-status-bar": "~1.6.0",
+    "expo-status-bar": "~1.7.1",
     "expo-store-review": "~6.4.0",
     "expo-system-ui": "~2.4.0",
     "expo-updates": "~0.18.17",
