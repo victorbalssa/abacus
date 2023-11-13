@@ -77,16 +77,16 @@ export default createModel<RootModel>()({
           },
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
-      if (current && current.attributes.code) {
+      if (currentCode) {
         const { data: budgets } = await dispatch.configuration.apiFetch({ url: `/api/v1/budgets?start=${start}&end=${end}` }) as { data: BudgetType[] };
         const { data: apiBudgetsLimits } = await dispatch.configuration.apiFetch({ url: `/api/v1/budget-limits?start=${start}&end=${end}` }) as { data: BudgetLimitType[] };
         const budgetsLimits = {};
 
         apiBudgetsLimits
-          .filter((limit) => limit.attributes.currencyCode === current.attributes.code)
+          .filter((limit) => limit.attributes.currencyCode === currentCode)
           .forEach((limit) => {
             if (limit && limit.attributes) {
               const {
@@ -108,8 +108,8 @@ export default createModel<RootModel>()({
           .sort((a, b) => ((a.attributes.order > b.attributes.order) ? 1 : -1))
           .map((budget: BudgetType) => ({
             limit: budgetsLimits[budget.id] || 0,
-            differenceFloat: budget.attributes.spent.find((budgetSpent) => budgetSpent.currencyCode === current.attributes.code)?.sum || 0,
-            currencyCode: current.attributes.code,
+            differenceFloat: budget.attributes.spent.find((budgetSpent) => budgetSpent.currencyCode === currentCode)?.sum || 0,
+            currencyCode: currentCode,
             ...budget,
           }));
 

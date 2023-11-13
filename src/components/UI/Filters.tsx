@@ -12,14 +12,14 @@ export default function Filters() {
   const { colors } = useThemeColors();
   const navigation = useNavigation();
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
-  const currentCurrency = useSelector((state: RootState) => state.currencies.current);
-  const range = useSelector((state: RootState) => state.firefly.rangeDetails?.range || 1);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
+  const range = useSelector((state: RootState) => state.firefly.rangeDetails.range);
   const {
     firefly: {
-      handleChangeRange,
+      setRange,
     },
     currencies: {
-      handleChangeCurrent,
+      setCurrentCode,
     },
   } = useDispatch<RootDispatch>();
 
@@ -46,15 +46,15 @@ export default function Filters() {
       <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
         {currencies.map((currency) => (
           <TouchableOpacity
-            disabled={currentCurrency.id === currency.id}
+            disabled={currentCode === currency.attributes.code}
             key={currency.id}
             onPress={() => {
-              handleChangeCurrent(currency.id);
+              setCurrentCode(currency.attributes.code);
               navigation.goBack();
             }}
           >
             <View style={{
-              backgroundColor: currentCurrency.id === currency.id ? colors.brandStyle : colors.filterBorderColor,
+              backgroundColor: currentCode === currency.attributes.code ? colors.brandStyle : colors.filterBorderColor,
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: 10,
@@ -89,7 +89,7 @@ export default function Filters() {
             disabled={range === period}
             key={period}
             onPress={() => {
-              handleChangeRange({ range: period });
+              setRange({ range: period });
               navigation.goBack();
             }}
           >
@@ -112,10 +112,8 @@ export default function Filters() {
       </HStack>
     </VStack>
   ), [
-    currencies,
-    currentCurrency,
-    handleChangeCurrent,
     range,
-    handleChangeRange,
+    currencies,
+    currentCode,
   ]);
 }

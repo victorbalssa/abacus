@@ -85,10 +85,16 @@ module.exports = {
         adbName: '.*'
       }
     },
-    emulator: {
+    'android.emulator.resizable': {
       type: 'android.emulator',
       device: {
-        avdName: 'Pixel_3a_API_33_arm64-v8a'
+        avdName: 'Resizable'
+      }
+    },
+    'android.emulator.4': {
+      type: 'android.emulator',
+      device: {
+        avdName: '4'
       }
     }
   },
@@ -118,11 +124,15 @@ module.exports = {
       app: 'android.release'
     },
     'android.emu.debug': {
-      device: 'emulator',
+      device: 'android.emulator.6',
       app: 'android.debug'
     },
-    'android.emu.release': {
-      device: 'emulator',
+    'android.emu.resizable.release': {
+      device: 'android.emulator.resizable',
+      app: 'android.release'
+    },
+    'android.emu.4.release': {
+      device: 'android.emulator.4',
       app: 'android.release'
     }
   }

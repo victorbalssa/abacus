@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   Text,
   VStack,
   HStack,
-  IconButton,
+  IconButton, View,
 } from 'native-base';
 import {
   VictoryAxis,
@@ -18,6 +18,7 @@ import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { ScrollView } from 'react-native';
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
@@ -25,13 +26,14 @@ import translate from '../../i18n/locale';
 
 export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
-  const dispatch = useDispatch<RootDispatch>();
-  const { start, end } = useSelector((state: RootState) => state.firefly.rangeDetails);
-  const loading = useSelector((state: RootState) => state.loading.effects.firefly?.getBalanceChart?.loading) || false;
+  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
   const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart || []);
   const spentChart = useSelector((state: RootState) => state.firefly.spentChart || []);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart.loading);
+  const dispatch = useDispatch<RootDispatch>();
 
-  const getTickValues = () => {
+  const getTickValues = useCallback(() => {
     const dateArray = [];
     const currentDate = new Date(start);
     currentDate.setDate(currentDate.getDate() + 14);
@@ -42,54 +44,57 @@ export default function BalanceHistoryChart() {
     }
 
     return dateArray;
-  };
+  }, [start, end]);
 
   return (
-    <VStack
-      bgColor={colors.tileBackgroundColor}
-      borderTopWidth={0.5}
-      borderBottomWidth={0.5}
-      borderColor={colors.listBorderColor}
-      justifyContent="center"
-    >
-      <Text
-        style={{
-          fontFamily: 'Montserrat_Bold',
-          margin: 15,
-          color: colors.text,
-          fontSize: 25,
-          lineHeight: 25,
-        }}
+    <ScrollView bounces={false}>
+      <VStack
+        bgColor={colors.tileBackgroundColor}
+        borderTopWidth={0.5}
+        borderBottomWidth={0.5}
+        borderColor={colors.listBorderColor}
+        justifyContent="center"
       >
-        {translate('balance_history_chart')}
-      </Text>
-      <HStack
-        justifyContent="flex-end"
-        style={{
-          marginTop: 10,
-          paddingTop: 0,
-          paddingHorizontal: 10,
-          paddingBottom: 0,
-        }}
-      >
-        <IconButton
-          variant="solid"
-          _icon={{
-            as: AntDesign,
-            name: 'reload1',
+        <Text
+          style={{
+            fontFamily: 'Montserrat_Bold',
+            margin: 15,
+            color: colors.text,
+            fontSize: 25,
+            lineHeight: 25,
           }}
-          onPress={() => dispatch.firefly.getBalanceChart()}
-          onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        />
-      </HStack>
-      {loading && (
+        >
+          {translate('balance_history_chart')}
+        </Text>
+        <HStack
+          justifyContent="flex-end"
+          style={{
+            marginTop: 10,
+            paddingTop: 0,
+            paddingHorizontal: 10,
+            paddingBottom: 0,
+          }}
+        >
+          <IconButton
+            variant="solid"
+            _icon={{
+              as: AntDesign,
+              name: 'reload1',
+            }}
+            onPress={() => {
+              dispatch.firefly.getBalanceChart();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+            }}
+          />
+        </HStack>
+        {loading && (
         <VStack justifyContent="center">
           <HStack h={400} alignItems="center">
             <Loading />
           </HStack>
         </VStack>
-      )}
-      {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
+        )}
+        {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
         <VictoryChart
           padding={{
             top: 10,
@@ -109,8 +114,8 @@ export default function BalanceHistoryChart() {
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
-                fill: colors.brandDarkLight,
-                fontWeight: 600,
+                fill: colors.text,
+                fontWeight: 200,
               },
             }}
           />
@@ -123,13 +128,14 @@ export default function BalanceHistoryChart() {
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
-                fill: colors.brandDarkLight,
-                fontWeight: 600,
+                fill: colors.text,
+                fontWeight: 200,
                 angle: getTickValues().length > 7 ? -40 : 0,
               },
             }}
           />
 
+          {!isEmpty(earnedChart) && (
           <VictoryBar
             key="gain"
             cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
@@ -142,6 +148,9 @@ export default function BalanceHistoryChart() {
             data={earnedChart}
             name="gain"
           />
+          )}
+
+          {!isEmpty(spentChart) && (
           <VictoryBar
             key="loose"
             cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
@@ -154,6 +163,9 @@ export default function BalanceHistoryChart() {
             data={spentChart}
             name="loose"
           />
+          )}
+
+          {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
           <VictoryLine
             key="lineBalance"
             style={{
@@ -166,6 +178,9 @@ export default function BalanceHistoryChart() {
             data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
             name="lineBalance"
           />
+          )}
+
+          {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
           <VictoryScatter
             key="ptsBalance"
             style={{
@@ -175,7 +190,7 @@ export default function BalanceHistoryChart() {
                 strokeWidth: 5,
               },
               labels: {
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: 600,
                 fill: colors.text,
               },
@@ -185,11 +200,14 @@ export default function BalanceHistoryChart() {
             data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
             name="ptsBalance"
           />
+          )}
         </VictoryChart>
-      )}
-      {!loading && (isEmpty(spentChart) || isEmpty(earnedChart)) && (
+        )}
+        {!loading && (isEmpty(spentChart) && isEmpty(earnedChart)) && (
         <Text p={2}>{translate('balance_history_chart_no_data')}</Text>
-      )}
-    </VStack>
+        )}
+      </VStack>
+      <View style={{ height: 200 }} />
+    </ScrollView>
   );
 }

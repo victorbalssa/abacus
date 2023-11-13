@@ -18,6 +18,7 @@ export default {
   blue: '#18528c',
   green: '#15803d',
   warmGray100: '#3b3b3b',
+  blurAndroidHeader: 'rgba(40,40,40,0.16)',
   dark: {
     text: 'white',
     textOpposite: 'black',

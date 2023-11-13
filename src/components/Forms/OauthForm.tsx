@@ -18,7 +18,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 
-import { isValidHttpUrl, useThemeColors } from '../../lib/common';
+import { isValidHttpUrl } from '../../lib/common';
 import translate from '../../i18n/locale';
 
 const copyToClipboard = async () => {
@@ -37,7 +37,6 @@ export default function OauthForm({
   backendURL,
   setBackendURL,
 }) {
-  const { colors } = useThemeColors();
   const [isOauth, setIsAuth] = useState<boolean>(true);
   const toggleIsOauth = () => setIsAuth((value) => !value);
   const isMinimumRequirement = () => {
@@ -67,12 +66,8 @@ export default function OauthForm({
         base: '100%',
         lg: 'auto',
       }}
-      behavior={Platform.select({ ios: 'padding', android: null })}
+      behavior={Platform.select({ ios: 'padding', android: 'height' })}
       keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
-      style={{
-        flex: 1,
-        backgroundColor: colors.backgroundColor,
-      }}
     >
       <ScrollView keyboardShouldPersistTaps="handled">
         <Box p={5} safeAreaTop>
@@ -102,16 +97,18 @@ export default function OauthForm({
 
           {isOauth && (
           <>
-            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)}>
-              ‣
-              {' '}
-              {translate('auth_create_new_oauth_client')}
-            </Text>
-            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
-              {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
-              /profile
-            </Text>
-            <HStack>
+            <HStack flexWrap="wrap">
+              <Text fontSize={12}>
+                ‣
+                {' '}
+                {translate('auth_create_new_oauth_client')}
+                {' '}
+                <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
+                  {`${isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}/profile`}
+                </Text>
+              </Text>
+            </HStack>
+            <HStack flexWrap="wrap">
               <Text py={1} pr={1} fontSize={12}>
                 ‣
                 {' '}

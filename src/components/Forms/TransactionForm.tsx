@@ -9,7 +9,6 @@ import * as Haptics from 'expo-haptics';
 import * as Crypto from 'expo-crypto';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useThemeColors } from '../../lib/common';
 import TransactionSplitForm from '../Forms/TransactionSplitForm';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
@@ -150,7 +149,6 @@ export default function TransactionForm({
   splits = [],
   id = null,
 }) {
-  const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
@@ -169,10 +167,10 @@ export default function TransactionForm({
       } else {
         await dispatch.transactions.updateTransaction({ id });
       }
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch();
       dispatch.transactions.setSuccessStatus();
     } catch (e) {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch();
       if (e.response) {
         dispatch.transactions.setErrorStatus(e.response.data.message);
       }
@@ -187,15 +185,12 @@ export default function TransactionForm({
           base: '100%',
           lg: 'auto',
         }}
+        behavior={Platform.select({ ios: 'padding', android: 'height' })}
         keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
-        style={{
-          flex: 1,
-          backgroundColor: colors.backgroundColor,
-        }}
       >
         <MultipleTransactionSplitForm isNew={id === null} title={title} splits={splits} />
         <TransactionFormButtons navigation={navigation} id={id} handleSubmit={handleSubmit} />
-        <View style={{ height: 350 }} />
+        <View style={{ height: 100 }} />
       </KeyboardAvoidingView>
     ),
     [],

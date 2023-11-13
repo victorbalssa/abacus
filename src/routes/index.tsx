@@ -26,7 +26,7 @@ import TransactionDetailScreen from '../components/Screens/TransactionDetailScre
 import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
 
 // UI components
-import ThemeBlurView from '../components/UI/ThemeBlurView';
+import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
@@ -81,11 +81,11 @@ function TabBarPrimaryButton() {
         )}
         _pressed={{
           style: {
-            top: -15,
+            top: -5,
           },
         }}
         style={{
-          top: -15,
+          top: -5,
         }}
       />
     </Box>
@@ -100,7 +100,7 @@ function TabBarComponent({
 }) {
   return (
     <>
-      <ThemeBlurView
+      <ABlurView
         style={{
           ...styles.navigatorContainer,
           borderTopWidth: 0.5,
@@ -112,7 +112,7 @@ function TabBarComponent({
           navigation={navigation}
           insets={insets}
         />
-      </ThemeBlurView>
+      </ABlurView>
       <NavigationHeader navigation={navigation} />
     </>
   );
@@ -225,6 +225,7 @@ function Home() {
         tabBarActiveBackgroundColor: colors.tabBackgroundColor,
         tabBarActiveTintColor: colors.brandStyle,
         tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarShowLabel: true,
         tabBarLazyLoad: true,

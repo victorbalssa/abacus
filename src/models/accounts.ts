@@ -84,7 +84,7 @@ export default createModel<RootModel>()({
     async getAccounts(_: void, rootState): Promise<void> {
       const {
         currencies: {
-          current,
+          currentCode,
         },
         firefly: {
           rangeDetails: {
@@ -93,8 +93,8 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      if (current && current.attributes.code) {
-        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current.attributes.code}/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
+      if (currentCode) {
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
 
         dispatch.accounts.setAccounts({ accounts });
       }

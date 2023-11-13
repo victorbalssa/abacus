@@ -230,7 +230,7 @@ export default createModel<RootModel>()({
           },
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
 
@@ -239,7 +239,7 @@ export default createModel<RootModel>()({
       const {
         data: transactions,
         meta,
-      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
       dispatch.transactions.setMetaPagination({
         page: meta.pagination.currentPage,
@@ -261,7 +261,7 @@ export default createModel<RootModel>()({
           totalPages = 1,
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
 
@@ -271,7 +271,7 @@ export default createModel<RootModel>()({
         const {
           data: transactions,
           meta,
-        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
         dispatch.transactions.setMetaPagination({
           page: meta.pagination.currentPage,

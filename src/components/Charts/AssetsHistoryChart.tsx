@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Text,
   VStack,
@@ -145,12 +145,13 @@ function Cursor({
 
 export default function AssetsHistoryChart() {
   const { colors } = useThemeColors();
-  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
-  const { start, end } = useSelector((state: RootState) => state.firefly.rangeDetails);
+  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
   const accounts = useSelector((state: RootState) => state.firefly.accounts);
-  const { firefly: { filterData, getAccountChart } } = useDispatch<RootDispatch>();
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart.loading);
+  const dispatch = useDispatch<RootDispatch>();
 
-  const getTickValues = () => {
+  const getTickValues = useCallback(() => {
     const dateArray = [];
     const currentDate = new Date(start);
     currentDate.setDate(currentDate.getDate() + 14);
@@ -161,91 +162,94 @@ export default function AssetsHistoryChart() {
     }
 
     return dateArray;
-  };
+  }, [start, end]);
 
-  return (
-    <VStack
-      bgColor={colors.tileBackgroundColor}
-      borderTopWidth={0.5}
-      borderBottomWidth={0.5}
-      borderColor={colors.listBorderColor}
-      justifyContent="center"
-    >
-      <Text
-        style={{
-          paddingTop: 15,
-          fontFamily: 'Montserrat_Bold',
-          margin: 15,
-          color: colors.text,
-          fontSize: 25,
-          lineHeight: 25,
-        }}
+  return useMemo(() => (
+    <ScrollView bounces={false}>
+      <VStack
+        bgColor={colors.tileBackgroundColor}
+        borderTopWidth={0.5}
+        borderBottomWidth={0.5}
+        borderColor={colors.listBorderColor}
+        justifyContent="center"
       >
-        {translate('assets_history_chart')}
-      </Text>
-      <HStack
-        style={{
-          marginTop: 10,
-          paddingTop: 0,
-          paddingHorizontal: 10,
-          justifyContent: 'space-between',
-          paddingBottom: 0,
-        }}
-      >
-        <View>
-          {accounts.map((chart, index) => (
-            <Pressable
-              key={`key-${chart.label}`}
-              onPress={() => filterData({ index })}
-              isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-              _disabled={{
-                style: {
-                  opacity: 0.4,
-                },
-              }}
-            >
-              <HStack p={1} key={`key-${chart.label}`}>
-                <Checkbox
-                  accessibilityLabel={`key-${chart.color}`}
-                  key={`key-${chart.label}`}
-                  colorScheme={chart.colorScheme}
-                  isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                  isChecked={!chart.skip}
-                  value={`${index}`}
-                  onChange={() => filterData({ index })}
-                />
-                <Text
-                  maxW={200}
-                  numberOfLines={1}
-                  ml={1}
-                  color={chart.color}
-                  fontSize={15}
-                >
-                  {chart.label}
-                </Text>
-              </HStack>
-            </Pressable>
-          ))}
-        </View>
-        <IconButton
-          variant="solid"
-          _icon={{
-            as: AntDesign,
-            name: 'reload1',
+        <Text
+          style={{
+            paddingTop: 15,
+            fontFamily: 'Montserrat_Bold',
+            margin: 15,
+            color: colors.text,
+            fontSize: 25,
+            lineHeight: 25,
           }}
-          onPress={() => getAccountChart()}
-          onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        />
-      </HStack>
-      <View style={{ height: 90 }} />
-      {loading && (
+        >
+          {translate('assets_history_chart')}
+        </Text>
+        <HStack
+          style={{
+            marginTop: 10,
+            paddingTop: 0,
+            paddingHorizontal: 10,
+            justifyContent: 'space-between',
+            paddingBottom: 0,
+          }}
+        >
+          <View>
+            {accounts.map((chart, index) => (
+              <Pressable
+                key={`key-${chart.label}`}
+                onPress={() => dispatch.firefly.filterData({ index })}
+                isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
+                _disabled={{
+                  style: {
+                    opacity: 0.4,
+                  },
+                }}
+              >
+                <HStack p={1} key={`key-${chart.label}`}>
+                  <Checkbox
+                    accessibilityLabel={`key-${chart.color}`}
+                    key={`key-${chart.label}`}
+                    colorScheme={chart.colorScheme}
+                    isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
+                    isChecked={!chart.skip}
+                    value={`${index}`}
+                    onChange={() => dispatch.firefly.filterData({ index })}
+                  />
+                  <Text
+                    maxW={200}
+                    numberOfLines={1}
+                    ml={1}
+                    color={chart.color}
+                    fontSize={15}
+                  >
+                    {chart.label}
+                  </Text>
+                </HStack>
+              </Pressable>
+            ))}
+          </View>
+          <IconButton
+            variant="solid"
+            _icon={{
+              as: AntDesign,
+              name: 'reload1',
+            }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+              dispatch.firefly.getAccountChart();
+            }}
+          />
+        </HStack>
+        <View style={{ height: 90 }} />
+        {loading && (
         <VStack justifyContent="center">
           <HStack h={400} alignItems="center">
             <Loading />
           </HStack>
         </VStack>
-      )}
-      {!loading && (
+        )}
+        {!loading && (
         <VictoryChart
           padding={{
             top: 10,
@@ -312,8 +316,10 @@ export default function AssetsHistoryChart() {
             />
           ))}
         </VictoryChart>
-      )}
-      {accounts.length > 4 && (<AccountsLengthMessage />)}
-    </VStack>
-  );
+        )}
+        {accounts.length > 4 && (<AccountsLengthMessage />)}
+      </VStack>
+      <View style={{ height: 200 }} />
+    </ScrollView>
+  ), [loading, accounts]);
 }
