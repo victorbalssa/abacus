@@ -42,7 +42,7 @@
     "expo-device": "~5.4.0",
     "expo-font": "~11.4.0",
     "expo-haptics": "~12.4.0",
-    "expo-linear-gradient": "~12.3.0",
+    "expo-linear-gradient": "~12.5.0",
     "expo-linking": "~5.0.2",
     "expo-local-authentication": "~13.4.1",
     "expo-localization": "~14.3.0",
