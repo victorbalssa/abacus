@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import {
   Text,
   VStack,
@@ -28,8 +28,8 @@ export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
-  const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart || []);
-  const spentChart = useSelector((state: RootState) => state.firefly.spentChart || []);
+  const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart);
+  const spentChart = useSelector((state: RootState) => state.firefly.spentChart);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart.loading);
   const dispatch = useDispatch<RootDispatch>();
 

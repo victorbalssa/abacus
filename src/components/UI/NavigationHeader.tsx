@@ -55,7 +55,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
             {rangeDetails.title}
           </AText>
           <AText py={4} fontSize={12} numberOfLines={1}>
-            {`${moment(rangeDetails.start).format('ll')} - ${moment(rangeDetails.end).format('ll')}`}
+            {rangeDetails.range === 1 ? `${moment(rangeDetails.start).format('MMMM D')} - ${moment(rangeDetails.end).format('D')}` : `${moment(rangeDetails.start).format('MMMM D')} - ${moment(rangeDetails.end).format('MMMM D')}`}
           </AText>
           <AStack row justifyContent="flex-start">
             <View style={{
