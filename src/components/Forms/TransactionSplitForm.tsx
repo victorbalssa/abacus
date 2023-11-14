@@ -324,7 +324,8 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
-        onChangeText={(value) => setTransaction({
+        splitType={formData.type}
+        onChangeText={(value: string) => setTransaction({
           ...formData,
           sourceName: value,
         })}
@@ -342,6 +343,8 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}
+        splitType={formData.type}
+        designation="destination"
         onChangeText={(value) => setTransaction({
           ...formData,
           destinationName: value,
@@ -352,7 +355,6 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['destinationName'])}
         routeApi="accounts"
-        isDestination
       />
 
       <AutocompleteField
