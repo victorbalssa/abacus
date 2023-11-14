@@ -51,10 +51,10 @@ export default function AutocompleteField({
     setAutocompletes(convertKeysToCamelCase(response.data));
   };
 
-  const handleChangeText = useCallback((text) => {
+  const handleChangeText = useCallback((text: string) => {
     if (multiple) {
       setMultipleValue(text);
-    } else {
+    } else if (onChangeText !== null) {
       onChangeText(text);
     }
     refreshAutocomplete(text);

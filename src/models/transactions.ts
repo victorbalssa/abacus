@@ -298,7 +298,7 @@ export default createModel<RootModel>()({
         transactions: transactions.map((transaction) => ({
           tags: transaction.tags,
           notes: transaction.notes,
-          foreign_amount: transaction.foreignAmount ? transaction.foreignAmount.replace(/,/g, '.') : 0,
+          foreign_amount: transaction.foreignAmount ? parseFloat(transaction.foreignAmount.replace(',', '.')) : 0,
           foreign_currency_id: transaction.foreignCurrencyId,
           description: transaction.description,
           date: transaction.date,
@@ -309,7 +309,7 @@ export default createModel<RootModel>()({
           budget_id: transaction.budgetId,
           budget_name: transaction.budgetName,
           type: transaction.type,
-          amount: transaction.amount.replace(/,/g, '.'),
+          amount: transaction.amount ? parseFloat(transaction.amount.replace(',', '.')) : 0,
         })),
         error_if_duplicate_hash: false,
         apply_rules: true,
@@ -335,7 +335,7 @@ export default createModel<RootModel>()({
         transactions: transactions.map((transaction: TransactionSplitType) => ({
           tags: transaction.tags,
           notes: transaction.notes,
-          foreign_amount: transaction.foreignAmount,
+          foreign_amount: transaction.foreignAmount ? parseFloat(transaction.foreignAmount.replace(',', '.')) : 0,
           foreign_currency_id: transaction.foreignCurrencyId,
           description: transaction.description,
           date: transaction.date,
@@ -346,7 +346,7 @@ export default createModel<RootModel>()({
           budget_id: transaction.budgetId,
           budget_name: transaction.budgetName,
           type: transaction.type,
-          amount: transaction.amount.replace(/,/g, '.'),
+          amount: transaction.amount ? parseFloat(transaction.amount.replace(',', '.')) : 0,
         })),
       };
 

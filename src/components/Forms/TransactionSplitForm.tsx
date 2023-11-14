@@ -194,7 +194,7 @@ export default function TransactionSplitForm({
           height={60}
           variant="outline"
           returnKeyType="done"
-          keyboardType="numbers-and-punctuation"
+          keyboardType="decimal-pad"
           placeholder="0.00"
           value={formData.amount}
           textAlign="center"
@@ -217,7 +217,7 @@ export default function TransactionSplitForm({
           small
           placeholder={translate('transaction_form_foreign_currency_label')}
           value={formData.foreignCurrencyCode}
-          onSelectAutocomplete={(autocomplete) => setTransaction({
+          onSelectAutocomplete={(autocomplete: { id: string, code: string }) => setTransaction({
             ...formData,
             foreignCurrencyId: autocomplete.id,
             foreignCurrencyCode: autocomplete.code,
@@ -229,7 +229,7 @@ export default function TransactionSplitForm({
         <Input
           variant="outline"
           returnKeyType="done"
-          keyboardType="numbers-and-punctuation"
+          keyboardType="decimal-pad"
           placeholder="0.00"
           value={formData.foreignAmount}
           textAlign="center"
