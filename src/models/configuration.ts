@@ -9,6 +9,7 @@ import { convertKeysToCamelCase } from '../lib/common';
 type ConfigurationStateType = {
   backendURL: string
   scrollEnabled: boolean
+  hideBalance: boolean
   faceId: boolean
   apiVersion: string
   serverVersion: string
@@ -34,6 +35,7 @@ type AboutType = {
 const INITIAL_STATE = {
   backendURL: 'https://',
   scrollEnabled: true,
+  hideBalance: false,
   faceId: false,
   apiVersion: '',
   serverVersion: '',
@@ -77,6 +79,13 @@ export default createModel<RootModel>()({
       return {
         ...state,
         scrollEnabled: true,
+      };
+    },
+
+    setHideBalance(state, hideBalance): ConfigurationStateType {
+      return {
+        ...state,
+        hideBalance,
       };
     },
 

@@ -294,15 +294,16 @@ function InsightBudgets() {
 
 function NetWorth() {
   const { colors } = useThemeColors();
-  const [hideBalance, setHideBalance] = useState<boolean>(false);
+  const hideBalance = useSelector((state: RootState) => state.configuration.hideBalance);
   const netWorth = useSelector((state: RootState) => state.firefly.netWorth);
   const balance = useSelector((state: RootState) => state.firefly.balance);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNetWorth?.loading);
+  const dispatch = useDispatch<RootDispatch>();
 
   return useMemo(() => (
     <View testID="home_screen_net_worth" justifyContent="center">
-      <TouchableOpacity onPress={() => setHideBalance(!hideBalance)}>
+      <TouchableOpacity onPress={() => dispatch.configuration.setHideBalance(!hideBalance)}>
         {netWorth && netWorth[0] && !hideBalance && (
         <VStack alignItems="center">
           <Text style={{
