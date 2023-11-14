@@ -39,7 +39,7 @@ describe.each([
   it('screenshots', async () => {
     // OAUTH
     await expect(element(by.id('auth_form_url_label'))).toBeVisible();
-    await device.takeScreenshot('oauth');
+    await device.takeScreenshot('2_oauth');
     await expect(element(by.id('toggle_is_oauth'))).toBeVisible();
     await element(by.id('toggle_is_oauth')).tap();
     await expect(element(by.id('auth_form_personal_access_token_input'))).toBeVisible();
@@ -56,26 +56,26 @@ describe.each([
     // redirect to home
     await waitFor(element(by.id('home_screen_net_worth'))).toExist().withTimeout(20000);
     await new Promise((r) => setTimeout(r, 5000));
-    await device.takeScreenshot('home');
+    await device.takeScreenshot('1_home');
 
     // CHART
     await element(by.id('navigation_chart_tab')).tap();
     await new Promise((r) => setTimeout(r, 1000));
-    await device.takeScreenshot('chart');
+    await device.takeScreenshot('3_chart');
 
     // TRANSACTIONS
     await element(by.id('navigation_transactions_tab')).tap();
     await new Promise((r) => setTimeout(r, 3000));
-    await device.takeScreenshot('transactions');
+    await device.takeScreenshot('4_transactions');
 
     // SETTINGS
     await element(by.id('navigation_settings_tab')).tap();
     await new Promise((r) => setTimeout(r, 1000));
-    await device.takeScreenshot('settings');
+    await device.takeScreenshot('5_settings');
 
     // MODAL NEW TRANSACTION
     await element(by.id('navigation_create_transaction')).tap();
     await new Promise((r) => setTimeout(r, 1000));
-    await device.takeScreenshot('create');
+    await device.takeScreenshot('6_create');
   });
 });

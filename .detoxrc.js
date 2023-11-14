@@ -67,6 +67,12 @@ module.exports = {
         name: 'IPHONE_15'
       }
     },
+    IPHONE_PRO_MAX: {
+      type: 'ios.simulator',
+      device: {
+        name: 'IPHONE_PRO_MAX'
+      }
+    },
     IPHONE_SE: {
       type: 'ios.simulator',
       device: {
@@ -109,8 +115,8 @@ module.exports = {
       device: 'simulator',
       app: 'ios.debug'
     },
-    'ios.sim.release.IPHONE_15_PRO_MAX': {
-      device: 'IPHONE_15_PRO_MAX',
+    'ios.sim.release.IPHONE_PRO_MAX': {
+      device: 'IPHONE_PRO_MAX',
       app: 'ios.release'
     },
     'ios.sim.release.IPHONE_15': {

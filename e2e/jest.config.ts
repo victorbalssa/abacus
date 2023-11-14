@@ -4,7 +4,7 @@ module.exports = {
   rootDir: '..',
   setupFiles: ['dotenv/config'],
   testMatch: ['<rootDir>/e2e/**/*.test.ts'],
-  testTimeout: 20000,
+  testTimeout: 50000,
   maxWorkers: 1,
   globalSetup: 'detox/runners/jest/globalSetup',
   globalTeardown: 'detox/runners/jest/globalTeardown',
