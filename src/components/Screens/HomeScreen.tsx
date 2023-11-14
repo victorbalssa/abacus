@@ -477,7 +477,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
         colors={colorScheme === 'light' ? ['rgb(255,211,195)', 'rgb(255,194,183)', 'rgb(248,199,193)', 'rgb(255,228,194)'] : ['#790277', '#d30847', '#FF5533', '#efe96d']}
         start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 0 }}
-        style={{ minHeight: 280, paddingTop: safeAreaInsets.top + 50 }}
+        style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top + 50 }}
       >
         <VStack
           flex={1}

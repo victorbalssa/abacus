@@ -61,10 +61,10 @@ module.exports = {
     }
   },
   devices: {
-    iPhone15: {
+    IPHONE_15: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone 15'
+        name: 'IPHONE_15'
       }
     },
     IPHONE_SE: {
@@ -73,10 +73,16 @@ module.exports = {
         name: 'IPHONE_SE'
       }
     },
-    iPadmini: {
+    IPAD_MINI: {
       type: 'ios.simulator',
       device: {
-        type: 'iPad mini (6th generation)'
+        name: 'IPAD_MINI'
+      }
+    },
+    IPAD_PRO: {
+      type: 'ios.simulator',
+      device: {
+        name: 'IPAD_PRO'
       }
     },
     attached: {
