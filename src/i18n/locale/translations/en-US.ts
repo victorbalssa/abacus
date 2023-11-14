@@ -50,7 +50,7 @@ export default {
   auth_form_submit_button_initial: 'Log In',
   auth_form_submit_button_loading: 'Submitting...',
   auth_form_biometrics_lock: 'Biometrics lock',
-  home_accounts: 'Accounts',
+  home_accounts: 'Asset Accounts',
   layout_new_update_header: 'New Update Available',
   layout_new_update_body_text: 'You can always update later in Settings tab.',
   layout_new_update_cancel_button: 'Cancel',
@@ -123,4 +123,6 @@ export default {
   // from 0.10.0
   period: 'Period',
   currency: 'Currency',
+
+  home_all_accounts: 'All Accounts',
 };

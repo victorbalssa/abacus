@@ -10,6 +10,7 @@ type ConfigurationStateType = {
   backendURL: string
   scrollEnabled: boolean
   hideBalance: boolean
+  displayAllAccounts: boolean
   faceId: boolean
   apiVersion: string
   serverVersion: string
@@ -36,6 +37,7 @@ const INITIAL_STATE = {
   backendURL: 'https://',
   scrollEnabled: true,
   hideBalance: false,
+  displayAllAccounts: false,
   faceId: false,
   apiVersion: '',
   serverVersion: '',
@@ -82,10 +84,17 @@ export default createModel<RootModel>()({
       };
     },
 
-    setHideBalance(state, hideBalance): ConfigurationStateType {
+    setHideBalance(state, hideBalance: boolean): ConfigurationStateType {
       return {
         ...state,
         hideBalance,
+      };
+    },
+
+    setDisplayAllAccounts(state, displayAllAccounts: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        displayAllAccounts,
       };
     },
 

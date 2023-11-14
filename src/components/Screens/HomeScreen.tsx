@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useMemo,
-  useState,
   useRef,
   useCallback,
 } from 'react';
@@ -21,7 +20,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  RefreshControl, TouchableOpacity, Animated,
+  RefreshControl,
+  TouchableOpacity,
+  Animated,
+  Switch,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
@@ -39,14 +41,22 @@ import { localNumberFormat, useThemeColors } from '../../lib/common';
 
 import { ScreenType } from './types';
 import Pagination from '../UI/Pagination';
+import { AStack } from '../UI/ALibrary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 function AssetsAccounts() {
   const { colors } = useThemeColors();
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
+  const displayAllAccounts = useSelector((state: RootState) => state.configuration.displayAllAccounts);
   const loading = useSelector((state: RootState) => state.loading.effects.accounts.getAccounts?.loading);
   const dispatch = useDispatch<RootDispatch>();
+
+  const onSwitch = async (bool: boolean) => {
+    dispatch.configuration.setDisplayAllAccounts(bool);
+    dispatch.accounts.getAccounts();
+    return Promise.resolve();
+  };
 
   return (
     <ScrollView
@@ -62,25 +72,27 @@ function AssetsAccounts() {
       )}
     >
       <View>
-        <Text
-          style={{
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 27,
-          }}
-        >
-          {translate('home_accounts')}
-        </Text>
-        {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
+        <AStack px={15} py={15} row justifyContent="space-between">
+          <Text
+            style={{
+              fontFamily: 'Montserrat_Bold',
+              color: colors.text,
+              fontSize: 25,
+              lineHeight: 27,
+            }}
+          >
+            {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
+          </Text>
+          <Switch trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
+        </AStack>
+        {accounts && accounts.map((account, index) => (
           <HStack
-            key={account.attributes.name}
+            key={account.id}
             mx={4}
             h={45}
             alignItems="center"
             justifyContent="space-between"
-            borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 0.5}
+            borderBottomWidth={index + 1 === accounts.length ? 0 : 0.5}
             borderColor={colors.listBorderColor}
           >
             <Text

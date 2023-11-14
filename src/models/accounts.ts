@@ -91,12 +91,19 @@ export default createModel<RootModel>()({
             end,
           },
         },
+        configuration: {
+          displayAllAccounts = false,
+        },
       } = rootState;
 
       if (currentCode) {
-        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as { data: AccountType[]};
 
-        dispatch.accounts.setAccounts({ accounts });
+        const filteredAccounts = accounts
+          .filter((a: AccountType) => a.attributes.active)
+          .sort((a, b) => ((parseFloat(b.attributes.currentBalance) > parseFloat(a.attributes.currentBalance)) ? 1 : -1));
+
+        dispatch.accounts.setAccounts({ accounts: filteredAccounts });
       }
     },
   }),
