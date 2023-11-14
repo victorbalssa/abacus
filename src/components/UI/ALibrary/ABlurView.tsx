@@ -1,11 +1,10 @@
 import React from 'react';
 import { BlurView } from 'expo-blur';
 import { Platform, View } from 'react-native';
-import * as Device from 'expo-device';
 
 import { useThemeColors } from '../../../lib/common';
 
-const CurrentBlur = (Platform.OS === 'ios' && Device.isDevice) ? BlurView : View;
+const CurrentBlur = (Platform.OS === 'ios') ? BlurView : View;
 
 export default function ABlurView({
   intensity = 50,

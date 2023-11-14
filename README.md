@@ -45,6 +45,8 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 
 ### 📱 Features
 
+## [🏁 Roadmap](https://github.com/users/victorbalssa/projects/2/views/1)
+
 | Feature                      | Available |
 |------------------------------|:---------:|
 | Oauth2 authentication        |     ✅     |

@@ -1,31 +1,31 @@
 /** @type {Detox.DetoxConfig} */
 module.exports = {
   logger: {
-    level: process.env.CI ? 'debug' : undefined,
+    level: 'debug',
   },
   testRunner: {
     args: {
       '$0': 'jest',
-      config: 'e2e/jest.config.js'
+      config: 'e2e/jest.config.ts'
     },
     jest: {
-      setupTimeout: 120000
+      setupTimeout: 120000,
     }
   },
   artifacts: {
-    rootDir: '.artifacts',
+    rootDir: 'artifacts',
     plugins: {
-      log: { enabled: true },
+      log: { enabled: false },
       screenshot: {
-        shouldTakeAutomaticSnapshots: true,
-        keepOnlyFailedTestsArtifacts: true,
+        shouldTakeAutomaticSnapshots: false,
+        keepOnlyFailedTestsArtifacts: false,
         takeWhen: {
           testStart: false,
-          testDone: true,
+          testDone: false,
         }
       },
       video: {
-        enabled: true,
+        enabled: false,
         android: {
           bitRate: 4000000,
         },
@@ -67,10 +67,10 @@ module.exports = {
         type: 'iPhone 15'
       }
     },
-    iPhoneSE: {
+    IPHONE_SE: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone SE (2nd generation)'
+        name: 'IPHONE_SE'
       }
     },
     iPadmini: {
@@ -103,16 +103,24 @@ module.exports = {
       device: 'simulator',
       app: 'ios.debug'
     },
-    'ios.sim.release.iPhone14': {
-      device: 'iPhone14',
+    'ios.sim.release.IPHONE_15_PRO_MAX': {
+      device: 'IPHONE_15_PRO_MAX',
       app: 'ios.release'
     },
-    'ios.sim.release.iPhoneSE': {
-      device: 'iPhoneSE',
+    'ios.sim.release.IPHONE_15': {
+      device: 'IPHONE_15',
       app: 'ios.release'
     },
-    'ios.sim.release.iPadmini': {
-      device: 'iPadmini',
+    'ios.sim.release.IPHONE_SE': {
+      device: 'IPHONE_SE',
+      app: 'ios.release'
+    },
+    'ios.sim.release.IPAD_MINI': {
+      device: 'IPAD_MINI',
+      app: 'ios.release'
+    },
+    'ios.sim.release.IPAD_PRO': {
+      device: 'IPAD_PRO',
       app: 'ios.release'
     },
     'android.att.debug': {

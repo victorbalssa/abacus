@@ -301,7 +301,7 @@ function NetWorth() {
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNetWorth?.loading);
 
   return useMemo(() => (
-    <View justifyContent="center">
+    <View testID="home_screen_net_worth" justifyContent="center">
       <TouchableOpacity onPress={() => setHideBalance(!hideBalance)}>
         {netWorth && netWorth[0] && !hideBalance && (
         <VStack alignItems="center">
@@ -316,7 +316,6 @@ function NetWorth() {
           <Skeleton isLoaded={!loading} speed={2} startColor={colors.brandWhiteOpacity} w={200} h={9} rounded={20}>
             <HStack alignItems="center">
               <Text
-                testID="home_screen_net_worth_text"
                 style={{
                   fontSize: 35,
                   lineHeight: 37,

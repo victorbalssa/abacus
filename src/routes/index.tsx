@@ -87,6 +87,7 @@ function TabBarPrimaryButton() {
         style={{
           top: -5,
         }}
+        testID="navigation_create_transaction"
       />
     </Box>
   );
@@ -247,6 +248,7 @@ function Home() {
         component={HomeScreen}
         options={{
           tabBarIcon: TabBarHomeScreenIcon,
+          tabBarTestID: 'navigation_home_tab',
         }}
       />
       <Tab.Screen
@@ -254,6 +256,7 @@ function Home() {
         component={ChartScreen}
         options={{
           tabBarIcon: TabBarChartScreenIcon,
+          tabBarTestID: 'navigation_chart_tab',
         }}
       />
       <Tab.Screen
@@ -269,6 +272,7 @@ function Home() {
         options={{
           tabBarIcon: TabBarTransactionScreenIcon,
           title: translate('navigation_transactions_tab'),
+          tabBarTestID: 'navigation_transactions_tab',
         }}
       />
       <Tab.Screen
@@ -276,6 +280,7 @@ function Home() {
         component={ConfigurationScreen}
         options={{
           tabBarIcon: TabBarConfigurationScreenIcon,
+          tabBarTestID: 'navigation_settings_tab',
         }}
       />
     </Tab.Navigator>

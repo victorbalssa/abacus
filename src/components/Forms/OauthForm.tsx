@@ -69,7 +69,7 @@ export default function OauthForm({
       behavior={Platform.select({ ios: 'padding', android: 'height' })}
       keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
     >
-      <ScrollView keyboardShouldPersistTaps="handled">
+      <ScrollView testID="auth_scroll_view" keyboardShouldPersistTaps="handled">
         <Box p={5} safeAreaTop>
           <FormControl isRequired>
             <FormControl.Label testID="auth_form_url_label">{translate('auth_form_url_label')}</FormControl.Label>
