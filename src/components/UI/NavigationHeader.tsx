@@ -25,9 +25,25 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
   const { colors } = useThemeColors();
   const safeAreaInsets = useSafeAreaInsets();
   const navigationStateIndex = navigation.getState().index;
+  const isStack = navigation.getState().key.startsWith('stack-');
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
-  const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
+  const title = useSelector((state: RootState) => state.firefly.rangeDetails.title);
+  const range = useSelector((state: RootState) => state.firefly.rangeDetails.range);
+  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
   const { firefly: { setRange } } = useDispatch<RootDispatch>();
+
+  if (![0, 1].includes(navigationStateIndex)) {
+    return useMemo(() => null, [
+      navigationStateIndex,
+      isStack,
+      currentCode,
+      title,
+      range,
+      start,
+      end,
+    ]);
+  }
 
   return useMemo(() => (
     <ABlurView
@@ -37,8 +53,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: Platform.select({ ios: colors.tabBackgroundColor, android: [2, 3].includes(navigationStateIndex) ? colors.tileBackgroundColor : colors.blurAndroidHeader }),
-        display: [0, 1, 2, 3].includes(navigationStateIndex) ? undefined : 'none',
+        backgroundColor: Platform.select({ ios: colors.tabBackgroundColor, android: isStack ? colors.tileBackgroundColor : colors.blurAndroidHeader }),
         paddingTop: safeAreaInsets.top,
       }}
     >
@@ -52,10 +67,10 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
         />
         <AStack px={12} alignItems="flex-start" justifyContent="space-between">
           <AText fontFamily="Montserrat_Bold" fontSize={17} lineHeight={18}>
-            {rangeDetails.title}
+            {title}
           </AText>
           <AText py={4} fontSize={12} numberOfLines={1}>
-            {rangeDetails.range === 1 ? `${moment(rangeDetails.start).format('MMMM D')} - ${moment(rangeDetails.end).format('D')}` : `${moment(rangeDetails.start).format('MMMM D')} - ${moment(rangeDetails.end).format('MMMM D')}`}
+            {range === 1 ? `${moment(start).format('MMMM D')} - ${moment(end).format('D')}` : `${moment(start).format('MMMM D')} - ${moment(end).format('MMMM D')}`}
           </AText>
           <AStack row justifyContent="flex-start">
             <View style={{
@@ -81,7 +96,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
             }}
             >
               <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
-                {`${rangeDetails.range}M`}
+                {`${range}M`}
               </AText>
             </View>
           </AStack>
@@ -115,8 +130,12 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
       </AStack>
     </ABlurView>
   ), [
-    currentCode,
-    rangeDetails,
     navigationStateIndex,
+    isStack,
+    currentCode,
+    title,
+    range,
+    start,
+    end,
   ]);
 }

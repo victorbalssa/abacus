@@ -83,7 +83,7 @@ function AssetsAccounts() {
           >
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
           </Text>
-          <Switch trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
+          <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
         </AStack>
         {accounts && accounts.map((account, index) => (
           <HStack

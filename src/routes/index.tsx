@@ -184,7 +184,10 @@ function TransactionsStack() {
         name="TransactionsScreen"
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: true,
+          header: NavigationHeader,
+        }}
       />
       <TransactionStack.Screen
         name="TransactionDetailScreen"
