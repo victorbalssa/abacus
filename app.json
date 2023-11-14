@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "0.10.1",
+    "version": "0.10.2",
     "orientation": "portrait",
     "updates": {
       "enabled": true,
@@ -35,7 +35,7 @@
         "usesNonExemptEncryption": false
       },
       "bundleIdentifier": "abacus.ios.app",
-      "buildNumber": "0.10.1"
+      "buildNumber": "0.10.2"
     },
     "android": {
       "icon": "./src/images/icon-abacus.png",
@@ -53,7 +53,7 @@
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
-      "versionCode": 10
+      "versionCode": 11
     },
     "web": {
       "bundler": "metro"
