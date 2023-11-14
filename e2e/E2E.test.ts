@@ -65,7 +65,7 @@ describe.each([
 
     // TRANSACTIONS
     await element(by.id('navigation_transactions_tab')).tap();
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 3000));
     await device.takeScreenshot('transactions');
 
     // SETTINGS
