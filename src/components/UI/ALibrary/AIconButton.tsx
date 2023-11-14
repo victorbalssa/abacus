@@ -1,6 +1,5 @@
 import React from 'react';
 import { Pressable } from 'react-native';
-import { useThemeColors } from '../../../lib/common';
 
 type AIconButtonType = {
   icon: React.ReactNode
@@ -19,8 +18,6 @@ export default function AIconButton({
   borderWidth = 0,
   style = null,
 }: AIconButtonType) {
-  const { colors } = useThemeColors();
-
   return (
     <Pressable
       onPress={onPress}
