@@ -26,7 +26,7 @@ import TransactionDetailScreen from '../components/Screens/TransactionDetailScre
 import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
 
 // UI components
-import ThemeBlurView from '../components/UI/ThemeBlurView';
+import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 
 const Stack = createNativeStackNavigator();
@@ -81,12 +81,13 @@ function TabBarPrimaryButton() {
         )}
         _pressed={{
           style: {
-            top: -15,
+            top: -5,
           },
         }}
         style={{
-          top: -15,
+          top: -5,
         }}
+        testID="navigation_create_transaction"
       />
     </Box>
   );
@@ -100,7 +101,7 @@ function TabBarComponent({
 }) {
   return (
     <>
-      <ThemeBlurView
+      <ABlurView
         style={{
           ...styles.navigatorContainer,
           borderTopWidth: 0.5,
@@ -112,7 +113,7 @@ function TabBarComponent({
           navigation={navigation}
           insets={insets}
         />
-      </ThemeBlurView>
+      </ABlurView>
       <NavigationHeader navigation={navigation} />
     </>
   );
@@ -183,7 +184,10 @@ function TransactionsStack() {
         name="TransactionsScreen"
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: true,
+          header: NavigationHeader,
+        }}
       />
       <TransactionStack.Screen
         name="TransactionDetailScreen"
@@ -225,6 +229,7 @@ function Home() {
         tabBarActiveBackgroundColor: colors.tabBackgroundColor,
         tabBarActiveTintColor: colors.brandStyle,
         tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarShowLabel: true,
         tabBarLazyLoad: true,
@@ -246,6 +251,7 @@ function Home() {
         component={HomeScreen}
         options={{
           tabBarIcon: TabBarHomeScreenIcon,
+          tabBarTestID: 'navigation_home_tab',
         }}
       />
       <Tab.Screen
@@ -253,6 +259,7 @@ function Home() {
         component={ChartScreen}
         options={{
           tabBarIcon: TabBarChartScreenIcon,
+          tabBarTestID: 'navigation_chart_tab',
         }}
       />
       <Tab.Screen
@@ -268,6 +275,7 @@ function Home() {
         options={{
           tabBarIcon: TabBarTransactionScreenIcon,
           title: translate('navigation_transactions_tab'),
+          tabBarTestID: 'navigation_transactions_tab',
         }}
       />
       <Tab.Screen
@@ -275,6 +283,7 @@ function Home() {
         component={ConfigurationScreen}
         options={{
           tabBarIcon: TabBarConfigurationScreenIcon,
+          tabBarTestID: 'navigation_settings_tab',
         }}
       />
     </Tab.Navigator>

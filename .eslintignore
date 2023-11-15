@@ -1,3 +1,4 @@
 /node_modules
 /dist
-/e2e/*.test.js
+/e2e/*.test.ts
+/artifacts

@@ -84,19 +84,26 @@ export default createModel<RootModel>()({
     async getAccounts(_: void, rootState): Promise<void> {
       const {
         currencies: {
-          current,
+          currentCode,
         },
         firefly: {
           rangeDetails: {
             end,
           },
         },
+        configuration: {
+          displayAllAccounts = false,
+        },
       } = rootState;
 
-      if (current && current.attributes.code) {
-        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current.attributes.code}/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
+      if (currentCode) {
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as { data: AccountType[]};
 
-        dispatch.accounts.setAccounts({ accounts });
+        const filteredAccounts = accounts
+          .filter((a: AccountType) => a.attributes.active)
+          .sort((a, b) => ((parseFloat(b.attributes.currentBalance) > parseFloat(a.attributes.currentBalance)) ? 1 : -1));
+
+        dispatch.accounts.setAccounts({ accounts: filteredAccounts });
       }
     },
   }),

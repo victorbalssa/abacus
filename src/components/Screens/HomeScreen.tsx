@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useMemo,
-  useState,
   useRef,
   useCallback,
 } from 'react';
@@ -21,7 +20,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  RefreshControl, TouchableOpacity, Animated,
+  RefreshControl,
+  TouchableOpacity,
+  Animated,
+  Switch,
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
@@ -39,21 +41,29 @@ import { localNumberFormat, useThemeColors } from '../../lib/common';
 
 import { ScreenType } from './types';
 import Pagination from '../UI/Pagination';
+import { AStack } from '../UI/ALibrary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 function AssetsAccounts() {
   const { colors } = useThemeColors();
-  const dispatch = useDispatch<RootDispatch>();
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
+  const displayAllAccounts = useSelector((state: RootState) => state.configuration.displayAllAccounts);
   const loading = useSelector((state: RootState) => state.loading.effects.accounts.getAccounts?.loading);
+  const dispatch = useDispatch<RootDispatch>();
+
+  const onSwitch = async (bool: boolean) => {
+    dispatch.configuration.setDisplayAllAccounts(bool);
+    dispatch.accounts.getAccounts();
+    return Promise.resolve();
+  };
 
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       refreshControl={(
         <RefreshControl
-          refreshing={loading}
+          refreshing={false}
           onRefresh={() => Promise.all([
             dispatch.accounts.getAccounts(),
             dispatch.firefly.getNetWorth(),
@@ -62,25 +72,27 @@ function AssetsAccounts() {
       )}
     >
       <View>
-        <Text
-          style={{
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 27,
-          }}
-        >
-          {translate('home_accounts')}
-        </Text>
-        {accounts && accounts?.filter((a) => a.attributes.active).map((account, index) => (
+        <AStack px={15} py={15} row justifyContent="space-between">
+          <Text
+            style={{
+              fontFamily: 'Montserrat_Bold',
+              color: colors.text,
+              fontSize: 25,
+              lineHeight: 27,
+            }}
+          >
+            {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
+          </Text>
+          <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
+        </AStack>
+        {accounts && accounts.map((account, index) => (
           <HStack
-            key={account.attributes.name}
+            key={account.id}
             mx={4}
             h={45}
             alignItems="center"
             justifyContent="space-between"
-            borderBottomWidth={index + 1 === accounts?.filter((a) => a.attributes.active).length ? 0 : 0.5}
+            borderBottomWidth={index + 1 === accounts.length ? 0 : 0.5}
             borderColor={colors.listBorderColor}
           >
             <Text
@@ -116,9 +128,9 @@ function AssetsAccounts() {
 
 function InsightCategories() {
   const { colors } = useThemeColors();
-  const dispatch = useDispatch<RootDispatch>();
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
   const loading = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories?.loading);
+  const dispatch = useDispatch<RootDispatch>();
 
   return (
     <ScrollView
@@ -182,9 +194,9 @@ function InsightCategories() {
 
 function InsightBudgets() {
   const { colors } = useThemeColors();
-  const dispatch = useDispatch<RootDispatch>();
   const insightBudgets = useSelector((state: RootState) => state.budgets.budgets);
   const loading = useSelector((state: RootState) => state.loading.effects.budgets.getInsightBudgets?.loading);
+  const dispatch = useDispatch<RootDispatch>();
 
   return (
     <ScrollView
@@ -292,16 +304,18 @@ function InsightBudgets() {
   );
 }
 
-function NetWorth({ currencyCode }) {
+function NetWorth() {
   const { colors } = useThemeColors();
-  const [hideBalance, setHideBalance] = useState<boolean>(false);
+  const hideBalance = useSelector((state: RootState) => state.configuration.hideBalance);
   const netWorth = useSelector((state: RootState) => state.firefly.netWorth);
   const balance = useSelector((state: RootState) => state.firefly.balance);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNetWorth?.loading);
+  const dispatch = useDispatch<RootDispatch>();
 
-  return (
-    <View justifyContent="center">
-      <TouchableOpacity onPress={() => setHideBalance(!hideBalance)}>
+  return useMemo(() => (
+    <View testID="home_screen_net_worth" justifyContent="center">
+      <TouchableOpacity onPress={() => dispatch.configuration.setHideBalance(!hideBalance)}>
         {netWorth && netWorth[0] && !hideBalance && (
         <VStack alignItems="center">
           <Text style={{
@@ -310,29 +324,18 @@ function NetWorth({ currencyCode }) {
             color: colors.text,
           }}
           >
-            {`${translate('home_net_worth')} • ${currencyCode}`}
+            {`${translate('home_net_worth')} • ${currentCode}`}
           </Text>
           <Skeleton isLoaded={!loading} speed={2} startColor={colors.brandWhiteOpacity} w={200} h={9} rounded={20}>
             <HStack alignItems="center">
               <Text
-                testID="home_screen_net_worth_text"
                 style={{
                   fontSize: 35,
                   lineHeight: 37,
                   fontFamily: 'Montserrat_Bold',
                 }}
               >
-                {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue)).split('.')[0]}
-              </Text>
-              <Text
-                testID="home_screen_net_worth_text"
-                style={{
-                  paddingTop: 8,
-                  fontSize: 15,
-                  fontFamily: 'Montserrat_Bold',
-                }}
-              >
-                {`.${localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue)).split('.')[1] || '00'}`}
+                {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue))}
               </Text>
             </HStack>
           </Skeleton>
@@ -375,18 +378,17 @@ function NetWorth({ currencyCode }) {
         )}
       </TouchableOpacity>
     </View>
-  );
+  ), [loading, hideBalance]);
 }
 
 export default function HomeScreen({ navigation }: ScreenType) {
-  const { colors } = useThemeColors();
+  const { colors, colorScheme } = useThemeColors();
   const toast = useToast();
   const safeAreaInsets = useSafeAreaInsets();
-  const { netWorth, balance } = useSelector((state: RootState) => state.firefly);
-  const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails);
-  const currency = useSelector((state: RootState) => state.currencies.current);
-  const { backendURL } = useSelector((state: RootState) => state.configuration);
-  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
+  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
+  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const dispatch = useDispatch<RootDispatch>();
   const renderIcons = [
     <Ionicons key="ios-wallet" name="ios-wallet" size={22} color={colors.text} />,
@@ -415,7 +417,8 @@ export default function HomeScreen({ navigation }: ScreenType) {
             await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
           }
 
-          await Promise.all([dispatch.currencies.getCurrencies(), dispatch.configuration.testAccessToken()]);
+          dispatch.configuration.testAccessToken();
+          dispatch.currencies.getCurrencies();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -445,30 +448,24 @@ export default function HomeScreen({ navigation }: ScreenType) {
     useCallback(() => {
       let isActive = true;
 
-      const fetchData = async () => {
-        try {
-          if (isActive && axios.defaults.headers.Authorization) {
-            await Promise.all([
-              dispatch.firefly.getNetWorth(),
-              dispatch.accounts.getAccounts(),
-              dispatch.categories.getInsightCategories(),
-              dispatch.budgets.getInsightBudgets(),
-            ]);
-          }
-        } catch (e) {
-          // handle error
+      const fetchData = () => {
+        if (isActive && axios.defaults.headers.Authorization) {
+          dispatch.firefly.getNetWorth();
+          dispatch.accounts.getAccounts();
+          dispatch.categories.getInsightCategories();
+          dispatch.budgets.getInsightBudgets();
         }
       };
 
-      if (prevFiltersRef.current !== `${rangeDetails?.start}-${rangeDetails?.end}-${currency?.id}`) {
+      if (prevFiltersRef.current !== `${start}-${end}-${currentCode}`) {
         fetchData();
-        prevFiltersRef.current = `${rangeDetails?.start}-${rangeDetails?.end}-${currency?.id}`;
+        prevFiltersRef.current = `${start}-${end}-${currentCode}`;
       }
 
       return () => {
         isActive = false;
       };
-    }, [rangeDetails, currency]),
+    }, [start, end, currentCode]),
   );
 
   const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
@@ -477,10 +474,10 @@ export default function HomeScreen({ navigation }: ScreenType) {
   return (useMemo(() => (
     <Box style={{ flex: 1 }}>
       <LinearGradient
-        colors={['#790277', '#d30847', '#FF5533', '#efe96d']}
+        colors={colorScheme === 'light' ? ['rgb(255,211,195)', 'rgb(255,194,183)', 'rgb(248,199,193)', 'rgb(255,228,194)'] : ['#790277', '#d30847', '#FF5533', '#efe96d']}
         start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 0 }}
-        style={{ flex: 1, paddingTop: safeAreaInsets.top + 50 }}
+        style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top + 50 }}
       >
         <VStack
           flex={1}
@@ -492,9 +489,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
           justifyContent="space-between"
           alignItems="center"
         >
-
-          <NetWorth currencyCode={currency?.attributes?.code} />
-
+          <NetWorth />
           <Pagination
             renderIcons={renderIcons}
             handlePress={(index) => viewPagerRef?.current?.setPage(index)}
@@ -504,7 +499,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
         </VStack>
       </LinearGradient>
 
-      <View style={{ flex: 3 }}>
+      <View style={{ flex: 2 }}>
         <Box
           backgroundColor={colors.tileBackgroundColor}
           borderTopRadius={30}
@@ -542,11 +537,6 @@ export default function HomeScreen({ navigation }: ScreenType) {
           </AnimatedPagerView>
         </Box>
       </View>
-
     </Box>
-  ), [
-    loading,
-    netWorth,
-    balance,
-  ]));
+  ), []));
 }

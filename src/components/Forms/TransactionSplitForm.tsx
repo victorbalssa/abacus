@@ -194,7 +194,7 @@ export default function TransactionSplitForm({
           height={60}
           variant="outline"
           returnKeyType="done"
-          keyboardType="numbers-and-punctuation"
+          keyboardType="decimal-pad"
           placeholder="0.00"
           value={formData.amount}
           textAlign="center"
@@ -217,7 +217,7 @@ export default function TransactionSplitForm({
           small
           placeholder={translate('transaction_form_foreign_currency_label')}
           value={formData.foreignCurrencyCode}
-          onSelectAutocomplete={(autocomplete) => setTransaction({
+          onSelectAutocomplete={(autocomplete: { id: string, code: string }) => setTransaction({
             ...formData,
             foreignCurrencyId: autocomplete.id,
             foreignCurrencyCode: autocomplete.code,
@@ -229,7 +229,7 @@ export default function TransactionSplitForm({
         <Input
           variant="outline"
           returnKeyType="done"
-          keyboardType="numbers-and-punctuation"
+          keyboardType="decimal-pad"
           placeholder="0.00"
           value={formData.foreignAmount}
           textAlign="center"
@@ -324,7 +324,8 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
-        onChangeText={(value) => setTransaction({
+        splitType={formData.type}
+        onChangeText={(value: string) => setTransaction({
           ...formData,
           sourceName: value,
         })}
@@ -342,6 +343,8 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}
+        splitType={formData.type}
+        designation="destination"
         onChangeText={(value) => setTransaction({
           ...formData,
           destinationName: value,
@@ -352,7 +355,6 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['destinationName'])}
         routeApi="accounts"
-        isDestination
       />
 
       <AutocompleteField

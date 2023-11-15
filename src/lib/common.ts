@@ -53,7 +53,7 @@ export const isValidHttpUrl = (string) => {
 
 export const localNumberFormat = (currencyCode: string, string: number | bigint) => {
   const [locale] = getLocales();
-  const formatter = new Intl.NumberFormat(locale.languageTag, {
+  const formatter = new Intl.NumberFormat(locale.languageTag.includes('CA') ? locale.languageTag : locale.languageCode, {
     style: 'currency',
     currency: currencyCode || 'USD',
   });

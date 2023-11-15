@@ -1,146 +1,141 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
-  HStack,
-  Box,
-  Text,
-  IconButton,
-  VStack,
-} from 'native-base';
+  View,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Platform, TouchableOpacity } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import {
+  ABlurView,
+  AStack,
+  AText,
+  AIconButton,
+} from './ALibrary';
 import { RootDispatch, RootState } from '../../store';
 import ErrorWidget from './ErrorWidget';
-import ThemeBlurView from './ThemeBlurView';
 import { useThemeColors } from '../../lib/common';
 
-export default function NavigationHeader({ navigation, relative = false }): React.ReactNode {
+export default function NavigationHeader({ navigation }): React.ReactNode {
   const { colors } = useThemeColors();
-  const currentCurrency = useSelector((state: RootState) => state.currencies.current);
-  const rangeDetails = useSelector((state: RootState) => state.firefly.rangeDetails || {
-    title: '', range: 3, end: '', start: '',
-  });
-  const dispatch = useDispatch<RootDispatch>();
+  const safeAreaInsets = useSafeAreaInsets();
   const navigationStateIndex = navigation.getState().index;
+  const isStack = navigation.getState().key.startsWith('stack-');
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
+  const title = useSelector((state: RootState) => state.firefly.rangeDetails.title);
+  const range = useSelector((state: RootState) => state.firefly.rangeDetails.range);
+  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
+  const { firefly: { setRange } } = useDispatch<RootDispatch>();
 
-  return (
-    <ThemeBlurView
+  if (![0, 1].includes(navigationStateIndex)) {
+    return useMemo(() => null, [
+      navigationStateIndex,
+      isStack,
+      currentCode,
+      title,
+      range,
+      start,
+      end,
+    ]);
+  }
+
+  return useMemo(() => (
+    <ABlurView
       intensity={45}
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: Platform.select({ ios: colors.tabBackgroundColor, android: relative ? colors.tileBackgroundColor : colors.tabBackgroundColor }),
-        display: [0, 1].includes(navigationStateIndex) ? undefined : 'none',
+        backgroundColor: Platform.select({ ios: colors.tabBackgroundColor, android: isStack ? colors.tileBackgroundColor : colors.blurAndroidHeader }),
+        paddingTop: safeAreaInsets.top,
       }}
     >
-      <Box
-        alignItems="center"
-        justifyContent="center"
-        safeAreaTop
-        borderColor={colors.listBorderColor}
-      >
-        <HStack px={2} py={1} justifyContent="space-between" alignItems="center">
-          <IconButton
-            variant="ghost"
-            _icon={{
-              color: colors.text,
-              as: FontAwesome,
-              name: 'angle-left',
-              px: 2,
-            }}
-            colorScheme="black"
-            onPress={() => dispatch.firefly.handleChangeRange({ direction: -1 })}
-            onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-          />
-
-          <VStack px={3} flex={1} justifyContent="space-between">
-            <Text style={{ fontFamily: 'Montserrat_Bold', fontSize: 18, lineHeight: 18 }}>
-              {rangeDetails.title}
-            </Text>
-            <Text style={{ fontSize: 12 }}>
-              {`${moment(rangeDetails.start).format('ll')} - ${moment(rangeDetails.end).format('ll')}`}
-            </Text>
-            <HStack>
-              <HStack style={{
-                alignSelf: 'flex-start',
-                borderWidth: 0.5,
-                borderColor: colors.text,
-                borderRadius: 10,
-                paddingHorizontal: 5,
-                marginHorizontal: 1,
-              }}
-              >
-                <Text style={{
-                  fontSize: 10,
-                  lineHeight: 14,
-                  fontFamily: 'Montserrat_Bold',
-                  color: colors.brandNeutral,
-                }}
-                >
-                  {`${currentCurrency?.attributes.code} ${currentCurrency?.attributes.symbol}`}
-                </Text>
-              </HStack>
-              <HStack style={{
-                alignSelf: 'flex-start',
-                borderWidth: 0.5,
-                borderColor: colors.text,
-                borderRadius: 10,
-                paddingHorizontal: 5,
-                marginHorizontal: 1,
-              }}
-              >
-                <Text style={{
-                  fontSize: 10,
-                  lineHeight: 14,
-                  fontFamily: 'Montserrat_Bold',
-                  color: colors.brandNeutral,
-                }}
-                >
-                  {`${rangeDetails.range}M`}
-                </Text>
-              </HStack>
-            </HStack>
-          </VStack>
-
-          <TouchableOpacity
-            style={{
-              margin: 5,
-              padding: 5,
+      <AStack row px={6} py={4} justifyContent="space-between">
+        <AIconButton
+          icon={<FontAwesome name="angle-left" size={25} color={colors.text} />}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+            setRange({ direction: -1 });
+          }}
+        />
+        <AStack px={12} alignItems="flex-start" justifyContent="space-between">
+          <AText fontFamily="Montserrat_Bold" fontSize={17} lineHeight={18}>
+            {title}
+          </AText>
+          <AText py={4} fontSize={12} numberOfLines={1}>
+            {range === 1 ? `${moment(start).format('MMMM D')} - ${moment(end).format('D')}` : `${moment(start).format('MMMM D')} - ${moment(end).format('MMMM D')}`}
+          </AText>
+          <AStack row justifyContent="flex-start">
+            <View style={{
+              alignSelf: 'flex-start',
+              borderWidth: 0.7,
+              borderColor: colors.text,
               borderRadius: 10,
+              paddingHorizontal: 5,
+              marginHorizontal: 1,
             }}
-            onPress={() => navigation.dispatch(
-              CommonActions.navigate({
-                name: 'FiltersScreen',
-              }),
-            )}
-          >
-            <Ionicons name="ios-filter" size={20} color={colors.text} />
-          </TouchableOpacity>
-
-          <ErrorWidget />
-
-          <IconButton
-            variant="ghost"
-            _icon={{
-              color: colors.text,
-              as: FontAwesome,
-              name: 'angle-right',
-              size: 'lg',
-              px: 2,
+            >
+              <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
+                {currentCode}
+              </AText>
+            </View>
+            <View style={{
+              alignSelf: 'flex-start',
+              borderWidth: 0.7,
+              borderColor: colors.text,
+              borderRadius: 10,
+              paddingHorizontal: 5,
+              marginHorizontal: 1,
             }}
-            colorScheme="black"
-            onPress={() => dispatch.firefly.handleChangeRange({ direction: 1 })}
-            onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-          />
+            >
+              <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
+                {`${range}M`}
+              </AText>
+            </View>
+          </AStack>
+        </AStack>
 
-        </HStack>
-      </Box>
-    </ThemeBlurView>
-  );
+        <TouchableOpacity
+          style={{
+            margin: 5,
+            padding: 5,
+            borderRadius: 10,
+          }}
+          onPress={() => navigation.dispatch(
+            CommonActions.navigate({
+              name: 'FiltersScreen',
+            }),
+          )}
+        >
+          <Ionicons name="ios-filter" size={20} color={colors.text} />
+        </TouchableOpacity>
+
+        <ErrorWidget />
+
+        <AIconButton
+          icon={<FontAwesome name="angle-right" size={25} color={colors.text} />}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+            setRange({ direction: +1 });
+          }}
+        />
+
+      </AStack>
+    </ABlurView>
+  ), [
+    navigationStateIndex,
+    isStack,
+    currentCode,
+    title,
+    range,
+    start,
+    end,
+  ]);
 }

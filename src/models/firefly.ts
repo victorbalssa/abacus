@@ -150,10 +150,7 @@ export default createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    async handleChangeRange(payload, rootState): Promise<void> {
-      if (rootState.firefly.rangeDetails === undefined) {
-        dispatch.firefly.resetState();
-      }
+    async setRange(payload, rootState): Promise<void> {
       const {
         firefly: {
           rangeDetails: {
@@ -236,14 +233,14 @@ export default createModel<RootModel>()({
           },
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
-      if (current && current.attributes.code) {
+      if (currentCode) {
         const params = new URLSearchParams({
           start,
           end,
-          currency_code: current?.attributes.code,
+          currency_code: currentCode,
         });
         const { data: summary } = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
         const netWorth = [];
@@ -324,7 +321,7 @@ export default createModel<RootModel>()({
           },
         },
         currencies: {
-          current,
+          currentCode,
         },
         configuration: {
           apiVersion,
@@ -341,7 +338,7 @@ export default createModel<RootModel>()({
       const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
       const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
 
-      const earnedChartEntries = balances.filter((balance) => balance.currencyCode === current.attributes.code && balance.label === 'earned')[0]?.entries;
+      const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
 
       if (earnedChartEntries) {
         this.setData({
@@ -358,7 +355,7 @@ export default createModel<RootModel>()({
         this.setData({ earnedChart: [] });
       }
 
-      const spentChartEntries = balances.filter((balance) => balance.currencyCode === current.attributes.code && balance.label === 'spent')[0]?.entries;
+      const spentChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'spent')[0]?.entries;
 
       if (spentChartEntries) {
         this.setData({

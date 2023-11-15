@@ -1,6 +1,7 @@
-import { Animated, TouchableOpacity } from 'react-native';
-import { View } from 'native-base';
 import React from 'react';
+import { View, Animated, TouchableOpacity } from 'react-native';
+
+import { useThemeColors } from '../../lib/common';
 
 const DOT_SIZE = 40;
 
@@ -15,6 +16,7 @@ export default function Pagination({
   scrollOffsetAnimatedValue: Animated.Value;
   positionAnimatedValue: Animated.Value;
 }) {
+  const { colors } = useThemeColors();
   const inputRange = [0, renderIcons.length];
   const translateX = Animated.add(
     scrollOffsetAnimatedValue,
@@ -36,7 +38,7 @@ export default function Pagination({
             width: DOT_SIZE,
             height: DOT_SIZE,
             borderBottomWidth: 2,
-            borderColor: '#ddd',
+            borderColor: colors.text,
           },
           {
             position: 'absolute',

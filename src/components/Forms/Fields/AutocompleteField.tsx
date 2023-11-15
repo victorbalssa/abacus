@@ -23,6 +23,8 @@ type AutocompleteType = {
 }
 
 export default function AutocompleteField({
+  splitType = 'withdrawal',
+  designation = 'source',
   isInvalid = false,
   isRequired = false,
   label,
@@ -34,7 +36,6 @@ export default function AutocompleteField({
   routeApi,
   error = null,
   onDeleteMultiple = null,
-  isDestination = false,
   multiple = false,
   small = false,
 }) {
@@ -45,16 +46,23 @@ export default function AutocompleteField({
   const [displayAutocomplete, setDisplayAutocomplete] = useState(false);
   const refreshAutocomplete = async (query) => {
     const limit = 10;
-    const type = isDestination ? 'Expense%20account' : 'Revenue%20account';
-    const types = routeApi === 'accounts' ? `&types=Asset%20account,${type},Loan,Debt,Mortgage` : '';
+    const accountTypeFilter = {
+      'source-withdrawal': 'Asset%20account',
+      'destination-withdrawal': 'Expense%20account',
+      'source-deposit': 'Revenue%20account',
+      'destination-deposit': 'Asset%20account',
+      'source-transfer': 'Asset%20account',
+      'destination-transfer': 'Asset%20account',
+    };
+    const types = routeApi === 'accounts' ? `&types=${accountTypeFilter[`${designation}-${splitType}`]},Loan,Debt,Mortgage` : '';
     const response = await axios.get(`${backendURL}/api/v1/autocomplete/${routeApi}?limit=${limit}${types}&query=${encodeURIComponent(query)}`);
     setAutocompletes(convertKeysToCamelCase(response.data));
   };
 
-  const handleChangeText = useCallback((text) => {
+  const handleChangeText = useCallback((text: string) => {
     if (multiple) {
       setMultipleValue(text);
-    } else {
+    } else if (onChangeText !== null) {
       onChangeText(text);
     }
     refreshAutocomplete(text);
@@ -81,39 +89,39 @@ export default function AutocompleteField({
     () => (
       <FormControl mt="1" isRequired={isRequired} isInvalid={isInvalid}>
         {!small && (
-        <FormControl.Label>
-          {label}
-        </FormControl.Label>
+          <FormControl.Label>
+            {label}
+          </FormControl.Label>
         )}
         {multiple && (
-        <ScrollView horizontal>
-          {value.map((item, index) => (
-            <Badge
-              mr={1}
-              mb={2}
-              py={1}
-              borderRadius={10}
-              key={`${index + 1}${item}`}
-              rightIcon={(
-                <IconButton
-                  mr={0}
-                  h={1}
-                  w={1}
-                  variant="ghost"
-                  colorScheme="gray"
-                  _icon={{
-                    as: AntDesign,
-                    name: 'closecircle',
-                    size: 19,
-                  }}
-                  onPress={() => handleDeleteMultiple(item)}
-                />
-                  )}
-            >
-              {item}
-            </Badge>
-          ))}
-        </ScrollView>
+          <ScrollView horizontal>
+            {value.map((item, index) => (
+              <Badge
+                mr={1}
+                mb={2}
+                py={1}
+                borderRadius={10}
+                key={`${index + 1}${item}`}
+                rightIcon={(
+                  <IconButton
+                    mr={0}
+                    h={1}
+                    w={1}
+                    variant="ghost"
+                    colorScheme="gray"
+                    _icon={{
+                      as: AntDesign,
+                      name: 'closecircle',
+                      size: 19,
+                    }}
+                    onPress={() => handleDeleteMultiple(item)}
+                  />
+                )}
+              >
+                {item}
+              </Badge>
+            ))}
+          </ScrollView>
         )}
         <Input
           returnKeyType="done"
@@ -162,8 +170,9 @@ export default function AutocompleteField({
       multiple,
       value,
       error,
-      isDestination,
+      designation,
       small,
+      splitType,
       multipleValue,
       autocompletes,
       displayAutocomplete,

@@ -21,6 +21,9 @@ import 'moment/locale/zh-cn';
 import itIT from './it-IT';
 import 'moment/locale/it';
 
+import slSI from './sl-SI';
+import 'moment/locale/sl';
+
 export default {
   de: deDE,
   en: enUS,
@@ -30,4 +33,5 @@ export default {
   id: idID,
   zh: zhCN,
   it: itIT,
+  sl: slSI,
 };
