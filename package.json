@@ -76,7 +76,7 @@
     "react-native-svg": "13.9.0",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-web": "~0.19.7",
-    "react-redux": "^8.1.2",
+    "react-redux": "^9.0.3",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "semver": "^7.5.4",
