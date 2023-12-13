@@ -69,7 +69,7 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
       >
         {translate('transaction_form_new_split_button')}
       </Button>
-      {splitNumber.length > 1 && (<GroupTitle title={title || ''} />)}
+      <GroupTitle title={title || ''} />
     </View>
   );
 }

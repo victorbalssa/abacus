@@ -185,7 +185,9 @@ function RenderItem({ item }: { item: TransactionType }) {
               numberOfLines={1}
               paddingTop={2}
             >
-              {item.attributes.transactions.length > 1 ? `${item.attributes.transactions.length} splits • ${item.attributes.groupTitle}` : item.attributes.transactions[0].description}
+              {item.attributes.groupTitle}
+              {item.attributes.groupTitle?.length > 0 ? ': ' : ''}
+              {item.attributes.transactions[0].description}
             </Text>
 
             <Text
