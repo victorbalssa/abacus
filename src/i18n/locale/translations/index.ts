@@ -24,6 +24,9 @@ import 'moment/locale/it';
 import slSI from './sl-SI';
 import 'moment/locale/sl';
 
+import ruRU from './ru-RU';
+import 'moment/locale/ru';
+
 export default {
   de: deDE,
   en: enUS,
@@ -34,4 +37,5 @@ export default {
   zh: zhCN,
   it: itIT,
   sl: slSI,
+  ru: ruRU,
 };
