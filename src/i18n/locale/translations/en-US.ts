@@ -129,5 +129,5 @@ export default {
   // from 0.10.3
   router_back_button: 'Back',
   transaction_clone: 'Clone',
-  transaction_delete: 'Delete'
+  transaction_delete: 'Delete',
 };
