@@ -285,7 +285,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
         <VStack alignItems="center">
           <Icon as={<MaterialIcons name="content-copy" />} color="white" size="sm" />
           <Text color="white" fontSize="xs" fontWeight="medium">
-            Clone
+            {translate('transaction_clone')}
           </Text>
         </VStack>
       </Pressable>
@@ -300,7 +300,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
         <VStack alignItems="center">
           <Icon as={<MaterialIcons name="delete" />} color="white" size="sm" />
           <Text color="white" fontSize="xs" fontWeight="medium">
-            Delete
+            {translate('transaction_delete')}
           </Text>
         </VStack>
       </Pressable>

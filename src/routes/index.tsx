@@ -196,7 +196,7 @@ function TransactionsStack() {
           headerShown: true,
           headerTitle: '',
           headerBackTitleVisible: true,
-          headerBackTitle: 'Back',
+          headerBackTitle: translate('router_back_button'),
           headerBackTitleStyle: {
             fontFamily: 'Montserrat_Bold',
           },
