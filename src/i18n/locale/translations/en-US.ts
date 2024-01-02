@@ -125,4 +125,9 @@ export default {
   currency: 'Currency',
 
   home_all_accounts: 'All Accounts',
+
+  // from 0.10.3
+  router_back_button: 'Back',
+  transaction_clone: 'Clone',
+  transaction_delete: 'Delete',
 };

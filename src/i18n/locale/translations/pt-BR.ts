@@ -120,4 +120,14 @@ export default {
   balance_history_chart_no_data: 'Para acessar esse gráfico, por favor atualize seu Firefly III para a versão mais recente.',
   account_not_included_in_net_worth: '* Conta não incluída no Patrimônio Líquido.',
 
+  // from 0.10.0
+  period: 'Período',
+  currency: 'Moeda',
+
+  home_all_accounts: 'Todas as contas',
+
+  // from 0.10.3
+  router_back_button: 'Voltar',
+  transaction_clone: 'Clonar',
+  transaction_delete: 'Apagar',
 };
