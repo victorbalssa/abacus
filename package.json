@@ -32,7 +32,7 @@
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.4.1",
     "expo": "^49.0.21",
-    "expo-application": "~5.3.0",
+    "expo-application": "~5.4.0",
     "expo-asset": "~8.10.1",
     "expo-auth-session": "~5.0.2",
     "expo-blur": "~12.4.1",
