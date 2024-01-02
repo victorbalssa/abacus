@@ -19,4 +19,4 @@ Please follow [Airbnb's Name Conventions](https://github.com/airbnb/javascript#n
 
 ## Linting
 
-Please ensure your code is passing through the linter.
+Please ensure your code is passing through the GitHub Action EsLint.

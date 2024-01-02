@@ -1,4 +1,6 @@
 export default {
-  tokens: 'FireflyIIIOAuthTokens',
+  accessToken: 'FireflyIIIOAuthAccessToken',
+  accessTokenExpiresIn: 'FireflyIIIOAuthAccessTokenExpiresIn',
+  refreshToken: 'FireflyIIIOAuthRefreshToken',
   oauthConfig: 'FireflyIIIOAuthConfig',
 };

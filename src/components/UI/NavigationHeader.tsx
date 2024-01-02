@@ -18,7 +18,6 @@ import {
   AIconButton,
 } from './ALibrary';
 import { RootDispatch, RootState } from '../../store';
-import ErrorWidget from './ErrorWidget';
 import { useThemeColors } from '../../lib/common';
 
 export default function NavigationHeader({ navigation }): React.ReactNode {
@@ -116,8 +115,6 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
         >
           <Ionicons name="ios-filter" size={20} color={colors.text} />
         </TouchableOpacity>
-
-        <ErrorWidget />
 
         <AIconButton
           icon={<FontAwesome name="angle-right" size={25} color={colors.text} />}

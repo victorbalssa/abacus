@@ -58,7 +58,7 @@
     "web": {
       "bundler": "metro"
     },
-    "scheme": "abacusiosapp",
+    "scheme": "abacusfiiiapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
     "runtimeVersion": {
       "policy": "sdkVersion"

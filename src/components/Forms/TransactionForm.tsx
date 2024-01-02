@@ -69,13 +69,13 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
       >
         {translate('transaction_form_new_split_button')}
       </Button>
-      {splitNumber.length > 1 && (<GroupTitle title={title || ''} />)}
+      <GroupTitle title={title || ''} />
     </View>
   );
 }
 
-function TransactionFormButtons({ navigation, id, handleSubmit }) {
-  const loading = useSelector((state: RootState) => state.loading.effects.transactions[id ? 'updateTransaction' : 'createTransaction']?.loading);
+function TransactionFormButtons({ navigation, handleSubmit }) {
+  const loading = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.loading);
   const error = useSelector((state: RootState) => state.transactions.error);
   const success = useSelector((state: RootState) => state.transactions.success);
   const dispatch = useDispatch<RootDispatch>();
@@ -147,7 +147,7 @@ export default function TransactionForm({
   navigation,
   title,
   splits = [],
-  id = null,
+  id = -1,
 }) {
   const dispatch = useDispatch<RootDispatch>();
 
@@ -162,11 +162,7 @@ export default function TransactionForm({
   const handleSubmit = async () => {
     Keyboard.dismiss();
     try {
-      if (id === null) {
-        await dispatch.transactions.createTransaction();
-      } else {
-        await dispatch.transactions.updateTransaction({ id });
-      }
+      await dispatch.transactions.upsertTransaction({ id });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch();
       dispatch.transactions.setSuccessStatus();
     } catch (e) {
@@ -189,7 +185,7 @@ export default function TransactionForm({
         keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
       >
         <MultipleTransactionSplitForm isNew={id === null} title={title} splits={splits} />
-        <TransactionFormButtons navigation={navigation} id={id} handleSubmit={handleSubmit} />
+        <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
         <View style={{ height: 100 }} />
       </KeyboardAvoidingView>
     ),

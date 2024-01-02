@@ -27,7 +27,6 @@ import {
 } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import { TokenResponse } from 'expo-auth-session';
 import type { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
 import PagerView from 'react-native-pager-view';
 
@@ -407,16 +406,11 @@ export default function HomeScreen({ navigation }: ScreenType) {
 
   useEffect(() => {
     (async () => {
-      const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
-      const storageValue = JSON.parse(tokens);
-      if (storageValue && storageValue.accessToken && backendURL) {
-        axios.defaults.headers.Authorization = `Bearer ${storageValue.accessToken}`;
+      const accessToken = await SecureStore.getItemAsync(secureKeys.accessToken);
+      if (accessToken && backendURL) {
+        axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
         try {
-          if (!TokenResponse.isTokenFresh(storageValue)) {
-            await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
-          }
-
           dispatch.configuration.testAccessToken();
           dispatch.currencies.getCurrencies();
         } catch (e) {

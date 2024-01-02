@@ -373,7 +373,7 @@ export default createModel<RootModel>()({
       }
     },
 
-    async getFreshAccessToken(payload, rootState): Promise<void> {
+    async getFreshAccessToken(payload, rootState): Promise<string> {
       const {
         configuration: {
           backendURL,
@@ -387,21 +387,23 @@ export default createModel<RootModel>()({
           clientId: oauthConfigStorageValue.oauthClientId,
           refreshToken: payload,
           extraParams: {
-            client_secret: oauthConfigStorageValue.oauthClientSecret,
+            client_secret: oauthConfigStorageValue.oauthClientSecret || undefined,
           },
         },
         discovery(backendURL),
       );
 
       if (!response.accessToken) {
-        await dispatch.configuration.resetAllStorage();
-
         throw new Error('Failed to get accessToken with the refresh token. Please restart the Sign In process.');
       }
 
-      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
-      const newStorageValue = JSON.stringify(response);
-      await SecureStore.setItemAsync(secureKeys.tokens, newStorageValue);
+      await SecureStore.setItemAsync(secureKeys.accessToken, response.accessToken);
+      await SecureStore.setItemAsync(secureKeys.refreshToken, response.refreshToken);
+      if (response.issuedAt && response.expiresIn) {
+        await SecureStore.setItemAsync(secureKeys.accessTokenExpiresIn, (response.issuedAt + response.expiresIn + -600).toString());
+      }
+
+      return response.accessToken;
     },
 
     async getNewAccessToken(payload, rootState): Promise<void> {
@@ -435,15 +437,19 @@ export default createModel<RootModel>()({
         throw new Error('Please check Oauth Client ID / Secret.');
       }
 
-      const storageValue = JSON.stringify(response);
       const oauthConfigStorageValue = JSON.stringify({
         oauthClientId,
         oauthClientSecret,
       });
       await Promise.all([
-        SecureStore.setItemAsync(secureKeys.tokens, storageValue),
+        SecureStore.setItemAsync(secureKeys.accessToken, response.accessToken),
+        SecureStore.setItemAsync(secureKeys.refreshToken, response.refreshToken),
         SecureStore.setItemAsync(secureKeys.oauthConfig, oauthConfigStorageValue),
       ]);
+
+      if (response.issuedAt && response.expiresIn) {
+        await SecureStore.setItemAsync(secureKeys.accessTokenExpiresIn, (response.issuedAt + response.expiresIn + -600).toString());
+      }
 
       axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
     },
