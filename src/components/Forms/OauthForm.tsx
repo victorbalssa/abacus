@@ -23,8 +23,8 @@ import { isValidHttpUrl, useThemeColors } from '../../lib/common';
 import translate from '../../i18n/locale';
 
 const copyToClipboard = async () => {
-  await Clipboard.setStringAsync('abacusiosapp://redirect');
-  Alert.alert('abacusiosapp://redirect copied to clipboard');
+  await Clipboard.setStringAsync('abacusfiiiapp://redirect');
+  Alert.alert('abacusfiiiapp://redirect copied to clipboard');
 };
 
 export default function OauthForm({

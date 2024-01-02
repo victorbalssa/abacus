@@ -328,48 +328,52 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      const apiSemverMinimum = '2.0.9';
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
-      if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
+      try {
+        const apiSemverMinimum = '2.0.9';
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
+        if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
+          this.setData({ earnedChart: [], spentChart: [] });
+          return;
+        }
+
+        const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
+        const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
+
+        const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
+
+        if (earnedChartEntries) {
+          this.setData({
+            earnedChart: Object.keys(earnedChartEntries).map((key) => {
+              const value = parseFloat(earnedChartEntries[key]);
+
+              return {
+                x: key,
+                y: value,
+              };
+            }),
+          });
+        } else {
+          this.setData({ earnedChart: [] });
+        }
+
+        const spentChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'spent')[0]?.entries;
+
+        if (spentChartEntries) {
+          this.setData({
+            spentChart: Object.keys(spentChartEntries).map((key) => {
+              const value = parseFloat(spentChartEntries[key]);
+
+              return {
+                x: key,
+                y: value,
+              };
+            }),
+          });
+        } else {
+          this.setData({ spentChart: [] });
+        }
+      } catch (error) {
         this.setData({ earnedChart: [], spentChart: [] });
-        return;
-      }
-
-      const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
-      const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
-
-      const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
-
-      if (earnedChartEntries) {
-        this.setData({
-          earnedChart: Object.keys(earnedChartEntries).map((key) => {
-            const value = parseFloat(earnedChartEntries[key]);
-
-            return {
-              x: key,
-              y: value,
-            };
-          }),
-        });
-      } else {
-        this.setData({ earnedChart: [] });
-      }
-
-      const spentChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'spent')[0]?.entries;
-
-      if (spentChartEntries) {
-        this.setData({
-          spentChart: Object.keys(spentChartEntries).map((key) => {
-            const value = parseFloat(spentChartEntries[key]);
-
-            return {
-              x: key,
-              y: value,
-            };
-          }),
-        });
-      } else {
-        this.setData({ spentChart: [] });
       }
     },
 
