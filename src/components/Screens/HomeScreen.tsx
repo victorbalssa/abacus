@@ -84,7 +84,7 @@ function AssetsAccounts() {
           </Text>
           <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
         </AStack>
-        {accounts && accounts.map((account, index) => (
+        {accounts && accounts.filter((a) => a.display || displayAllAccounts).map((account, index) => (
           <HStack
             key={account.id}
             mx={4}

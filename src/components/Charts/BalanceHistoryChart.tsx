@@ -31,6 +31,7 @@ export default function BalanceHistoryChart() {
   const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart);
   const spentChart = useSelector((state: RootState) => state.firefly.spentChart);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart.loading);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
 
   const getTickValues = useCallback(() => {
@@ -55,28 +56,29 @@ export default function BalanceHistoryChart() {
         borderColor={colors.listBorderColor}
         justifyContent="center"
       >
-        <Text
-          style={{
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 25,
-          }}
-        >
-          {translate('balance_history_chart')}
-        </Text>
         <HStack
-          justifyContent="flex-end"
           style={{
-            marginTop: 10,
-            paddingTop: 0,
-            paddingHorizontal: 10,
+            paddingTop: 10,
+            justifyContent: 'space-between',
             paddingBottom: 0,
           }}
         >
+          <Text
+            style={{
+              fontFamily: 'Montserrat_Bold',
+              margin: 15,
+              color: colors.text,
+              fontSize: 25,
+              lineHeight: 25,
+            }}
+          >
+            {translate('balance_history_chart')}
+            {' '}
+            {currentCode}
+          </Text>
           <IconButton
             variant="solid"
+            m={2}
             _icon={{
               as: AntDesign,
               name: 'reload1',

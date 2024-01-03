@@ -36,6 +36,7 @@ export type AccountType = {
     zoomLevel: null,
   },
   id: string,
+  display: boolean,
   links: {
     0: {
       rel: string,
@@ -46,12 +47,23 @@ export type AccountType = {
   type: string,
 }
 
+export type PreferenceType = {
+  attributes: {
+    createdAt: Date,
+    data: number[],
+  },
+  id: string,
+  type: string,
+}
+
 export type AccountStateType = {
   accounts: AccountType[],
+  selectedAccountIds: number[],
 }
 
 const INITIAL_STATE = {
   accounts: [],
+  selectedAccountIds: [],
 } as AccountStateType;
 
 export default createModel<RootModel>()({
@@ -59,7 +71,7 @@ export default createModel<RootModel>()({
   state: INITIAL_STATE,
 
   reducers: {
-    setAccounts(state, payload): AccountStateType {
+    setAccounts(state: AccountStateType, payload): AccountStateType {
       const {
         accounts = state.accounts,
       } = payload;
@@ -67,6 +79,28 @@ export default createModel<RootModel>()({
       return {
         ...state,
         accounts,
+      };
+    },
+
+    setSelectedAccountIds(state: AccountStateType, id: number): AccountStateType {
+      const { selectedAccountIds } = state;
+
+      if (selectedAccountIds?.includes(id)) {
+        return {
+          ...state,
+          selectedAccountIds: selectedAccountIds?.filter((d) => d !== id),
+        };
+      }
+      return {
+        ...state,
+        selectedAccountIds: [...selectedAccountIds || [], id],
+      };
+    },
+
+    resetSelectedAccountIds(state: AccountStateType): AccountStateType {
+      return {
+        ...state,
+        selectedAccountIds: [],
       };
     },
 
@@ -97,11 +131,23 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (currentCode) {
-        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as { data: AccountType[]};
+        const [
+          { data: accounts },
+          { data: frontPageAccounts },
+        ] = await Promise.all([
+          dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as Promise<{ data: AccountType[] }>,
+          dispatch.configuration.apiFetch({ url: '/api/v2/preferences/frontPageAccounts' }) as Promise<{ data: PreferenceType }>,
+        ]);
 
         const filteredAccounts = accounts
           .filter((a: AccountType) => a.attributes.active)
-          .sort((a, b) => ((parseFloat(b.attributes.currentBalance) > parseFloat(a.attributes.currentBalance)) ? 1 : -1));
+          .sort((a, b) => (b.attributes.order < a.attributes.order ? 1 : -1));
+
+        if (frontPageAccounts) {
+          accounts.forEach((a: AccountType, index) => {
+            accounts[index].display = frontPageAccounts.attributes.data.includes(parseInt(a.id, 10));
+          });
+        }
 
         dispatch.accounts.setAccounts({ accounts: filteredAccounts });
       }

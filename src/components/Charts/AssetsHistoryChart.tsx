@@ -2,9 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import {
   Text,
   VStack,
-  Checkbox,
   HStack,
-  Pressable,
   ScrollView,
   IconButton,
   View,
@@ -26,7 +24,7 @@ import * as Localization from 'expo-localization';
 import { RootDispatch, RootState } from '../../store';
 import Loading from '../UI/Loading';
 import translate from '../../i18n/locale';
-import { D_WIDTH, useThemeColors } from '../../lib/common';
+import { useThemeColors } from '../../lib/common';
 
 function AccountsLengthMessage() {
   const { colors } = useThemeColors();
@@ -34,7 +32,7 @@ function AccountsLengthMessage() {
 
   return (
     <View m={2}>
-      <Text fontSize={11}>
+      <Text fontSize={12}>
         {translate('assetsHistoryCharts_chart_works')}
         {' '}
         <Text
@@ -57,8 +55,8 @@ function AccountsLengthMessage() {
 function CursorPointer({ x, y, stroke }) {
   return (
     <>
-      <Circle cx={x} cy={y} r="10" fill={stroke} />
-      <Circle cx={x} cy={y} r="7" fill="#fff" />
+      <Circle cx={x} cy={y} r="7" fill={stroke} />
+      <Circle cx={x} cy={y} r="4" fill="#fff" />
     </>
   );
 }
@@ -69,58 +67,58 @@ function Cursor({
   minY,
   maxY,
   activePoints,
+  colors,
 }) {
   return (
     <>
-      <VStack ml={2} h={100} top={-100} borderTopRadius={15} mr={5}>
-        <HStack
-          justifyContent="center"
-          minW={100}
+      <VStack
+        bgColor={colors.tileBackgroundColor}
+        mx={2}
+        h={100}
+        top={-110}
+      >
+        <VStack
+          position="absolute"
+          left={0}
+          right={0}
+          bottom={0}
+          marginLeft="auto"
+          marginRight="auto"
         >
-          <Text fontWeight={600} pt={2} fontSize={18}>
+          <Text fontWeight={600} fontSize={16} my={1}>
             {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
               month: 'short',
               day: 'numeric',
               year: 'numeric',
             }) : '  '}`}
           </Text>
-        </HStack>
-        <VStack
-          position="absolute"
-          left={x < D_WIDTH - 90 ? x - 35 : undefined}
-          right={0}
-          bottom={0}
-          marginLeft="auto"
-          marginRight="auto"
-          minW={100}
-        >
-          <ScrollView maxHeight={110}>
-            {activePoints.map(({
-              y: yPoint, childName, style,
-            }) => {
-              const {
-                data: {
-                  stroke,
-                },
-              } = style;
+          {activePoints.map(({
+            y: yPoint, childName, style,
+          }) => {
+            const {
+              data: {
+                stroke,
+              },
+            } = style;
 
-              return (
-                <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontSize={12}>
+            return (
+              <HStack key={childName} justifyContent="space-between" alignItems="center">
+                <Text alignSelf="flex-start" color={stroke} fontSize={12}>{childName}</Text>
+                <Text alignSelf="flex-start" color={stroke} fontSize={12}>
                   {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
                 </Text>
-              );
-            })}
-          </ScrollView>
+              </HStack>
+            );
+          })}
         </VStack>
       </VStack>
       <Line
-        strokeDasharray="5, 5"
-        stroke="#676767"
-        strokeWidth={2}
+        stroke="#fff"
+        strokeWidth={1}
         x1={x}
         x2={x}
-        y1={10}
-        y2={299}
+        y1={0}
+        y2={300}
       />
       {activePoints.map(({
         y: yPoint, childName, style,
@@ -149,6 +147,7 @@ export default function AssetsHistoryChart() {
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
   const accounts = useSelector((state: RootState) => state.firefly.accounts);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart.loading);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
 
   const getTickValues = useCallback(() => {
@@ -173,64 +172,29 @@ export default function AssetsHistoryChart() {
         borderColor={colors.listBorderColor}
         justifyContent="center"
       >
-        <Text
-          style={{
-            paddingTop: 15,
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 25,
-          }}
-        >
-          {translate('assets_history_chart')}
-        </Text>
         <HStack
           style={{
-            marginTop: 10,
-            paddingTop: 0,
-            paddingHorizontal: 10,
+            paddingTop: 10,
             justifyContent: 'space-between',
             paddingBottom: 0,
           }}
         >
-          <View>
-            {accounts.map((chart, index) => (
-              <Pressable
-                key={`key-${chart.label}`}
-                onPress={() => dispatch.firefly.filterData({ index })}
-                isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                _disabled={{
-                  style: {
-                    opacity: 0.4,
-                  },
-                }}
-              >
-                <HStack p={1} key={`key-${chart.label}`}>
-                  <Checkbox
-                    accessibilityLabel={`key-${chart.color}`}
-                    key={`key-${chart.label}`}
-                    colorScheme={chart.colorScheme}
-                    isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                    isChecked={!chart.skip}
-                    value={`${index}`}
-                    onChange={() => dispatch.firefly.filterData({ index })}
-                  />
-                  <Text
-                    maxW={200}
-                    numberOfLines={1}
-                    ml={1}
-                    color={chart.color}
-                    fontSize={15}
-                  >
-                    {chart.label}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
+          <Text
+            style={{
+              fontFamily: 'Montserrat_Bold',
+              margin: 15,
+              color: colors.text,
+              fontSize: 25,
+              lineHeight: 25,
+            }}
+          >
+            {translate('assets_history_chart')}
+            {' '}
+            {currentCode}
+          </Text>
           <IconButton
             variant="solid"
+            m={2}
             _icon={{
               as: AntDesign,
               name: 'reload1',
@@ -241,7 +205,7 @@ export default function AssetsHistoryChart() {
             }}
           />
         </HStack>
-        <View style={{ height: 90 }} />
+        <View style={{ height: 55 }} />
         {loading && (
         <VStack justifyContent="center">
           <HStack h={400} alignItems="center">
@@ -270,6 +234,7 @@ export default function AssetsHistoryChart() {
                   activePoints
                   maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY || 0}
                   minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY || 0}
+                  colors={colors}
                 />
               )}
             />

@@ -239,7 +239,7 @@ export default createModel<RootModel>()({
       const {
         data: transactions,
         meta,
-      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?limit=10&page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
       dispatch.transactions.setMetaPagination({
         page: meta.pagination.currentPage,
@@ -271,7 +271,7 @@ export default createModel<RootModel>()({
         const {
           data: transactions,
           meta,
-        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?limit=10&page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
         dispatch.transactions.setMetaPagination({
           page: meta.pagination.currentPage,
@@ -283,7 +283,7 @@ export default createModel<RootModel>()({
 
       return [];
     },
-    async upsertTransaction({ id = -1 }, rootState): Promise<AxiosResponse> {
+    async upsertTransaction({ id = '-1' }, rootState): Promise<AxiosResponse> {
       const {
         transactions: {
           transactionPayload: {
@@ -298,7 +298,7 @@ export default createModel<RootModel>()({
         transactions: transactions.map((transaction) => ({
           tags: transaction.tags,
           notes: transaction.notes,
-          foreign_amount: transaction.foreignAmount ? parseFloat(transaction.foreignAmount.replace(',', '.')) : 0,
+          foreign_amount: transaction.foreignAmount ? parseFloat(transaction.foreignAmount.replace(',', '.')) : null,
           foreign_currency_id: transaction.foreignCurrencyId,
           description: transaction.description,
           date: transaction.date,
@@ -317,7 +317,7 @@ export default createModel<RootModel>()({
       };
 
       let response: AxiosResponse;
-      if (id !== -1) {
+      if (id !== '-1') {
         response = await dispatch.configuration.apiPut({ url: `/api/v1/transactions/${id}`, body });
       } else {
         response = await dispatch.configuration.apiPost({ url: '/api/v1/transactions', body });

@@ -15,12 +15,18 @@ export default function Filters() {
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const range = useSelector((state: RootState) => state.firefly.rangeDetails.range);
+  const accounts = useSelector((state: RootState) => state.accounts.accounts);
+  const selectedAccountIds = useSelector((state: RootState) => state.accounts.selectedAccountIds);
   const {
     firefly: {
       setRange,
     },
     currencies: {
       setCurrentCode,
+    },
+    accounts: {
+      setSelectedAccountIds,
+      resetSelectedAccountIds,
     },
   } = useDispatch<RootDispatch>();
 
@@ -114,10 +120,71 @@ export default function Filters() {
           </TouchableOpacity>
         ))}
       </HStack>
+      <Text
+        style={{
+          fontFamily: 'Montserrat_Bold',
+          margin: 15,
+          color: colors.text,
+          fontSize: 15,
+          lineHeight: 15,
+        }}
+      >
+        {translate('home_accounts')}
+      </Text>
+      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+        {accounts.map((account, index) => (
+          <TouchableOpacity
+            key={`key-${account.id}`}
+            onPress={() => setSelectedAccountIds(parseInt(account.id, 10))}
+          >
+            <View style={{
+              backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? colors.brandStyle : colors.filterBorderColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              height: 35,
+              margin: 2,
+              paddingHorizontal: 10,
+            }}
+            >
+              <Text
+                style={{ fontFamily: 'Montserrat_Bold', color: 'white', maxWidth: 200 }}
+                numberOfLines={1}
+              >
+                {account.attributes.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+        <TouchableOpacity
+          key={'key-reset'}
+          onPress={() => resetSelectedAccountIds()}
+        >
+          <View style={{
+            backgroundColor: colors.filterBorderColor,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 10,
+            height: 35,
+            margin: 2,
+            paddingHorizontal: 10,
+          }}
+          >
+            <Text
+              style={{ fontFamily: 'Montserrat_Bold', color: 'white', maxWidth: 200 }}
+              numberOfLines={1}
+            >
+              reset
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </HStack>
     </VStack>
   ), [
     range,
     currencies,
     currentCode,
+    accounts,
+    selectedAccountIds,
   ]);
 }

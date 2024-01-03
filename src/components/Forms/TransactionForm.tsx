@@ -147,7 +147,7 @@ export default function TransactionForm({
   navigation,
   title,
   splits = [],
-  id = -1,
+  id = '-1',
 }) {
   const dispatch = useDispatch<RootDispatch>();
 
@@ -184,7 +184,7 @@ export default function TransactionForm({
         behavior={Platform.select({ ios: 'padding', android: 'height' })}
         keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
       >
-        <MultipleTransactionSplitForm isNew={id === null} title={title} splits={splits} />
+        <MultipleTransactionSplitForm isNew={id === '-1'} title={title} splits={splits} />
         <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
         <View style={{ height: 100 }} />
       </KeyboardAvoidingView>

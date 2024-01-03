@@ -23,7 +23,7 @@
         "resizeMode": "contain",
         "backgroundColor": "#ffffff",
         "dark": {
-          "backgroundColor": "#25292e"
+          "backgroundColor": "#121215"
         }
       },
       "supportsTablet": true,
@@ -48,7 +48,7 @@
         "resizeMode": "contain",
         "backgroundColor": "#ffffff",
         "dark": {
-          "backgroundColor": "#25292e"
+          "backgroundColor": "#121215"
         }
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
