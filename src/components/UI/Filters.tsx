@@ -132,10 +132,13 @@ export default function Filters() {
         {translate('home_accounts')}
       </Text>
       <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
-        {accounts.map((account, index) => (
+        {accounts.map((account) => (
           <TouchableOpacity
             key={`key-${account.id}`}
-            onPress={() => setSelectedAccountIds(parseInt(account.id, 10))}
+            onPress={() => {
+              setSelectedAccountIds(parseInt(account.id, 10));
+              navigation.goBack();
+            }}
           >
             <View style={{
               backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? colors.brandStyle : colors.filterBorderColor,
@@ -157,7 +160,7 @@ export default function Filters() {
           </TouchableOpacity>
         ))}
         <TouchableOpacity
-          key={'key-reset'}
+          key="key-reset"
           onPress={() => resetSelectedAccountIds()}
         >
           <View style={{
