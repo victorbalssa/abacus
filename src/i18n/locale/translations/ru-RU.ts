@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Источник',
   configuration_debug: 'Отладка',
   configuration_get_help: 'Получить помощь',
-  assetsHistoryCharts_chart_works: 'Этот график лучше всего работает с четырьмя учетными записями.,',
+  assetsHistoryCharts_chart_works: 'Этот график лучше всего работает с четырьмя учетными записями.',
   assetsHistoryCharts_change_preferences: 'нажмите сюда',
   assetsHistoryCharts_choose_preferences_text: 'выбрать предпочитаемые счета в настройках Firefly III:',
   assetsHistoryCharts_home_screen: 'Главный экран',

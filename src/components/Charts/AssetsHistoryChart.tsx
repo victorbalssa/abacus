@@ -1,13 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import {
-  Text,
-  VStack,
-  HStack,
-  ScrollView,
-  IconButton,
-  View,
-} from 'native-base';
-import {
   VictoryAxis,
   VictoryChart,
   VictoryLine,
@@ -17,9 +9,13 @@ import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import * as Linking from 'expo-linking';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
+import { Pressable, View, ScrollView } from 'react-native';
+import {
+  AStack,
+  AText,
+} from '../UI/ALibrary';
 
 import { RootDispatch, RootState } from '../../store';
 import Loading from '../UI/Loading';
@@ -27,27 +23,11 @@ import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 
 function AccountsLengthMessage() {
-  const { colors } = useThemeColors();
-  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
-
   return (
-    <View m={2}>
-      <Text fontSize={12}>
+    <View style={{ margin: 5 }}>
+      <AText fontSize={12}>
         {translate('assetsHistoryCharts_chart_works')}
-        {' '}
-        <Text
-          style={{ color: colors.brandInfo }}
-          onPress={() => Linking.openURL(`${backendURL}/preferences`)}
-          underline
-        >
-          {translate('assetsHistoryCharts_change_preferences')}
-        </Text>
-        {' '}
-        {translate('assetsHistoryCharts_choose_preferences_text')}
-        {' '}
-        <Text fontFamily="Montserrat_Bold">{translate('assetsHistoryCharts_home_screen')}</Text>
-        .
-      </Text>
+      </AText>
     </View>
   );
 }
@@ -71,27 +51,32 @@ function Cursor({
 }) {
   return (
     <>
-      <VStack
-        bgColor={colors.tileBackgroundColor}
-        mx={2}
-        h={100}
-        top={-110}
+      <AStack
+        flex={0}
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        backgroundColor={colors.tileBackgroundColor}
+        style={{
+          position: 'absolute',
+          top: -120,
+          height: 100,
+          left: 0,
+          right: 0,
+          paddingHorizontal: 10,
+        }}
       >
-        <VStack
-          position="absolute"
-          left={0}
-          right={0}
-          bottom={0}
-          marginLeft="auto"
-          marginRight="auto"
+        <AText fontFamily="Montserrat_Bold" fontSize={16} py={1}>
+          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          }) : '  '}`}
+        </AText>
+        <AStack
+          flex={0}
+          alignItems="flex-start"
+          justifyContent="flex-start"
         >
-          <Text fontWeight={600} fontSize={16} my={1}>
-            {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            }) : '  '}`}
-          </Text>
           {activePoints.map(({
             y: yPoint, childName, style,
           }) => {
@@ -102,23 +87,28 @@ function Cursor({
             } = style;
 
             return (
-              <HStack key={childName} justifyContent="space-between" alignItems="center">
-                <Text alignSelf="flex-start" color={stroke} fontSize={12}>{childName}</Text>
-                <Text alignSelf="flex-start" color={stroke} fontSize={12}>
+              <AStack
+                flex={0}
+                row
+                justifyContent="space-between"
+                key={childName}
+              >
+                <AText color={stroke} fontSize={12}>{childName}</AText>
+                <AText color={stroke} fontSize={12}>
                   {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
-                </Text>
-              </HStack>
+                </AText>
+              </AStack>
             );
           })}
-        </VStack>
-      </VStack>
+        </AStack>
+      </AStack>
       <Line
         stroke="#fff"
         strokeWidth={1}
         x1={x}
         x2={x}
-        y1={0}
-        y2={300}
+        y1={10}
+        y2={295}
       />
       {activePoints.map(({
         y: yPoint, childName, style,
@@ -145,15 +135,15 @@ export default function AssetsHistoryChart() {
   const { colors } = useThemeColors();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
-  const accounts = useSelector((state: RootState) => state.firefly.accounts);
-  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart.loading);
+  const accounts = useSelector((state: RootState) => state.firefly?.accounts);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
 
   const getTickValues = useCallback(() => {
     const dateArray = [];
     const currentDate = new Date(start);
-    currentDate.setDate(currentDate.getDate() + 14);
+    currentDate.setDate(currentDate.getDate() + 10);
 
     while (currentDate <= new Date(end)) {
       dateArray.push(+new Date(currentDate));
@@ -165,53 +155,48 @@ export default function AssetsHistoryChart() {
 
   return useMemo(() => (
     <ScrollView bounces={false}>
-      <VStack
-        bgColor={colors.tileBackgroundColor}
-        borderTopWidth={0.5}
-        borderBottomWidth={0.5}
-        borderColor={colors.listBorderColor}
+      <AStack
+        backgroundColor={colors.tileBackgroundColor}
         justifyContent="center"
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+        }}
       >
-        <HStack
+        <AStack
+          row
+          alignItems="baseline"
+          justifyContent="space-between"
           style={{
-            paddingTop: 10,
-            justifyContent: 'space-between',
-            paddingBottom: 0,
+            paddingHorizontal: 10,
+            paddingVertical: 10,
           }}
         >
-          <Text
-            style={{
-              fontFamily: 'Montserrat_Bold',
-              margin: 15,
-              color: colors.text,
-              fontSize: 25,
-              lineHeight: 25,
-            }}
+          <AText
+            fontFamily="Montserrat_Bold"
+            fontSize={24}
           >
             {translate('assets_history_chart')}
             {' '}
             {currentCode}
-          </Text>
-          <IconButton
-            variant="solid"
-            m={2}
-            _icon={{
-              as: AntDesign,
-              name: 'reload1',
-            }}
+          </AText>
+          <Pressable
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
               dispatch.firefly.getAccountChart();
             }}
-          />
-        </HStack>
-        <View style={{ height: 55 }} />
+          >
+            <AntDesign name="reload1" size={24} color={colors.text} />
+          </Pressable>
+        </AStack>
+        <View style={{ height: 80 }} />
         {loading && (
-        <VStack justifyContent="center">
-          <HStack h={400} alignItems="center">
+        <AStack justifyContent="center">
+          <AStack row style={{ height: 400 }} alignItems="center">
             <Loading />
-          </HStack>
-        </VStack>
+          </AStack>
+        </AStack>
         )}
         {!loading && (
         <VictoryChart
@@ -236,9 +221,9 @@ export default function AssetsHistoryChart() {
                   minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY || 0}
                   colors={colors}
                 />
-              )}
+                        )}
             />
-          )}
+                    )}
         >
           <VictoryAxis
             dependentAxis
@@ -246,6 +231,7 @@ export default function AssetsHistoryChart() {
             tickCount={6}
             tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
             style={{
+              grid: { stroke: '#949494', strokeWidth: 0.2 },
               axis: { stroke: colors.brandLight },
               tickLabels: {
                 fill: colors.text,
@@ -258,6 +244,7 @@ export default function AssetsHistoryChart() {
             tickValues={getTickValues()}
             tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
             style={{
+              grid: { stroke: '#949494', strokeWidth: 0.2 },
               axis: { stroke: colors.brandLight },
               tickLabels: {
                 fill: colors.text,
@@ -267,23 +254,23 @@ export default function AssetsHistoryChart() {
             }}
           />
           {accounts.filter((v) => !v.skip).map((chart) => chart.entries.length > 0 && (
-            <VictoryLine
-              key={chart.label}
-              style={{
-                data: {
-                  stroke: chart.color,
-                  strokeWidth: 2,
-                },
-              }}
-              interpolation="monotoneX"
-              data={chart.entries}
-              name={`${chart.label} (${chart.currencySymbol})`}
-            />
+          <VictoryLine
+            key={chart.label}
+            style={{
+              data: {
+                stroke: chart.color,
+                strokeWidth: 2,
+              },
+            }}
+            interpolation="monotoneX"
+            data={chart.entries}
+            name={`${chart.label} (${chart.currencySymbol})`}
+          />
           ))}
         </VictoryChart>
         )}
         {accounts.length > 4 && (<AccountsLengthMessage />)}
-      </VStack>
+      </AStack>
       <View style={{ height: 200 }} />
     </ScrollView>
   ), [loading, accounts]);

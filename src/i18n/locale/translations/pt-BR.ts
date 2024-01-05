@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Código-fonte',
   configuration_debug: 'Depuração de erros',
   configuration_get_help: 'Obter ajudar',
-  assetsHistoryCharts_chart_works: 'Este gráfico funciona melhor com até 4 contas,',
+  assetsHistoryCharts_chart_works: 'Este gráfico funciona melhor com até 4 contas.',
   assetsHistoryCharts_change_preferences: 'toque aqui',
   assetsHistoryCharts_choose_preferences_text: 'para escolher suas contas preferidas nas configurações do Firefly III:',
   assetsHistoryCharts_home_screen: 'Início',

@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Quellen',
   configuration_debug: 'Debuggen',
   configuration_get_help: 'Hilfe',
-  assetsHistoryCharts_chart_works: 'Dieses Diagramm funktioniert am besten mit bis zu 4 Konten,',
+  assetsHistoryCharts_chart_works: 'Dieses Diagramm funktioniert am besten mit bis zu 4 Konten.',
   assetsHistoryCharts_change_preferences: 'Hier Klicken',
   assetsHistoryCharts_choose_preferences_text: 'um Ihre bevorzugten Konten in den Firefly III Einstellungen zu wählen:',
   assetsHistoryCharts_home_screen: 'Startbildschirm',

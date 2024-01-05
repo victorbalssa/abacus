@@ -4,7 +4,7 @@ import { HStack, VStack } from 'native-base';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -20,11 +20,13 @@ export default function Filters() {
   const {
     firefly: {
       setRange,
+      getAccountChart,
     },
     currencies: {
       setCurrentCode,
     },
     accounts: {
+      getAccounts,
       setSelectedAccountIds,
       resetSelectedAccountIds,
     },
@@ -58,6 +60,7 @@ export default function Filters() {
             onPress={() => {
               setCurrentCode(currency.attributes.code);
               navigation.goBack();
+              getAccounts();
             }}
           >
             <View style={{
@@ -138,6 +141,7 @@ export default function Filters() {
             onPress={() => {
               setSelectedAccountIds(parseInt(account.id, 10));
               navigation.goBack();
+              getAccountChart();
             }}
           >
             <View style={{
@@ -161,7 +165,11 @@ export default function Filters() {
         ))}
         <TouchableOpacity
           key="key-reset"
-          onPress={() => resetSelectedAccountIds()}
+          onPress={() => {
+            resetSelectedAccountIds();
+            navigation.goBack();
+            getAccountChart();
+          }}
         >
           <View style={{
             backgroundColor: colors.filterBorderColor,
@@ -173,12 +181,7 @@ export default function Filters() {
             paddingHorizontal: 10,
           }}
           >
-            <Text
-              style={{ fontFamily: 'Montserrat_Bold', color: 'white', maxWidth: 200 }}
-              numberOfLines={1}
-            >
-              reset
-            </Text>
+            <AntDesign name="close" size={20} color={colors.text} />
           </View>
         </TouchableOpacity>
       </HStack>

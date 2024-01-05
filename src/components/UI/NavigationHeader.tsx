@@ -30,6 +30,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
   const range = useSelector((state: RootState) => state.firefly.rangeDetails.range);
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
+  const selectedAccountIds = useSelector((state: RootState) => state.accounts.selectedAccountIds);
   const { firefly: { setRange } } = useDispatch<RootDispatch>();
 
   if (![0, 1].includes(navigationStateIndex)) {
@@ -98,6 +99,21 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
                 {`${range}M`}
               </AText>
             </View>
+            {selectedAccountIds?.length > 0 && (
+              <View style={{
+                alignSelf: 'flex-start',
+                borderWidth: 0.7,
+                borderColor: colors.text,
+                borderRadius: 10,
+                paddingHorizontal: 5,
+                marginHorizontal: 1,
+              }}
+              >
+                <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
+                  {`+${selectedAccountIds.length}`}
+                </AText>
+              </View>
+            )}
           </AStack>
         </AStack>
 
@@ -128,6 +144,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
     </ABlurView>
   ), [
     navigationStateIndex,
+    selectedAccountIds,
     isStack,
     currentCode,
     title,
