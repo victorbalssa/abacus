@@ -45,7 +45,7 @@ Information is anonymized and does not include any personal information.
 This request includes the following information:
 
 - `expo-server-url`: `https://u.expo.dev/292ed6dc-804c-4444-95f5-fa5d76d9913b` (https://github.com/victorbalssa/abacus/blob/updates/app.json#L17)
-- `expo-runtime-version`: `0.11.0` (https://github.com/victorbalssa/abacus/blob/updates/app.json#L12)
+- `expo-runtime-version`: `0.11.1` (https://github.com/victorbalssa/abacus/blob/updates/app.json#L12)
 - `expo-platform`: `ios` or `android`
 
 That's it. No other information is collected.

@@ -25,7 +25,6 @@ export type AssetAccountType = {
   currencyCode: string,
   currencySymbol: string,
   valueParsed: string,
-  skip: boolean,
   color: string,
   colorScheme: string,
   entries: { x: number, y: number }[],
@@ -130,18 +129,6 @@ export default createModel<RootModel>()({
       return {
         ...state,
         rangeDetails,
-      };
-    },
-
-    filterData(state, payload) {
-      const { index: filterIndex } = payload;
-      const { accounts } = state;
-      const newAccounts = accounts.map((d) => (d));
-      newAccounts[filterIndex].skip = !newAccounts[filterIndex].skip;
-
-      return {
-        ...state,
-        accounts: newAccounts,
       };
     },
 
@@ -284,12 +271,10 @@ export default createModel<RootModel>()({
       let colorIndex = 0;
 
       accounts
-        .filter((account) => account.currencyCode === currentCode)
         .forEach((v, index) => {
           if (colorIndex >= 6) {
             colorIndex = 0;
           }
-          accounts[index].skip = false;
           accounts[index].color = colors[`brandStyle${colorIndex}`];
           accounts[index].colorScheme = `chart${colorIndex}`;
           colorIndex += 1;
@@ -319,7 +304,7 @@ export default createModel<RootModel>()({
           accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
         });
 
-      dispatch.firefly.setData({ accounts });
+      dispatch.firefly.setData({ accounts: accounts.filter((account) => account.currencyCode === currentCode) });
     },
 
     async getBalanceChart(_: void, rootState): Promise<void> {

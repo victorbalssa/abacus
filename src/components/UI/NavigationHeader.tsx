@@ -36,6 +36,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
   if (![0, 1].includes(navigationStateIndex)) {
     return useMemo(() => null, [
       navigationStateIndex,
+      selectedAccountIds,
       isStack,
       currentCode,
       title,

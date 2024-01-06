@@ -61,6 +61,7 @@ export default function Filters() {
               setCurrentCode(currency.attributes.code);
               navigation.goBack();
               getAccounts();
+              resetSelectedAccountIds();
             }}
           >
             <View style={{
