@@ -22,9 +22,9 @@ export type HomeDisplayType = {
 export type AssetAccountType = {
   title: string,
   label: string,
+  currencyCode: string,
   currencySymbol: string,
   valueParsed: string,
-  skip: boolean,
   color: string,
   colorScheme: string,
   entries: { x: number, y: number }[],
@@ -129,18 +129,6 @@ export default createModel<RootModel>()({
       return {
         ...state,
         rangeDetails,
-      };
-    },
-
-    filterData(state, payload) {
-      const { index: filterIndex } = payload;
-      const { accounts } = state;
-      const newAccounts = accounts.map((d) => (d));
-      newAccounts[filterIndex].skip = !newAccounts[filterIndex].skip;
-
-      return {
-        ...state,
-        accounts: newAccounts,
       };
     },
 
@@ -270,46 +258,53 @@ export default createModel<RootModel>()({
             end,
           },
         },
+        currencies: {
+          currentCode,
+        },
+        accounts: {
+          selectedAccountIds,
+        },
       } = rootState;
 
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}` }) as { data: AssetAccountType[] };
+      const accountIdsParam = (selectedAccountIds && selectedAccountIds.length > 0) ? `&accounts[]=${selectedAccountIds.join('&accounts[]=')}` : '';
+      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/account/dashboard?start=${start}&end=${end}${accountIdsParam}` }) as { data: AssetAccountType[] };
       let colorIndex = 0;
 
-      accounts.forEach((v, index) => {
-        if (colorIndex >= 4) {
-          colorIndex = 0;
-        }
-        accounts[index].skip = false;
-        accounts[index].color = colors[`brandStyle${colorIndex}`];
-        accounts[index].colorScheme = `chart${colorIndex}`;
-        colorIndex += 1;
-        accounts[index].entries = range > 3 ? Object.keys(v.entries)
-          .filter((e, i) => i % 2 === 0)
-          .filter((e, i) => i % 2 === 0)
-          .filter((e, i) => i % 2 === 0)
-          .map((key) => {
-            const value = parseFloat(accounts[index].entries[key]);
-            const date = new Date(key);
+      accounts
+        .forEach((v, index) => {
+          if (colorIndex >= 6) {
+            colorIndex = 0;
+          }
+          accounts[index].color = colors[`brandStyle${colorIndex}`];
+          accounts[index].colorScheme = `chart${colorIndex}`;
+          colorIndex += 1;
+          accounts[index].entries = range > 3 ? Object.keys(v.entries)
+            .filter((e, i) => i % 2 === 0)
+            .filter((e, i) => i % 2 === 0)
+            .filter((e, i) => i % 2 === 0)
+            .map((key) => {
+              const value = parseFloat(accounts[index].entries[key]);
+              const date = new Date(key);
 
-            return {
-              x: +date,
-              y: value,
-            };
-          })
-          : Object.keys(v.entries).map((key) => {
-            const value = parseFloat(accounts[index].entries[key]);
-            const date = new Date(key);
+              return {
+                x: +date,
+                y: value,
+              };
+            })
+            : Object.keys(v.entries).map((key) => {
+              const value = parseFloat(accounts[index].entries[key]);
+              const date = new Date(key);
 
-            return {
-              x: +date,
-              y: value,
-            };
-          });
-        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
-        accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
-      });
+              return {
+                x: +date,
+                y: value,
+              };
+            });
+          accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
+          accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
+        });
 
-      dispatch.firefly.setData({ accounts });
+      dispatch.firefly.setData({ accounts: accounts.filter((account) => account.currencyCode === currentCode) });
     },
 
     async getBalanceChart(_: void, rootState): Promise<void> {
@@ -328,52 +323,56 @@ export default createModel<RootModel>()({
         },
       } = rootState;
 
-      const apiSemverMinimum = '2.0.9';
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
-      if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
+      try {
+        const apiSemverMinimum = '2.0.9';
+        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
+        if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
+          this.setData({ earnedChart: [], spentChart: [] });
+          return;
+        }
+
+        const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
+        const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
+
+        const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
+
+        if (earnedChartEntries) {
+          this.setData({
+            earnedChart: Object.keys(earnedChartEntries).map((key) => {
+              const value = parseFloat(earnedChartEntries[key]);
+
+              return {
+                x: key,
+                y: value,
+              };
+            }),
+          });
+        } else {
+          this.setData({ earnedChart: [] });
+        }
+
+        const spentChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'spent')[0]?.entries;
+
+        if (spentChartEntries) {
+          this.setData({
+            spentChart: Object.keys(spentChartEntries).map((key) => {
+              const value = parseFloat(spentChartEntries[key]);
+
+              return {
+                x: key,
+                y: value,
+              };
+            }),
+          });
+        } else {
+          this.setData({ spentChart: [] });
+        }
+      } catch (error) {
         this.setData({ earnedChart: [], spentChart: [] });
-        return;
-      }
-
-      const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
-      const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
-
-      const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
-
-      if (earnedChartEntries) {
-        this.setData({
-          earnedChart: Object.keys(earnedChartEntries).map((key) => {
-            const value = parseFloat(earnedChartEntries[key]);
-
-            return {
-              x: key,
-              y: value,
-            };
-          }),
-        });
-      } else {
-        this.setData({ earnedChart: [] });
-      }
-
-      const spentChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'spent')[0]?.entries;
-
-      if (spentChartEntries) {
-        this.setData({
-          spentChart: Object.keys(spentChartEntries).map((key) => {
-            const value = parseFloat(spentChartEntries[key]);
-
-            return {
-              x: key,
-              y: value,
-            };
-          }),
-        });
-      } else {
-        this.setData({ spentChart: [] });
       }
     },
 
-    async getFreshAccessToken(payload, rootState): Promise<void> {
+    async getFreshAccessToken(payload, rootState): Promise<string> {
       const {
         configuration: {
           backendURL,
@@ -387,21 +386,23 @@ export default createModel<RootModel>()({
           clientId: oauthConfigStorageValue.oauthClientId,
           refreshToken: payload,
           extraParams: {
-            client_secret: oauthConfigStorageValue.oauthClientSecret,
+            client_secret: oauthConfigStorageValue.oauthClientSecret || undefined,
           },
         },
         discovery(backendURL),
       );
 
       if (!response.accessToken) {
-        await dispatch.configuration.resetAllStorage();
-
         throw new Error('Failed to get accessToken with the refresh token. Please restart the Sign In process.');
       }
 
-      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
-      const newStorageValue = JSON.stringify(response);
-      await SecureStore.setItemAsync(secureKeys.tokens, newStorageValue);
+      await SecureStore.setItemAsync(secureKeys.accessToken, response.accessToken);
+      await SecureStore.setItemAsync(secureKeys.refreshToken, response.refreshToken);
+      if (response.issuedAt && response.expiresIn) {
+        await SecureStore.setItemAsync(secureKeys.accessTokenExpiresIn, (response.issuedAt + response.expiresIn + -600).toString());
+      }
+
+      return response.accessToken;
     },
 
     async getNewAccessToken(payload, rootState): Promise<void> {
@@ -435,15 +436,19 @@ export default createModel<RootModel>()({
         throw new Error('Please check Oauth Client ID / Secret.');
       }
 
-      const storageValue = JSON.stringify(response);
       const oauthConfigStorageValue = JSON.stringify({
         oauthClientId,
         oauthClientSecret,
       });
       await Promise.all([
-        SecureStore.setItemAsync(secureKeys.tokens, storageValue),
+        SecureStore.setItemAsync(secureKeys.accessToken, response.accessToken),
+        SecureStore.setItemAsync(secureKeys.refreshToken, response.refreshToken),
         SecureStore.setItemAsync(secureKeys.oauthConfig, oauthConfigStorageValue),
       ]);
+
+      if (response.issuedAt && response.expiresIn) {
+        await SecureStore.setItemAsync(secureKeys.accessTokenExpiresIn, (response.issuedAt + response.expiresIn + -600).toString());
+      }
 
       axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
     },

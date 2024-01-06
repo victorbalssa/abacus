@@ -1,11 +1,5 @@
 import React, { useCallback } from 'react';
 import {
-  Text,
-  VStack,
-  HStack,
-  IconButton, View,
-} from 'native-base';
-import {
   VictoryAxis,
   VictoryBar,
   VictoryChart,
@@ -18,11 +12,12 @@ import * as Haptics from 'expo-haptics';
 import * as Localization from 'expo-localization';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ScrollView } from 'react-native';
+import { ScrollView, View, Pressable } from 'react-native';
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
+import { AStack, AText } from '../UI/ALibrary';
 
 export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
@@ -31,12 +26,13 @@ export default function BalanceHistoryChart() {
   const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart);
   const spentChart = useSelector((state: RootState) => state.firefly.spentChart);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart.loading);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
 
   const getTickValues = useCallback(() => {
     const dateArray = [];
     const currentDate = new Date(start);
-    currentDate.setDate(currentDate.getDate() + 14);
+    currentDate.setDate(currentDate.getDate() + 10);
 
     while (currentDate <= new Date(end)) {
       dateArray.push(+new Date(currentDate));
@@ -48,51 +44,47 @@ export default function BalanceHistoryChart() {
 
   return (
     <ScrollView bounces={false}>
-      <VStack
-        bgColor={colors.tileBackgroundColor}
-        borderTopWidth={0.5}
-        borderBottomWidth={0.5}
-        borderColor={colors.listBorderColor}
+      <AStack
+        backgroundColor={colors.tileBackgroundColor}
         justifyContent="center"
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+        }}
       >
-        <Text
+        <AStack
+          row
+          alignItems="baseline"
+          justifyContent="space-between"
           style={{
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 25,
-          }}
-        >
-          {translate('balance_history_chart')}
-        </Text>
-        <HStack
-          justifyContent="flex-end"
-          style={{
-            marginTop: 10,
-            paddingTop: 0,
             paddingHorizontal: 10,
-            paddingBottom: 0,
+            paddingVertical: 10,
           }}
         >
-          <IconButton
-            variant="solid"
-            _icon={{
-              as: AntDesign,
-              name: 'reload1',
-            }}
+          <AText
+            fontFamily="Montserrat_Bold"
+            fontSize={24}
+          >
+            {translate('balance_history_chart')}
+            {' '}
+            {currentCode}
+          </AText>
+          <Pressable
             onPress={() => {
-              dispatch.firefly.getBalanceChart();
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+              dispatch.firefly.getBalanceChart();
             }}
-          />
-        </HStack>
+          >
+            <AntDesign name="reload1" size={24} color={colors.text} />
+          </Pressable>
+        </AStack>
         {loading && (
-        <VStack justifyContent="center">
-          <HStack h={400} alignItems="center">
-            <Loading />
-          </HStack>
-        </VStack>
+          <AStack justifyContent="center">
+            <AStack row style={{ height: 400 }} alignItems="center">
+              <Loading />
+            </AStack>
+          </AStack>
         )}
         {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
         <VictoryChart
@@ -204,9 +196,9 @@ export default function BalanceHistoryChart() {
         </VictoryChart>
         )}
         {!loading && (isEmpty(spentChart) && isEmpty(earnedChart)) && (
-        <Text p={2}>{translate('balance_history_chart_no_data')}</Text>
+          <AText px={2}>{translate('balance_history_chart_no_data')}</AText>
         )}
-      </VStack>
+      </AStack>
       <View style={{ height: 200 }} />
     </ScrollView>
   );

@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Código-fonte',
   configuration_debug: 'Depuração de erros',
   configuration_get_help: 'Obter ajudar',
-  assetsHistoryCharts_chart_works: 'Este gráfico funciona melhor com até 4 contas,',
+  assetsHistoryCharts_chart_works: 'Este gráfico funciona melhor com até 4 contas.',
   assetsHistoryCharts_change_preferences: 'toque aqui',
   assetsHistoryCharts_choose_preferences_text: 'para escolher suas contas preferidas nas configurações do Firefly III:',
   assetsHistoryCharts_home_screen: 'Início',
@@ -120,4 +120,14 @@ export default {
   balance_history_chart_no_data: 'Para acessar esse gráfico, por favor atualize seu Firefly III para a versão mais recente.',
   account_not_included_in_net_worth: '* Conta não incluída no Patrimônio Líquido.',
 
+  // from 0.10.0
+  period: 'Período',
+  currency: 'Moeda',
+
+  home_all_accounts: 'Todas as contas',
+
+  // from 0.10.3
+  router_back_button: 'Voltar',
+  transaction_clone: 'Clonar',
+  transaction_delete: 'Apagar',
 };

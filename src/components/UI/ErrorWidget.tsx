@@ -41,10 +41,7 @@ export default function ErrorWidget() {
     }
 
     if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 401) {
-      Promise.all([
-        SecureStore.deleteItemAsync(secureKeys.tokens),
-        SecureStore.deleteItemAsync(secureKeys.oauthConfig),
-      ]).then(goToOauth);
+      Promise.all([SecureStore.deleteItemAsync(secureKeys.accessToken)]).then(goToOauth);
     }
   }, [error]);
 

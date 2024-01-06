@@ -68,12 +68,27 @@ export default function OauthScreen({ navigation }: ScreenType) {
     }
   };
 
+  const isTokenFresh = (expiresIn: string): boolean => {
+    if (expiresIn && parseInt(expiresIn, 10) > 0) {
+      const now = Math.floor(Date.now() / 1000);
+      return now < parseInt(expiresIn, 10);
+    }
+    // if there is no expiration time, it is assumed to never expire.
+    return true;
+  };
+
   useEffect(() => {
     (async () => {
-      const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
-      const storageValue = JSON.parse(tokens);
-      if (storageValue && storageValue.accessToken && backendURL) {
-        axios.defaults.headers.Authorization = `Bearer ${storageValue.accessToken}`;
+      let accessToken = await SecureStore.getItemAsync(secureKeys.accessToken);
+      const refreshToken = await SecureStore.getItemAsync(secureKeys.refreshToken);
+      const expiresIn = await SecureStore.getItemAsync(secureKeys.accessTokenExpiresIn);
+
+      if (!isTokenFresh(expiresIn) && refreshToken) {
+        accessToken = await dispatch.firefly.getFreshAccessToken(refreshToken);
+      }
+
+      if (accessToken && backendURL) {
+        axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
         try {
           await faceIdCheck();
@@ -158,11 +173,7 @@ export default function OauthScreen({ navigation }: ScreenType) {
 
       // test personal token
       await axios.get(`${backendURL}/api/v1/about/user`);
-
-      const storageValue = JSON.stringify({
-        accessToken: config.personalAccessToken,
-      });
-      await SecureStore.setItemAsync(secureKeys.tokens, storageValue);
+      await SecureStore.setItemAsync(secureKeys.accessToken, config.personalAccessToken);
 
       toast.show({
         render: ({ id }) => (

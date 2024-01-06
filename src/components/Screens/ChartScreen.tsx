@@ -75,6 +75,7 @@ export default function ChartScreen() {
         ref={viewPagerRef}
         initialPage={0}
         style={{ flex: 1 }}
+        scrollEnabled={false}
         onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
           [
             {

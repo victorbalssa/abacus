@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Sources',
   configuration_debug: 'Debug',
   configuration_get_help: 'Help',
-  assetsHistoryCharts_chart_works: 'Questo grafico funziona meglio con 4 account,',
+  assetsHistoryCharts_chart_works: 'Questo grafico funziona meglio con 4 account.',
   assetsHistoryCharts_change_preferences: 'clicca qui',
   assetsHistoryCharts_choose_preferences_text: 'Per selezionare i tuoi account preferiti in Firefly III preferenze:',
   assetsHistoryCharts_home_screen: 'Schermata Home',

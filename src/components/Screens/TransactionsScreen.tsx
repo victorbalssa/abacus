@@ -185,7 +185,9 @@ function RenderItem({ item }: { item: TransactionType }) {
               numberOfLines={1}
               paddingTop={2}
             >
-              {item.attributes.transactions.length > 1 ? `${item.attributes.transactions.length} splits • ${item.attributes.groupTitle}` : item.attributes.transactions[0].description}
+              {item.attributes.groupTitle}
+              {item.attributes.groupTitle?.length > 0 ? ': ' : ''}
+              {item.attributes.transactions[0].description}
             </Text>
 
             <Text
@@ -285,7 +287,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
         <VStack alignItems="center">
           <Icon as={<MaterialIcons name="content-copy" />} color="white" size="sm" />
           <Text color="white" fontSize="xs" fontWeight="medium">
-            Clone
+            {translate('transaction_clone')}
           </Text>
         </VStack>
       </Pressable>
@@ -300,7 +302,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
         <VStack alignItems="center">
           <Icon as={<MaterialIcons name="delete" />} color="white" size="sm" />
           <Text color="white" fontSize="xs" fontWeight="medium">
-            Delete
+            {translate('transaction_delete')}
           </Text>
         </VStack>
       </Pressable>

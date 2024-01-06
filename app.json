@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "0.10.2",
+    "version": "0.11.1",
     "orientation": "portrait",
     "updates": {
       "enabled": true,
@@ -23,7 +23,7 @@
         "resizeMode": "contain",
         "backgroundColor": "#ffffff",
         "dark": {
-          "backgroundColor": "#25292e"
+          "backgroundColor": "#121215"
         }
       },
       "supportsTablet": true,
@@ -35,7 +35,7 @@
         "usesNonExemptEncryption": false
       },
       "bundleIdentifier": "abacus.ios.app",
-      "buildNumber": "0.10.2"
+      "buildNumber": "0.11.1"
     },
     "android": {
       "icon": "./src/images/icon-abacus.png",
@@ -48,17 +48,17 @@
         "resizeMode": "contain",
         "backgroundColor": "#ffffff",
         "dark": {
-          "backgroundColor": "#25292e"
+          "backgroundColor": "#121215"
         }
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
-      "versionCode": 11
+      "versionCode": 13
     },
     "web": {
       "bundler": "metro"
     },
-    "scheme": "abacusiosapp",
+    "scheme": "abacusfiiiapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
     "runtimeVersion": {
       "policy": "sdkVersion"

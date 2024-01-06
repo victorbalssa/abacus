@@ -217,7 +217,9 @@ export default createModel<RootModel>()({
      */
     async resetAllStorage(): Promise<void> {
       await Promise.all([
-        SecureStore.deleteItemAsync(secureKeys.tokens),
+        SecureStore.deleteItemAsync(secureKeys.accessToken),
+        SecureStore.deleteItemAsync(secureKeys.accessTokenExpiresIn),
+        SecureStore.deleteItemAsync(secureKeys.refreshToken),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
         dispatch.accounts.resetState(),
         dispatch.budgets.resetState(),

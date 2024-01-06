@@ -71,6 +71,9 @@ export default function AutocompleteField({
   const handleSelectAutocomplete = useCallback((autocomplete) => {
     onSelectAutocomplete(autocomplete);
     setDisplayAutocomplete(false);
+    if (multiple) {
+      setMultipleValue('');
+    }
   }, [onSelectAutocomplete]);
 
   const handleDeleteMultiple = useCallback((item) => {

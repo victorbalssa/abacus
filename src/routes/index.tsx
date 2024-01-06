@@ -28,6 +28,7 @@ import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
 // UI components
 import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
+import ErrorWidget from '../components/UI/ErrorWidget';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -115,6 +116,7 @@ function TabBarComponent({
         />
       </ABlurView>
       <NavigationHeader navigation={navigation} />
+      <ErrorWidget />
     </>
   );
 }
@@ -196,7 +198,7 @@ function TransactionsStack() {
           headerShown: true,
           headerTitle: '',
           headerBackTitleVisible: true,
-          headerBackTitle: 'Back',
+          headerBackTitle: translate('router_back_button'),
           headerBackTitleStyle: {
             fontFamily: 'Montserrat_Bold',
           },

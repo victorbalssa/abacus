@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Viri',
   configuration_debug: 'Razhroščevanje',
   configuration_get_help: 'Pridobite pomoč',
-  assetsHistoryCharts_chart_works: 'Ta grafikon najbolje deluje z do 4 računi,',
+  assetsHistoryCharts_chart_works: 'Ta grafikon najbolje deluje z do 4 računi.',
   assetsHistoryCharts_change_preferences: 'kliknite tukaj',
   assetsHistoryCharts_choose_preferences_text: 'da izberete želene račune v nastavitvah Firefly III:',
   assetsHistoryCharts_home_screen: 'Domači zaslon',

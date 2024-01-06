@@ -1,15 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import {
-  Text,
-  VStack,
-  Checkbox,
-  HStack,
-  Pressable,
-  ScrollView,
-  IconButton,
-  View,
-} from 'native-base';
-import {
   VictoryAxis,
   VictoryChart,
   VictoryLine,
@@ -19,37 +9,25 @@ import { maxBy, minBy } from 'lodash';
 import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import * as Linking from 'expo-linking';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
+import { Pressable, View, ScrollView } from 'react-native';
+import {
+  AStack,
+  AText,
+} from '../UI/ALibrary';
 
 import { RootDispatch, RootState } from '../../store';
 import Loading from '../UI/Loading';
 import translate from '../../i18n/locale';
-import { D_WIDTH, useThemeColors } from '../../lib/common';
+import { useThemeColors } from '../../lib/common';
 
 function AccountsLengthMessage() {
-  const { colors } = useThemeColors();
-  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
-
   return (
-    <View m={2}>
-      <Text fontSize={11}>
+    <View style={{ margin: 5 }}>
+      <AText fontSize={12}>
         {translate('assetsHistoryCharts_chart_works')}
-        {' '}
-        <Text
-          style={{ color: colors.brandInfo }}
-          onPress={() => Linking.openURL(`${backendURL}/preferences`)}
-          underline
-        >
-          {translate('assetsHistoryCharts_change_preferences')}
-        </Text>
-        {' '}
-        {translate('assetsHistoryCharts_choose_preferences_text')}
-        {' '}
-        <Text fontFamily="Montserrat_Bold">{translate('assetsHistoryCharts_home_screen')}</Text>
-        .
-      </Text>
+      </AText>
     </View>
   );
 }
@@ -57,8 +35,8 @@ function AccountsLengthMessage() {
 function CursorPointer({ x, y, stroke }) {
   return (
     <>
-      <Circle cx={x} cy={y} r="10" fill={stroke} />
-      <Circle cx={x} cy={y} r="7" fill="#fff" />
+      <Circle cx={x} cy={y} r="7" fill={stroke} />
+      <Circle cx={x} cy={y} r="4" fill="#fff" />
     </>
   );
 }
@@ -69,58 +47,68 @@ function Cursor({
   minY,
   maxY,
   activePoints,
+  colors,
 }) {
   return (
     <>
-      <VStack ml={2} h={100} top={-100} borderTopRadius={15} mr={5}>
-        <HStack
-          justifyContent="center"
-          minW={100}
+      <AStack
+        flex={0}
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        backgroundColor={colors.tileBackgroundColor}
+        style={{
+          position: 'absolute',
+          top: -120,
+          height: 100,
+          left: 0,
+          right: 0,
+          paddingHorizontal: 10,
+        }}
+      >
+        <AText fontFamily="Montserrat_Bold" fontSize={16} py={1}>
+          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          }) : '  '}`}
+        </AText>
+        <AStack
+          flex={0}
+          alignItems="flex-start"
+          justifyContent="flex-start"
         >
-          <Text fontWeight={600} pt={2} fontSize={18}>
-            {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            }) : '  '}`}
-          </Text>
-        </HStack>
-        <VStack
-          position="absolute"
-          left={x < D_WIDTH - 90 ? x - 35 : undefined}
-          right={0}
-          bottom={0}
-          marginLeft="auto"
-          marginRight="auto"
-          minW={100}
-        >
-          <ScrollView maxHeight={110}>
-            {activePoints.map(({
-              y: yPoint, childName, style,
-            }) => {
-              const {
-                data: {
-                  stroke,
-                },
-              } = style;
+          {activePoints.map(({
+            y: yPoint, childName, style,
+          }) => {
+            const {
+              data: {
+                stroke,
+              },
+            } = style;
 
-              return (
-                <Text key={childName} alignSelf="flex-start" ml={1} color={stroke} fontSize={12}>
+            return (
+              <AStack
+                flex={0}
+                row
+                justifyContent="space-between"
+                key={childName}
+              >
+                <AText color={stroke} fontSize={12}>{childName}</AText>
+                <AText color={stroke} fontSize={12}>
                   {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
-                </Text>
-              );
-            })}
-          </ScrollView>
-        </VStack>
-      </VStack>
+                </AText>
+              </AStack>
+            );
+          })}
+        </AStack>
+      </AStack>
       <Line
-        strokeDasharray="5, 5"
-        stroke="#676767"
-        strokeWidth={2}
+        stroke="#fff"
+        strokeWidth={1}
         x1={x}
         x2={x}
         y1={10}
-        y2={299}
+        y2={295}
       />
       {activePoints.map(({
         y: yPoint, childName, style,
@@ -147,14 +135,15 @@ export default function AssetsHistoryChart() {
   const { colors } = useThemeColors();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
-  const accounts = useSelector((state: RootState) => state.firefly.accounts);
-  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart.loading);
+  const accounts = useSelector((state: RootState) => state.firefly?.accounts);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
 
   const getTickValues = useCallback(() => {
     const dateArray = [];
     const currentDate = new Date(start);
-    currentDate.setDate(currentDate.getDate() + 14);
+    currentDate.setDate(currentDate.getDate() + 10);
 
     while (currentDate <= new Date(end)) {
       dateArray.push(+new Date(currentDate));
@@ -166,88 +155,48 @@ export default function AssetsHistoryChart() {
 
   return useMemo(() => (
     <ScrollView bounces={false}>
-      <VStack
-        bgColor={colors.tileBackgroundColor}
-        borderTopWidth={0.5}
-        borderBottomWidth={0.5}
-        borderColor={colors.listBorderColor}
+      <AStack
+        backgroundColor={colors.tileBackgroundColor}
         justifyContent="center"
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+        }}
       >
-        <Text
+        <AStack
+          row
+          alignItems="baseline"
+          justifyContent="space-between"
           style={{
-            paddingTop: 15,
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 25,
-          }}
-        >
-          {translate('assets_history_chart')}
-        </Text>
-        <HStack
-          style={{
-            marginTop: 10,
-            paddingTop: 0,
             paddingHorizontal: 10,
-            justifyContent: 'space-between',
-            paddingBottom: 0,
+            paddingVertical: 10,
           }}
         >
-          <View>
-            {accounts.map((chart, index) => (
-              <Pressable
-                key={`key-${chart.label}`}
-                onPress={() => dispatch.firefly.filterData({ index })}
-                isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                _disabled={{
-                  style: {
-                    opacity: 0.4,
-                  },
-                }}
-              >
-                <HStack p={1} key={`key-${chart.label}`}>
-                  <Checkbox
-                    accessibilityLabel={`key-${chart.color}`}
-                    key={`key-${chart.label}`}
-                    colorScheme={chart.colorScheme}
-                    isDisabled={!chart.skip && accounts.filter((v) => !v.skip).length < 2}
-                    isChecked={!chart.skip}
-                    value={`${index}`}
-                    onChange={() => dispatch.firefly.filterData({ index })}
-                  />
-                  <Text
-                    maxW={200}
-                    numberOfLines={1}
-                    ml={1}
-                    color={chart.color}
-                    fontSize={15}
-                  >
-                    {chart.label}
-                  </Text>
-                </HStack>
-              </Pressable>
-            ))}
-          </View>
-          <IconButton
-            variant="solid"
-            _icon={{
-              as: AntDesign,
-              name: 'reload1',
-            }}
+          <AText
+            fontFamily="Montserrat_Bold"
+            fontSize={24}
+          >
+            {translate('assets_history_chart')}
+            {' '}
+            {currentCode}
+          </AText>
+          <Pressable
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
               dispatch.firefly.getAccountChart();
             }}
-          />
-        </HStack>
-        <View style={{ height: 90 }} />
+          >
+            <AntDesign name="reload1" size={24} color={colors.text} />
+          </Pressable>
+        </AStack>
+        <View style={{ height: 80 }} />
         {loading && (
-        <VStack justifyContent="center">
-          <HStack h={400} alignItems="center">
+        <AStack justifyContent="center">
+          <AStack row style={{ height: 400 }} alignItems="center">
             <Loading />
-          </HStack>
-        </VStack>
+          </AStack>
+        </AStack>
         )}
         {!loading && (
         <VictoryChart
@@ -270,10 +219,11 @@ export default function AssetsHistoryChart() {
                   activePoints
                   maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY || 0}
                   minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY || 0}
+                  colors={colors}
                 />
-              )}
+                        )}
             />
-          )}
+                    )}
         >
           <VictoryAxis
             dependentAxis
@@ -281,6 +231,7 @@ export default function AssetsHistoryChart() {
             tickCount={6}
             tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
             style={{
+              grid: { stroke: '#949494', strokeWidth: 0.2 },
               axis: { stroke: colors.brandLight },
               tickLabels: {
                 fill: colors.text,
@@ -293,6 +244,7 @@ export default function AssetsHistoryChart() {
             tickValues={getTickValues()}
             tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
             style={{
+              grid: { stroke: '#949494', strokeWidth: 0.2 },
               axis: { stroke: colors.brandLight },
               tickLabels: {
                 fill: colors.text,
@@ -302,23 +254,23 @@ export default function AssetsHistoryChart() {
             }}
           />
           {accounts.filter((v) => !v.skip).map((chart) => chart.entries.length > 0 && (
-            <VictoryLine
-              key={chart.label}
-              style={{
-                data: {
-                  stroke: chart.color,
-                  strokeWidth: 2,
-                },
-              }}
-              interpolation="monotoneX"
-              data={chart.entries}
-              name={`${chart.label} (${chart.currencySymbol})`}
-            />
+          <VictoryLine
+            key={chart.label}
+            style={{
+              data: {
+                stroke: chart.color,
+                strokeWidth: 2,
+              },
+            }}
+            interpolation="monotoneX"
+            data={chart.entries}
+            name={`${chart.label} (${chart.currencySymbol})`}
+          />
           ))}
         </VictoryChart>
         )}
         {accounts.length > 4 && (<AccountsLengthMessage />)}
-      </VStack>
+      </AStack>
       <View style={{ height: 200 }} />
     </ScrollView>
   ), [loading, accounts]);

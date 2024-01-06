@@ -4,7 +4,7 @@
 
 ![img_1.png](img_1.png)
 1. Go to `/profile` 
-2. Create a new Oauth client with redirect URI: `abacusiosapp://redirect`
+2. Create a new Oauth client with redirect URI: `abacusfiiiapp://redirect`
 
 ![img.png](img.png)
 
@@ -12,7 +12,7 @@
 
 4. No need to use the secret client but if you do so copy and paste it in the `Oauth Client Secret` field.
 
-<img alt="img_2.png" height="670" src="img_2.png" width="300"/>
+<img alt="img_2.jpeg" height="670" src="img_2.jpeg" width="300"/>
 
 ### Personal Access Token
 

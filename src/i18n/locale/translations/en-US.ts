@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Sources',
   configuration_debug: 'Debug',
   configuration_get_help: 'Get Help',
-  assetsHistoryCharts_chart_works: 'This chart works best with up to 4 accounts,',
+  assetsHistoryCharts_chart_works: 'This chart works best with up to 4 accounts.',
   assetsHistoryCharts_change_preferences: 'click here',
   assetsHistoryCharts_choose_preferences_text: 'to choose your preferred accounts in the Firefly III preferences:',
   assetsHistoryCharts_home_screen: 'Home screen',
@@ -117,7 +117,7 @@ export default {
   // from 0.9.2
   assets_history_chart: 'Accounts chart',
   balance_history_chart: 'Net Worth chart',
-  balance_history_chart_no_data: 'To access this chart, please update FireflyIII to the last version.',
+  balance_history_chart_no_data: 'To access this graph, please update FireflyIII to the latest version.',
   account_not_included_in_net_worth: '* Account not included in Net Worth.',
 
   // from 0.10.0
@@ -125,4 +125,9 @@ export default {
   currency: 'Currency',
 
   home_all_accounts: 'All Accounts',
+
+  // from 0.10.3
+  router_back_button: 'Back',
+  transaction_clone: 'Clone',
+  transaction_delete: 'Delete',
 };

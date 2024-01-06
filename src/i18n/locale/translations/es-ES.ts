@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Fuentes',
   configuration_debug: 'Depurar',
   configuration_get_help: 'Conseguir Ayuda',
-  assetsHistoryCharts_chart_works: 'Este gráfico funciona de forma óptima con hasta 4 cuentas,',
+  assetsHistoryCharts_chart_works: 'Este gráfico funciona de forma óptima con hasta 4 cuentas.',
   assetsHistoryCharts_change_preferences: 'clica aquí',
   assetsHistoryCharts_choose_preferences_text: 'para escoger tus cuentas preferidas en los ajustes de Firefly III:',
   assetsHistoryCharts_home_screen: 'Pantalla de inicio',

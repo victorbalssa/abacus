@@ -4,6 +4,7 @@ import { HStack, VStack } from 'native-base';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -14,12 +15,20 @@ export default function Filters() {
   const currencies = useSelector((state: RootState) => state.currencies.currencies);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const range = useSelector((state: RootState) => state.firefly.rangeDetails.range);
+  const accounts = useSelector((state: RootState) => state.accounts.accounts);
+  const selectedAccountIds = useSelector((state: RootState) => state.accounts.selectedAccountIds);
   const {
     firefly: {
       setRange,
+      getAccountChart,
     },
     currencies: {
       setCurrentCode,
+    },
+    accounts: {
+      getAccounts,
+      setSelectedAccountIds,
+      resetSelectedAccountIds,
     },
   } = useDispatch<RootDispatch>();
 
@@ -51,6 +60,8 @@ export default function Filters() {
             onPress={() => {
               setCurrentCode(currency.attributes.code);
               navigation.goBack();
+              getAccounts();
+              resetSelectedAccountIds();
             }}
           >
             <View style={{
@@ -86,7 +97,6 @@ export default function Filters() {
       <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
         {[1, 3, 6, 12].map((period) => (
           <TouchableOpacity
-            disabled={range === period}
             key={period}
             onPress={() => {
               setRange({ range: period });
@@ -94,7 +104,7 @@ export default function Filters() {
             }}
           >
             <View style={{
-              backgroundColor: range === period ? colors.brandStyle : colors.filterBorderColor,
+              backgroundColor: colors.filterBorderColor,
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: 25,
@@ -103,17 +113,85 @@ export default function Filters() {
               margin: 2,
             }}
             >
-              <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
-                {`${period}M`}
+              {range === period ? (
+                <Ionicons name="today" size={18} color="white" />
+              ) : (
+                <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+                  {`${period}M`}
+                </Text>
+              )}
+            </View>
+          </TouchableOpacity>
+        ))}
+      </HStack>
+      <Text
+        style={{
+          fontFamily: 'Montserrat_Bold',
+          margin: 15,
+          color: colors.text,
+          fontSize: 15,
+          lineHeight: 15,
+        }}
+      >
+        {translate('home_accounts')}
+      </Text>
+      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+        {accounts.map((account) => (
+          <TouchableOpacity
+            key={`key-${account.id}`}
+            onPress={() => {
+              setSelectedAccountIds(parseInt(account.id, 10));
+              navigation.goBack();
+              getAccountChart();
+            }}
+          >
+            <View style={{
+              backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? colors.brandStyle : colors.filterBorderColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              height: 35,
+              margin: 2,
+              paddingHorizontal: 10,
+            }}
+            >
+              <Text
+                style={{ fontFamily: 'Montserrat_Bold', color: 'white', maxWidth: 200 }}
+                numberOfLines={1}
+              >
+                {account.attributes.name}
               </Text>
             </View>
           </TouchableOpacity>
         ))}
+        <TouchableOpacity
+          key="key-reset"
+          onPress={() => {
+            resetSelectedAccountIds();
+            navigation.goBack();
+            getAccountChart();
+          }}
+        >
+          <View style={{
+            backgroundColor: colors.filterBorderColor,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 10,
+            height: 35,
+            margin: 2,
+            paddingHorizontal: 10,
+          }}
+          >
+            <AntDesign name="close" size={20} color={colors.text} />
+          </View>
+        </TouchableOpacity>
       </HStack>
     </VStack>
   ), [
     range,
     currencies,
     currentCode,
+    accounts,
+    selectedAccountIds,
   ]);
 }

@@ -7,23 +7,24 @@ import {
   HStack,
   Stack,
   Text,
-  Pressable,
   Switch,
   ScrollView,
   KeyboardAvoidingView,
 } from 'native-base';
-import { Alert, Platform, View } from 'react-native';
+import {
+  Alert, Platform, View, Pressable,
+} from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 
-import { isValidHttpUrl } from '../../lib/common';
+import { isValidHttpUrl, useThemeColors } from '../../lib/common';
 import translate from '../../i18n/locale';
 
 const copyToClipboard = async () => {
-  await Clipboard.setStringAsync('abacusiosapp://redirect');
-  Alert.alert('abacusiosapp://redirect copied to clipboard');
+  await Clipboard.setStringAsync('abacusfiiiapp://redirect');
+  Alert.alert('abacusfiiiapp://redirect copied to clipboard');
 };
 
 export default function OauthForm({
@@ -37,6 +38,7 @@ export default function OauthForm({
   backendURL,
   setBackendURL,
 }) {
+  const { colors } = useThemeColors();
   const [isOauth, setIsAuth] = useState<boolean>(true);
   const toggleIsOauth = () => setIsAuth((value) => !value);
   const isMinimumRequirement = () => {
@@ -90,7 +92,7 @@ export default function OauthForm({
 
           <Stack py={2}>
             <HStack py={2} minH={45} alignItems="center" justifyContent="space-between">
-              <Text fontSize={12} color="gray.600">{translate('auth_use_personal_access_token')}</Text>
+              <Text fontSize={12}>{translate('auth_use_personal_access_token')}</Text>
               <Switch testID="toggle_is_oauth" isChecked={!isOauth} onToggle={toggleIsOauth} colorScheme="primary" />
             </HStack>
           </Stack>
@@ -98,26 +100,36 @@ export default function OauthForm({
           {isOauth && (
           <>
             <HStack flexWrap="wrap">
-              <Text fontSize={12}>
+              <Text fontSize={13} lineHeight={20}>
                 ‣
                 {' '}
                 {translate('auth_create_new_oauth_client')}
                 {' '}
-                <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
+                <Text fontSize={13} lineHeight={20} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
                   {`${isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}/profile`}
                 </Text>
               </Text>
             </HStack>
-            <HStack flexWrap="wrap">
-              <Text py={1} pr={1} fontSize={12}>
+            <HStack flexWrap="wrap" py={2}>
+              <Text py={1} pr={1} fontSize={13}>
                 ‣
                 {' '}
                 {translate('auth_form_set_redirect')}
               </Text>
 
-              <Pressable flexDirection="row" justifyContent="center" alignItems="center" onPress={copyToClipboard} backgroundColor="primary.200" borderRadius={10} py={0} px={0}>
+              <Pressable
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.brandStyle,
+                  borderRadius: 10,
+                  padding: 0,
+                }}
+                onPress={copyToClipboard}
+              >
                 <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
-                <Text fontFamily="Montserrat_Bold" color="white" mr={1}>abacusiosapp://redirect</Text>
+                <Text fontSize={13} fontFamily="Montserrat_Bold" color="white" mr={1}>abacusfiiiapp://redirect</Text>
               </Pressable>
             </HStack>
             <FormControl isRequired>
@@ -154,16 +166,17 @@ export default function OauthForm({
 
           {!isOauth && (
           <>
-            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)}>
+            <Text fontSize={13} lineHeight={20} onPress={() => Linking.openURL(`${backendURL}/profile`)}>
               ‣
               {' '}
               {translate('auth_create_new_personal_access_token')}
+              {' '}
+              <Text fontSize={13} lineHeight={20} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
+                {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
+                /profile
+              </Text>
             </Text>
-            <Text fontSize={12} onPress={() => Linking.openURL(`${backendURL}/profile`)} underline>
-              {isValidHttpUrl(backendURL) ? backendURL : '[Firefly III URL]'}
-              /profile
-            </Text>
-            <FormControl isRequired>
+            <FormControl isRequired py={3}>
               <FormControl.Label testID="auth_form_personal_access_token_label">{translate('auth_form_personal_access_token_label')}</FormControl.Label>
               <Input
                 returnKeyType="done"
@@ -183,8 +196,15 @@ export default function OauthForm({
           </>
           )}
 
-          <Pressable mx={3} my={3} minH={45} alignItems="center" justifyContent="flex-end">
-            <Text onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('auth_form_need_help')}</Text>
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 15,
+            }}
+          >
+            <Text fontSize={12} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('auth_form_need_help')}</Text>
           </Pressable>
 
           <Button
