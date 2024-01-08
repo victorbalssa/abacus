@@ -9,7 +9,6 @@ import * as Haptics from 'expo-haptics';
 import * as Crypto from 'expo-crypto';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useThemeColors } from '../../lib/common';
 import TransactionSplitForm from '../Forms/TransactionSplitForm';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
@@ -19,7 +18,7 @@ import GroupTitle from './Fields/GroupTitle';
 import Loading from '../UI/Loading';
 import { initialSplit } from '../../models/transactions';
 
-function MultipleTransactionSplitForm({ splits, title }) {
+function MultipleTransactionSplitForm({ isNew, splits, title }) {
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -48,6 +47,7 @@ function MultipleTransactionSplitForm({ splits, title }) {
         <TransactionSplitForm
           key={e}
           index={i}
+          isNew={isNew}
           total={splitNumber.length}
           transaction={splits[i] || initialSplit()}
           handleDelete={() => deleteTransactionSplit(i)}
@@ -69,13 +69,13 @@ function MultipleTransactionSplitForm({ splits, title }) {
       >
         {translate('transaction_form_new_split_button')}
       </Button>
-      {splitNumber.length > 1 && (<GroupTitle title={title || 'Default title'} />)}
+      <GroupTitle title={title || ''} />
     </View>
   );
 }
 
-function TransactionFormButtons({ navigation, id, handleSubmit }) {
-  const { loading } = useSelector((state: RootState) => state.loading.effects.transactions[id ? 'updateTransaction' : 'createTransaction']);
+function TransactionFormButtons({ navigation, handleSubmit }) {
+  const loading = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.loading);
   const error = useSelector((state: RootState) => state.transactions.error);
   const success = useSelector((state: RootState) => state.transactions.success);
   const dispatch = useDispatch<RootDispatch>();
@@ -147,9 +147,8 @@ export default function TransactionForm({
   navigation,
   title,
   splits = [],
-  id = null,
+  id = '-1',
 }) {
-  const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
 
   useEffect(() => {
@@ -163,15 +162,11 @@ export default function TransactionForm({
   const handleSubmit = async () => {
     Keyboard.dismiss();
     try {
-      if (id === null) {
-        await dispatch.transactions.createTransaction();
-      } else {
-        await dispatch.transactions.updateTransaction({ id });
-      }
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      await dispatch.transactions.upsertTransaction({ id });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch();
       dispatch.transactions.setSuccessStatus();
     } catch (e) {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch();
       if (e.response) {
         dispatch.transactions.setErrorStatus(e.response.data.message);
       }
@@ -186,15 +181,12 @@ export default function TransactionForm({
           base: '100%',
           lg: 'auto',
         }}
+        behavior={Platform.select({ ios: 'padding', android: 'height' })}
         keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
-        style={{
-          flex: 1,
-          backgroundColor: colors.backgroundColor,
-        }}
       >
-        <MultipleTransactionSplitForm title={title} splits={splits} />
-        <TransactionFormButtons navigation={navigation} id={id} handleSubmit={handleSubmit} />
-        <View style={{ height: 350 }} />
+        <MultipleTransactionSplitForm isNew={id === '-1'} title={title} splits={splits} />
+        <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
+        <View style={{ height: 100 }} />
       </KeyboardAvoidingView>
     ),
     [],

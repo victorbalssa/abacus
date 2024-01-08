@@ -1,13 +1,4 @@
-import React from 'react';
-import {
-  View,
-  Text,
-} from 'react-native';
-import {
-  VStack,
-  HStack,
-  IconButton,
-} from 'native-base';
+import React, { useCallback } from 'react';
 import {
   VictoryAxis,
   VictoryBar,
@@ -18,94 +9,92 @@ import {
 import { isEmpty, round } from 'lodash';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-
 import * as Localization from 'expo-localization';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { ScrollView, View, Pressable } from 'react-native';
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
+import { RootDispatch, RootState } from '../../store';
+import translate from '../../i18n/locale';
+import { AStack, AText } from '../UI/ALibrary';
 
-export default function BalanceHistoryChart({
-  loading,
-  end,
-  range,
-  balances,
-  fetchBalances,
-}) {
+export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
-  const getTickValues = () => [...Array(+range + 1).keys()];
+  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
+  const earnedChart = useSelector((state: RootState) => state.firefly.earnedChart);
+  const spentChart = useSelector((state: RootState) => state.firefly.spentChart);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getBalanceChart.loading);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
+  const dispatch = useDispatch<RootDispatch>();
 
-  const displayTick = (x: number) => {
-    const currentDate = new Date(end);
-    const quarter = Math.floor((currentDate.getMonth() + 3) / 3) - 1;
-    const semi = Math.floor((currentDate.getMonth() + 6) / 6);
-    currentDate.setDate(1);
-    switch (+range) {
-      case 1:
-        currentDate.setMonth(x - 1);
-        break;
-      case 3:
-        currentDate.setMonth(x + (+range * (quarter)) - 1);
-        break;
-      case 6:
-        currentDate.setMonth(x + (+range * (semi - 1)) - 1);
-        break;
-      case 12:
-        currentDate.setMonth(x - 1);
-        break;
-      default:
-        currentDate.setMonth(x - 1);
-        break;
+  const getTickValues = useCallback(() => {
+    const dateArray = [];
+    const currentDate = new Date(start);
+    currentDate.setDate(currentDate.getDate() + 10);
+
+    while (currentDate <= new Date(end)) {
+      dateArray.push(+new Date(currentDate));
+      currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
-    return currentDate.toLocaleString(Localization.locale, { month: 'short' });
-  };
-
-  if (isEmpty(balances)) {
-    return <View><Text>No Data/Endpoint</Text></View>;
-  }
+    return dateArray;
+  }, [start, end]);
 
   return (
-    <VStack
-      mt={2}
-      bgColor={colors.brandLight}
-      borderWidth={0.5}
-      borderColor="#E3E3E3FF"
-      justifyContent="center"
-      borderRadius={5}
-    >
-      <HStack
-        justifyContent="flex-end"
+    <ScrollView bounces={false}>
+      <AStack
+        backgroundColor={colors.tileBackgroundColor}
+        justifyContent="center"
         style={{
-          marginTop: 10,
-          paddingTop: 0,
-          paddingLeft: 15,
-          paddingBottom: 0,
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
         }}
       >
-        <IconButton
-          _icon={{
-            as: AntDesign,
-            name: 'reload1',
+        <AStack
+          row
+          alignItems="baseline"
+          justifyContent="space-between"
+          style={{
+            paddingHorizontal: 10,
+            paddingVertical: 10,
           }}
-          onPress={fetchBalances}
-          onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        />
-      </HStack>
-      {loading && (
-        <VStack m={2} justifyContent="center" borderRadius={10}>
-          <HStack h={400} alignItems="center">
-            <Loading />
-          </HStack>
-        </VStack>
-      )}
-      {!loading && (
+        >
+          <AText
+            fontFamily="Montserrat_Bold"
+            fontSize={24}
+          >
+            {translate('balance_history_chart')}
+            {' '}
+            {currentCode}
+          </AText>
+          <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+              dispatch.firefly.getBalanceChart();
+            }}
+          >
+            <AntDesign name="reload1" size={24} color={colors.text} />
+          </Pressable>
+        </AStack>
+        {loading && (
+          <AStack justifyContent="center">
+            <AStack row style={{ height: 400 }} alignItems="center">
+              <Loading />
+            </AStack>
+          </AStack>
+        )}
+        {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
         <VictoryChart
           padding={{
             top: 10,
             left: 50,
             right: 35,
-            bottom: 135,
+            bottom: 105,
           }}
-          height={430}
+          height={400}
           domainPadding={10}
           minDomain={{ x: 0.5 }}
         >
@@ -117,27 +106,28 @@ export default function BalanceHistoryChart({
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
-                fill: colors.brandDarkLight,
-                fontWeight: 600,
+                fill: colors.text,
+                fontWeight: 200,
               },
             }}
           />
 
           <VictoryAxis
-            offsetY={135}
+            offsetY={105}
             minDomain={{ x: 0 }}
             tickValues={getTickValues()}
-            tickFormat={(x) => displayTick(x)}
+            tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
             style={{
               axis: { stroke: colors.brandLight },
               tickLabels: {
-                fill: colors.brandDarkLight,
-                fontWeight: 600,
+                fill: colors.text,
+                fontWeight: 200,
                 angle: getTickValues().length > 7 ? -40 : 0,
               },
             }}
           />
 
+          {!isEmpty(earnedChart) && (
           <VictoryBar
             key="gain"
             cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
@@ -147,9 +137,12 @@ export default function BalanceHistoryChart({
                 width: 15,
               },
             }}
-            data={balances[0]}
+            data={earnedChart}
             name="gain"
           />
+          )}
+
+          {!isEmpty(spentChart) && (
           <VictoryBar
             key="loose"
             cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
@@ -159,9 +152,12 @@ export default function BalanceHistoryChart({
                 width: 15,
               },
             }}
-            data={balances[1].map((d) => -d)}
+            data={spentChart}
             name="loose"
           />
+          )}
+
+          {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
           <VictoryLine
             key="lineBalance"
             style={{
@@ -171,30 +167,39 @@ export default function BalanceHistoryChart({
               },
             }}
             interpolation="monotoneX"
-            data={balances[0].map((d, i) => d - balances[1][i])}
+            data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
             name="lineBalance"
           />
+          )}
+
+          {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
           <VictoryScatter
             key="ptsBalance"
             style={{
               data: {
                 fill: colors.brandPrimary,
-                stroke: ({ datum }) => ((datum._y < 0) ? colors.brandDanger : colors.brandSuccess),
+                stroke: ({ datum }) => ((datum.y < 0) ? colors.red : colors.green),
                 strokeWidth: 5,
               },
               labels: {
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: 600,
-                fill: ({ datum }) => ((datum._y < 0) ? colors.brandDanger : colors.brandSuccess),
+                fill: colors.text,
               },
             }}
             size={7}
-            labels={({ datum }) => (datum._y !== 0 ? `${(round(datum._y / 1000, 1))}k` : '')}
-            data={balances[0].map((d, i) => d - balances[1][i])}
+            labels={({ datum }) => (datum.y !== 0 ? `${(round(datum.y / 1000, 1))}k` : '')}
+            data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
             name="ptsBalance"
           />
+          )}
         </VictoryChart>
-      )}
-    </VStack>
+        )}
+        {!loading && (isEmpty(spentChart) && isEmpty(earnedChart)) && (
+          <AText px={2}>{translate('balance_history_chart_no_data')}</AText>
+        )}
+      </AStack>
+      <View style={{ height: 200 }} />
+    </ScrollView>
   );
 }

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import { useAuthRequest, TokenResponse } from 'expo-auth-session';
+import { useAuthRequest } from 'expo-auth-session';
 import { CommonActions } from '@react-navigation/native';
 import { useToast } from 'native-base';
 import { Keyboard } from 'react-native';
 
+import * as LocalAuthentication from 'expo-local-authentication';
 import OauthForm from '../Forms/OauthForm';
 import secureKeys from '../../constants/oauth';
 import { discovery, redirectUri } from '../../lib/oauth';
@@ -18,7 +19,7 @@ import translate from '../../i18n/locale';
 
 export default function OauthScreen({ navigation }: ScreenType) {
   const toast = useToast();
-  const { loading } = useSelector((state: RootState) => state.loading.models.firefly);
+  const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNewAccessToken?.loading);
   const configuration = useSelector((state: RootState) => state.configuration);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -56,17 +57,41 @@ export default function OauthScreen({ navigation }: ScreenType) {
     }),
   );
 
+  const faceIdCheck = async () => {
+    if (faceId) {
+      const bioAuth = await LocalAuthentication.authenticateAsync();
+      if (bioAuth.success) {
+        goToHome();
+      }
+    } else {
+      goToHome();
+    }
+  };
+
+  const isTokenFresh = (expiresIn: string): boolean => {
+    if (expiresIn && parseInt(expiresIn, 10) > 0) {
+      const now = Math.floor(Date.now() / 1000);
+      return now < parseInt(expiresIn, 10);
+    }
+    // if there is no expiration time, it is assumed to never expire.
+    return true;
+  };
+
   useEffect(() => {
     (async () => {
-      const tokens = await SecureStore.getItemAsync(secureKeys.tokens);
-      const storageValue = JSON.parse(tokens);
-      if (storageValue && storageValue.accessToken && backendURL) {
-        axios.defaults.headers.Authorization = `Bearer ${storageValue.accessToken}`;
+      let accessToken = await SecureStore.getItemAsync(secureKeys.accessToken);
+      const refreshToken = await SecureStore.getItemAsync(secureKeys.refreshToken);
+      const expiresIn = await SecureStore.getItemAsync(secureKeys.accessTokenExpiresIn);
+
+      if (!isTokenFresh(expiresIn) && refreshToken) {
+        accessToken = await dispatch.firefly.getFreshAccessToken(refreshToken);
+      }
+
+      if (accessToken && backendURL) {
+        axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
         try {
-          if (!TokenResponse.isTokenFresh(storageValue)) {
-            await dispatch.firefly.getFreshAccessToken(storageValue.refreshToken);
-          }
+          await faceIdCheck();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -112,7 +137,6 @@ export default function OauthScreen({ navigation }: ScreenType) {
           Keyboard.dismiss();
 
           await dispatch.firefly.getNewAccessToken(payload);
-          await dispatch.firefly.testAccessToken();
 
           toast.show({
             render: ({ id }) => (
@@ -149,11 +173,7 @@ export default function OauthScreen({ navigation }: ScreenType) {
 
       // test personal token
       await axios.get(`${backendURL}/api/v1/about/user`);
-
-      const storageValue = JSON.stringify({
-        accessToken: config.personalAccessToken,
-      });
-      await SecureStore.setItemAsync(secureKeys.tokens, storageValue);
+      await SecureStore.setItemAsync(secureKeys.accessToken, config.personalAccessToken);
 
       toast.show({
         render: ({ id }) => (
@@ -188,7 +208,7 @@ export default function OauthScreen({ navigation }: ScreenType) {
       loading={loading}
       faceId={faceId}
       backendURL={backendURL}
-      faceIdCheck={goToHome}
+      faceIdCheck={faceIdCheck}
       setConfig={setConfig}
       oauthLogin={() => promptAsync()}
       tokenLogin={tokenLogin}

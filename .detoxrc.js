@@ -1,31 +1,31 @@
 /** @type {Detox.DetoxConfig} */
 module.exports = {
   logger: {
-    level: process.env.CI ? 'debug' : undefined,
+    level: 'debug',
   },
   testRunner: {
     args: {
       '$0': 'jest',
-      config: 'e2e/jest.config.js'
+      config: 'e2e/jest.config.ts'
     },
     jest: {
-      setupTimeout: 120000
+      setupTimeout: 120000,
     }
   },
   artifacts: {
-    rootDir: '.artifacts',
+    rootDir: 'artifacts',
     plugins: {
-      log: { enabled: true },
+      log: { enabled: false },
       screenshot: {
-        shouldTakeAutomaticSnapshots: true,
-        keepOnlyFailedTestsArtifacts: true,
+        shouldTakeAutomaticSnapshots: false,
+        keepOnlyFailedTestsArtifacts: false,
         takeWhen: {
           testStart: false,
-          testDone: true,
+          testDone: false,
         }
       },
       video: {
-        enabled: true,
+        enabled: false,
         android: {
           bitRate: 4000000,
         },
@@ -61,16 +61,34 @@ module.exports = {
     }
   },
   devices: {
-    iPhone14: {
+    IPHONE_15: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone 14'
+        name: 'IPHONE_15'
       }
     },
-    iPadmini: {
+    IPHONE_PRO_MAX: {
       type: 'ios.simulator',
       device: {
-        type: 'iPad mini (6th generation)'
+        name: 'IPHONE_PRO_MAX'
+      }
+    },
+    IPHONE_SE: {
+      type: 'ios.simulator',
+      device: {
+        name: 'IPHONE_SE'
+      }
+    },
+    IPAD_MINI: {
+      type: 'ios.simulator',
+      device: {
+        name: 'IPAD_MINI'
+      }
+    },
+    IPAD_PRO: {
+      type: 'ios.simulator',
+      device: {
+        name: 'IPAD_PRO'
       }
     },
     attached: {
@@ -79,10 +97,16 @@ module.exports = {
         adbName: '.*'
       }
     },
-    emulator: {
+    'android.emulator.resizable': {
       type: 'android.emulator',
       device: {
-        avdName: 'Pixel_3a_API_33_arm64-v8a'
+        avdName: 'Resizable'
+      }
+    },
+    'android.emulator.4': {
+      type: 'android.emulator',
+      device: {
+        avdName: '4'
       }
     }
   },
@@ -91,12 +115,24 @@ module.exports = {
       device: 'simulator',
       app: 'ios.debug'
     },
-    'ios.sim.release.iPhone14': {
-      device: 'iPhone14',
+    'ios.sim.release.IPHONE_PRO_MAX': {
+      device: 'IPHONE_PRO_MAX',
       app: 'ios.release'
     },
-    'ios.sim.release.iPadmini': {
-      device: 'iPadmini',
+    'ios.sim.release.IPHONE_15': {
+      device: 'IPHONE_15',
+      app: 'ios.release'
+    },
+    'ios.sim.release.IPHONE_SE': {
+      device: 'IPHONE_SE',
+      app: 'ios.release'
+    },
+    'ios.sim.release.IPAD_MINI': {
+      device: 'IPAD_MINI',
+      app: 'ios.release'
+    },
+    'ios.sim.release.IPAD_PRO': {
+      device: 'IPAD_PRO',
       app: 'ios.release'
     },
     'android.att.debug': {
@@ -108,11 +144,15 @@ module.exports = {
       app: 'android.release'
     },
     'android.emu.debug': {
-      device: 'emulator',
+      device: 'android.emulator.6',
       app: 'android.debug'
     },
-    'android.emu.release': {
-      device: 'emulator',
+    'android.emu.resizable.release': {
+      device: 'android.emulator.resizable',
+      app: 'android.release'
+    },
+    'android.emu.4.release': {
+      device: 'android.emulator.4',
       app: 'android.release'
     }
   }

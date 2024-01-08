@@ -26,6 +26,7 @@ import { TransactionSplitType } from '../../models/transactions';
 export default function TransactionSplitForm({
   index,
   total,
+  isNew,
   handleDelete,
   transaction,
 }) {
@@ -54,6 +55,17 @@ export default function TransactionSplitForm({
           acc[curr] = '';
           return acc;
         }, {}),
+      };
+      dispatch.transactions.setTransactionSplitByIndex(index, newSplit);
+      return newSplit;
+    });
+  };
+
+  const resetTagTransaction = (item: string) => {
+    setData((split: TransactionSplitType) => {
+      const newSplit = {
+        ...split,
+        tags: split.tags.filter((tag) => tag !== item),
       };
       dispatch.transactions.setTransactionSplitByIndex(index, newSplit);
       return newSplit;
@@ -137,6 +149,7 @@ export default function TransactionSplitForm({
           />
         </HStack>
       )}
+      {isNew && (
       <FormControl isRequired>
         <HStack justifyContent="center">
           <Button.Group isAttached borderRadius={10}>
@@ -162,7 +175,7 @@ export default function TransactionSplitForm({
                 isDisabled={type === formData.type}
                 backgroundColor={type !== formData.type ? colors.tileBackgroundColor : colorItemTypes[formData.type]}
                 key={type}
-                borderWidth={type === formData.type ? 0 : 0.5}
+                borderWidth={0.5}
                 borderColor={colors.listBorderColor}
               >
                 {name}
@@ -171,6 +184,7 @@ export default function TransactionSplitForm({
           </Button.Group>
         </HStack>
       </FormControl>
+      )}
 
       <FormControl mt="1" isRequired>
         <FormControl.Label>
@@ -180,7 +194,7 @@ export default function TransactionSplitForm({
           height={60}
           variant="outline"
           returnKeyType="done"
-          keyboardType="numbers-and-punctuation"
+          keyboardType="decimal-pad"
           placeholder="0.00"
           value={formData.amount}
           textAlign="center"
@@ -203,7 +217,7 @@ export default function TransactionSplitForm({
           small
           placeholder={translate('transaction_form_foreign_currency_label')}
           value={formData.foreignCurrencyCode}
-          onSelectAutocomplete={(autocomplete) => setTransaction({
+          onSelectAutocomplete={(autocomplete: { id: string, code: string }) => setTransaction({
             ...formData,
             foreignCurrencyId: autocomplete.id,
             foreignCurrencyCode: autocomplete.code,
@@ -215,7 +229,7 @@ export default function TransactionSplitForm({
         <Input
           variant="outline"
           returnKeyType="done"
-          keyboardType="numbers-and-punctuation"
+          keyboardType="decimal-pad"
           placeholder="0.00"
           value={formData.foreignAmount}
           textAlign="center"
@@ -310,7 +324,8 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
-        onChangeText={(value) => setTransaction({
+        splitType={formData.type}
+        onChangeText={(value: string) => setTransaction({
           ...formData,
           sourceName: value,
         })}
@@ -328,6 +343,8 @@ export default function TransactionSplitForm({
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}
+        splitType={formData.type}
+        designation="destination"
         onChangeText={(value) => setTransaction({
           ...formData,
           destinationName: value,
@@ -338,7 +355,6 @@ export default function TransactionSplitForm({
         })}
         InputRightElement={deleteBtn(['destinationName'])}
         routeApi="accounts"
-        isDestination
       />
 
       <AutocompleteField
@@ -382,10 +398,7 @@ export default function TransactionSplitForm({
         placeholder={translate('transaction_form_tags_label')}
         value={formData.tags}
         onChangeText={() => {}}
-        onDeleteMultiple={(item) => setTransaction({
-          ...formData,
-          tags: formData.tags.filter((tag) => tag !== item),
-        })}
+        onDeleteMultiple={resetTagTransaction}
         onSelectAutocomplete={(autocomplete) => setTransaction({
           ...formData,
           tags: Array.from(new Set([...formData.tags, autocomplete.name])),

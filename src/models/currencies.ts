@@ -18,12 +18,12 @@ type CurrencyType = {
 
 type CurrencyStateType = {
   currencies: CurrencyType[]
-  current: CurrencyType
+  currentCode: string
 }
 
 const INITIAL_STATE = {
   currencies: [],
-  current: null,
+  currentCode: '',
 } as CurrencyStateType;
 
 export default createModel<RootModel>()({
@@ -34,23 +34,20 @@ export default createModel<RootModel>()({
     setCurrencies(state, payload): CurrencyStateType {
       const {
         currencies = state.currencies,
-        current = state.current,
+        currentCode = state.currentCode,
       } = payload;
 
       return {
         ...state,
         currencies,
-        current,
+        currentCode,
       };
     },
 
-    handleChangeCurrent(state, payload: string): CurrencyStateType {
-      const { currencies } = state;
-      const current = currencies.find((c) => c.id === payload);
-
+    setCurrentCode(state, code: string): CurrencyStateType {
       return {
         ...state,
-        current,
+        currentCode: code,
       };
     },
 
@@ -68,15 +65,18 @@ export default createModel<RootModel>()({
     async getCurrencies(_: void, rootState): Promise<void> {
       const {
         currencies: {
-          current,
+          currentCode = null,
         },
       } = rootState;
 
       const { data: currencies } = await dispatch.configuration.apiFetch({ url: '/api/v1/currencies' }) as { data: CurrencyType[] };
 
+      const defaultCurrency = currencies.filter((c: CurrencyType) => c.attributes.default === true).pop();
+      const defaultCode = defaultCurrency ? defaultCurrency.attributes.code : '';
+
       dispatch.currencies.setCurrencies({
         currencies: currencies.filter((c: CurrencyType) => c.attributes.enabled === true),
-        current: current || currencies.filter((c: CurrencyType) => c.attributes.default === true)[0] || null,
+        currentCode: currentCode || defaultCode,
       });
     },
   }),

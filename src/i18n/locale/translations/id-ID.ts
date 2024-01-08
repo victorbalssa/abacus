@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Sumber',
   configuration_debug: 'Debug',
   configuration_get_help: 'Dapatkan Bantuan',
-  assetsHistoryCharts_chart_works: 'Grafik ini bekerja dengan maksimal 4 akun,',
+  assetsHistoryCharts_chart_works: 'Grafik ini bekerja dengan maksimal 4 akun.',
   assetsHistoryCharts_change_preferences: 'klik di sini',
   assetsHistoryCharts_choose_preferences_text: 'untuk memilih akun yang Anda inginkan di preferensi Firefly III:',
   assetsHistoryCharts_home_screen: 'Layar Beranda',

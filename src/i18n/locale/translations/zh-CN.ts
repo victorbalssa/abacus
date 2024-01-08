@@ -15,7 +15,7 @@ export default {
   configuration_sources: '源码',
   configuration_debug: '调试',
   configuration_get_help: '获取帮助',
-  assetsHistoryCharts_chart_works: '此报表使用 4 个帐户以内最佳，',
+  assetsHistoryCharts_chart_works: '此报表使用 4 个帐户以内最佳',
   assetsHistoryCharts_change_preferences: '点击这里',
   assetsHistoryCharts_choose_preferences_text: '要在 Firefly III 偏好设置中选择您的首选帐户：',
   assetsHistoryCharts_home_screen: '主屏幕',

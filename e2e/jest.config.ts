@@ -1,9 +1,10 @@
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
+  preset: 'ts-jest',
   rootDir: '..',
   setupFiles: ['dotenv/config'],
-  testMatch: ['<rootDir>/e2e/**/*.test.js'],
-  testTimeout: 120000,
+  testMatch: ['<rootDir>/e2e/**/*.test.ts'],
+  testTimeout: 50000,
   maxWorkers: 1,
   globalSetup: 'detox/runners/jest/globalSetup',
   globalTeardown: 'detox/runners/jest/globalTeardown',

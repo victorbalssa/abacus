@@ -15,7 +15,7 @@ export default {
   configuration_sources: 'Quellen',
   configuration_debug: 'Debuggen',
   configuration_get_help: 'Hilfe',
-  assetsHistoryCharts_chart_works: 'Dieses Diagramm funktioniert am besten mit bis zu 4 Konten,',
+  assetsHistoryCharts_chart_works: 'Dieses Diagramm funktioniert am besten mit bis zu 4 Konten.',
   assetsHistoryCharts_change_preferences: 'Hier Klicken',
   assetsHistoryCharts_choose_preferences_text: 'um Ihre bevorzugten Konten in den Firefly III Einstellungen zu wählen:',
   assetsHistoryCharts_home_screen: 'Startbildschirm',
@@ -27,10 +27,14 @@ export default {
   transaction_form_destinationAccount_label: 'Zielkonto',
   transaction_form_date_label: 'Datum',
   transaction_form_amount_label: 'Betrag',
+  transaction_form_foreign_amount_label: 'Ausländischer Betrag',
+  transaction_form_notes_label: 'Notizen',
   transaction_form_category_label: 'Kategorie',
   transaction_form_budget_label: 'Budget',
+  transaction_form_tags_label: 'Schlagwörter',
   transaction_form_reset_button: 'Zurücksetzen',
   transaction_form_submit_button: 'Absenden',
+  transaction_form_new_split_button: 'Teilung hinzufügen',
   transaction_list_alert_title: 'Sind Sie sicher?',
   transaction_list_alert_text: 'Diese Transaktion wird dauerhaft entfernt:',
   transaction_list_delete_button: 'Löschen',
@@ -45,6 +49,7 @@ export default {
   auth_form_need_help: 'Brauchen Sie Hilfe?',
   auth_form_submit_button_initial: 'Anmelden',
   auth_form_submit_button_loading: 'Senden...',
+  auth_form_biometrics_lock: 'Biometrische Sperre',
   home_accounts: 'Konten',
   layout_new_update_header: 'Neue Aktualisierung verfügbar',
   layout_new_update_body_text: 'Sie können später jederzeit unter Einstellungen aktualisieren.',
@@ -100,4 +105,24 @@ export default {
   auth_create_new_personal_access_token: 'Erstellen Sie ein neues Personal Access Token auf der Registerkarte OAuth, hier:',
   oauth_wrong_token_error_description: 'AccessToken konnte nicht validiert werden, bitte überprüfen Sie Ihr Token oder Ihre Backend-URL erneut.',
   transaction_screen_edit_title: 'Transaktion bearbeiten',
+
+  // from 0.9.0
+  transaction_form_foreign_currency_label: 'Ausländischer Betrag',
+  transaction_form_group_title_label: 'Beschreibung der geteilten Transaktion',
+  transaction_form_group_title_placeholder: 'Beschreibung',
+  transaction_form_group_title_helper: 'Wenn Sie eine geteilte Transaktion erstellen, muss eine allgmeine Beschreibung für die geteile Transaktion vorhanden sein.',
+  configuration_review_app_ios: 'Bewerte Abacus im AppStore',
+  configuration_review_app_android: 'Bewerte Abacus im Google Play',
+
+  // from 0.9.2
+  assets_history_chart: 'Kontendiagramm',
+  balance_history_chart: 'Vermögensdiagramm',
+  balance_history_chart_no_data: 'Um auf dieses Diagramm zugreifen zu können, aktualisieren Sie bitte FireflyIII auf die neueste Version.',
+  account_not_included_in_net_worth: '* Konten nicht im Nettovermögen enthalten.',
+
+  // from 0.10.0
+  period: 'Zeitraum',
+  currency: 'Währung',
+
+  home_all_accounts: 'Alle Konten',
 };

@@ -54,14 +54,14 @@ export default createModel<RootModel>()({
           },
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
-      if (current && current.attributes.code) {
+      if (currentCode) {
         const { data: insightCategories } = await dispatch.configuration.apiFetch({ url: `/api/v1/insight/expense/category?start=${start}&end=${end}` }) as { data: InsightCategoryType[]};
 
         const filteredCategories = insightCategories
-          .filter((category: InsightCategoryType) => category.currencyCode === current.attributes.code)
+          .filter((category: InsightCategoryType) => category.currencyCode === currentCode)
           .sort((a, b) => ((a.differenceFloat > b.differenceFloat) ? 1 : -1));
 
         dispatch.categories.setInsightCategories({ insightCategories: filteredCategories });

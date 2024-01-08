@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
-  BottomTabBar, BottomTabBarButtonProps,
+  BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
@@ -18,6 +18,7 @@ import { useThemeColors } from '../lib/common';
 // Screens
 import OauthScreen from '../components/Screens/OauthScreen';
 import HomeScreen from '../components/Screens/HomeScreen';
+import FiltersScreen from '../components/Screens/FiltersScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
@@ -25,8 +26,9 @@ import TransactionDetailScreen from '../components/Screens/TransactionDetailScre
 import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
 
 // UI components
-import ThemeBlurView from '../components/UI/ThemeBlurView';
+import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
+import ErrorWidget from '../components/UI/ErrorWidget';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function TabBarPrimaryButton(_: BottomTabBarButtonProps) {
+function TabBarPrimaryButton() {
   const navigation = useNavigation();
 
   return (
@@ -80,12 +82,13 @@ function TabBarPrimaryButton(_: BottomTabBarButtonProps) {
         )}
         _pressed={{
           style: {
-            top: -15,
+            top: -5,
           },
         }}
         style={{
-          top: -15,
+          top: -5,
         }}
+        testID="navigation_create_transaction"
       />
     </Box>
   );
@@ -99,7 +102,7 @@ function TabBarComponent({
 }) {
   return (
     <>
-      <ThemeBlurView
+      <ABlurView
         style={{
           ...styles.navigatorContainer,
           borderTopWidth: 0.5,
@@ -111,8 +114,9 @@ function TabBarComponent({
           navigation={navigation}
           insets={insets}
         />
-      </ThemeBlurView>
-      <NavigationHeader navigationState={state} />
+      </ABlurView>
+      <NavigationHeader navigation={navigation} />
+      <ErrorWidget />
     </>
   );
 }
@@ -183,23 +187,8 @@ function TransactionsStack() {
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
         options={{
-          headerShadowVisible: true,
           headerShown: true,
-          headerTitle: 'Transactions',
-          headerTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerLargeTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
-          },
-          headerLargeTitle: false,
-          headerTintColor: colors.text,
-          /*          headerSearchBarOptions: {
-            autoCapitalize: 'none',
-          }, */
-          headerStyle: {
-            backgroundColor: colors.tileBackgroundColor,
-          },
+          header: NavigationHeader,
         }}
       />
       <TransactionStack.Screen
@@ -209,7 +198,7 @@ function TransactionsStack() {
           headerShown: true,
           headerTitle: '',
           headerBackTitleVisible: true,
-          headerBackTitle: 'Back',
+          headerBackTitle: translate('router_back_button'),
           headerBackTitleStyle: {
             fontFamily: 'Montserrat_Bold',
           },
@@ -242,6 +231,7 @@ function Home() {
         tabBarActiveBackgroundColor: colors.tabBackgroundColor,
         tabBarActiveTintColor: colors.brandStyle,
         tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarShowLabel: true,
         tabBarLazyLoad: true,
@@ -263,6 +253,7 @@ function Home() {
         component={HomeScreen}
         options={{
           tabBarIcon: TabBarHomeScreenIcon,
+          tabBarTestID: 'navigation_home_tab',
         }}
       />
       <Tab.Screen
@@ -270,6 +261,7 @@ function Home() {
         component={ChartScreen}
         options={{
           tabBarIcon: TabBarChartScreenIcon,
+          tabBarTestID: 'navigation_chart_tab',
         }}
       />
       <Tab.Screen
@@ -285,6 +277,7 @@ function Home() {
         options={{
           tabBarIcon: TabBarTransactionScreenIcon,
           title: translate('navigation_transactions_tab'),
+          tabBarTestID: 'navigation_transactions_tab',
         }}
       />
       <Tab.Screen
@@ -292,6 +285,7 @@ function Home() {
         component={ConfigurationScreen}
         options={{
           tabBarIcon: TabBarConfigurationScreenIcon,
+          tabBarTestID: 'navigation_settings_tab',
         }}
       />
     </Tab.Navigator>
@@ -311,7 +305,10 @@ export default function Index() {
         },
       }}
     >
-      <Stack.Navigator initialRouteName="dashboard" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName="oauth"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen
           name="oauth"
           component={OauthScreen}
@@ -334,6 +331,24 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
+              headerRight: headerRightComp,
+              headerShadowVisible: true,
+              headerTitleStyle: {
+                fontFamily: 'Montserrat_Bold',
+              },
+              headerTintColor: colors.text,
+              headerStyle: {
+                backgroundColor: colors.tileBackgroundColor,
+              },
+            }}
+          />
+          <ModalStack.Screen
+            name="FiltersScreen"
+            component={FiltersScreen}
+            options={{
+              headerShown: true,
+              headerBackVisible: false,
+              headerTitle: 'Filters',
               headerRight: headerRightComp,
               headerShadowVisible: true,
               headerTitleStyle: {

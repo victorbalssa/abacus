@@ -93,7 +93,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             paddingHorizontal: 10,
             paddingTop: 5,
             color: colors.text,
-            fontSize: 15,
+            fontSize: 18,
           }}
         >
           {translate('configuration_security')}
@@ -116,7 +116,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             paddingHorizontal: 10,
             paddingTop: 5,
             color: colors.text,
-            fontSize: 15,
+            fontSize: 18,
           }}
         >
           {translate('configuration_about')}
@@ -151,7 +151,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             paddingHorizontal: 10,
             paddingTop: 5,
             color: colors.text,
-            fontSize: 15,
+            fontSize: 18,
           }}
         >
           {translate('configuration_debug')}

@@ -37,7 +37,7 @@ import Routes from './routes';
 import Loading from './components/UI/Loading';
 import translate from './i18n/locale';
 import { useThemeColors } from './lib/common';
-import ThemeBlurView from './components/UI/ThemeBlurView';
+import ABlurView from './components/UI/ALibrary/ABlurView';
 
 const config = {
   dependencies: {
@@ -82,7 +82,7 @@ export default function App() {
       await Updates.fetchUpdateAsync();
       await Updates.reloadAsync();
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   };
 
@@ -96,7 +96,7 @@ export default function App() {
         }
       }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   };
 
@@ -138,7 +138,7 @@ export default function App() {
               <>
                 <Routes />
                 {appStateVisible !== 'active' && (
-                  <ThemeBlurView
+                  <ABlurView
                     style={{
                       position: 'absolute',
                       top: 0,
@@ -158,7 +158,7 @@ export default function App() {
                       source={abacusIcon}
                     />
                     <Text>Abacus</Text>
-                  </ThemeBlurView>
+                  </ABlurView>
                 )}
               </>
             )}

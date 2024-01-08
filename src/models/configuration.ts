@@ -7,9 +7,13 @@ import { RootModel } from './index';
 import { convertKeysToCamelCase } from '../lib/common';
 
 type ConfigurationStateType = {
-  backendURL: string,
-  scrollEnabled: boolean,
-  faceId: boolean,
+  backendURL: string
+  scrollEnabled: boolean
+  hideBalance: boolean
+  displayAllAccounts: boolean
+  faceId: boolean
+  apiVersion: string
+  serverVersion: string
 }
 
 type FireflyIIIApiResponse = {
@@ -22,10 +26,21 @@ type FireflyIIIApiResponse = {
   },
 }
 
+type AboutType = {
+  data?: {
+    apiVersion: string
+    version: string
+  }
+}
+
 const INITIAL_STATE = {
   backendURL: 'https://',
   scrollEnabled: true,
+  hideBalance: false,
+  displayAllAccounts: false,
   faceId: false,
+  apiVersion: '',
+  serverVersion: '',
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -37,6 +52,14 @@ export default createModel<RootModel>()({
       return {
         ...state,
         backendURL: payload,
+      };
+    },
+
+    setVersions(state, { apiVersion, serverVersion }) {
+      return {
+        ...state,
+        apiVersion,
+        serverVersion,
       };
     },
 
@@ -61,6 +84,20 @@ export default createModel<RootModel>()({
       };
     },
 
+    setHideBalance(state, hideBalance: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        hideBalance,
+      };
+    },
+
+    setDisplayAllAccounts(state, displayAllAccounts: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        displayAllAccounts,
+      };
+    },
+
     resetState() {
       return INITIAL_STATE;
     },
@@ -78,7 +115,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('GET  ', `${backendURL}${url}`);
+        // console.log('GET  ', `${backendURL}${url}`);
         const response = await axios.get(`${backendURL}${url}`, config);
 
         if (response.data) {
@@ -108,7 +145,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('POST  ', `${backendURL}${url}`);
+        // console.log('POST  ', `${backendURL}${url}`);
         const { data } = await axios.post(`${backendURL}${url}`, body, config);
 
         return data;
@@ -128,7 +165,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('PUT  ', `${backendURL}${url}`);
+        // console.log('PUT  ', `${backendURL}${url}`);
         const { data } = await axios.put(`${backendURL}${url}`, body, config);
 
         return data;
@@ -148,7 +185,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       if (backendURL) {
-        console.log('DELETE  ', `${backendURL}${url}`);
+        // console.log('DELETE  ', `${backendURL}${url}`);
         const { data } = await axios.delete(`${backendURL}${url}`);
 
         return data;
@@ -158,13 +195,31 @@ export default createModel<RootModel>()({
     },
 
     /**
+     * Test the accessToken
+     *
+     * @returns {Promise}
+     */
+    async testAccessToken(): Promise<void> {
+      const { data } = await dispatch.configuration.apiFetch({ url: '/api/v1/about' }) as AboutType;
+
+      if (data.apiVersion && data.version) {
+        dispatch.configuration.setVersions({
+          apiVersion: data.apiVersion,
+          serverVersion: data.version,
+        });
+      }
+    },
+
+    /**
      * Reset all storage from app
      *
      * @returns {Promise}
      */
     async resetAllStorage(): Promise<void> {
       await Promise.all([
-        SecureStore.deleteItemAsync(secureKeys.tokens),
+        SecureStore.deleteItemAsync(secureKeys.accessToken),
+        SecureStore.deleteItemAsync(secureKeys.accessTokenExpiresIn),
+        SecureStore.deleteItemAsync(secureKeys.refreshToken),
         SecureStore.deleteItemAsync(secureKeys.oauthConfig),
         dispatch.accounts.resetState(),
         dispatch.budgets.resetState(),

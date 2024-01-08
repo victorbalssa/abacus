@@ -1,4 +1,4 @@
-import * as Localization from 'expo-localization';
+import { getLocales } from 'expo-localization';
 import { I18n, TranslateOptions } from 'i18n-js';
 import moment from 'moment/moment';
 import languages from './translations';
@@ -12,8 +12,15 @@ i18n.translations = {
 
 i18n.enableFallback = true;
 i18n.defaultLocale = 'en-US';
-i18n.locale = Localization.locale;
-moment.locale(Localization.locale);
+const [{ languageCode }] = getLocales();
+i18n.locale = languageCode;
+
+if (Object.keys(languages).includes(languageCode)) {
+  // fix zh locale
+  moment.locale(languageCode === 'zh' ? 'zh-cn' : languageCode);
+} else {
+  moment.locale('en');
+}
 
 export default function translate(value: string, option: TranslateOptions = null) {
   return i18n.t(value, option);

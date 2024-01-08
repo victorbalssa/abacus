@@ -9,12 +9,8 @@
       "android",
       "web"
     ],
-    "version": "0.9.1",
+    "version": "0.11.1",
     "orientation": "portrait",
-    "splash": {
-      "image": "./src/images/splash.png",
-      "resizeMode": "contain"
-    },
     "updates": {
       "enabled": true,
       "checkAutomatically": "ON_ERROR_RECOVERY",
@@ -22,16 +18,24 @@
     },
     "ios": {
       "icon": "./src/images/icon-abacus.png",
+      "splash": {
+        "image": "./src/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "backgroundColor": "#121215"
+        }
+      },
       "supportsTablet": true,
-      "buildNumber": "0.9.1",
-      "bundleIdentifier": "abacus.ios.app",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Abacus use Authentication with TouchId or FaceID",
         "NSLocalNetworkUsageDescription": "Abacus use Local Network to connect to your local instance of Firefly III"
       },
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "bundleIdentifier": "abacus.ios.app",
+      "buildNumber": "0.11.1"
     },
     "android": {
       "icon": "./src/images/icon-abacus.png",
@@ -39,14 +43,22 @@
         "foregroundImage": "./src/images/icon-abacus-foreground.png",
         "backgroundImage": "./src/images/icon-abacus-background.png"
       },
+      "splash": {
+        "image": "./src/images/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "backgroundColor": "#121215"
+        }
+      },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
-      "versionCode": 7
+      "versionCode": 13
     },
     "web": {
       "bundler": "metro"
     },
-    "scheme": "abacusiosapp",
+    "scheme": "abacusfiiiapp",
     "githubUrl": "https://github.com/victorbalssa/abacus",
     "runtimeVersion": {
       "policy": "sdkVersion"

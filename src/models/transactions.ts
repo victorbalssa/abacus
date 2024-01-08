@@ -230,7 +230,7 @@ export default createModel<RootModel>()({
           },
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
 
@@ -239,7 +239,7 @@ export default createModel<RootModel>()({
       const {
         data: transactions,
         meta,
-      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?limit=10&page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
       dispatch.transactions.setMetaPagination({
         page: meta.pagination.currentPage,
@@ -261,7 +261,7 @@ export default createModel<RootModel>()({
           totalPages = 1,
         },
         currencies: {
-          current,
+          currentCode,
         },
       } = rootState;
 
@@ -271,7 +271,7 @@ export default createModel<RootModel>()({
         const {
           data: transactions,
           meta,
-        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${current?.attributes.code}/transactions?page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?limit=10&page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
 
         dispatch.transactions.setMetaPagination({
           page: meta.pagination.currentPage,
@@ -283,7 +283,7 @@ export default createModel<RootModel>()({
 
       return [];
     },
-    async createTransaction(_: void, rootState): Promise<AxiosResponse> {
+    async upsertTransaction({ id = '-1' }, rootState): Promise<AxiosResponse> {
       const {
         transactions: {
           transactionPayload: {
@@ -298,7 +298,7 @@ export default createModel<RootModel>()({
         transactions: transactions.map((transaction) => ({
           tags: transaction.tags,
           notes: transaction.notes,
-          foreign_amount: transaction.foreignAmount ? transaction.foreignAmount.replace(/,/g, '.') : 0,
+          foreign_amount: transaction.foreignAmount ? parseFloat(transaction.foreignAmount.replace(',', '.')) : null,
           foreign_currency_id: transaction.foreignCurrencyId,
           description: transaction.description,
           date: transaction.date,
@@ -309,55 +309,24 @@ export default createModel<RootModel>()({
           budget_id: transaction.budgetId,
           budget_name: transaction.budgetName,
           type: transaction.type,
-          amount: transaction.amount.replace(/,/g, '.'),
+          amount: transaction.amount ? parseFloat(transaction.amount.replace(',', '.')) : 0,
         })),
         error_if_duplicate_hash: false,
         apply_rules: true,
         fire_webhooks: true,
       };
 
-      const data = await dispatch.configuration.apiPost({ url: '/api/v1/transactions', body });
+      let response: AxiosResponse;
+      if (id !== '-1') {
+        response = await dispatch.configuration.apiPut({ url: `/api/v1/transactions/${id}`, body });
+      } else {
+        response = await dispatch.configuration.apiPost({ url: '/api/v1/transactions', body });
+      }
 
-      return data;
-    },
-    async updateTransaction({ id }, rootState): Promise<AxiosResponse> {
-      const {
-        transactions: {
-          transactionPayload: {
-            title,
-            transactions,
-          },
-        },
-      } = rootState;
-
-      const body = {
-        group_title: title,
-        transactions: transactions.map((transaction: TransactionSplitType) => ({
-          tags: transaction.tags,
-          notes: transaction.notes,
-          foreign_amount: transaction.foreignAmount,
-          foreign_currency_id: transaction.foreignCurrencyId,
-          description: transaction.description,
-          date: transaction.date,
-          source_name: transaction.sourceName,
-          destination_name: transaction.destinationName,
-          category_id: transaction.categoryName === '' ? undefined : transaction.categoryId,
-          category_name: transaction.categoryName,
-          budget_id: transaction.budgetId,
-          budget_name: transaction.budgetName,
-          type: transaction.type,
-          amount: transaction.amount.replace(/,/g, '.'),
-        })),
-      };
-
-      const data = await dispatch.configuration.apiPut({ url: `/api/v1/transactions/${id}`, body });
-
-      return data;
+      return response;
     },
     async deleteTransaction(id): Promise<AxiosResponse> {
-      const data = await dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
-
-      return data;
+      return dispatch.configuration.apiDelete({ url: `/api/v1/transactions/${id}` });
     },
   }),
 });

@@ -62,4 +62,4 @@ dist/
 service-account.json
 
 detox_test.sh
-.artifacts/
+artifacts/
