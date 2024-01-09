@@ -27,10 +27,14 @@ export default {
   transaction_form_destinationAccount_label: '收款账户',
   transaction_form_date_label: '日期',
   transaction_form_amount_label: '金额',
+  transaction_form_foreign_amount_label: '外币金额',
+  transaction_form_notes_label: '注释',
   transaction_form_category_label: '分类',
   transaction_form_budget_label: '预算',
+  transaction_form_tags_label: '标签',
   transaction_form_reset_button: '重置',
   transaction_form_submit_button: '提交',
+  transaction_form_new_split_button: '添加拆分',
   transaction_list_alert_title: '是否确定？',
   transaction_list_alert_text: '此交易将被永久删除：',
   transaction_list_delete_button: '删除',
@@ -45,6 +49,7 @@ export default {
   auth_form_need_help: '需要帮助？',
   auth_form_submit_button_initial: '登录',
   auth_form_submit_button_loading: '提交...',
+  auth_form_biometrics_lock: '生物锁',
   home_accounts: '帐户',
   layout_new_update_header: '有更新可用',
   layout_new_update_body_text: '您可以稍后在设置页面手动升级',
@@ -80,9 +85,49 @@ export default {
   transaction_form_success_description: '交易已创建，点这里去查看交易列表',
   transaction_form_error_title: '错误',
   home_header_time_range_year: '年',
-  home_header_time_range_q: 'Q', // Put an abbreviation that best represents a quarter
-  home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
+  home_header_time_range_q: '季', // Put an abbreviation that best represents a quarter
+  home_header_time_range_s: '期', // Put an abbreviation that best represents a semiannual
+
+  // from 0.6.0
+  balance: '预算',
+  history: '历史',
+  home_categories: '分类',
+  home_net_worth: '净值',
 
   // from 0.7.0
   home_budgets: '预算',
+  configuration_ui: '用户界面',
+  configuration_color_mode: '暗黑模式',
+  auth_form_personal_access_token_label: '个人访问令牌',
+  auth_use_personal_access_token: '使用个人访问令牌',
+  auth_external_heads_up: '❗️如果您使用的是外部身份验证服务，例如 Authelia、Keycloak、Cloudflare Tunnels 等，OAuth 客户端将无法工作。 您只能使用个人访问令牌.',
+  auth_create_new_oauth_client: '在 OAuth 选项卡上创建一个新的 Oauth 客户端，这里:',
+  auth_create_new_personal_access_token: '在 OAuth 选项卡上创建一个新的个人访问令牌，这里:',
+  oauth_wrong_token_error_description: 'accessToken验证失败，请重新检查您的token或后端URL.',
+  transaction_screen_edit_title: '编辑交易',
+
+  // from 0.9.0
+  transaction_form_foreign_currency_label: '外币金额',
+  transaction_form_group_title_label: '拆分交易说明',
+  transaction_form_group_title_placeholder: '标题',
+  transaction_form_group_title_helper: '如果创建拆分交易，则必须有该交易的所有拆分的全局描述.',
+  configuration_review_app_ios: '在 AppStore 上评论 Abacus',
+  configuration_review_app_android: '在 Google Play 上评论 Abacus',
+
+  // from 0.9.2
+  assets_history_chart: '账户图表',
+  balance_history_chart: '净值图表',
+  balance_history_chart_no_data: '要访问此图表，请将 FireflyIII 更新到最新版本.',
+  account_not_included_in_net_worth: '* 账户不计入净资产.',
+
+  // from 0.10.0
+  period: '期间',
+  currency: '金额',
+
+  home_all_accounts: '所有账户',
+
+  // from 0.10.3
+  router_back_button: '返回',
+  transaction_clone: '克隆',
+  transaction_delete: '删除',
 };
