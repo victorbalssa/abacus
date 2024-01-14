@@ -1,10 +1,15 @@
 import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { HStack, VStack } from 'native-base';
-import { Text, TouchableOpacity, View } from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import { AntDesign, Ionicons } from '@expo/vector-icons';
+
+import { AStack } from './ALibrary';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -33,13 +38,13 @@ export default function Filters() {
   } = useDispatch<RootDispatch>();
 
   return useMemo(() => (
-    <VStack
-      py={1}
-      alignItems="center"
-      justifyContent="center"
-      backgroundColor={colors.tabBackgroundColor}
+    <ScrollView contentContainerStyle={{
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.tabBackgroundColor,
+      paddingHorizontal: 5,
+    }}
     >
-
       <Text
         style={{
           fontFamily: 'Montserrat_Bold',
@@ -52,7 +57,7 @@ export default function Filters() {
         {translate('currency')}
       </Text>
 
-      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+      <AStack row justifyContent="center" flexWrap="wrap">
         {currencies.map((currency) => (
           <TouchableOpacity
             disabled={currentCode === currency.attributes.code}
@@ -80,7 +85,7 @@ export default function Filters() {
             </View>
           </TouchableOpacity>
         ))}
-      </HStack>
+      </AStack>
 
       <Text
         style={{
@@ -94,7 +99,7 @@ export default function Filters() {
         {translate('period')}
       </Text>
 
-      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+      <AStack row justifyContent="center" flexWrap="wrap">
         {[1, 3, 6, 12].map((period) => (
           <TouchableOpacity
             key={period}
@@ -123,7 +128,7 @@ export default function Filters() {
             </View>
           </TouchableOpacity>
         ))}
-      </HStack>
+      </AStack>
       <Text
         style={{
           fontFamily: 'Montserrat_Bold',
@@ -135,7 +140,7 @@ export default function Filters() {
       >
         {translate('home_accounts')}
       </Text>
-      <HStack justifyContent="center" flexDirection="row" flexWrap="wrap">
+      <AStack justifyContent="center" row flexWrap="wrap">
         {accounts.map((account) => (
           <TouchableOpacity
             key={`key-${account.id}`}
@@ -185,8 +190,9 @@ export default function Filters() {
             <AntDesign name="close" size={20} color={colors.text} />
           </View>
         </TouchableOpacity>
-      </HStack>
-    </VStack>
+      </AStack>
+      <View style={{ height: 200 }} />
+    </ScrollView>
   ), [
     range,
     currencies,
