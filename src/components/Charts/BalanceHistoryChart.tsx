@@ -18,6 +18,7 @@ import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { AStack, AText } from '../UI/ALibrary';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function BalanceHistoryChart() {
   const { colors } = useThemeColors();
@@ -43,163 +44,165 @@ export default function BalanceHistoryChart() {
   }, [start, end]);
 
   return (
-    <ScrollView bounces={false}>
-      <AStack
-        backgroundColor={colors.tileBackgroundColor}
-        justifyContent="center"
-        style={{
-          borderTopWidth: 0.5,
-          borderBottomWidth: 0.5,
-          borderColor: colors.listBorderColor,
-        }}
-      >
+    <ErrorBoundary>
+      <ScrollView bounces={false}>
         <AStack
-          row
-          alignItems="baseline"
-          justifyContent="space-between"
+          backgroundColor={colors.tileBackgroundColor}
+          justifyContent="center"
           style={{
-            paddingHorizontal: 10,
-            paddingVertical: 10,
+            borderTopWidth: 0.5,
+            borderBottomWidth: 0.5,
+            borderColor: colors.listBorderColor,
           }}
         >
-          <AText
-            fontFamily="Montserrat_Bold"
-            fontSize={24}
-          >
-            {translate('balance_history_chart')}
-            {' '}
-            {currentCode}
-          </AText>
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
-              dispatch.firefly.getBalanceChart();
+          <AStack
+            row
+            alignItems="baseline"
+            justifyContent="space-between"
+            style={{
+              paddingHorizontal: 10,
+              paddingVertical: 10,
             }}
           >
-            <AntDesign name="reload1" size={24} color={colors.text} />
-          </Pressable>
-        </AStack>
-        {loading && (
+            <AText
+              fontFamily="Montserrat_Bold"
+              fontSize={24}
+            >
+              {translate('balance_history_chart')}
+              {' '}
+              {currentCode}
+            </AText>
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+                dispatch.firefly.getBalanceChart();
+              }}
+            >
+              <AntDesign name="reload1" size={24} color={colors.text} />
+            </Pressable>
+          </AStack>
+          {loading && (
           <AStack justifyContent="center">
             <AStack row style={{ height: 400 }} alignItems="center">
               <Loading />
             </AStack>
           </AStack>
-        )}
-        {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
-        <VictoryChart
-          padding={{
-            top: 10,
-            left: 50,
-            right: 35,
-            bottom: 105,
-          }}
-          height={400}
-          domainPadding={10}
-          minDomain={{ x: 0.5 }}
-        >
-          <VictoryAxis
-            orientation="left"
-            dependentAxis
-            crossAxis={false}
-            tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
-            style={{
-              axis: { stroke: colors.brandLight },
-              tickLabels: {
-                fill: colors.text,
-                fontWeight: 200,
-              },
-            }}
-          />
-
-          <VictoryAxis
-            offsetY={105}
-            minDomain={{ x: 0 }}
-            tickValues={getTickValues()}
-            tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
-            style={{
-              axis: { stroke: colors.brandLight },
-              tickLabels: {
-                fill: colors.text,
-                fontWeight: 200,
-                angle: getTickValues().length > 7 ? -40 : 0,
-              },
-            }}
-          />
-
-          {!isEmpty(earnedChart) && (
-          <VictoryBar
-            key="gain"
-            cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
-            style={{
-              data: {
-                fill: colors.brandStyle70,
-                width: 15,
-              },
-            }}
-            data={earnedChart}
-            name="gain"
-          />
           )}
-
-          {!isEmpty(spentChart) && (
-          <VictoryBar
-            key="loose"
-            cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
-            style={{
-              data: {
-                fill: colors.brandStyle20,
-                width: 15,
-              },
+          {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
+          <VictoryChart
+            padding={{
+              top: 10,
+              left: 50,
+              right: 35,
+              bottom: 105,
             }}
-            data={spentChart}
-            name="loose"
-          />
-          )}
+            height={400}
+            domainPadding={10}
+            minDomain={{ x: 0.5 }}
+          >
+            <VictoryAxis
+              orientation="left"
+              dependentAxis
+              crossAxis={false}
+              tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
+              style={{
+                axis: { stroke: colors.brandLight },
+                tickLabels: {
+                  fill: colors.text,
+                  fontWeight: 200,
+                },
+              }}
+            />
 
-          {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
-          <VictoryLine
-            key="lineBalance"
-            style={{
-              data: {
-                stroke: '#a6a6a6',
-                strokeWidth: 2,
-              },
-            }}
-            interpolation="monotoneX"
-            data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
-            name="lineBalance"
-          />
-          )}
+            <VictoryAxis
+              offsetY={105}
+              minDomain={{ x: 0 }}
+              tickValues={getTickValues()}
+              tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
+              style={{
+                axis: { stroke: colors.brandLight },
+                tickLabels: {
+                  fill: colors.text,
+                  fontWeight: 200,
+                  angle: getTickValues().length > 7 ? -40 : 0,
+                },
+              }}
+            />
 
-          {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
-          <VictoryScatter
-            key="ptsBalance"
-            style={{
-              data: {
-                fill: colors.brandPrimary,
-                stroke: ({ datum }) => ((datum.y < 0) ? colors.red : colors.green),
-                strokeWidth: 5,
-              },
-              labels: {
-                fontSize: 10,
-                fontWeight: 600,
-                fill: colors.text,
-              },
-            }}
-            size={7}
-            labels={({ datum }) => (datum.y !== 0 ? `${(round(datum.y / 1000, 1))}k` : '')}
-            data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
-            name="ptsBalance"
-          />
+            {!isEmpty(earnedChart) && (
+            <VictoryBar
+              key="gain"
+              cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
+              style={{
+                data: {
+                  fill: colors.brandStyle70,
+                  width: 15,
+                },
+              }}
+              data={earnedChart}
+              name="gain"
+            />
+            )}
+
+            {!isEmpty(spentChart) && (
+            <VictoryBar
+              key="loose"
+              cornerRadius={{ top: ({ datum }) => ((datum._y === 0) ? 0 : 7) }}
+              style={{
+                data: {
+                  fill: colors.brandStyle20,
+                  width: 15,
+                },
+              }}
+              data={spentChart}
+              name="loose"
+            />
+            )}
+
+            {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
+            <VictoryLine
+              key="lineBalance"
+              style={{
+                data: {
+                  stroke: '#a6a6a6',
+                  strokeWidth: 2,
+                },
+              }}
+              interpolation="monotoneX"
+              data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
+              name="lineBalance"
+            />
+            )}
+
+            {!isEmpty(earnedChart) && !isEmpty(spentChart) && (
+            <VictoryScatter
+              key="ptsBalance"
+              style={{
+                data: {
+                  fill: colors.brandPrimary,
+                  stroke: ({ datum }) => ((datum.y < 0) ? colors.red : colors.green),
+                  strokeWidth: 5,
+                },
+                labels: {
+                  fontSize: 10,
+                  fontWeight: 600,
+                  fill: colors.text,
+                },
+              }}
+              size={7}
+              labels={({ datum }) => (datum.y !== 0 ? `${(round(datum.y / 1000, 1))}k` : '')}
+              data={earnedChart.map((pts, index) => ({ x: pts.x, y: pts.y + spentChart[index].y }))}
+              name="ptsBalance"
+            />
+            )}
+          </VictoryChart>
           )}
-        </VictoryChart>
-        )}
-        {!loading && (isEmpty(spentChart) && isEmpty(earnedChart)) && (
+          {!loading && (isEmpty(spentChart) && isEmpty(earnedChart)) && (
           <AText px={2}>{translate('balance_history_chart_no_data')}</AText>
-        )}
-      </AStack>
-      <View style={{ height: 200 }} />
-    </ScrollView>
+          )}
+        </AStack>
+        <View style={{ height: 200 }} />
+      </ScrollView>
+    </ErrorBoundary>
   );
 }
