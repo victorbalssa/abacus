@@ -43,6 +43,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
       range,
       start,
       end,
+      colors,
     ]);
   }
 
@@ -152,5 +153,6 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
     range,
     start,
     end,
+    colors,
   ]);
 }

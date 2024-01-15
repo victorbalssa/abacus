@@ -21,6 +21,7 @@ import { RootDispatch, RootState } from '../../store';
 import Loading from '../UI/Loading';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 function AccountsLengthMessage() {
   return (
@@ -154,124 +155,130 @@ export default function AssetsHistoryChart() {
   }, [start, end]);
 
   return useMemo(() => (
-    <ScrollView bounces={false}>
-      <AStack
-        backgroundColor={colors.tileBackgroundColor}
-        justifyContent="center"
-        style={{
-          borderTopWidth: 0.5,
-          borderBottomWidth: 0.5,
-          borderColor: colors.listBorderColor,
-        }}
-      >
+    <ErrorBoundary>
+      <ScrollView bounces={false}>
         <AStack
-          row
-          alignItems="baseline"
-          justifyContent="space-between"
+          backgroundColor={colors.tileBackgroundColor}
+          justifyContent="center"
           style={{
-            paddingHorizontal: 10,
-            paddingVertical: 10,
+            borderTopWidth: 0.5,
+            borderBottomWidth: 0.5,
+            borderColor: colors.listBorderColor,
           }}
         >
-          <AText
-            fontFamily="Montserrat_Bold"
-            fontSize={24}
-          >
-            {translate('assets_history_chart')}
-            {' '}
-            {currentCode}
-          </AText>
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
-              dispatch.firefly.getAccountChart();
+          <AStack
+            row
+            alignItems="baseline"
+            justifyContent="space-between"
+            style={{
+              paddingHorizontal: 10,
+              paddingVertical: 10,
             }}
           >
-            <AntDesign name="reload1" size={24} color={colors.text} />
-          </Pressable>
-        </AStack>
-        <View style={{ height: 80 }} />
-        {loading && (
-        <AStack justifyContent="center">
-          <AStack row style={{ height: 400 }} alignItems="center">
-            <Loading />
+            <AText
+              fontFamily="Montserrat_Bold"
+              fontSize={24}
+            >
+              {translate('assets_history_chart')}
+              {' '}
+              {currentCode}
+            </AText>
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+                dispatch.firefly.getAccountChart();
+              }}
+            >
+              <AntDesign name="reload1" size={24} color={colors.text} />
+            </Pressable>
           </AStack>
-        </AStack>
-        )}
-        {!loading && (
-        <VictoryChart
-          padding={{
-            top: 10,
-            left: 50,
-            right: 35,
-            bottom: 105,
-          }}
-          height={400}
-          domainPadding={2}
-          containerComponent={(
-            <VictoryVoronoiContainer
-              voronoiDimension="x"
-              labels={({ datum }) => datum.childName}
-              labelComponent={(
-                <Cursor
-                  x
-                  y
-                  activePoints
-                  maxY={maxBy(accounts.filter((v) => !v.skip), (c: { maxY: number }) => c.maxY)?.maxY || 0}
-                  minY={minBy(accounts.filter((v) => !v.skip), (c: { minY: number }) => c.minY)?.minY || 0}
-                  colors={colors}
-                />
-                        )}
+          <View style={{ height: 80 }} />
+          {loading && (
+          <AStack justifyContent="center">
+            <AStack row style={{ height: 400 }} alignItems="center">
+              <Loading />
+            </AStack>
+          </AStack>
+          )}
+          {!loading && (
+          <VictoryChart
+            padding={{
+              top: 10,
+              left: 50,
+              right: 35,
+              bottom: 105,
+            }}
+            height={400}
+            domainPadding={2}
+            containerComponent={(
+              <VictoryVoronoiContainer
+                voronoiDimension="x"
+                labels={({ datum }) => datum.childName}
+                labelComponent={(
+                  <Cursor
+                    x
+                    y
+                    activePoints
+                    maxY={maxBy(accounts, (c: { maxY: number }) => c.maxY)?.maxY || 0}
+                    minY={minBy(accounts, (c: { minY: number }) => c.minY)?.minY || 0}
+                    colors={colors}
+                  />
+              )}
+              />
+          )}
+          >
+            <VictoryAxis
+              dependentAxis
+              crossAxis={false}
+              tickCount={6}
+              tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
+              style={{
+                grid: { stroke: '#949494', strokeWidth: 0.2 },
+                axis: { stroke: colors.brandLight },
+                tickLabels: {
+                  fill: colors.text,
+                  fontWeight: 200,
+                },
+              }}
             />
-                    )}
-        >
-          <VictoryAxis
-            dependentAxis
-            crossAxis={false}
-            tickCount={6}
-            tickFormat={(x) => ((x !== 0) ? `${(Math.round(x) / 1000)}k` : '0')}
-            style={{
-              grid: { stroke: '#949494', strokeWidth: 0.2 },
-              axis: { stroke: colors.brandLight },
-              tickLabels: {
-                fill: colors.text,
-                fontWeight: 200,
-              },
-            }}
-          />
-          <VictoryAxis
-            offsetY={105}
-            tickValues={getTickValues()}
-            tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
-            style={{
-              grid: { stroke: '#949494', strokeWidth: 0.2 },
-              axis: { stroke: colors.brandLight },
-              tickLabels: {
-                fill: colors.text,
-                fontWeight: 200,
-                angle: getTickValues().length > 7 ? -40 : 0,
-              },
-            }}
-          />
-          {accounts.filter((v) => !v.skip).map((chart) => chart.entries.length > 0 && (
-          <VictoryLine
-            key={chart.label}
-            style={{
-              data: {
-                stroke: chart.color,
-                strokeWidth: 2,
-              },
-            }}
-            interpolation="monotoneX"
-            data={chart.entries}
-            name={`${chart.label} (${chart.currencySymbol})`}
-          />
-          ))}
-        </VictoryChart>
-        )}
-        {accounts.length > 4 && (<AccountsLengthMessage />)}
-      </AStack>
-      <View style={{ height: 200 }} />
-    </ScrollView>
-  ), [loading, accounts]);
+            <VictoryAxis
+              offsetY={105}
+              tickValues={getTickValues()}
+              tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
+              style={{
+                grid: { stroke: '#949494', strokeWidth: 0.2 },
+                axis: { stroke: colors.brandLight },
+                tickLabels: {
+                  fill: colors.text,
+                  fontWeight: 200,
+                  angle: getTickValues().length > 7 ? -40 : 0,
+                },
+              }}
+            />
+            {accounts.map((chart) => chart.entries.length > 0 && (
+            <VictoryLine
+              key={chart.label}
+              style={{
+                data: {
+                  stroke: chart.color,
+                  strokeWidth: 2,
+                },
+              }}
+              interpolation="monotoneX"
+              data={chart.entries}
+              name={`${chart.label} (${chart.currencySymbol})`}
+            />
+            ))}
+          </VictoryChart>
+          )}
+          {accounts.length > 4 && (<AccountsLengthMessage />)}
+        </AStack>
+        <View style={{ height: 200 }} />
+      </ScrollView>
+    </ErrorBoundary>
+  ), [
+    loading,
+    accounts,
+    colors,
+  ]);
 }

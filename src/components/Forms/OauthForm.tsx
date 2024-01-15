@@ -9,10 +9,13 @@ import {
   Text,
   Switch,
   ScrollView,
-  KeyboardAvoidingView,
 } from 'native-base';
 import {
-  Alert, Platform, View, Pressable,
+  View,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
@@ -63,13 +66,8 @@ export default function OauthForm({
 
   return (
     <KeyboardAvoidingView
-      enabled
-      h={{
-        base: '100%',
-        lg: 'auto',
-      }}
+      style={{ flex: 1 }}
       behavior={Platform.select({ ios: 'padding', android: 'height' })}
-      keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
     >
       <ScrollView testID="auth_scroll_view" keyboardShouldPersistTaps="handled">
         <Box p={5} safeAreaTop>
@@ -272,7 +270,7 @@ export default function OauthForm({
           </Button>
           )}
         </Box>
-        <View style={{ height: 370 }} />
+        <View style={{ height: 170 }} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

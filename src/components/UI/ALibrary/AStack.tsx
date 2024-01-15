@@ -35,6 +35,7 @@ type AStackType = {
   justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly'
   alignItems?: FlexAlignType
   backgroundColor?: string
+  flexWrap?: 'wrap' | 'nowrap'
   style?: AStyle
   children: React.ReactNode
 }
@@ -49,6 +50,7 @@ export default function AStack({
   justifyContent = 'center',
   alignItems = 'center',
   backgroundColor = 'transparent',
+  flexWrap = 'nowrap',
   style = {},
   children,
 }: AStackType) {
@@ -61,6 +63,7 @@ export default function AStack({
         justifyContent,
         alignItems,
         backgroundColor,
+        flexWrap,
         paddingHorizontal: px,
         paddingVertical: py,
         marginHorizontal: mx,

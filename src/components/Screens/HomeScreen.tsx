@@ -377,7 +377,14 @@ function NetWorth() {
         )}
       </TouchableOpacity>
     </View>
-  ), [loading, hideBalance]);
+  ), [
+    loading,
+    hideBalance,
+    colors,
+    netWorth,
+    balance,
+    currentCode,
+  ]);
 }
 
 export default function HomeScreen({ navigation }: ScreenType) {
@@ -532,5 +539,5 @@ export default function HomeScreen({ navigation }: ScreenType) {
         </Box>
       </View>
     </Box>
-  ), []));
+  ), [colors]));
 }

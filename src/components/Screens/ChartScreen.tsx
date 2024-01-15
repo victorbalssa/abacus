@@ -94,5 +94,5 @@ export default function ChartScreen() {
         <BalanceHistoryChart key="2" />
       </AnimatedPagerView>
     </View>
-  ), []);
+  ), [colors]);
 }
