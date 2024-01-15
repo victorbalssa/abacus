@@ -77,6 +77,7 @@ function ListFooterComponent({ loadMore, initLoading }) {
       )}
     </Box>
   ), [
+    colors,
     page,
     totalPages,
     loading,
@@ -241,7 +242,7 @@ function RenderItem({ item }: { item: TransactionType }) {
         </Box>
       </HStack>
     </Pressable>
-  ), [item]);
+  ), [item, colors]);
 }
 
 async function deleteAlert(transaction: TransactionType, rowMap, closeRow, deleteRow) {

@@ -253,7 +253,7 @@ export default function AssetsHistoryChart() {
               },
             }}
           />
-          {accounts.filter((v) => !v.skip).map((chart) => chart.entries.length > 0 && (
+          {accounts.map((chart) => chart.entries.length > 0 && (
           <VictoryLine
             key={chart.label}
             style={{
@@ -273,5 +273,5 @@ export default function AssetsHistoryChart() {
       </AStack>
       <View style={{ height: 200 }} />
     </ScrollView>
-  ), [loading, accounts]);
+  ), [loading, accounts, colors]);
 }
