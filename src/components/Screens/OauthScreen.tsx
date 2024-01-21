@@ -16,7 +16,7 @@ import { OauthConfigType, ScreenType } from './types';
 import ToastAlert from '../UI/ToastAlert';
 
 import translate from '../../i18n/locale';
-import {isValidHttpUrl} from "../../lib/common";
+import { isValidHttpUrl } from '../../lib/common';
 
 export default function OauthScreen({ navigation }: ScreenType) {
   const toast = useToast();
