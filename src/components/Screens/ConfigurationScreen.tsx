@@ -33,11 +33,11 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
   const {
     backendURL,
-    faceId,
+    useBiometricAuth,
   } = useSelector((state: RootState) => state.configuration);
   const {
     configuration: {
-      setFaceId,
+      setUseBiometricAuth,
       resetAllStorage,
     },
   } = useDispatch<RootDispatch>();
@@ -105,7 +105,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
           </HStack>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between">
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('auth_form_biometrics_lock')}</Text>
-            <Switch isChecked={faceId} onToggle={setFaceId} colorScheme="primary" />
+            <Switch isChecked={useBiometricAuth} onToggle={setUseBiometricAuth} colorScheme="primary" />
           </HStack>
         </Box>
 
@@ -140,7 +140,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
           </Pressable>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={reviewApp} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</Text>
-            <Ionicons name={Platform.select({ ios: 'ios-logo-apple-appstore', android: 'ios-logo-google-playstore' })} size={23} color="gray" />
+            <Ionicons name={Platform.select({ ios: 'logo-apple-appstore', android: 'logo-google-playstore' })} size={23} color="gray" />
           </Pressable>
         </Box>
 

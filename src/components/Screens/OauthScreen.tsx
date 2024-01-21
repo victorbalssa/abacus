@@ -16,6 +16,7 @@ import { OauthConfigType, ScreenType } from './types';
 import ToastAlert from '../UI/ToastAlert';
 
 import translate from '../../i18n/locale';
+import {isValidHttpUrl} from "../../lib/common";
 
 export default function OauthScreen({ navigation }: ScreenType) {
   const toast = useToast();
@@ -25,7 +26,7 @@ export default function OauthScreen({ navigation }: ScreenType) {
 
   const {
     backendURL,
-    faceId,
+    useBiometricAuth,
   } = configuration;
 
   const [config, setConfig] = useState<OauthConfigType>({
@@ -57,8 +58,8 @@ export default function OauthScreen({ navigation }: ScreenType) {
     }),
   );
 
-  const faceIdCheck = async () => {
-    if (faceId) {
+  const biometricCheck = async () => {
+    if (useBiometricAuth) {
       const bioAuth = await LocalAuthentication.authenticateAsync();
       if (bioAuth.success) {
         goToHome();
@@ -87,11 +88,11 @@ export default function OauthScreen({ navigation }: ScreenType) {
         accessToken = await dispatch.firefly.getFreshAccessToken(refreshToken);
       }
 
-      if (accessToken && backendURL) {
+      if (accessToken && isValidHttpUrl(backendURL)) {
         axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
         try {
-          await faceIdCheck();
+          await biometricCheck();
         } catch (e) {
           toast.show({
             render: ({ id }) => (
@@ -206,9 +207,9 @@ export default function OauthScreen({ navigation }: ScreenType) {
     <OauthForm
       config={config}
       loading={loading}
-      faceId={faceId}
+      useBiometricAuth={useBiometricAuth}
       backendURL={backendURL}
-      faceIdCheck={faceIdCheck}
+      biometricCheck={biometricCheck}
       setConfig={setConfig}
       oauthLogin={() => promptAsync()}
       tokenLogin={tokenLogin}

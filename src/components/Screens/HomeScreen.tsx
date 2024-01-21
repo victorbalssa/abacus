@@ -36,7 +36,7 @@ import { RootDispatch, RootState } from '../../store';
 import secureKeys from '../../constants/oauth';
 import ToastAlert from '../UI/ToastAlert';
 import translate from '../../i18n/locale';
-import { localNumberFormat, useThemeColors } from '../../lib/common';
+import { isValidHttpUrl, localNumberFormat, useThemeColors } from '../../lib/common';
 
 import { ScreenType } from './types';
 import Pagination from '../UI/Pagination';
@@ -397,8 +397,8 @@ export default function HomeScreen({ navigation }: ScreenType) {
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const dispatch = useDispatch<RootDispatch>();
   const renderIcons = [
-    <Ionicons key="ios-wallet" name="ios-wallet" size={22} color={colors.text} />,
-    <Ionicons key="ios-pricetag" name="ios-pricetags" size={22} color={colors.text} />,
+    <Ionicons key="wallet" name="wallet" size={22} color={colors.text} />,
+    <Ionicons key="pricetag" name="pricetags" size={22} color={colors.text} />,
     <MaterialCommunityIcons key="progress-check" name="progress-check" size={22} color={colors.text} />,
   ];
 
@@ -414,7 +414,7 @@ export default function HomeScreen({ navigation }: ScreenType) {
   useEffect(() => {
     (async () => {
       const accessToken = await SecureStore.getItemAsync(secureKeys.accessToken);
-      if (accessToken && backendURL) {
+      if (accessToken && isValidHttpUrl(backendURL)) {
         axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
         try {

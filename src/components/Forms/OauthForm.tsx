@@ -32,8 +32,8 @@ const copyToClipboard = async () => {
 
 export default function OauthForm({
   loading,
-  faceId,
-  faceIdCheck,
+  useBiometricAuth,
+  biometricCheck,
   config,
   setConfig,
   oauthLogin,
@@ -238,9 +238,9 @@ export default function OauthForm({
           >
             {translate('auth_form_submit_button_initial')}
           </Button>
-          {faceId && (
+          {useBiometricAuth && (
           <Button
-            leftIcon={<Ionicons name="ios-lock-open" size={16} color="white" />}
+            leftIcon={<Ionicons name="lock-open" size={16} color="white" />}
             mt="2"
             shadow={2}
             onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
@@ -264,7 +264,7 @@ export default function OauthForm({
             }}
             colorScheme="coolGray"
             isLoading={loading}
-            onPress={() => faceIdCheck()}
+            onPress={() => biometricCheck()}
           >
             {translate('auth_form_biometrics_lock')}
           </Button>

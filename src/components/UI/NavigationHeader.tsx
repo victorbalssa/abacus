@@ -131,7 +131,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
             }),
           )}
         >
-          <Ionicons name="ios-filter" size={20} color={colors.text} />
+          <Ionicons name="filter" size={20} color={colors.text} />
         </TouchableOpacity>
 
         <AIconButton

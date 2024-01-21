@@ -11,7 +11,7 @@ type ConfigurationStateType = {
   scrollEnabled: boolean
   hideBalance: boolean
   displayAllAccounts: boolean
-  faceId: boolean
+  useBiometricAuth: boolean
   apiVersion: string
   serverVersion: string
 }
@@ -38,7 +38,7 @@ const INITIAL_STATE = {
   scrollEnabled: true,
   hideBalance: false,
   displayAllAccounts: false,
-  faceId: false,
+  useBiometricAuth: false,
   apiVersion: '',
   serverVersion: '',
 } as ConfigurationStateType;
@@ -63,10 +63,10 @@ export default createModel<RootModel>()({
       };
     },
 
-    setFaceId(state): ConfigurationStateType {
+    setUseBiometricAuth(state): ConfigurationStateType {
       return {
         ...state,
-        faceId: !state.faceId,
+        useBiometricAuth: !state.useBiometricAuth,
       };
     },
 
