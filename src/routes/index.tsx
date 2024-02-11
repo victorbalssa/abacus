@@ -16,14 +16,15 @@ import translate from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
 
 // Screens
-import OauthScreen from '../components/Screens/OauthScreen';
 import HomeScreen from '../components/Screens/HomeScreen';
 import FiltersScreen from '../components/Screens/FiltersScreen';
+import CredentialCreateScreen from '../components/Screens/CredentialCreateScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
 import TransactionDetailScreen from '../components/Screens/TransactionDetailScreen';
 import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
+import CredentialsScreen from '../components/Screens/CredentialsScreen';
 
 // UI components
 import ABlurView from '../components/UI/ALibrary/ABlurView';
@@ -306,12 +307,12 @@ export default function Index() {
       }}
     >
       <Stack.Navigator
-        initialRouteName="oauth"
+        initialRouteName="credentials"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen
-          name="oauth"
-          component={OauthScreen}
+          name="credentials"
+          component={CredentialsScreen}
         />
         <Stack.Screen
           name="dashboard"
@@ -358,6 +359,24 @@ export default function Index() {
               headerStyle: {
                 backgroundColor: colors.tileBackgroundColor,
               },
+            }}
+          />
+          <ModalStack.Screen
+            name="CredentialCreateScreen"
+            component={CredentialCreateScreen}
+            options={{
+              headerShown: false,
+              headerBackVisible: false,
+              headerLeft: headerRightComp,
+            }}
+          />
+          <ModalStack.Screen
+            name="CredentialsScreen"
+            component={CredentialsScreen}
+            options={{
+              headerShown: false,
+              headerBackVisible: false,
+              headerLeft: headerRightComp,
             }}
           />
         </ModalStack.Group>

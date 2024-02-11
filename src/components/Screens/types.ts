@@ -4,6 +4,7 @@ export type ScreenType = {
   navigation: {
     dispatch: (action) => void,
     setParams: (params) => void,
+    goBack: () => void,
   },
   route?: {
     params?: {
@@ -18,6 +19,7 @@ export type ScreenType = {
 }
 
 export type OauthConfigType = {
+  backendURL: string,
   oauthClientId: string,
   oauthClientSecret: string,
   personalAccessToken: string,

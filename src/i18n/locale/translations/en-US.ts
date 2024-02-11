@@ -1,14 +1,11 @@
 export default {
   configuration_app_version: 'App Version',
   configuration_about: 'About',
-  configuration_clear_option: 'Clear & Reset Application',
+  configuration_clear_option: 'Clear cache',
   configuration_clear_confirm_button: 'Clear now',
   configuration_clear_alert_title: 'Are you sure?',
-  configuration_clear_alert_text: 'Clearing cache will remove:\n'
-    + 'local configurations\n'
-    + 'Oauth Client ID & Secret\n'
-    + 'URL of your instance',
-  configuration_clear_cancel_button: 'Cancel',
+  configuration_clear_alert_text: 'Clearing cache will remove all your data from the app. Are you sure you want to continue?',
+  cancel: 'Cancel',
   configuration_security: 'Security',
   configuration_share_feedback: 'Share Feedback',
   configuration_report_issue: 'Report Issue',
@@ -130,4 +127,18 @@ export default {
   router_back_button: 'Back',
   transaction_clone: 'Clone',
   transaction_delete: 'Delete',
+
+  // from 0.11.0
+  configuration_credentials: 'Credentials',
+  configuration_manage_credentials: 'Manage Credentials',
+  configuration_credentials_add_button: 'Add Credential',
+  logout: 'Logout',
+
+  // from 0.12.0
+  credential_clear_confirm_button: 'Delete',
+  credential_clear_alert_title: 'Are you sure?',
+  credential_clear_cancel_button: 'Cancel',
+
+  configuration_logout_alert_title: 'Logout',
+
 };

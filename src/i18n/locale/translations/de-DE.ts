@@ -8,7 +8,7 @@ export default {
     + 'lokale Konfigurationen\n'
     + 'Oauth Client ID & Secret\n'
     + 'URL Ihrer Instanz',
-  configuration_clear_cancel_button: 'Abbrechen',
+  cancel: 'Abbrechen',
   configuration_security: 'Sicherheit',
   configuration_share_feedback: 'Feedback teilen',
   configuration_report_issue: 'Problem melden',

@@ -38,7 +38,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
   const {
     configuration: {
       setUseBiometricAuth,
-      resetAllStorage,
+      resetAllStates,
     },
   } = useDispatch<RootDispatch>();
 
@@ -48,29 +48,63 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
     }
   };
 
-  const resetApp = async () => {
-    await resetAllStorage();
+  const resetCache = async () => {
+    await resetAllStates();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
-          { name: 'oauth' },
+          { name: 'dashboard' },
         ],
       }),
     );
   };
 
-  const showAlert = () => Alert.alert(
+  const showResetCacheAlert = () => Alert.alert(
     translate('configuration_clear_alert_title'),
     translate('configuration_clear_alert_text'),
     [
       {
         text: translate('configuration_clear_confirm_button'),
-        onPress: () => resetApp(),
+        onPress: () => resetCache(),
         style: 'destructive',
       },
       {
-        text: translate('configuration_clear_cancel_button'),
+        text: translate('cancel'),
+        style: 'cancel',
+      },
+    ],
+  );
+
+  const goToAccounts = () => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'CredentialsScreen',
+    }),
+  );
+
+  const logout = async () => {
+    await resetAllStates();
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'credentials' },
+        ],
+      }),
+    );
+  };
+
+  const showLogoutAlert = () => Alert.alert(
+    translate('configuration_logout_alert_title'),
+    '',
+    [
+      {
+        text: translate('logout'),
+        onPress: () => logout(),
+        style: 'destructive',
+      },
+      {
+        text: translate('cancel'),
         style: 'cancel',
       },
     ],
@@ -103,6 +137,10 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>URL</Text>
             <Text style={{ fontFamily: 'Montserrat', textDecorationLine: 'underline', color: colors.brandInfo }} onPress={() => Linking.openURL(backendURL)}>{backendURL}</Text>
           </HStack>
+          <Pressable pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" borderBottomWidth={0.5} borderColor={colors.listBorderColor} _pressed={{ backgroundColor: colors.listPressed }} onPress={goToAccounts} flexDirection="row">
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_manage_credentials')}</Text>
+            <FontAwesome name="angle-right" size={22} color="gray" />
+          </Pressable>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between">
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('auth_form_biometrics_lock')}</Text>
             <Switch isChecked={useBiometricAuth} onToggle={setUseBiometricAuth} colorScheme="primary" />
@@ -161,8 +199,12 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_get_help')}</Text>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
-          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showAlert} px={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
+          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showResetCacheAlert} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
             <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_clear_option')}</Text>
+            <FontAwesome name="angle-right" size={22} color="gray" />
+          </Pressable>
+          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showLogoutAlert} px={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
+            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('logout')}</Text>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
         </Box>

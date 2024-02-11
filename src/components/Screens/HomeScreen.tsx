@@ -12,12 +12,11 @@ import {
   Skeleton,
   Stack,
   Text,
-  useToast,
   View,
   VStack,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
-import { CommonActions, useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   RefreshControl,
@@ -25,7 +24,6 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import type { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
 import PagerView from 'react-native-pager-view';
@@ -33,12 +31,9 @@ import PagerView from 'react-native-pager-view';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RootDispatch, RootState } from '../../store';
-import secureKeys from '../../constants/oauth';
-import ToastAlert from '../UI/ToastAlert';
 import translate from '../../i18n/locale';
-import { isValidHttpUrl, localNumberFormat, useThemeColors } from '../../lib/common';
+import { localNumberFormat, useThemeColors } from '../../lib/common';
 
-import { ScreenType } from './types';
 import Pagination from '../UI/Pagination';
 import { AStack } from '../UI/ALibrary';
 
@@ -387,14 +382,12 @@ function NetWorth() {
   ]);
 }
 
-export default function HomeScreen({ navigation }: ScreenType) {
+export default function HomeScreen() {
   const { colors, colorScheme } = useThemeColors();
-  const toast = useToast();
   const safeAreaInsets = useSafeAreaInsets();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
-  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const dispatch = useDispatch<RootDispatch>();
   const renderIcons = [
     <Ionicons key="wallet" name="wallet" size={22} color={colors.text} />,
@@ -402,40 +395,12 @@ export default function HomeScreen({ navigation }: ScreenType) {
     <MaterialCommunityIcons key="progress-check" name="progress-check" size={22} color={colors.text} />,
   ];
 
-  const goToOauth = () => navigation.dispatch(
-    CommonActions.reset({
-      index: 0,
-      routes: [
-        { name: 'oauth' },
-      ],
-    }),
-  );
-
   useEffect(() => {
     (async () => {
-      const accessToken = await SecureStore.getItemAsync(secureKeys.accessToken);
-      if (accessToken && isValidHttpUrl(backendURL)) {
-        axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
-
-        try {
-          dispatch.configuration.testAccessToken();
-          dispatch.currencies.getCurrencies();
-        } catch (e) {
-          toast.show({
-            render: ({ id }) => (
-              <ToastAlert
-                onClose={() => toast.close(id)}
-                title={translate('home_container_error_title')}
-                status="error"
-                variant="solid"
-                description={`${translate('home_container_error_description')}, ${e.message}`}
-              />
-            ),
-          });
-        }
-      } else {
-        goToOauth();
-      }
+      await Promise.all([
+        dispatch.currencies.getCurrencies(),
+        dispatch.configuration.getCurrentApiVersion(),
+      ]);
     })();
   }, []);
 

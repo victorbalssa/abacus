@@ -1,4 +1,5 @@
-import { withAndroidManifest } from '@expo/config-plugins';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withAndroidManifest } = require('@expo/config-plugins');
 
 function removeNetworkSecurityConfig(androidManifest) {
   const newManifest = { ...androidManifest };
