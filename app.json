@@ -34,7 +34,7 @@
         "usesNonExemptEncryption": false
       },
       "bundleIdentifier": "abacus.ios.app",
-      "buildNumber": "0.11.1"
+      "buildNumber": "0.12.0"
     },
     "android": {
       "icon": "./src/images/icon-abacus.png",
