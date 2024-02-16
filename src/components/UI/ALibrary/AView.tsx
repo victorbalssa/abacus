@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { AStyle } from './AStack';
+import { AStyle } from './types';
 
 type AViewType = {
   style?: AStyle

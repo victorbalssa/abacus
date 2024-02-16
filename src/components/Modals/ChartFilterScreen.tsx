@@ -6,7 +6,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import {AStack, AStackFlex, AText, AView} from '../UI/ALibrary';
+import { AStack, AStackFlex, AText, AView } from '../UI/ALibrary';
 import { RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
 import { ScreenType } from '../../types/screen';
@@ -31,6 +31,21 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
 
   return useMemo(() => (
     <ScrollView bounces={false} contentContainerStyle={{ paddingHorizontal: 5 }}>
+      {selectedAccountIds?.length > 0 && (
+        <View style={{
+          alignSelf: 'flex-start',
+          borderWidth: 0.7,
+          borderColor: colors.text,
+          borderRadius: 10,
+          paddingHorizontal: 5,
+          marginHorizontal: 1,
+        }}
+        >
+          <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
+            {`+${selectedAccountIds.length}`}
+          </AText>
+        </View>
+      )}
       {filterType === 'Type' && (
         <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
           {types.map((type) => (

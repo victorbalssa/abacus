@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { useThemeColors } from '../../../lib/common';
-import { AStyle } from './AStack';
+import { AStyle } from './types';
 
 type ATextType = {
   px?: number

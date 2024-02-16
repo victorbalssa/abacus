@@ -21,7 +21,7 @@ import { isValidHttpUrl, useThemeColors } from '../../lib/common';
 import translate from '../../i18n/locale';
 import { RootState } from '../../store';
 import {
-  APressable, AStack, AText, AView,
+  APressable, AStack, AStackFlex, AText, AView,
 } from '../UI/ALibrary';
 
 const copyToClipboard = async () => {
@@ -71,7 +71,7 @@ export default function OauthForm({
         keyboardShouldPersistTaps="handled"
         bounces={false}
       >
-        <AStack px={20} style={{ marginTop: Platform.OS === 'ios' ? 10 : 20 }}>
+        <AStackFlex px={20} style={{ marginTop: Platform.OS === 'ios' ? 10 : 20 }}>
           <FormControl isRequired>
             <FormControl.Label testID="auth_form_url_label">{translate('auth_form_url_label')}</FormControl.Label>
             <Input
@@ -92,13 +92,13 @@ export default function OauthForm({
 
           <AText py={10} fontSize={13}>{translate('auth_external_heads_up')}</AText>
 
-          <AStack row py={10} alignItems="center" justifyContent="space-between">
+          <AStackFlex row py={10} alignItems="center" justifyContent="space-between">
             <AText fontSize={12}>{translate('auth_use_personal_access_token')}</AText>
             <Switch testID="toggle_is_oauth" isChecked={!isOauth} onToggle={toggleIsOauth} colorScheme="primary" />
-          </AStack>
+          </AStackFlex>
 
           {isOauth && (
-          <AStack py={10} alignItems="flex-start" justifyContent="flex-start">
+          <AStackFlex py={10} alignItems="flex-start" justifyContent="flex-start">
             <AText fontSize={13}>
               ‣
               {' '}
@@ -108,7 +108,7 @@ export default function OauthForm({
                 {`${isValidHttpUrl(config.backendURL) ? config.backendURL : '[Firefly III URL]'}/profile`}
               </AText>
             </AText>
-            <AStack row py={10} alignItems="flex-start" justifyContent="flex-start">
+            <AStackFlex row py={10} alignItems="flex-start" justifyContent="flex-start">
               <AText fontSize={13}>
                 ‣
                 {' '}
@@ -130,7 +130,7 @@ export default function OauthForm({
                 <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
                 <AText fontSize={13} fontFamily="Montserrat_Bold" color="white">abacusfiiiapp://redirect</AText>
               </APressable>
-            </AStack>
+            </AStackFlex>
             <FormControl isRequired>
               <FormControl.Label>{translate('auth_form_oauth_clientId')}</FormControl.Label>
               <Input
@@ -160,11 +160,11 @@ export default function OauthForm({
                 {translate('auth_form_secrets_help_message')}
               </FormControl.HelperText>
             </FormControl>
-          </AStack>
+          </AStackFlex>
           )}
 
           {!isOauth && (
-            <AStack py={10} alignItems="flex-start" justifyContent="flex-start">
+            <AStackFlex py={10} alignItems="flex-start" justifyContent="flex-start">
               <AText fontSize={13} onPress={() => Linking.openURL(`${config.backendURL}/profile`)}>
                 ‣
                 {' '}
@@ -192,7 +192,7 @@ export default function OauthForm({
                   {translate('auth_form_secrets_help_message')}
                 </FormControl.HelperText>
               </FormControl>
-            </AStack>
+            </AStackFlex>
           )}
 
           <AView
@@ -272,7 +272,7 @@ export default function OauthForm({
             </Button>
             )}
           </AView>
-        </AStack>
+        </AStackFlex>
         <AView style={{ height: 170 }} />
       </ScrollView>
     </KeyboardAvoidingView>

@@ -120,7 +120,6 @@ function TabBarComponent({
           insets={insets}
         />
       </ABlurView>
-      <NavigationHeader navigation={navigation} />
       <ErrorWidget />
     </>
   );
@@ -265,6 +264,10 @@ function Home() {
         name={translate('navigation_home_tab')}
         component={HomeScreen}
         options={{
+          headerShown: true,
+          // eslint-disable-next-line react/no-unstable-nested-components
+          header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
+          headerTransparent: Platform.select({ ios: true, android: false }),
           tabBarIcon: TabBarHomeScreenIcon,
           tabBarTestID: 'navigation_home_tab',
         }}
@@ -273,6 +276,10 @@ function Home() {
         name={translate('navigation_chart_tab')}
         component={ChartScreen}
         options={{
+          headerShown: true,
+          // eslint-disable-next-line react/no-unstable-nested-components
+          header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
+          headerTransparent: Platform.select({ ios: true, android: false }),
           tabBarIcon: TabBarChartScreenIcon,
           tabBarTestID: 'navigation_chart_tab',
         }}

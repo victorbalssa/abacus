@@ -29,7 +29,7 @@ import { CommonActions } from '@react-navigation/native';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/screen';
 import { AText } from '../UI/ALibrary';
 
 export default function ConfigurationScreen({ navigation }: ScreenType) {

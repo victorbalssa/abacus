@@ -3,7 +3,7 @@ import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { AText, AView } from './index';
-import { NavigationType } from '../../Screens/types';
+import { NavigationType } from '../../../types/screen';
 import { useThemeColors } from '../../../lib/common';
 
 interface AFilterButtonType {

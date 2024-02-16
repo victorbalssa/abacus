@@ -30,9 +30,9 @@ import { GetTransactionsPayload, TransactionSplitType, TransactionType } from '.
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { D_WIDTH, localNumberFormat, useThemeColors } from '../../lib/common';
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/screen';
 import {
-  APressable, AStack, AText, AView,
+  APressable, AStack, AStackFlex, AText, AView,
 } from '../UI/ALibrary';
 import AFilterButton from '../UI/ALibrary/AFilterButton';
 
@@ -49,7 +49,7 @@ function ListFooterComponent({ onLoadMore, initLoading }) {
   const { page, totalPages } = useSelector((state: RootState) => state.transactions);
 
   return useMemo(() => (loading || initLoading || (page < totalPages)) && (
-    <AStack
+    <AStackFlex
       style={{
         height: ITEM_HEIGHT,
         paddingLeft: 10,
@@ -60,25 +60,25 @@ function ListFooterComponent({ onLoadMore, initLoading }) {
       }}
     >
       {(loading || initLoading) && (
-      <AStack row justifyContent="space-between" alignItems="flex-start" py={10} px={10}>
-        <AStack justifyContent="flex-start" row>
+      <AStackFlex row justifyContent="space-between" alignItems="flex-start" py={10} px={10}>
+        <AStackFlex justifyContent="flex-start" row>
           <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
           <Skeleton.Text w={130} ml={2} lines={3} />
-        </AStack>
+        </AStackFlex>
         <Skeleton w={75} h={8} rounded={10} />
-      </AStack>
+      </AStackFlex>
       )}
       {(!initLoading && !loading && (page < totalPages)) && (
-      <AStack px={3} py={3}>
+      <AStackFlex px={3} py={3}>
         <Button
           leftIcon={<Ionicons name="cloud-download" size={20} color="white" />}
           onPress={onLoadMore}
         >
           Load More
         </Button>
-      </AStack>
+      </AStackFlex>
       )}
-    </AStack>
+    </AStackFlex>
   ), [
     colors,
     page,
@@ -169,8 +169,8 @@ function RenderItem({ item }) {
         });
       }}
     >
-      <AStack justifyContent="space-between" alignItems="flex-start" row>
-        <AStack justifyContent="flex-start" row>
+      <AStackFlex justifyContent="space-between" alignItems="flex-start" row>
+        <AStackFlex justifyContent="flex-start" row>
           <AView
             style={{
               backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
@@ -185,7 +185,7 @@ function RenderItem({ item }) {
               color={getTransactionTypeAttributes(item.attributes.transactions[0].type).color}
             />
           </AView>
-          <AStack alignItems="flex-start" py={7}>
+          <AStackFlex alignItems="flex-start" py={7}>
             <AText fontSize={14} maxWidth={D_WIDTH - 175} numberOfLines={1} bold>
               {item.attributes.groupTitle}
               {item.attributes.groupTitle?.length > 0 ? ': ' : ''}
@@ -203,7 +203,7 @@ function RenderItem({ item }) {
               {`${moment(item.attributes.transactions[0].date).format('ll')} • ${item.attributes.transactions[0].categoryName || ''}`}
             </AText>
             {item.attributes.transactions[0].tags.length > 0 && (
-              <AStack justifyContent="flex-start" alignItems="flex-start" row>
+              <AStackFlex justifyContent="flex-start" alignItems="flex-start" row>
                 {item.attributes.transactions[0].tags.filter((_, index) => index < 2).map((tag) => (
                   <AView
                     key={tag}
@@ -223,10 +223,10 @@ function RenderItem({ item }) {
                     <AText fontSize={10} color={colors.brandDark} numberOfLines={1} maxWidth={100} bold>{tag}</AText>
                   </AView>
                 ))}
-              </AStack>
+              </AStackFlex>
             )}
-          </AStack>
-        </AStack>
+          </AStackFlex>
+        </AStackFlex>
         <AView
           style={{
             borderRadius: 10,
@@ -240,7 +240,7 @@ function RenderItem({ item }) {
             {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currencyCode, item.attributes.transactions.reduce((total, split) => total + parseFloat(split.amount), 0))}`}
           </AText>
         </AView>
-      </AStack>
+      </AStackFlex>
     </APressable>
   ), [item, colors]);
 }
@@ -271,7 +271,7 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
   const { colors } = useThemeColors();
 
   return useMemo(() => (
-    <AStack row>
+    <AStackFlex row>
       <APressable
         style={{
           height: ITEM_HEIGHT,
@@ -283,14 +283,14 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
         }}
         onPress={handleOnPressCopy}
       >
-        <AStack alignItems="flex-start">
-          <AStack style={{ width: 70 }}>
+        <AStackFlex alignItems="flex-start">
+          <AStackFlex style={{ width: 70 }}>
             <MaterialIcons name="content-copy" color="white" size={17} />
             <AText color="white" fontSize={12} bold>
               {translate('transaction_clone')}
             </AText>
-          </AStack>
-        </AStack>
+          </AStackFlex>
+        </AStackFlex>
       </APressable>
       <APressable
         style={{
@@ -303,16 +303,16 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
         }}
         onPress={handleOnPressDelete}
       >
-        <AStack alignItems="flex-end">
-          <AStack style={{ width: 70 }}>
+        <AStackFlex alignItems="flex-end">
+          <AStackFlex style={{ width: 70 }}>
             <MaterialIcons name="delete" color="white" size={17} />
             <AText color="white" fontSize={12} bold>
               {translate('transaction_delete')}
             </AText>
-          </AStack>
-        </AStack>
+          </AStackFlex>
+        </AStackFlex>
       </APressable>
-    </AStack>
+    </AStackFlex>
   ), [handleOnPressCopy, handleOnPressDelete]);
 }
 
@@ -435,8 +435,8 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         />
       )}
       ListHeaderComponent={(
-        <AStack px={14} backgroundColor={colors.tileBackgroundColor}>
-          <AStack
+        <AStackFlex px={14} backgroundColor={colors.tileBackgroundColor}>
+          <AStackFlex
             row
             justifyContent="flex-start"
             style={{
@@ -464,8 +464,8 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
             {/*
             <AFilterButton filterType="Period" selected={title} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
 */}
-          </AStack>
-        </AStack>
+          </AStackFlex>
+        </AStackFlex>
       )}
       initialNumToRender={15}
       keyExtractor={(item: TransactionType) => item.id}

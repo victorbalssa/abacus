@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView } from 'native-base';
 
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/types';
 import TransactionForm from '../Forms/TransactionForm';
 
 export default function TransactionCreateScreen({ navigation, route }: ScreenType) {

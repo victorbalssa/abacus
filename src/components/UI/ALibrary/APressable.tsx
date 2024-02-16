@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable } from 'react-native';
-import { AStyle } from './AStack';
+import { AStyle } from './types';
 import { useThemeColors } from '../../../lib/common';
 
 type APressableType = {

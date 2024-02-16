@@ -11,7 +11,7 @@ import {
   addCredential,
 } from '../../lib/oauth';
 import { RootDispatch } from '../../store';
-import { OauthConfigType, ScreenType } from './types';
+import { OauthConfigType, ScreenType } from '../../types/types';
 
 import translate from '../../i18n/locale';
 import { TCredential } from '../../types/credential';

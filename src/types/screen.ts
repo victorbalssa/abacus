@@ -1,4 +1,4 @@
-import { TransactionSplitType } from '../../models/transactions';
+import { TransactionSplitType } from '../models/transactions';
 
 interface filterScreenParamsType {
   filterType: string;

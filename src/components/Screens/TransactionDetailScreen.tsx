@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView } from 'react-native';
 
 import TransactionForm from '../Forms/TransactionForm';
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/types';
 
 export default function TransactionDetailScreen({ navigation, route }: ScreenType) {
   const { payload } = route.params;

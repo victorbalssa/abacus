@@ -35,7 +35,7 @@ import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 
 import Pagination from '../UI/Pagination';
-import { AStack } from '../UI/ALibrary';
+import { AStackFlex } from '../UI/ALibrary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -66,7 +66,7 @@ function AssetsAccounts() {
       )}
     >
       <View>
-        <AStack px={15} py={15} row justifyContent="space-between">
+        <AStackFlex px={15} py={15} row justifyContent="space-between">
           <Text
             style={{
               fontFamily: 'Montserrat_Bold',
@@ -78,7 +78,7 @@ function AssetsAccounts() {
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
           </Text>
           <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
-        </AStack>
+        </AStackFlex>
         {accounts && accounts.filter((a) => a.display || displayAllAccounts).map((account, index) => (
           <HStack
             key={account.id}

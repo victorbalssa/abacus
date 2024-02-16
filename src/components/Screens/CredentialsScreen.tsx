@@ -7,11 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 import {
-  AStack,
   AView,
   AText,
   APressable,
   AScrollView,
+  AStackFlex,
 } from '../UI/ALibrary';
 
 import translate from '../../i18n/locale';
@@ -20,7 +20,7 @@ import {
   deleteCredential, deleteOldSecureStore, getCredentials, isTokenFresh,
 } from '../../lib/oauth';
 import { TCredential } from '../../types/credential';
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/screen';
 import { RootDispatch, RootState } from '../../store';
 import AButton from '../UI/ALibrary/AButton';
 
@@ -34,7 +34,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
   const dispatch = useDispatch<RootDispatch>();
 
   const bioAuthCheck = async () => {
-    if (useBiometricAuth) {
+    if (useBiometricAuth && !authenticated) {
       const bioAuth = await LocalAuthentication.authenticateAsync();
       if (bioAuth.success) {
         setAuthenticated(true);
@@ -50,7 +50,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
       // delete old secure store keys
       deleteOldSecureStore().catch();
       getCredentials().then((c) => setCredentials(c));
-    }, []),
+    }, [authenticated]),
   );
 
   const goToCredentialCreateScreen = () => navigation.dispatch(
@@ -121,10 +121,10 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
         showsVerticalScrollIndicator={false}
       >
         <AButton style={{ height: 50 }} mx={40} onPress={bioAuthCheck}>
-          <AStack row>
+          <AStackFlex row>
             <Ionicons name="lock-open" size={15} color="white" style={{ margin: 5 }} />
             <AText fontSize={15}>{translate('auth_form_biometrics_lock')}</AText>
-          </AStack>
+          </AStackFlex>
         </AButton>
       </AScrollView>
     );
@@ -135,8 +135,8 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
       bounces={false}
       showsVerticalScrollIndicator={false}
     >
-      <AStack alignItems="flex-start">
-        <AStack
+      <AStackFlex alignItems="flex-start">
+        <AStackFlex
           row
           justifyContent="space-between"
           style={{
@@ -165,8 +165,8 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
               <AText fontSize={16} color={colors.brandStyle}>{editMode ? 'Done' : 'Edit'}</AText>
             </APressable>
           ) : <AView style={{ width: 100 }} />}
-        </AStack>
-        <AStack px={10}>
+        </AStackFlex>
+        <AStackFlex px={10}>
           {credentials.map((c, index) => (
             <AButton
               key={`${c.backendURL}-${c.email}`}
@@ -197,7 +197,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
                 <AntDesign onPress={() => showAlert(index)} name="minuscircle" size={17} color="red" />
               </AView>
               <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={25} color={colors.text} />
-              <AStack alignItems="flex-start" mx={5}>
+              <AStackFlex alignItems="flex-start" mx={5}>
                 <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
                 <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
                 <AText
@@ -207,13 +207,13 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
                 >
                   {c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}
                 </AText>
-              </AStack>
+              </AStackFlex>
             </AButton>
           ))}
-        </AStack>
+        </AStackFlex>
 
         {!editMode && (
-          <AStack px={10}>
+          <AStackFlex px={10}>
             <Button
               w="100%"
               leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
@@ -222,11 +222,11 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
             >
               {translate('configuration_credentials_add_button')}
             </Button>
-          </AStack>
+          </AStackFlex>
         )}
 
         <AView style={{ height: 300 }} />
-      </AStack>
+      </AStackFlex>
     </AScrollView>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { AStyle } from './AStack';
+import { AStyle } from './types';
 
 type AScrollViewType = {
   bounces?: boolean

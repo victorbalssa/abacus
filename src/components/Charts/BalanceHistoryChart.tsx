@@ -17,7 +17,7 @@ import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
-import { AStack, AText } from '../UI/ALibrary';
+import { AStack, AStackFlex, AText } from '../UI/ALibrary';
 import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function BalanceHistoryChart() {
@@ -46,7 +46,7 @@ export default function BalanceHistoryChart() {
   return (
     <ErrorBoundary>
       <ScrollView bounces={false}>
-        <AStack
+        <AStackFlex
           backgroundColor={colors.tileBackgroundColor}
           justifyContent="center"
           style={{
@@ -55,7 +55,7 @@ export default function BalanceHistoryChart() {
             borderColor: colors.listBorderColor,
           }}
         >
-          <AStack
+          <AStackFlex
             row
             alignItems="baseline"
             justifyContent="space-between"
@@ -80,13 +80,13 @@ export default function BalanceHistoryChart() {
             >
               <AntDesign name="reload1" size={24} color={colors.text} />
             </Pressable>
-          </AStack>
+          </AStackFlex>
           {loading && (
-          <AStack justifyContent="center">
-            <AStack row style={{ height: 400 }} alignItems="center">
+          <AStackFlex justifyContent="center">
+            <AStackFlex row style={{ height: 400 }} alignItems="center">
               <Loading />
-            </AStack>
-          </AStack>
+            </AStackFlex>
+          </AStackFlex>
           )}
           {!loading && (!isEmpty(spentChart) || !isEmpty(earnedChart)) && (
           <VictoryChart
@@ -200,7 +200,7 @@ export default function BalanceHistoryChart() {
           {!loading && (isEmpty(spentChart) && isEmpty(earnedChart)) && (
           <AText px={2}>{translate('balance_history_chart_no_data')}</AText>
           )}
-        </AStack>
+        </AStackFlex>
         <View style={{ height: 200 }} />
       </ScrollView>
     </ErrorBoundary>
