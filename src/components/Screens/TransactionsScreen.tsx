@@ -375,7 +375,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         shouldShowHintSearchIcon: false,
       },
     });
-  }, [navigation]);
+  }, [navigation, search]);
 
   useFocusEffect(
     useCallback(() => {

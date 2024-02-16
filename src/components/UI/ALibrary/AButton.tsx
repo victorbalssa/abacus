@@ -27,13 +27,12 @@ export default function AButton({
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => ({
-        flex: 1,
         backgroundColor: pressed ? colors.filterBorderColor : colors.tileBackgroundColor,
         borderRadius: 10,
         marginBottom: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        height: 65,
+        height: 75,
         marginHorizontal: mx,
         paddingHorizontal: px,
         ...style,

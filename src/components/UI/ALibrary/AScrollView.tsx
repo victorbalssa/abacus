@@ -19,9 +19,7 @@ export default function AScrollView({
     <ScrollView
       bounces={bounces}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
-      style={{
-        ...style,
-      }}
+      contentContainerStyle={style}
     >
       {children}
     </ScrollView>

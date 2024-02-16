@@ -51,6 +51,15 @@ export const deleteCredential = async (index: number) => {
   await setCredentials(newCredentials);
 };
 
+export const deleteOldSecureStore = async () => {
+  await Promise.all([
+    SecureStore.deleteItemAsync('FireflyIIIOAuthAccessToken'),
+    SecureStore.deleteItemAsync('FireflyIIIOAuthAccessTokenExpiresIn'),
+    SecureStore.deleteItemAsync('FireflyIIIOAuthRefreshToken'),
+    SecureStore.deleteItemAsync('FireflyIIIOAuthConfig'),
+  ]);
+};
+
 export const deleteAccessToken = async (index: number) => {
   const credentials = await getCredentials();
   const newCredentials = [...credentials];

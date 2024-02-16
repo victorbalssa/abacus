@@ -138,6 +138,7 @@ export default {
   credential_clear_confirm_button: 'Delete',
   credential_clear_alert_title: 'Are you sure?',
   credential_clear_cancel_button: 'Cancel',
+  go_to_credentials: 'Go to Credentials',
 
   configuration_logout_alert_title: 'Logout',
 

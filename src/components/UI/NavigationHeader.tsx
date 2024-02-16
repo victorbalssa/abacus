@@ -84,7 +84,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
               marginHorizontal: 1,
             }}
             >
-              <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
+              <AText fontSize={10} lineHeight={12} bold>
                 {currentCode}
               </AText>
             </View>
@@ -97,7 +97,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
               marginHorizontal: 1,
             }}
             >
-              <AText fontFamily="Montserrat_Bold" fontSize={10} lineHeight={12}>
+              <AText fontSize={10} lineHeight={12} bold>
                 {`${range}M`}
               </AText>
             </View>

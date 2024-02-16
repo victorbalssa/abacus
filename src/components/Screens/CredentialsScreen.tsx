@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
+import { useRoute, CommonActions, useFocusEffect } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { Button } from 'native-base';
-import { CommonActions, useFocusEffect } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 import {
@@ -15,27 +16,41 @@ import {
 
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
-import { deleteCredential, getCredentials, isTokenFresh } from '../../lib/oauth';
+import {
+  deleteCredential, deleteOldSecureStore, getCredentials, isTokenFresh,
+} from '../../lib/oauth';
 import { TCredential } from '../../types/credential';
 import { ScreenType } from './types';
-import { RootDispatch } from '../../store';
+import { RootDispatch, RootState } from '../../store';
 import AButton from '../UI/ALibrary/AButton';
 
 export default function CredentialsScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
+  const { name: routeName } = useRoute();
+  const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
   const [credentials, setCredentials] = useState<TCredential[]>([]);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
   const dispatch = useDispatch<RootDispatch>();
 
+  const bioAuthCheck = async () => {
+    if (useBiometricAuth) {
+      const bioAuth = await LocalAuthentication.authenticateAsync();
+      if (bioAuth.success) {
+        setAuthenticated(true);
+      }
+    } else {
+      setAuthenticated(true);
+    }
+  };
+
   useFocusEffect(
-    useCallback(
-      () => {
-        getCredentials().then((c) => {
-          setCredentials(c);
-        });
-      },
-      [],
-    ),
+    useCallback(() => {
+      bioAuthCheck().catch();
+      // delete old secure store keys
+      deleteOldSecureStore().catch();
+      getCredentials().then((c) => setCredentials(c));
+    }, []),
   );
 
   const goToCredentialCreateScreen = () => navigation.dispatch(
@@ -71,6 +86,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
   };
 
   const handleDeleteCredential = async (index: number) => {
+    await dispatch.configuration.resetAllStates();
     await deleteCredential(index);
     setCredentials((c) => c.filter((_, i) => i !== index));
     setEditMode(!editMode);
@@ -93,11 +109,29 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
     ],
   );
 
+  if (!authenticated) {
+    return (
+      <AScrollView
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <AButton style={{ height: 50 }} mx={40} onPress={bioAuthCheck}>
+          <AStack row>
+            <Ionicons name="lock-open" size={15} color="white" style={{ margin: 5 }} />
+            <AText fontSize={15}>{translate('auth_form_biometrics_lock')}</AText>
+          </AStack>
+        </AButton>
+      </AScrollView>
+    );
+  }
+
   return (
     <AScrollView
-      style={{
-        backgroundColor: colors.backgroundColor,
-      }}
       bounces={false}
       showsVerticalScrollIndicator={false}
     >
@@ -118,7 +152,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
           >
             {translate('configuration_credentials')}
           </AText>
-          {credentials.length > 0 ? (
+          {(credentials.length > 0 && routeName === 'credentials') ? (
             <APressable
               style={{
                 width: 100,
@@ -166,23 +200,29 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
               <AStack alignItems="flex-start" mx={5}>
                 <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
                 <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
-                <AText py={3} numberOfLines={1} fontSize={10}>{c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}</AText>
+                <AText
+                  py={3}
+                  numberOfLines={1}
+                  fontSize={10}
+                >
+                  {c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}
+                </AText>
               </AStack>
             </AButton>
           ))}
         </AStack>
 
         {!editMode && (
-        <AStack px={10}>
-          <Button
-            w="100%"
-            leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
-            onPress={goToCredentialCreateScreen}
-            colorScheme="coolGray"
-          >
-            {translate('configuration_credentials_add_button')}
-          </Button>
-        </AStack>
+          <AStack px={10}>
+            <Button
+              w="100%"
+              leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
+              onPress={goToCredentialCreateScreen}
+              colorScheme="coolGray"
+            >
+              {translate('configuration_credentials_add_button')}
+            </Button>
+          </AStack>
         )}
 
         <AView style={{ height: 300 }} />
