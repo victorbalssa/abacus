@@ -164,9 +164,9 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
               </AView>
               <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={25} color={colors.text} />
               <AStack alignItems="flex-start" mx={5}>
-                <AText py={2} numberOfLines={1} fontSize={15} bold>{c.email}</AText>
-                <AText py={2} numberOfLines={1} fontSize={10} underline>{c.backendURL}</AText>
-                <AText py={3} numberOfLines={1} fontSize={9}>{c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}</AText>
+                <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
+                <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
+                <AText py={3} numberOfLines={1} fontSize={10}>{c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}</AText>
               </AStack>
             </AButton>
           ))}

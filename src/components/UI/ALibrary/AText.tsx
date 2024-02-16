@@ -9,6 +9,7 @@ type ATextType = {
   color?: string,
   fontSize?: number
   lineHeight?: number
+  maxWidth?: number
   bold?: boolean
   fontFamily?: 'Montserrat_Bold' | 'Montserrat'
   numberOfLines?: number
@@ -24,6 +25,7 @@ export default function AText({
   color,
   fontSize = 11,
   lineHeight,
+  maxWidth,
   bold = false,
   fontFamily = 'Montserrat',
   numberOfLines,
@@ -42,6 +44,7 @@ export default function AText({
         color: color || colors.text,
         lineHeight,
         fontSize,
+        maxWidth,
         fontFamily: bold ? `${fontFamily}_Bold` : fontFamily,
         paddingHorizontal: px,
         paddingVertical: py,

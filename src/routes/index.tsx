@@ -8,7 +8,9 @@ import {
   BottomTabBar,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { AntDesign, Foundation, FontAwesome } from '@expo/vector-icons';
+import {
+  AntDesign, Foundation, Ionicons,
+} from '@expo/vector-icons';
 import { Box, IconButton } from 'native-base';
 import { StyleSheet, Platform, View } from 'react-native';
 
@@ -18,6 +20,7 @@ import { useThemeColors } from '../lib/common';
 // Screens
 import HomeScreen from '../components/Screens/HomeScreen';
 import FiltersScreen from '../components/Screens/FiltersScreen';
+import FilterScreen from '../components/Screens/FilterScreen';
 import CredentialCreateScreen from '../components/Screens/CredentialCreateScreen';
 import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
@@ -30,6 +33,7 @@ import CredentialsScreen from '../components/Screens/CredentialsScreen';
 import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 import ErrorWidget from '../components/UI/ErrorWidget';
+import { APressable } from '../components/UI/ALibrary';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -162,19 +166,14 @@ function TabBarConfigurationScreenIcon({ color }) {
   );
 }
 
-function headerRightComp() {
+export function HeaderClose() {
+  const { colors } = useThemeColors();
   const navigation = useNavigation();
 
   return (
-    <IconButton
-      variant="ghost"
-      _icon={{
-        as: FontAwesome,
-        name: 'angle-down',
-        paddingLeft: 1,
-      }}
-      onPress={navigation.goBack}
-    />
+    <APressable onPress={navigation.goBack}>
+      <Ionicons name="close-circle" size={25} color={colors.text} />
+    </APressable>
   );
 }
 
@@ -188,8 +187,21 @@ function TransactionsStack() {
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
         options={{
-          headerShown: true,
-          header: NavigationHeader,
+          headerTitle: 'Transactions',
+          headerLargeTitle: true,
+          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerTintColor: colors.text,
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: colors.tileBackgroundColor,
+          },
+          headerTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
+          headerLargeTitleStyle: {
+            fontFamily: 'Montserrat_Bold',
+          },
         }}
       />
       <TransactionStack.Screen
@@ -332,7 +344,7 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
-              headerRight: headerRightComp,
+              headerRight: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
                 fontFamily: 'Montserrat_Bold',
@@ -348,9 +360,9 @@ export default function Index() {
             component={FiltersScreen}
             options={{
               headerShown: true,
-              headerBackVisible: false,
+              headerBackVisible: true,
               headerTitle: 'Filters',
-              headerRight: headerRightComp,
+              headerRight: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
                 fontFamily: 'Montserrat_Bold',
@@ -362,12 +374,28 @@ export default function Index() {
             }}
           />
           <ModalStack.Screen
+            name="FilterScreen"
+            component={FilterScreen}
+            options={{
+              headerShown: true,
+              headerBackVisible: true,
+              headerTitle: '',
+              headerRight: HeaderClose,
+              headerShadowVisible: true,
+              headerTitleStyle: {
+                fontFamily: 'Montserrat_Bold',
+              },
+              headerTintColor: colors.text,
+              headerStyle: {
+                backgroundColor: colors.backgroundColor,
+              },
+            }}
+          />
+          <ModalStack.Screen
             name="CredentialCreateScreen"
             component={CredentialCreateScreen}
             options={{
               headerShown: false,
-              headerBackVisible: false,
-              headerLeft: headerRightComp,
             }}
           />
           <ModalStack.Screen
@@ -375,8 +403,6 @@ export default function Index() {
             component={CredentialsScreen}
             options={{
               headerShown: false,
-              headerBackVisible: false,
-              headerLeft: headerRightComp,
             }}
           />
         </ModalStack.Group>

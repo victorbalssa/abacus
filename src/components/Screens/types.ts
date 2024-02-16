@@ -1,26 +1,36 @@
 import { TransactionSplitType } from '../../models/transactions';
 
-export type ScreenType = {
-  navigation: {
-    dispatch: (action) => void,
-    setParams: (params) => void,
-    goBack: () => void,
-  },
+interface filterScreenParamsType {
+  filterType: string;
+  selectFilter: (filter: string) => void;
+}
+export interface NavigationType {
+  dispatch: (action) => void;
+  setParams: (params) => void;
+  goBack: () => void;
+  setOptions: (options) => void;
+  navigate: (screen: string, params: filterScreenParamsType) => void;
+}
+
+export interface ScreenType {
+  navigation: NavigationType;
   route?: {
     params?: {
       payload?: {
-        splits?: TransactionSplitType[]
+        splits?: TransactionSplitType[];
         groupTitle?: string
-      }
-      id?: string
-      forceRefresh?: boolean | undefined
+      };
+      id?: string;
+      forceRefresh?: boolean | undefined;
+      filterType?: string;
+      selectFilter?: (filter: string) => void;
     }
   }
 }
 
-export type OauthConfigType = {
-  backendURL: string,
-  oauthClientId: string,
-  oauthClientSecret: string,
-  personalAccessToken: string,
+export interface OauthConfigType {
+  backendURL: string;
+  oauthClientId: string;
+  oauthClientSecret: string;
+  personalAccessToken: string;
 }

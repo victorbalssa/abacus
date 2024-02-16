@@ -8,10 +8,12 @@ type APressableType = {
   disabled?: boolean
   children?: React.ReactNode
   onPress: () => void
+  onLongPress?: () => void
 }
 
 export default function APressable({
   onPress,
+  onLongPress,
   disabled = false,
   style = null,
   children = null,
@@ -22,6 +24,7 @@ export default function APressable({
     <Pressable
       disabled={disabled}
       onPress={onPress}
+      onLongPress={onLongPress}
       style={({ pressed }) => ({
         backgroundColor: pressed ? colors.listPressed : 'transparent',
         alignItems: 'center',

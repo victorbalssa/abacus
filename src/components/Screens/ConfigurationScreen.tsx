@@ -2,7 +2,8 @@ import React from 'react';
 import {
   ScrollView,
   Alert,
-  Text, Platform,
+  Text,
+  Platform,
 } from 'react-native';
 import {
   Box,

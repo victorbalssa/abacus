@@ -21,7 +21,7 @@ import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
 import { RootDispatch } from '../../store';
-import { TransactionSplitType } from '../../models/transactions';
+import { TransactionSplitType, types } from '../../models/transactions';
 
 export default function TransactionSplitForm({
   index,
@@ -71,21 +71,6 @@ export default function TransactionSplitForm({
       return newSplit;
     });
   };
-
-  const types = [
-    {
-      type: 'withdrawal',
-      name: translate('transaction_form_type_withdraw'),
-    },
-    {
-      type: 'deposit',
-      name: translate('transaction_form_type_deposit'),
-    },
-    {
-      type: 'transfer',
-      name: translate('transaction_form_type_transfer'),
-    },
-  ];
 
   const colorItemTypes = {
     withdrawal: colors.red,
