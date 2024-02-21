@@ -320,7 +320,7 @@ export default function TransactionSplitForm({
       />
 
       <AutocompleteField
-        isRequired={'withdrawal' === formData.type || 'transfer' === formData.type }
+        isRequired={['withdrawal', 'transfer'].includes(formData.type)}
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
