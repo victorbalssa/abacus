@@ -2,18 +2,20 @@
 const { withAndroidManifest } = require('@expo/config-plugins');
 
 function removeNetworkSecurityConfig(androidManifest) {
-  const manifest = { ...androidManifest };
+  const newManifest = { ...androidManifest };
 
-  manifest.manifest.application[0].$['android:networkSecurityConfig'] = undefined;
-  manifest.manifest.application[0].$['android:usesCleartextTraffic'] = 'true';
+  newManifest.manifest.application[0].$['android:networkSecurityConfig'] = undefined;
+  newManifest.manifest.application[0].$['android:usesCleartextTraffic'] = 'true';
 
-  return manifest;
+  return newManifest;
 }
 
 module.exports = function withAndroidManifestUpdate(configuration) {
   return withAndroidManifest(configuration, (config) => {
-    // eslint-disable-next-line no-param-reassign
-    config.modResults = removeNetworkSecurityConfig(config.modResults);
-    return config;
+    const newConfig = { ...config };
+
+    newConfig.modResults = removeNetworkSecurityConfig(newConfig.modResults);
+
+    return newConfig;
   });
 };

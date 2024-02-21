@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { useThemeColors } from '../../../lib/common';
-import { AStyle } from './AStack';
+import { AStyle } from './types';
 
 type ATextType = {
   px?: number
@@ -9,6 +9,8 @@ type ATextType = {
   color?: string,
   fontSize?: number
   lineHeight?: number
+  maxWidth?: number
+  bold?: boolean
   fontFamily?: 'Montserrat_Bold' | 'Montserrat'
   numberOfLines?: number
   underline?: boolean
@@ -23,6 +25,8 @@ export default function AText({
   color,
   fontSize = 11,
   lineHeight,
+  maxWidth,
+  bold = false,
   fontFamily = 'Montserrat',
   numberOfLines,
   underline = false,
@@ -40,7 +44,8 @@ export default function AText({
         color: color || colors.text,
         lineHeight,
         fontSize,
-        fontFamily,
+        maxWidth,
+        fontFamily: bold ? `${fontFamily}_Bold` : fontFamily,
         paddingHorizontal: px,
         paddingVertical: py,
         textDecorationLine: underline ? 'underline' : 'none',

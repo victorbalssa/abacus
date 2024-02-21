@@ -1,27 +1,23 @@
 import React, {
   useCallback,
   useMemo,
-  useRef,
+  useLayoutEffect,
+  useEffect,
   useState,
 } from 'react';
 import {
-  Alert, Platform,
+  Alert,
   RefreshControl,
 } from 'react-native';
 import {
-  Badge,
-  Box,
   Button,
-  HStack,
-  Icon,
-  Pressable,
   Skeleton,
-  Text,
-  VStack,
 } from 'native-base';
 import moment from 'moment';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {
+  EvilIcons, Ionicons, MaterialCommunityIcons, MaterialIcons,
+} from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -30,11 +26,15 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
-import { TransactionSplitType, TransactionType } from '../../models/transactions';
+import { GetTransactionsPayload, TransactionSplitType, TransactionType } from '../../models/transactions';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { D_WIDTH, localNumberFormat, useThemeColors } from '../../lib/common';
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/screen';
+import {
+  APressable, AStackFlex, AText, AView,
+} from '../UI/ALibrary';
+import AFilterButton from '../UI/ALibrary/AFilterButton';
 
 const ITEM_HEIGHT = 90;
 
@@ -43,39 +43,42 @@ const resetTransactionsDates = (transactions: TransactionSplitType[]) => transac
   date: new Date().toISOString(),
 }));
 
-function ListFooterComponent({ loadMore, initLoading }) {
+function ListFooterComponent({ onLoadMore, initLoading }) {
   const { colors } = useThemeColors();
   const loading = useSelector((state: RootState) => state.loading.effects.transactions.getMoreTransactions?.loading);
   const { page, totalPages } = useSelector((state: RootState) => state.transactions);
 
-  return useMemo(() => (loading || (page < totalPages)) && (
-    <Box
-      h={ITEM_HEIGHT}
-      paddingLeft={2}
-      backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={0.5}
-      borderColor={colors.listBorderColor}
+  return useMemo(() => (loading || initLoading || (page < totalPages)) && (
+    <AStackFlex
+      style={{
+        height: ITEM_HEIGHT,
+        paddingLeft: 10,
+        backgroundColor: colors.tileBackgroundColor,
+        borderTopWidth: 0.5,
+        borderBottomWidth: 0.5,
+        borderColor: colors.listBorderColor,
+      }}
     >
-      {(loading) && (
-      <HStack justifyContent="space-between" alignItems="flex-start" space={3} paddingTop={3} paddingRight={3}>
-        <HStack>
+      {(loading || initLoading) && (
+      <AStackFlex row justifyContent="space-between" alignItems="flex-start" py={10} px={10}>
+        <AStackFlex justifyContent="flex-start" row>
           <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
           <Skeleton.Text w={130} ml={2} lines={3} />
-        </HStack>
+        </AStackFlex>
         <Skeleton w={75} h={8} rounded={10} />
-      </HStack>
+      </AStackFlex>
       )}
       {(!initLoading && !loading && (page < totalPages)) && (
-      <HStack justifyContent="center" alignItems="center" px={3} py={3}>
+      <AStackFlex px={3} py={3}>
         <Button
           leftIcon={<Ionicons name="cloud-download" size={20} color="white" />}
-          onPress={loadMore}
+          onPress={onLoadMore}
         >
           Load More
         </Button>
-      </HStack>
+      </AStackFlex>
       )}
-    </Box>
+    </AStackFlex>
   ), [
     colors,
     page,
@@ -85,7 +88,7 @@ function ListFooterComponent({ loadMore, initLoading }) {
   ]);
 }
 
-function RenderItem({ item }: { item: TransactionType }) {
+function RenderItem({ item }) {
   const { colors } = useThemeColors();
   const navigation = useNavigation();
 
@@ -144,12 +147,14 @@ function RenderItem({ item }: { item: TransactionType }) {
   };
 
   return useMemo(() => (
-    <Pressable
-      h={ITEM_HEIGHT}
-      paddingLeft={2}
-      backgroundColor={colors.tileBackgroundColor}
-      borderBottomWidth={0.5}
-      borderColor={colors.listBorderColor}
+    <APressable
+      style={{
+        height: ITEM_HEIGHT,
+        backgroundColor: colors.tileBackgroundColor,
+        borderTopWidth: 0.5,
+        borderColor: colors.listBorderColor,
+        paddingLeft: 10,
+      }}
       onPress={() => {
         goToEdit(item.id, {
           splits: item.attributes.transactions,
@@ -164,84 +169,79 @@ function RenderItem({ item }: { item: TransactionType }) {
         });
       }}
     >
-      <HStack justifyContent="space-between" alignItems="flex-start">
-        <HStack alignItems="center">
-          <Box style={{
-            backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
-            borderRadius: 10,
-            marginRight: 8,
-            padding: 5,
-          }}
+      <AStackFlex justifyContent="space-between" alignItems="flex-start" row>
+        <AStackFlex justifyContent="flex-start" row>
+          <AView
+            style={{
+              backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
+              borderRadius: 10,
+              marginRight: 8,
+              padding: 5,
+            }}
           >
             <MaterialCommunityIcons
               name={getTransactionTypeAttributes(item.attributes.transactions[0].type).icon}
               size={24}
               color={getTransactionTypeAttributes(item.attributes.transactions[0].type).color}
             />
-          </Box>
-          <VStack>
-            <Text
-              fontFamily="Montserrat_Bold"
-              maxW={D_WIDTH - 175}
-              numberOfLines={1}
-              paddingTop={2}
-            >
+          </AView>
+          <AStackFlex alignItems="flex-start" py={7}>
+            <AText fontSize={14} maxWidth={D_WIDTH - 175} numberOfLines={1} bold>
               {item.attributes.groupTitle}
               {item.attributes.groupTitle?.length > 0 ? ': ' : ''}
               {item.attributes.transactions[0].description}
-            </Text>
+            </AText>
 
-            <Text
-              fontSize="xs"
-              alignSelf="flex-start"
-              maxW={D_WIDTH - 175}
-              numberOfLines={1}
-            >
-              {`${item.attributes.transactions[0].type === 'withdrawal' ? `${item.attributes.transactions[0].sourceName}` : `${item.attributes.transactions[0].destinationName}`}`}
-            </Text>
+            <AText fontSize={12} maxWidth={D_WIDTH - 175} numberOfLines={1}>
+              {`${item.attributes.transactions[0].type === 'withdrawal'
+                ? `${item.attributes.transactions[0].sourceName}`
+                : `${item.attributes.transactions[0].destinationName}`}
+              `}
+            </AText>
 
-            <Text
-              fontSize="xs"
-              alignSelf="flex-start"
-              maxW={D_WIDTH - 175}
-              numberOfLines={1}
-            >
+            <AText fontSize={12} maxWidth={D_WIDTH - 175} numberOfLines={1}>
               {`${moment(item.attributes.transactions[0].date).format('ll')} • ${item.attributes.transactions[0].categoryName || ''}`}
-            </Text>
-            <HStack alignSelf="flex-start">
-              {item.attributes.transactions[0].tags.filter((_, index) => index < 2).map((tag) => (
-                <Badge
-                  p={0}
-                  mx={0.5}
-                  px={0.5}
-                  my={0}
-                  key={tag}
-                  borderRadius={5}
-                >
-                  <Text fontSize={10} color={colors.brandDark} numberOfLines={1} maxW={90}>{tag}</Text>
-                </Badge>
-              ))}
-            </HStack>
-          </VStack>
-        </HStack>
-        <Box style={{
-          borderRadius: 10,
-          backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
-          margin: 10,
-          marginTop: 15,
-          padding: 5,
-        }}
+            </AText>
+            {item.attributes.transactions[0].tags.length > 0 && (
+              <AStackFlex justifyContent="flex-start" alignItems="flex-start" row>
+                {item.attributes.transactions[0].tags.filter((_, index) => index < 2).map((tag) => (
+                  <AView
+                    key={tag}
+                    style={{
+                      height: 15,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 4,
+                      paddingHorizontal: 2,
+                      paddingVertical: 0,
+                      backgroundColor: colors.brandNeutral,
+                      marginHorizontal: 2,
+                    }}
+                  >
+                    <EvilIcons name="tag" size={15} color={colors.brandDark} />
+                    <AText fontSize={10} color={colors.brandDark} numberOfLines={1} maxWidth={100} bold>{tag}</AText>
+                  </AView>
+                ))}
+              </AStackFlex>
+            )}
+          </AStackFlex>
+        </AStackFlex>
+        <AView
+          style={{
+            borderRadius: 10,
+            backgroundColor: getTransactionTypeAttributes(item.attributes.transactions[0].type).bg,
+            margin: 10,
+            marginTop: 15,
+            padding: 5,
+          }}
         >
-          <Text
-            fontSize={15}
-            fontFamily="Montserrat_Bold"
-            style={{ color: getTransactionTypeAttributes(item.attributes.transactions[0].type).color }}
-          >
+          <AText fontSize={15} color={getTransactionTypeAttributes(item.attributes.transactions[0].type).color} bold>
             {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currencyCode, item.attributes.transactions.reduce((total, split) => total + parseFloat(split.amount), 0))}`}
-          </Text>
-        </Box>
-      </HStack>
-    </Pressable>
+          </AText>
+        </AView>
+      </AStackFlex>
+    </APressable>
   ), [item, colors]);
 }
 
@@ -271,53 +271,60 @@ function RenderHiddenItem({ handleOnPressCopy, handleOnPressDelete }) {
   const { colors } = useThemeColors();
 
   return useMemo(() => (
-    <HStack
-      h={ITEM_HEIGHT}
-      flexDirection="row"
-      borderBottomWidth={0.5}
-      borderColor={colors.listBorderColor}
-    >
-      <Pressable
-        justifyContent="center"
-        alignItems="flex-start"
-        flex={1}
-        backgroundColor={colors.brandWarning}
+    <AStackFlex row>
+      <APressable
+        style={{
+          height: ITEM_HEIGHT,
+          width: '50%',
+          backgroundColor: colors.brandWarning,
+          paddingHorizontal: 10,
+          borderTopWidth: 0.5,
+          borderColor: colors.listBorderColor,
+        }}
         onPress={handleOnPressCopy}
-        px={5}
       >
-        <VStack alignItems="center">
-          <Icon as={<MaterialIcons name="content-copy" />} color="white" size="sm" />
-          <Text color="white" fontSize="xs" fontWeight="medium">
-            {translate('transaction_clone')}
-          </Text>
-        </VStack>
-      </Pressable>
-      <Pressable
-        justifyContent="center"
-        alignItems="flex-end"
-        flex={1}
-        backgroundColor={colors.red}
+        <AStackFlex alignItems="flex-start">
+          <AStackFlex style={{ width: 70 }}>
+            <MaterialIcons name="content-copy" color="white" size={17} />
+            <AText color="white" fontSize={12} bold>
+              {translate('transaction_clone')}
+            </AText>
+          </AStackFlex>
+        </AStackFlex>
+      </APressable>
+      <APressable
+        style={{
+          height: ITEM_HEIGHT,
+          width: '50%',
+          backgroundColor: colors.red,
+          paddingHorizontal: 10,
+          borderTopWidth: 0.5,
+          borderColor: colors.listBorderColor,
+        }}
         onPress={handleOnPressDelete}
-        px={5}
       >
-        <VStack alignItems="center">
-          <Icon as={<MaterialIcons name="delete" />} color="white" size="sm" />
-          <Text color="white" fontSize="xs" fontWeight="medium">
-            {translate('transaction_delete')}
-          </Text>
-        </VStack>
-      </Pressable>
-    </HStack>
+        <AStackFlex alignItems="flex-end">
+          <AStackFlex style={{ width: 70 }}>
+            <MaterialIcons name="delete" color="white" size={17} />
+            <AText color="white" fontSize={12} bold>
+              {translate('transaction_delete')}
+            </AText>
+          </AStackFlex>
+        </AStackFlex>
+      </APressable>
+    </AStackFlex>
   ), [handleOnPressCopy, handleOnPressDelete]);
 }
 
 export default function TransactionsScreen({ navigation, route }: ScreenType) {
   const { params } = route;
-  const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
-  const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
-  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
+  const { colors } = useThemeColors();
   const [loading, setLoading] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
+  const [search, setSearch] = React.useState('');
+  const [{ start, end }] = React.useState({ start: '', end: '', title: '' });
+  const [type, setType] = React.useState<'' | 'withdrawal' | 'deposit' | 'transfer'>('');
+  const [currentCode, setCurrentCode] = React.useState('');
   const {
     transactions: {
       getMoreTransactions,
@@ -326,41 +333,70 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     },
   } = useDispatch<RootDispatch>();
 
-  const onRefresh = async () => {
+  const onLoadMore = async () => {
+    const payload: GetTransactionsPayload = {
+      start,
+      end,
+      type,
+      currentCode,
+      search,
+    };
+    const effectTransactions = await getMoreTransactions(payload);
+    setTransactions([...transactions, ...effectTransactions]);
+  };
+
+  const onLoad = async () => {
+    const payload: GetTransactionsPayload = {
+      start,
+      end,
+      type,
+      currentCode,
+      search,
+    };
     setLoading(true);
-    const effectTransactions = await getTransactions();
+    const effectTransactions = await getTransactions(payload);
     setTransactions(effectTransactions);
     setLoading(false);
   };
 
-  const prevFiltersRef = useRef<string>();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        autoCapitalize: 'none',
+        placeholder: 'Search transactions...',
+        headerIconColor: colors.text,
+        tintColor: colors.text,
+        textColor: colors.text,
+        hintTextColor: colors.text,
+        barTintColor: colors.tileBackgroundColor,
+        onChangeText: (event) => setSearch(event.nativeEvent.text),
+        onBlur: () => onLoad(),
+        disableBackButtonOverride: true,
+        shouldShowHintSearchIcon: false,
+      },
+    });
+  }, [navigation, search]);
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
-      if (prevFiltersRef.current !== `${start}-${end}-${currentCode}` || params?.forceRefresh === true) {
+      if (params?.forceRefresh === true) {
         if (isActive) {
-          onRefresh().catch();
+          onLoad().catch();
           navigation.setParams({ forceRefresh: false });
         }
-        prevFiltersRef.current = `${start}-${end}-${currentCode}`;
       }
 
       return () => {
         isActive = false;
       };
-    }, [
-      params,
-      start,
-      end,
-      currentCode,
-    ]),
+    }, [params, currentCode, type]),
   );
 
-  const loadMore = useCallback(async () => {
-    const effectTransactions = await getMoreTransactions();
-    setTransactions([...transactions, ...effectTransactions]);
-  }, [transactions, getMoreTransactions]);
+  useEffect(() => {
+    onLoad().catch();
+  }, [type, currentCode]);
 
   const closeRow = (rowKey: string | number, rowMap: { [x: string]: { closeRow: () => void; }; }) => {
     if (rowMap[rowKey]) {
@@ -382,62 +418,92 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     }),
   );
 
-  return useMemo(
-    () => (
-      <SwipeListView
-        useNativeDriver
-        contentInsetAdjustmentBehavior="automatic"
-        refreshControl={(
-          <RefreshControl
-            refreshing={loading}
-            onRefresh={onRefresh}
-            progressViewOffset={100}
-          />
-        )}
-        contentInset={{ top: 100 }}
-        initialNumToRender={15}
-        maxToRenderPerBatch={10}
-        keyExtractor={(item: TransactionType) => item.id}
-        data={transactions}
-        showsVerticalScrollIndicator
-        renderItem={({ item }) => <RenderItem item={item} />}
-        renderHiddenItem={(data, rowMap) => (
-          <RenderHiddenItem
-            handleOnPressCopy={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
-              goToDuplicate({
-                splits: resetTransactionsDates(data.item.attributes.transactions),
-                groupTitle: data.item.attributes.groupTitle || '',
-              });
+  const resetFilters = () => {
+    setType('');
+    setCurrentCode('');
+    setSearch('');
+  };
+
+  return (
+    <SwipeListView
+      nestedScrollEnabled={false}
+      contentInsetAdjustmentBehavior="automatic"
+      refreshControl={(
+        <RefreshControl
+          refreshing={false}
+          onRefresh={onLoad}
+        />
+      )}
+      ListHeaderComponent={(
+        <AStackFlex px={14} backgroundColor={colors.tileBackgroundColor}>
+          <AStackFlex
+            row
+            justifyContent="flex-start"
+            style={{
+              marginBottom: 10,
             }}
-            handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
-          />
-        )}
-        rightOpenValue={-90}
-        stopRightSwipe={-190}
-        rightActivationValue={-170}
-        onRightActionStatusChange={({
-          key,
-          isActivated,
-        }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
-        leftOpenValue={90}
-        stopLeftSwipe={190}
-        leftActivationValue={170}
-        onLeftActionStatusChange={({
-          key,
-          isActivated,
-        }) => (isActivated ? goToDuplicate({
-          splits: resetTransactionsDates(transactions.find((t) => t.id === key).attributes.transactions),
-          groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || '',
-        }) : null)}
-        contentContainerStyle={{ paddingBottom: 100, paddingTop: Platform.select({ android: 90, ios: 0 }) }}
-        getItemLayout={(_, index: number) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
-        ListFooterComponent={() => <ListFooterComponent loadMore={loadMore} initLoading={loading} />}
-      />
-    ),
-    [
-      transactions,
-      loading,
-    ],
+          >
+            {(type !== '' || currentCode !== '') && (
+            <APressable
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 27,
+                paddingVertical: 3,
+                borderRadius: 10,
+                marginRight: 5,
+                backgroundColor: colors.filterBorderColor,
+              }}
+              onPress={resetFilters}
+            >
+              <Ionicons name="close-circle" size={20} color={colors.text} />
+            </APressable>
+            )}
+            <AFilterButton filterType="Type" selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} />
+            <AFilterButton filterType="Currency" selected={currentCode} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
+            {/*
+            <AFilterButton filterType="Period" selected={title} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
+*/}
+          </AStackFlex>
+        </AStackFlex>
+      )}
+      initialNumToRender={15}
+      keyExtractor={(item: TransactionType) => item.id}
+      data={!loading ? transactions : []}
+      showsVerticalScrollIndicator
+      renderItem={({ item }) => <RenderItem item={item} />}
+      renderHiddenItem={(data, rowMap) => (
+        <RenderHiddenItem
+          handleOnPressCopy={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch();
+            goToDuplicate({
+              splits: resetTransactionsDates(data.item.attributes.transactions),
+              groupTitle: data.item.attributes.groupTitle || '',
+            });
+          }}
+          handleOnPressDelete={() => deleteAlert(data.item, rowMap, closeRow, deleteRow)}
+        />
+      )}
+      rightOpenValue={-90}
+      stopRightSwipe={-190}
+      rightActivationValue={-170}
+      onRightActionStatusChange={({
+        key,
+        isActivated,
+      }) => (isActivated ? deleteAlert(transactions.find((t) => t.id === key), [], closeRow, deleteRow) : null)}
+      leftOpenValue={90}
+      stopLeftSwipe={190}
+      leftActivationValue={170}
+      onLeftActionStatusChange={({
+        key,
+        isActivated,
+      }) => (isActivated ? goToDuplicate({
+        splits: resetTransactionsDates(transactions.find((t) => t.id === key).attributes.transactions),
+        groupTitle: transactions.find((t) => t.id === key).attributes.groupTitle || '',
+      }) : null)}
+      contentContainerStyle={{ paddingBottom: 100 }}
+      getItemLayout={(_, index: number) => ({ length: ITEM_HEIGHT + 1, offset: (ITEM_HEIGHT + 1) * index, index })}
+      ListFooterComponent={ListFooterComponent({ onLoadMore, initLoading: loading })}
+    />
   );
 }

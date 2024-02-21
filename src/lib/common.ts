@@ -3,6 +3,7 @@ import { getLocales } from 'expo-localization';
 import moment from 'moment/moment';
 import colors from '../constants/colors';
 import translate from '../i18n/locale';
+import { TCredential } from '../types/credential';
 
 export const { height: D_HEIGHT, width: D_WIDTH } = (() => {
   const { width, height } = Dimensions.get('window');
@@ -50,6 +51,8 @@ export const isValidHttpUrl = (string) => {
     + '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
   return !!pattern.test(string);
 };
+
+export const isValidCredential = (credential: TCredential) => isValidHttpUrl(credential.backendURL) && credential.accessToken;
 
 export const localNumberFormat = (currencyCode: string, num: number | bigint) => {
   const [locale] = getLocales();

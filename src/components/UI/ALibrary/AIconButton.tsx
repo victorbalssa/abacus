@@ -1,7 +1,6 @@
 import React from 'react';
-import { Pressable } from 'react-native';
-import { View } from 'native-base';
-import { AStyle } from './AStack';
+import { View, Pressable } from 'react-native';
+import { AStyle } from './types';
 
 type AIconButtonType = {
   icon: React.ReactNode
