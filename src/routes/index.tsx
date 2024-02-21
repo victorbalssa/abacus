@@ -214,12 +214,10 @@ function TransactionsStack() {
           headerBackTitleStyle: {
             fontFamily: 'Montserrat_Bold',
           },
-          headerTransparent: Platform.select({ ios: true, android: false }),
-          headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerTransparent: false,
           headerTintColor: colors.text,
-          headerShadowVisible: true,
           headerStyle: {
-            backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+            backgroundColor: colors.tileBackgroundColor,
           },
           animation: Platform.select({ ios: 'default', android: 'slide_from_right' }),
         }}
