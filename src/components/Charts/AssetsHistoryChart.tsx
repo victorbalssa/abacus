@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
 import { Pressable, View, ScrollView } from 'react-native';
 import {
-  AStack, AStackFlex,
+  AStackFlex,
   AText,
 } from '../UI/ALibrary';
 

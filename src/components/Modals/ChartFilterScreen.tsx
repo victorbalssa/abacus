@@ -6,7 +6,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-import { AStack, AStackFlex, AText, AView } from '../UI/ALibrary';
+import { AStackFlex, AText, AView } from '../UI/ALibrary';
 import { RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
 import { ScreenType } from '../../types/screen';

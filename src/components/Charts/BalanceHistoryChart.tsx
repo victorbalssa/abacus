@@ -17,7 +17,7 @@ import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
-import { AStack, AStackFlex, AText } from '../UI/ALibrary';
+import { AStackFlex, AText } from '../UI/ALibrary';
 import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function BalanceHistoryChart() {

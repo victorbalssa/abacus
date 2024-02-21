@@ -32,7 +32,7 @@ import translate from '../../i18n/locale';
 import { D_WIDTH, localNumberFormat, useThemeColors } from '../../lib/common';
 import { ScreenType } from '../../types/screen';
 import {
-  APressable, AStack, AStackFlex, AText, AView,
+  APressable, AStackFlex, AText, AView,
 } from '../UI/ALibrary';
 import AFilterButton from '../UI/ALibrary/AFilterButton';
 

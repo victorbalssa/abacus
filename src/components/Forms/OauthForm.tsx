@@ -21,7 +21,7 @@ import { isValidHttpUrl, useThemeColors } from '../../lib/common';
 import translate from '../../i18n/locale';
 import { RootState } from '../../store';
 import {
-  APressable, AStack, AStackFlex, AText, AView,
+  APressable, AStackFlex, AText, AView,
 } from '../UI/ALibrary';
 
 const copyToClipboard = async () => {
