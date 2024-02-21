@@ -9,7 +9,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 
-import { AStackFlex } from './ALibrary';
+import { AStackFlex, AText } from './ALibrary';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -79,9 +79,9 @@ export default function Filters() {
               margin: 2,
             }}
             >
-              <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+              <AText fontSize={13} numberOfLines={1} color="white" bold>
                 {`${currency?.attributes.code} ${currency?.attributes.symbol}`}
-              </Text>
+              </AText>
             </View>
           </TouchableOpacity>
         ))}

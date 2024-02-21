@@ -193,10 +193,9 @@ function RenderItem({ item }) {
             </AText>
 
             <AText fontSize={12} maxWidth={D_WIDTH - 175} numberOfLines={1}>
-              {`${item.attributes.transactions[0].type === 'withdrawal'
-                ? `${item.attributes.transactions[0].sourceName}`
-                : `${item.attributes.transactions[0].destinationName}`}
-              `}
+              {item.attributes.transactions[0].type === 'withdrawal'
+                ? item.attributes.transactions[0].sourceName
+                : item.attributes.transactions[0].destinationName}
             </AText>
 
             <AText fontSize={12} maxWidth={D_WIDTH - 175} numberOfLines={1}>
@@ -365,8 +364,11 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         autoCapitalize: 'none',
         placeholder: 'Search transactions...',
         headerIconColor: colors.text,
+        textColor: colors.text,
+        hintTextColor: colors.text,
         onChangeText: (event) => setSearch(event.nativeEvent.text),
         onBlur: () => onLoad(),
+        onSearchButtonPress: () => onLoad(),
         disableBackButtonOverride: true,
         shouldShowHintSearchIcon: false,
       },

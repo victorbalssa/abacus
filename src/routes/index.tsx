@@ -265,7 +265,7 @@ function Home() {
           headerShown: true,
           // eslint-disable-next-line react/no-unstable-nested-components
           header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
-          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerTransparent: true,
           tabBarIcon: TabBarHomeScreenIcon,
           tabBarTestID: 'navigation_home_tab',
         }}
@@ -277,7 +277,7 @@ function Home() {
           headerShown: true,
           // eslint-disable-next-line react/no-unstable-nested-components
           header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
-          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerTransparent: true,
           tabBarIcon: TabBarChartScreenIcon,
           tabBarTestID: 'navigation_chart_tab',
         }}
@@ -365,7 +365,7 @@ export default function Index() {
             component={FiltersScreen}
             options={{
               headerShown: true,
-              headerBackVisible: true,
+              headerBackVisible: false,
               headerTitle: 'Filters',
               headerRight: HeaderClose,
               headerShadowVisible: true,
@@ -383,7 +383,7 @@ export default function Index() {
             component={FilterScreen}
             options={{
               headerShown: true,
-              headerBackVisible: true,
+              headerBackVisible: false,
               headerTitle: '',
               headerRight: HeaderClose,
               headerShadowVisible: true,
