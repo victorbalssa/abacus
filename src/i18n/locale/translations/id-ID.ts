@@ -8,7 +8,7 @@ export default {
     + 'konfigurasi lokal\n'
     + 'Oauth Client ID & Secret\n'
     + 'URL dari instansimu',
-  configuration_clear_cancel_button: 'Batal',
+  cancel: 'Batal',
   configuration_security: 'Keamanan',
   configuration_share_feedback: 'Berikan Umpan Balik',
   configuration_report_issue: 'Laporkan Masalah',

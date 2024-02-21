@@ -1,16 +1,19 @@
 import { createModel } from '@rematch/core';
 import moment from 'moment';
 import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
-import * as SecureStore from 'expo-secure-store';
-import axios from 'axios';
 import { maxBy, minBy } from 'lodash';
 import semver from 'semver';
-import secureKeys from '../constants/oauth';
-import { discovery, redirectUri } from '../lib/oauth';
+import axios from 'axios';
+import {
+  discovery,
+  redirectUri,
+  addCredential,
+} from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
 import { generateRangeTitle } from '../lib/common';
 import { AccountType } from './accounts';
+import { TCredential } from '../types/credential';
 
 export type HomeDisplayType = {
   title: string,
@@ -372,47 +375,36 @@ export default createModel<RootModel>()({
       }
     },
 
-    async getFreshAccessToken(payload, rootState): Promise<string> {
-      const {
-        configuration: {
-          backendURL,
-        },
-      } = rootState;
-      const oauthConfig = await SecureStore.getItemAsync(secureKeys.oauthConfig);
-      const oauthConfigStorageValue = JSON.parse(oauthConfig);
-
+    async getFreshAccessToken(credential: TCredential): Promise<void> {
       const response = await refreshAsync(
         {
-          clientId: oauthConfigStorageValue.oauthClientId,
-          refreshToken: payload,
+          clientId: credential.oauthClientId,
+          refreshToken: credential.refreshToken,
           extraParams: {
-            client_secret: oauthConfigStorageValue.oauthClientSecret || undefined,
+            client_secret: credential.oauthClientSecret,
           },
         },
-        discovery(backendURL),
+        discovery(credential.backendURL),
       );
 
       if (!response.accessToken) {
         throw new Error('Failed to get accessToken with the refresh token. Please restart the Sign In process.');
       }
 
-      await SecureStore.setItemAsync(secureKeys.accessToken, response.accessToken);
-      await SecureStore.setItemAsync(secureKeys.refreshToken, response.refreshToken);
-      if (response.issuedAt && response.expiresIn) {
-        await SecureStore.setItemAsync(secureKeys.accessTokenExpiresIn, (response.issuedAt + response.expiresIn + -600).toString());
-      }
+      const newCredential = { ...credential };
+      newCredential.accessToken = response.accessToken;
+      newCredential.refreshToken = response.refreshToken;
+      newCredential.accessTokenExpiresIn = (response.issuedAt && response.expiresIn)
+        ? (response.issuedAt + response.expiresIn + -600).toString() : '';
+      await addCredential(newCredential);
 
-      return response.accessToken;
+      // set backend url and access token for this session
+      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
     },
 
-    async getNewAccessToken(payload, rootState): Promise<void> {
+    async getNewAccessToken(payload): Promise<void> {
       const {
-        configuration: {
-          backendURL,
-        },
-      } = rootState;
-
-      const {
+        backendURL,
         oauthClientId,
         oauthClientSecret,
         codeVerifier,
@@ -436,21 +428,23 @@ export default createModel<RootModel>()({
         throw new Error('Please check Oauth Client ID / Secret.');
       }
 
-      const oauthConfigStorageValue = JSON.stringify({
+      // test personal token and get user email
+      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
+      dispatch.configuration.setBackendURL(backendURL);
+      const email = await dispatch.configuration.getCurrentUserEmail();
+
+      const credential: TCredential = {
+        email,
+        backendURL,
+        accessToken: response.accessToken,
+        accessTokenExpiresIn: (response.issuedAt && response.expiresIn)
+          ? (response.issuedAt + response.expiresIn + -600).toString() : '',
         oauthClientId,
         oauthClientSecret,
-      });
-      await Promise.all([
-        SecureStore.setItemAsync(secureKeys.accessToken, response.accessToken),
-        SecureStore.setItemAsync(secureKeys.refreshToken, response.refreshToken),
-        SecureStore.setItemAsync(secureKeys.oauthConfig, oauthConfigStorageValue),
-      ]);
+        refreshToken: response.refreshToken,
+      };
 
-      if (response.issuedAt && response.expiresIn) {
-        await SecureStore.setItemAsync(secureKeys.accessTokenExpiresIn, (response.issuedAt + response.expiresIn + -600).toString());
-      }
-
-      axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
+      await addCredential(credential);
     },
 
   }),

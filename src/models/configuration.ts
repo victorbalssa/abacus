@@ -1,17 +1,14 @@
 import { createModel } from '@rematch/core';
-import * as SecureStore from 'expo-secure-store';
 import axios, { AxiosResponse } from 'axios';
 
-import secureKeys from '../constants/oauth';
 import { RootModel } from './index';
 import { convertKeysToCamelCase } from '../lib/common';
 
 type ConfigurationStateType = {
   backendURL: string
-  scrollEnabled: boolean
   hideBalance: boolean
   displayAllAccounts: boolean
-  faceId: boolean
+  useBiometricAuth: boolean
   apiVersion: string
   serverVersion: string
 }
@@ -33,12 +30,19 @@ type AboutType = {
   }
 }
 
+type AboutUserType = {
+  data: {
+    attributes: {
+      email: string
+    }
+  }
+}
+
 const INITIAL_STATE = {
-  backendURL: 'https://',
-  scrollEnabled: true,
+  backendURL: '',
   hideBalance: false,
   displayAllAccounts: false,
-  faceId: false,
+  useBiometricAuth: false,
   apiVersion: '',
   serverVersion: '',
 } as ConfigurationStateType;
@@ -63,24 +67,10 @@ export default createModel<RootModel>()({
       };
     },
 
-    setFaceId(state): ConfigurationStateType {
+    setUseBiometricAuth(state): ConfigurationStateType {
       return {
         ...state,
-        faceId: !state.faceId,
-      };
-    },
-
-    disableScroll(state): ConfigurationStateType {
-      return {
-        ...state,
-        scrollEnabled: false,
-      };
-    },
-
-    enableScroll(state): ConfigurationStateType {
-      return {
-        ...state,
-        scrollEnabled: true,
+        useBiometricAuth: !state.useBiometricAuth,
       };
     },
 
@@ -104,9 +94,7 @@ export default createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    /**
-     * @returns {Promise}
-     */
+
     async apiFetch({ url, config }, rootState): Promise<FireflyIIIApiResponse> {
       const {
         configuration: {
@@ -134,9 +122,6 @@ export default createModel<RootModel>()({
       throw new Error('No backend URL defined.');
     },
 
-    /**
-     * @returns {Promise}
-     */
     async apiPost({ url, body, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
@@ -154,9 +139,6 @@ export default createModel<RootModel>()({
       throw new Error('No backend URL defined.');
     },
 
-    /**
-     * @returns {Promise}
-     */
     async apiPut({ url, body, config }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
@@ -174,9 +156,6 @@ export default createModel<RootModel>()({
       throw new Error('No backend URL defined.');
     },
 
-    /**
-     * @returns {Promise}
-     */
     async apiDelete({ url }, rootState): Promise<AxiosResponse> {
       const {
         configuration: {
@@ -194,12 +173,7 @@ export default createModel<RootModel>()({
       throw new Error('No backend URL defined.');
     },
 
-    /**
-     * Test the accessToken
-     *
-     * @returns {Promise}
-     */
-    async testAccessToken(): Promise<void> {
+    async getCurrentApiVersion(): Promise<void> {
       const { data } = await dispatch.configuration.apiFetch({ url: '/api/v1/about' }) as AboutType;
 
       if (data.apiVersion && data.version) {
@@ -210,21 +184,17 @@ export default createModel<RootModel>()({
       }
     },
 
-    /**
-     * Reset all storage from app
-     *
-     * @returns {Promise}
-     */
-    async resetAllStorage(): Promise<void> {
+    async getCurrentUserEmail(): Promise<string> {
+      const { data } = await dispatch.configuration.apiFetch({ url: '/api/v1/about/user' }) as AboutUserType;
+
+      return data.attributes.email;
+    },
+
+    async resetAllStates(): Promise<void> {
       await Promise.all([
-        SecureStore.deleteItemAsync(secureKeys.accessToken),
-        SecureStore.deleteItemAsync(secureKeys.accessTokenExpiresIn),
-        SecureStore.deleteItemAsync(secureKeys.refreshToken),
-        SecureStore.deleteItemAsync(secureKeys.oauthConfig),
         dispatch.accounts.resetState(),
         dispatch.budgets.resetState(),
         dispatch.categories.resetState(),
-        dispatch.configuration.resetState(),
         dispatch.currencies.resetState(),
         dispatch.firefly.resetState(),
         dispatch.transactions.resetState(),

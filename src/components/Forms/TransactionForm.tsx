@@ -113,7 +113,7 @@ function TransactionFormButtons({ navigation, handleSubmit }) {
       )}
       <Button
         mt="3"
-        leftIcon={<Ionicons name="ios-cloud-upload-sharp" size={20} color="white" />}
+        leftIcon={<Ionicons name="cloud-upload-sharp" size={20} color="white" />}
         _pressed={{
           style: {
             transform: [{

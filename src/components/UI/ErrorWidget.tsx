@@ -5,11 +5,9 @@ import { AxiosError } from 'axios';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { View } from 'react-native';
 
-import * as SecureStore from 'expo-secure-store';
 import { RootState } from '../../store';
 import ToastAlert from './ToastAlert';
 import translate from '../../i18n/locale';
-import secureKeys from '../../constants/oauth';
 
 export default function ErrorWidget() {
   const toast = useToast();
@@ -20,7 +18,7 @@ export default function ErrorWidget() {
     CommonActions.reset({
       index: 0,
       routes: [
-        { name: 'oauth' },
+        { name: 'credentials' },
       ],
     }),
   );
@@ -41,7 +39,7 @@ export default function ErrorWidget() {
     }
 
     if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 401) {
-      Promise.all([SecureStore.deleteItemAsync(secureKeys.accessToken)]).then(goToOauth);
+      goToOauth();
     }
   }, [error]);
 

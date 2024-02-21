@@ -8,7 +8,7 @@ export default {
     + 'Локальные настройки\n'
     + 'Oauth Client ID & Secret\n'
     + 'URL вашего экземпляра',
-  configuration_clear_cancel_button: 'Отмена',
+  cancel: 'Отмена',
   configuration_security: 'Безопасность',
   configuration_share_feedback: 'Оставить отзыв',
   configuration_report_issue: 'Сообщить о проблеме',

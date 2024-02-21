@@ -2,7 +2,10 @@ import React from 'react';
 import {
   Text,
   IconButton,
-  HStack, Alert, VStack, CloseIcon,
+  HStack,
+  Alert,
+  VStack,
+  CloseIcon,
 } from 'native-base';
 
 export default function ToastAlert({
