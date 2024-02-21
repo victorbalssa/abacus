@@ -215,7 +215,7 @@ function RenderItem({ item }) {
                       borderRadius: 4,
                       paddingHorizontal: 2,
                       paddingVertical: 0,
-                      backgroundColor: colors.brandNeutral,
+                      backgroundColor: colors.brandNeutralFix,
                       marginHorizontal: 2,
                     }}
                   >
@@ -365,10 +365,6 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         autoCapitalize: 'none',
         placeholder: 'Search transactions...',
         headerIconColor: colors.text,
-        tintColor: colors.text,
-        textColor: colors.text,
-        hintTextColor: colors.text,
-        barTintColor: colors.tileBackgroundColor,
         onChangeText: (event) => setSearch(event.nativeEvent.text),
         onBlur: () => onLoad(),
         disableBackButtonOverride: true,

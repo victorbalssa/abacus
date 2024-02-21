@@ -27,6 +27,9 @@ import 'moment/locale/sl';
 import ruRU from './ru-RU';
 import 'moment/locale/ru';
 
+import viVN from './vi-VN';
+import 'moment/locale/vi';
+
 export default {
   de: deDE,
   en: enUS,
@@ -38,4 +41,5 @@ export default {
   it: itIT,
   sl: slSI,
   ru: ruRU,
+  vi: viVN,
 };
