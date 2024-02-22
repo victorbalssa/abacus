@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as Localization from 'expo-localization';
 import { Pressable, View, ScrollView } from 'react-native';
 import {
-  AStack,
+  AStackFlex,
   AText,
 } from '../UI/ALibrary';
 
@@ -52,7 +52,7 @@ function Cursor({
 }) {
   return (
     <>
-      <AStack
+      <AStackFlex
         flex={0}
         alignItems="flex-start"
         justifyContent="flex-start"
@@ -73,7 +73,7 @@ function Cursor({
             year: 'numeric',
           }) : '  '}`}
         </AText>
-        <AStack
+        <AStackFlex
           flex={0}
           alignItems="flex-start"
           justifyContent="flex-start"
@@ -88,7 +88,7 @@ function Cursor({
             } = style;
 
             return (
-              <AStack
+              <AStackFlex
                 flex={0}
                 row
                 justifyContent="space-between"
@@ -98,11 +98,11 @@ function Cursor({
                 <AText color={stroke} fontSize={12}>
                   {`${(yPoint).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') || ''}`}
                 </AText>
-              </AStack>
+              </AStackFlex>
             );
           })}
-        </AStack>
-      </AStack>
+        </AStackFlex>
+      </AStackFlex>
       <Line
         stroke="#fff"
         strokeWidth={1}
@@ -157,7 +157,7 @@ export default function AssetsHistoryChart() {
   return useMemo(() => (
     <ErrorBoundary>
       <ScrollView bounces={false}>
-        <AStack
+        <AStackFlex
           backgroundColor={colors.tileBackgroundColor}
           justifyContent="center"
           style={{
@@ -166,7 +166,7 @@ export default function AssetsHistoryChart() {
             borderColor: colors.listBorderColor,
           }}
         >
-          <AStack
+          <AStackFlex
             row
             alignItems="baseline"
             justifyContent="space-between"
@@ -191,14 +191,14 @@ export default function AssetsHistoryChart() {
             >
               <AntDesign name="reload1" size={24} color={colors.text} />
             </Pressable>
-          </AStack>
+          </AStackFlex>
           <View style={{ height: 80 }} />
           {loading && (
-          <AStack justifyContent="center">
-            <AStack row style={{ height: 400 }} alignItems="center">
+          <AStackFlex justifyContent="center">
+            <AStackFlex row style={{ height: 400 }} alignItems="center">
               <Loading />
-            </AStack>
-          </AStack>
+            </AStackFlex>
+          </AStackFlex>
           )}
           {!loading && (
           <VictoryChart
@@ -272,7 +272,7 @@ export default function AssetsHistoryChart() {
           </VictoryChart>
           )}
           {accounts.length > 4 && (<AccountsLengthMessage />)}
-        </AStack>
+        </AStackFlex>
         <View style={{ height: 200 }} />
       </ScrollView>
     </ErrorBoundary>

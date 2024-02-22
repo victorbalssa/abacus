@@ -21,6 +21,7 @@ export default {
   green: '#15803d',
   warmGray100: '#3b3b3b',
   blurAndroidHeader: 'rgba(40,40,40,0.16)',
+  brandNeutralFix: '#e3e3e3',
   dark: {
     text: 'white',
     textOpposite: 'black',

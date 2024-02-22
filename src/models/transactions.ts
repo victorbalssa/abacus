@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import { AxiosResponse } from 'axios';
 import { RootModel } from './index';
+import translate from '../i18n/locale';
 
 export type TransactionSplitType = {
   order?: number
@@ -60,6 +61,15 @@ export type ErrorStateType = {
   notes: string
 }
 
+export type GetTransactionsPayload = {
+  type: '' | 'withdrawal' | 'deposit' | 'transfer'
+  search?: string
+  start?: string
+  end?: string
+  currentCode?: string
+  accountIds?: number[]
+}
+
 export const initialSplit = () => ({
   type: 'withdrawal',
   amount: '',
@@ -78,6 +88,21 @@ export const initialSplit = () => ({
   tags: [],
   notes: '',
 }) as TransactionSplitType;
+
+export const types = [
+  {
+    type: 'withdrawal',
+    name: translate('transaction_form_type_withdraw'),
+  },
+  {
+    type: 'deposit',
+    name: translate('transaction_form_type_deposit'),
+  },
+  {
+    type: 'transfer',
+    name: translate('transaction_form_type_transfer'),
+  },
+];
 
 const INITIAL_STATE = {
   page: 1,
@@ -221,25 +246,29 @@ export default createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    async getTransactions(_: void, rootState): Promise<TransactionType[]> {
+    async getTransactions(payload: GetTransactionsPayload): Promise<TransactionType[]> {
       const {
-        firefly: {
-          rangeDetails: {
-            start,
-            end,
-          },
-        },
-        currencies: {
-          currentCode,
-        },
-      } = rootState;
+        type,
+        start,
+        end,
+        currentCode,
+        search: searchQuery,
+      } = payload;
 
-      const type = 'all';
       const currentPage = 1;
+      const today = new Date().toISOString().split('T')[0];
+      let search = searchQuery || ' ';
+      search += (end && start) ? ` date_before:${end} date_after:${start}` : ` date_before:${today}`;
+      search += (currentCode) ? ` currency_is:${currentCode}` : '';
+      search += (type) ? ` type:${type}` : '';
+
       const {
         data: transactions,
         meta,
-      } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?limit=10&page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+      } = await dispatch.configuration.apiFetch({ url: `/api/v1/search/transactions?limit=15&page=${currentPage}&query=${search}` }) as {
+        data: TransactionType[],
+        meta
+      };
 
       dispatch.transactions.setMetaPagination({
         page: meta.pagination.currentPage,
@@ -248,30 +277,38 @@ export default createModel<RootModel>()({
 
       return transactions;
     },
-    async getMoreTransactions(_: void, rootState): Promise<TransactionType[]> {
+
+    async getMoreTransactions(payload: GetTransactionsPayload, rootState): Promise<TransactionType[]> {
       const {
-        firefly: {
-          rangeDetails: {
-            start,
-            end,
-          },
-        },
         transactions: {
           page = 1,
           totalPages = 1,
         },
-        currencies: {
-          currentCode,
-        },
       } = rootState;
 
-      const type = 'all';
+      const {
+        type,
+        start,
+        end,
+        currentCode,
+        search: searchQuery,
+      } = payload;
+
       const currentPage = (page < totalPages) ? page + 1 : 1;
       if (page < totalPages) {
+        const today = new Date().toISOString().split('T')[0];
+        let search = searchQuery || ' ';
+        search += (end && start) ? ` date_before:${end} date_after:${start}` : ` date_before:${today}`;
+        search += (currentCode) ? ` currency_is:${currentCode}` : '';
+        search += (type) ? ` type:${type}` : '';
+
         const {
           data: transactions,
           meta,
-        } = await dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/transactions?limit=10&page=${currentPage}&start=${start}&end=${end}&type=${type}` }) as { data: TransactionType[], meta };
+        } = await dispatch.configuration.apiFetch({ url: `/api/v1/search/transactions?limit=15&page=${currentPage}&query=${search}` }) as {
+          data: TransactionType[],
+          meta
+        };
 
         dispatch.transactions.setMetaPagination({
           page: meta.pagination.currentPage,
@@ -283,6 +320,7 @@ export default createModel<RootModel>()({
 
       return [];
     },
+
     async upsertTransaction({ id = '-1' }, rootState): Promise<AxiosResponse> {
       const {
         transactions: {

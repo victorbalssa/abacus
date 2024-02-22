@@ -5,12 +5,13 @@ import {
 } from 'react-native';
 import { AStyle } from './types';
 
-type AStackType = {
+type AStackFlexType = {
   px?: number
   py?: number
   mx?: number
   my?: number
   row?: boolean
+  flex?: number
   justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly'
   alignItems?: FlexAlignType
   backgroundColor?: string
@@ -19,11 +20,12 @@ type AStackType = {
   children: React.ReactNode
 }
 
-export default function AStack({
+export default function AStackFlex({
   px = 0,
   py = 0,
   mx = 0,
   my = 0,
+  flex = 1,
   row = false,
   justifyContent = 'center',
   alignItems = 'center',
@@ -31,10 +33,12 @@ export default function AStack({
   flexWrap = 'nowrap',
   style = {},
   children,
-}: AStackType) {
+}: AStackFlexType) {
   return (
     <SafeAreaView
       style={{
+        flex,
+        width: '100%',
         flexDirection: row ? 'row' : 'column',
         justifyContent,
         alignItems,

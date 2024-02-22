@@ -1,26 +1,25 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
 
+import { ScreenType } from '../../types/screen';
 import TransactionForm from '../Forms/TransactionForm';
-import { ScreenType } from './types';
 
 export default function TransactionDetailScreen({ navigation, route }: ScreenType) {
-  const { payload } = route.params;
+  const {
+    params: {
+      id,
+      payload: {
+        groupTitle,
+        splits,
+      },
+    },
+  } = route;
 
   return (
-    <ScrollView
-      style={{
-        padding: 7,
-      }}
-      keyboardShouldPersistTaps="handled"
-      contentInsetAdjustmentBehavior="automatic"
-    >
-      <TransactionForm
-        navigation={navigation}
-        splits={payload?.splits}
-        title={payload?.groupTitle}
-        id={route.params.id}
-      />
-    </ScrollView>
+    <TransactionForm
+      navigation={navigation}
+      splits={splits}
+      title={groupTitle}
+      id={id}
+    />
   );
 }

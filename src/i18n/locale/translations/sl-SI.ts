@@ -8,7 +8,7 @@ export default {
     + 'lokalne nastavitve\n'
     + 'Oauth ID odjemalca & skriti ključ\n'
     + 'URL naslov do vaše namestitve',
-  configuration_clear_cancel_button: 'Prekliči',
+  cancel: 'Prekliči',
   configuration_security: 'Varnost',
   configuration_share_feedback: 'Delite povratne informacije',
   configuration_report_issue: 'Prijavite težavo',

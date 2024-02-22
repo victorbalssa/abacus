@@ -2,7 +2,8 @@ import React from 'react';
 import {
   ScrollView,
   Alert,
-  Text, Platform,
+  Text,
+  Platform,
 } from 'react-native';
 import {
   Box,
@@ -14,6 +15,7 @@ import {
 } from 'native-base';
 import * as Linking from 'expo-linking';
 import * as Application from 'expo-application';
+import * as LocalAuthentication from 'expo-local-authentication';
 import {
   Octicons,
   FontAwesome,
@@ -27,20 +29,26 @@ import { CommonActions } from '@react-navigation/native';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
-import { ScreenType } from './types';
+import { ScreenType } from '../../types/screen';
+import { AText } from '../UI/ALibrary';
 
 export default function ConfigurationScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
-  const {
-    backendURL,
-    faceId,
-  } = useSelector((state: RootState) => state.configuration);
+  const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
+  const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
   const {
     configuration: {
-      setFaceId,
-      resetAllStorage,
+      setUseBiometricAuth,
+      resetAllStates,
     },
   } = useDispatch<RootDispatch>();
+
+  const bioAuthCallback = async (callback) => {
+    const bioAuth = await LocalAuthentication.authenticateAsync();
+    if (bioAuth.success) {
+      callback();
+    }
+  };
 
   const reviewApp = async () => {
     if (await StoreReview.isAvailableAsync()) {
@@ -48,29 +56,63 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
     }
   };
 
-  const resetApp = async () => {
-    await resetAllStorage();
+  const resetCache = async () => {
+    await resetAllStates();
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
-          { name: 'oauth' },
+          { name: 'dashboard' },
         ],
       }),
     );
   };
 
-  const showAlert = () => Alert.alert(
+  const showResetCacheAlert = () => Alert.alert(
     translate('configuration_clear_alert_title'),
     translate('configuration_clear_alert_text'),
     [
       {
         text: translate('configuration_clear_confirm_button'),
-        onPress: () => resetApp(),
+        onPress: () => resetCache(),
         style: 'destructive',
       },
       {
-        text: translate('configuration_clear_cancel_button'),
+        text: translate('cancel'),
+        style: 'cancel',
+      },
+    ],
+  );
+
+  const goToAccounts = () => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'CredentialsScreen',
+    }),
+  );
+
+  const goToCredentials = async () => {
+    await resetAllStates();
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'credentials' },
+        ],
+      }),
+    );
+  };
+
+  const showLogoutAlert = () => Alert.alert(
+    translate('configuration_clear_alert_title'),
+    '',
+    [
+      {
+        text: 'OK',
+        onPress: () => goToCredentials(),
+        style: 'destructive',
+      },
+      {
+        text: translate('cancel'),
         style: 'cancel',
       },
     ],
@@ -100,12 +142,16 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
         </Text>
         <Box borderTopWidth={0.5} borderBottomWidth={0.5} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>URL</Text>
-            <Text style={{ fontFamily: 'Montserrat', textDecorationLine: 'underline', color: colors.brandInfo }} onPress={() => Linking.openURL(backendURL)}>{backendURL}</Text>
+            <AText fontSize={14}>URL</AText>
+            <AText fontSize={14} onPress={() => Linking.openURL(backendURL)} underline>{backendURL}</AText>
           </HStack>
+          <Pressable pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" borderBottomWidth={0.5} borderColor={colors.listBorderColor} _pressed={{ backgroundColor: colors.listPressed }} onPress={goToAccounts} flexDirection="row">
+            <AText fontSize={14}>{translate('configuration_manage_credentials')}</AText>
+            <FontAwesome name="angle-right" size={22} color="gray" />
+          </Pressable>
           <HStack pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between">
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('auth_form_biometrics_lock')}</Text>
-            <Switch isChecked={faceId} onToggle={setFaceId} colorScheme="primary" />
+            <AText fontSize={14}>{translate('auth_form_biometrics_lock')}</AText>
+            <Switch isChecked={useBiometricAuth} onToggle={() => bioAuthCallback(setUseBiometricAuth)} colorScheme="primary" />
           </HStack>
         </Box>
 
@@ -123,24 +169,24 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
         </Text>
         <Box borderTopWidth={0.5} borderBottomWidth={0.5} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
           <HStack alignItems="center" justifyContent="space-between" pr={4} ml={4} py={2} h={45} borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_app_version')}</Text>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{Application.nativeApplicationVersion}</Text>
+            <AText fontSize={14}>{translate('configuration_app_version')}</AText>
+            <AText fontSize={14}>{Application.nativeApplicationVersion}</AText>
           </HStack>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/')} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_share_feedback')}</Text>
+            <AText fontSize={14}>{translate('configuration_share_feedback')}</AText>
             <Octicons name="cross-reference" size={20} color="gray" />
           </Pressable>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/issues/new')} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_report_issue')}</Text>
+            <AText fontSize={14}>{translate('configuration_report_issue')}</AText>
             <Octicons name="issue-opened" size={20} color="gray" />
           </Pressable>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_sources')}</Text>
+            <AText fontSize={14}>{translate('configuration_sources')}</AText>
             <AntDesign name="github" size={22} color="gray" />
           </Pressable>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={reviewApp} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</Text>
-            <Ionicons name={Platform.select({ ios: 'ios-logo-apple-appstore', android: 'ios-logo-google-playstore' })} size={23} color="gray" />
+            <AText fontSize={14}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</AText>
+            <Ionicons name={Platform.select({ ios: 'logo-apple-appstore', android: 'logo-google-playstore' })} size={23} color="gray" />
           </Pressable>
         </Box>
 
@@ -158,11 +204,15 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
         </Text>
         <Box borderTopWidth={0.5} borderBottomWidth={0.5} borderColor={colors.listBorderColor} backgroundColor={colors.tileBackgroundColor}>
           <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_get_help')}</Text>
+            <AText fontSize={14}>{translate('configuration_get_help')}</AText>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
-          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showAlert} px={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
-            <Text style={{ fontFamily: 'Montserrat', color: colors.text }}>{translate('configuration_clear_option')}</Text>
+          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showResetCacheAlert} pr={4} ml={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row" borderBottomWidth={0.5} borderColor={colors.listBorderColor}>
+            <AText fontSize={14}>{translate('configuration_clear_option')}</AText>
+            <FontAwesome name="angle-right" size={22} color="gray" />
+          </Pressable>
+          <Pressable _pressed={{ backgroundColor: colors.listPressed }} onPress={showLogoutAlert} px={4} py={2} h={45} alignItems="center" justifyContent="space-between" flexDirection="row">
+            <AText fontSize={14}>{translate('go_to_credentials')}</AText>
             <FontAwesome name="angle-right" size={22} color="gray" />
           </Pressable>
         </Box>

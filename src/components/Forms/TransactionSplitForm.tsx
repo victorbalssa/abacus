@@ -21,7 +21,7 @@ import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
 import { RootDispatch } from '../../store';
-import { TransactionSplitType } from '../../models/transactions';
+import { TransactionSplitType, types } from '../../models/transactions';
 
 export default function TransactionSplitForm({
   index,
@@ -71,21 +71,6 @@ export default function TransactionSplitForm({
       return newSplit;
     });
   };
-
-  const types = [
-    {
-      type: 'withdrawal',
-      name: translate('transaction_form_type_withdraw'),
-    },
-    {
-      type: 'deposit',
-      name: translate('transaction_form_type_deposit'),
-    },
-    {
-      type: 'transfer',
-      name: translate('transaction_form_type_transfer'),
-    },
-  ];
 
   const colorItemTypes = {
     withdrawal: colors.red,
@@ -320,7 +305,7 @@ export default function TransactionSplitForm({
       />
 
       <AutocompleteField
-        isRequired
+        isRequired={['withdrawal', 'transfer'].includes(formData.type)}
         label={translate('transaction_form_sourceAccount_label')}
         placeholder={translate('transaction_form_sourceAccount_label')}
         value={formData.sourceName}
@@ -340,6 +325,7 @@ export default function TransactionSplitForm({
       />
 
       <AutocompleteField
+        isRequired={['deposit', 'transfer'].includes(formData.type)}
         label={translate('transaction_form_destinationAccount_label')}
         placeholder={translate('transaction_form_destinationAccount_label')}
         value={formData.destinationName}

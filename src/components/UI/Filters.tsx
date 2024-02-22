@@ -9,7 +9,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 
-import { AStack } from './ALibrary';
+import { AStackFlex, AText } from './ALibrary';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -57,7 +57,7 @@ export default function Filters() {
         {translate('currency')}
       </Text>
 
-      <AStack row justifyContent="center" flexWrap="wrap">
+      <AStackFlex row justifyContent="center" flexWrap="wrap">
         {currencies.map((currency) => (
           <TouchableOpacity
             disabled={currentCode === currency.attributes.code}
@@ -79,13 +79,13 @@ export default function Filters() {
               margin: 2,
             }}
             >
-              <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+              <AText fontSize={13} numberOfLines={1} color="white" bold>
                 {`${currency?.attributes.code} ${currency?.attributes.symbol}`}
-              </Text>
+              </AText>
             </View>
           </TouchableOpacity>
         ))}
-      </AStack>
+      </AStackFlex>
 
       <Text
         style={{
@@ -99,7 +99,7 @@ export default function Filters() {
         {translate('period')}
       </Text>
 
-      <AStack row justifyContent="center" flexWrap="wrap">
+      <AStackFlex row justifyContent="center" flexWrap="wrap">
         {[1, 3, 6, 12].map((period) => (
           <TouchableOpacity
             key={period}
@@ -128,7 +128,7 @@ export default function Filters() {
             </View>
           </TouchableOpacity>
         ))}
-      </AStack>
+      </AStackFlex>
       <Text
         style={{
           fontFamily: 'Montserrat_Bold',
@@ -140,7 +140,7 @@ export default function Filters() {
       >
         {translate('home_accounts')}
       </Text>
-      <AStack justifyContent="center" row flexWrap="wrap">
+      <AStackFlex justifyContent="center" row flexWrap="wrap">
         {accounts.map((account) => (
           <TouchableOpacity
             key={`key-${account.id}`}
@@ -190,7 +190,7 @@ export default function Filters() {
             <AntDesign name="close" size={20} color={colors.text} />
           </View>
         </TouchableOpacity>
-      </AStack>
+      </AStackFlex>
       <View style={{ height: 200 }} />
     </ScrollView>
   ), [

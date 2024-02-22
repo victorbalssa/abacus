@@ -8,7 +8,7 @@ export default {
     + '本地配置\n'
     + 'Oauth 客户端 ID 和 密钥\n'
     + 'Firefly III 后端网址',
-  configuration_clear_cancel_button: '取消',
+  cancel: '取消',
   configuration_security: '安全',
   configuration_share_feedback: '发送反馈',
   configuration_report_issue: '报告问题',

@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Keyboard, Platform, View } from 'react-native';
 import {
-  Button,
-  KeyboardAvoidingView,
-} from 'native-base';
+  Keyboard, Platform, View, KeyboardAvoidingView, ScrollView,
+} from 'react-native';
+import { Button } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
 import * as Crypto from 'expo-crypto';
@@ -17,6 +16,7 @@ import GroupTitle from './Fields/GroupTitle';
 
 import Loading from '../UI/Loading';
 import { initialSplit } from '../../models/transactions';
+import { AView } from '../UI/ALibrary';
 
 function MultipleTransactionSplitForm({ isNew, splits, title }) {
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
@@ -113,7 +113,7 @@ function TransactionFormButtons({ navigation, handleSubmit }) {
       )}
       <Button
         mt="3"
-        leftIcon={<Ionicons name="ios-cloud-upload-sharp" size={20} color="white" />}
+        leftIcon={<Ionicons name="cloud-upload-sharp" size={20} color="white" />}
         _pressed={{
           style: {
             transform: [{
@@ -176,17 +176,20 @@ export default function TransactionForm({
   return useMemo(
     () => (
       <KeyboardAvoidingView
-        enabled
-        h={{
-          base: '100%',
-          lg: 'auto',
-        }}
+        style={{ flex: 1 }}
         behavior={Platform.select({ ios: 'padding', android: 'height' })}
-        keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
       >
-        <MultipleTransactionSplitForm isNew={id === '-1'} title={title} splits={splits} />
-        <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
-        <View style={{ height: 100 }} />
+        <ScrollView
+          style={{
+            padding: 10,
+          }}
+          keyboardShouldPersistTaps="handled"
+          bounces={false}
+        >
+          <MultipleTransactionSplitForm isNew={id === '-1'} title={title} splits={splits} />
+          <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
+          <AView style={{ height: 170 }} />
+        </ScrollView>
       </KeyboardAvoidingView>
     ),
     [],

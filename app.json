@@ -6,10 +6,9 @@
     "privacy": "public",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
-    "version": "0.11.1",
+    "version": "0.12.4",
     "orientation": "portrait",
     "updates": {
       "enabled": true,
@@ -35,7 +34,7 @@
         "usesNonExemptEncryption": false
       },
       "bundleIdentifier": "abacus.ios.app",
-      "buildNumber": "0.11.1"
+      "buildNumber": "0.12.4"
     },
     "android": {
       "icon": "./src/images/icon-abacus.png",
@@ -53,7 +52,7 @@
       },
       "playStoreUrl": "https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app",
       "package": "abacus.fireflyiii.android.app",
-      "versionCode": 13
+      "versionCode": 18
     },
     "web": {
       "bundler": "metro"
@@ -71,7 +70,7 @@
     "plugins": [
       "expo-localization",
       "./plugins/withAndroidManifest",
-      "@config-plugins/detox"
+      "expo-build-properties"
     ],
     "userInterfaceStyle": "automatic"
   }
