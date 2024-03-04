@@ -4,25 +4,14 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import {
-  Box,
-  HStack,
-  Progress,
-  ScrollView,
-  Skeleton,
-  Stack,
-  Text,
-  View,
-  VStack,
-} from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   RefreshControl,
-  TouchableOpacity,
   Animated,
   Switch,
+  View,
 } from 'react-native';
 import axios from 'axios';
 import type { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
@@ -35,7 +24,12 @@ import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 
 import Pagination from '../UI/Pagination';
-import { AStackFlex } from '../UI/ALibrary';
+import {
+  APressable,
+  AScrollView, AStack, AText, AView,
+  AProgressBar,
+  ASkeleton, AStackFlex,
+} from '../UI/ALibrary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -53,7 +47,7 @@ function AssetsAccounts() {
   };
 
   return (
-    <ScrollView
+    <AScrollView
       showsVerticalScrollIndicator={false}
       refreshControl={(
         <RefreshControl
@@ -65,58 +59,53 @@ function AssetsAccounts() {
         />
       )}
     >
-      <View>
-        <AStackFlex px={15} py={15} row justifyContent="space-between">
-          <Text
-            style={{
-              fontFamily: 'Montserrat_Bold',
-              color: colors.text,
-              fontSize: 25,
-              lineHeight: 27,
-            }}
-          >
+      <AView>
+        <AStack px={5} row justifyContent="space-between">
+          <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
-          </Text>
-          <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
-        </AStackFlex>
+          </AText>
+          <Switch style={{ marginHorizontal: 10 }} thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
+        </AStack>
         {accounts && accounts.filter((a) => a.display || displayAllAccounts).map((account, index) => (
-          <HStack
+          <AStack
             key={account.id}
-            mx={4}
-            h={45}
-            alignItems="center"
+            row
+            mx={15}
+            style={{
+              height: 45,
+              borderColor: colors.listBorderColor,
+              borderBottomWidth: index + 1 === accounts.length ? 0 : 0.5,
+            }}
             justifyContent="space-between"
-            borderBottomWidth={index + 1 === accounts.length ? 0 : 0.5}
-            borderColor={colors.listBorderColor}
           >
-            <Text
-              maxW="60%"
+            <AText
+              fontSize={14}
+              maxWidth="60%"
               numberOfLines={1}
             >
               {account.attributes.name}
-              <Text style={{ fontSize: 10 }}>
+              <AText fontSize={10}>
                 {account.attributes.includeNetWorth ? '' : '*'}
-              </Text>
-            </Text>
+              </AText>
+            </AText>
 
-            {!loading ? (
-              <Text
-                maxW="39%"
+            <ASkeleton loading={loading}>
+              <AText
+                maxWidth={100}
+                fontSize={14}
                 numberOfLines={1}
               >
                 {localNumberFormat(account.attributes.currencyCode, parseFloat(account.attributes.currentBalance))}
-              </Text>
-            ) : (
-              <Skeleton w={70} h={5} rounded={10} />
-            )}
-          </HStack>
+              </AText>
+            </ASkeleton>
+          </AStack>
         ))}
-        <Text style={{ fontSize: 10, paddingHorizontal: 10 }}>
+        <AText fontSize={9} py={10} px={15}>
           {translate('account_not_included_in_net_worth')}
-        </Text>
-        <View style={{ height: 150 }} />
-      </View>
-    </ScrollView>
+        </AText>
+        <AView style={{ height: 150 }} />
+      </AView>
+    </AScrollView>
   );
 }
 
@@ -127,11 +116,11 @@ function InsightCategories() {
   const dispatch = useDispatch<RootDispatch>();
 
   return (
-    <ScrollView
+    <AScrollView
       showsVerticalScrollIndicator={false}
       refreshControl={(
         <RefreshControl
-          refreshing={loading}
+          refreshing={false}
           onRefresh={() => Promise.all([
             dispatch.categories.getInsightCategories(),
             dispatch.firefly.getNetWorth(),
@@ -139,50 +128,42 @@ function InsightCategories() {
         />
       )}
     >
-      <Box>
-        <Text
+      <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
+        {translate('home_categories')}
+      </AText>
+      {insightCategories.map((category, index) => (
+        <AStack
+          key={category.name}
+          row
+          mx={15}
           style={{
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 27,
+            height: 45,
+            borderColor: colors.listBorderColor,
+            borderBottomWidth: index + 1 === insightCategories.length ? 0 : 0.5,
           }}
+          justifyContent="space-between"
         >
-          {translate('home_categories')}
-        </Text>
-        {insightCategories.map((category, index) => (
-          <HStack
-            key={category.name}
-            mx={4}
-            h={45}
-            alignItems="center"
-            justifyContent="space-between"
-            borderBottomWidth={index + 1 === insightCategories.length ? 0 : 0.5}
-            borderColor={colors.listBorderColor}
+          <AText
+            fontSize={14}
+            maxWidth="60%"
+            numberOfLines={1}
           >
-            <Text
-              maxW="70%"
+            {category.name}
+          </AText>
+
+          <ASkeleton loading={loading}>
+            <AText
+              fontSize={14}
+              maxWidth={100}
               numberOfLines={1}
             >
-              {category.name}
-            </Text>
-
-            {!loading ? (
-              <Text
-                maxW="30%"
-                numberOfLines={1}
-              >
-                {localNumberFormat(category.currencyCode, (category.differenceFloat * -1))}
-              </Text>
-            ) : (
-              <Skeleton w={70} h={5} rounded={10} />
-            )}
-          </HStack>
-        ))}
-      </Box>
-      <View style={{ height: 150 }} />
-    </ScrollView>
+              {localNumberFormat(category.currencyCode, (category.differenceFloat * -1))}
+            </AText>
+          </ASkeleton>
+        </AStack>
+      ))}
+      <AView style={{ height: 150 }} />
+    </AScrollView>
   );
 }
 
@@ -193,11 +174,11 @@ function InsightBudgets() {
   const dispatch = useDispatch<RootDispatch>();
 
   return (
-    <ScrollView
+    <AScrollView
       showsVerticalScrollIndicator={false}
       refreshControl={(
         <RefreshControl
-          refreshing={loading}
+          refreshing={false}
           onRefresh={() => Promise.all([
             dispatch.budgets.getInsightBudgets(),
             dispatch.firefly.getNetWorth(),
@@ -205,96 +186,58 @@ function InsightBudgets() {
         />
       )}
     >
-      <Box>
-        <Text
-          style={{
-            fontFamily: 'Montserrat_Bold',
-            margin: 15,
-            color: colors.text,
-            fontSize: 25,
-            lineHeight: 27,
-          }}
+      <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
+        {translate('home_budgets')}
+      </AText>
+      {insightBudgets.filter((budget) => budget.attributes?.active).map((budget, index) => (
+        <AStack
+          key={budget.attributes.name}
+          mx={15}
+          style={{ height: 60 }}
         >
-          {translate('home_budgets')}
-        </Text>
-        {insightBudgets.filter((budget) => budget.attributes?.active).map((budget, index) => (
-          <Stack
-            key={budget.attributes.name}
-          >
-            <VStack
-              mx={4}
-              h={60}
-              justifyContent="center"
-              borderBottomWidth={index + 1 === insightBudgets.length ? 0 : 0.5}
-              borderColor={colors.listBorderColor}
+          <AStackFlex row justifyContent="space-between">
+            <AStack
+              style={{ maxWidth: '80%' }}
+              alignItems="flex-start"
             >
-              <HStack
-                pt={1}
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <VStack
-                  maxW="80%"
-                  justifyContent="center"
-                  alignItems="flex-start"
-                >
-                  <Text
-                    numberOfLines={1}
-                  >
-                    {budget.attributes.name}
-                  </Text>
-                  <Text fontSize={10} numberOfLines={1}>
-                    {localNumberFormat(budget.currencyCode, budget.differenceFloat < 0 ? (budget.differenceFloat * -1) : budget.differenceFloat)}
-                    {' / '}
-                    {localNumberFormat(budget.currencyCode, budget.limit)}
-                  </Text>
-                </VStack>
+              <AText fontSize={14} lineHeight={22} numberOfLines={1}>
+                {budget.attributes.name}
+              </AText>
+              <AText fontSize={12} numberOfLines={1}>
+                {localNumberFormat(budget.currencyCode, budget.differenceFloat < 0 ? (budget.differenceFloat * -1) : budget.differenceFloat)}
+                {' / '}
+                {localNumberFormat(budget.currencyCode, budget.limit)}
+              </AText>
+            </AStack>
 
-                {!loading ? (
-                  <VStack
-                    justifyContent="center"
-                    alignItems="flex-end"
+            <ASkeleton loading={loading}>
+              <AStack alignItems="flex-end">
+                <AStack
+                  px={5}
+                  backgroundColor={-budget.differenceFloat > budget.limit ? colors.brandNeutralLight : colors.brandSuccessLight}
+                  style={{ borderRadius: 5 }}
+                >
+                  <AText
+                    fontSize={14}
+                    numberOfLines={1}
+                    color={-budget.differenceFloat > budget.limit ? colors.brandNeutral : colors.brandSuccess}
+                    style={{ textAlign: 'center' }}
+                    bold
                   >
-                    <Box style={{
-                      backgroundColor: -budget.differenceFloat > budget.limit ? colors.brandNeutralLight : colors.brandSuccessLight,
-                      borderRadius: 5,
-                      paddingHorizontal: 5,
-                    }}
-                    >
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: 14,
-                          fontFamily: 'Montserrat_Bold',
-                          textAlign: 'center',
-                          color: -budget.differenceFloat > budget.limit ? colors.brandNeutral : colors.brandSuccess,
-                        }}
-                      >
-                        {`${(budget.limit > 0 ? (((budget.differenceFloat * -1) * 100) / budget.limit).toFixed(0) : 0)}%`}
-                      </Text>
-                    </Box>
-                  </VStack>
-                ) : (
-                  <VStack
-                    justifyContent="center"
-                    alignItems="flex-end"
-                  >
-                    <Skeleton w={10} h={5} rounded={5} />
-                  </VStack>
-                )}
-              </HStack>
-              <Progress
-                colorScheme={-budget.differenceFloat > budget.limit ? 'danger' : 'success'}
-                value={((-budget.differenceFloat * 100) / budget.limit) || 0}
-                h={1}
-                mt={1}
-              />
-            </VStack>
-          </Stack>
-        ))}
-      </Box>
-      <View style={{ height: 150 }} />
-    </ScrollView>
+                    {`${(budget.limit > 0 ? (((budget.differenceFloat * -1) * 100) / budget.limit).toFixed(0) : 0)}%`}
+                  </AText>
+                </AStack>
+              </AStack>
+            </ASkeleton>
+          </AStackFlex>
+          <AProgressBar
+            color={-budget.differenceFloat > budget.limit ? colors.red : colors.green}
+            value={((-budget.differenceFloat * 100) / budget.limit) || 0}
+          />
+        </AStack>
+      ))}
+      <AView style={{ height: 150 }} />
+    </AScrollView>
   );
 }
 
@@ -308,58 +251,46 @@ function NetWorth() {
   const dispatch = useDispatch<RootDispatch>();
 
   return useMemo(() => (
-    <View testID="home_screen_net_worth" justifyContent="center">
-      <TouchableOpacity onPress={() => dispatch.configuration.setHideBalance(!hideBalance)}>
+    <View testID="home_screen_net_worth">
+      <APressable flexDirection="column" onPress={() => dispatch.configuration.setHideBalance(!hideBalance)}>
         {netWorth && netWorth[0] && !hideBalance && (
-        <VStack alignItems="center">
-          <Text style={{
-            fontSize: 11,
-            fontFamily: 'Montserrat',
-            color: colors.text,
-          }}
-          >
-            {`${translate('home_net_worth')} • ${currentCode}`}
-          </Text>
-          <Skeleton isLoaded={!loading} speed={2} startColor={colors.brandWhiteOpacity} w={200} h={9} rounded={20}>
-            <HStack alignItems="center">
-              <Text
-                style={{
-                  fontSize: 35,
-                  lineHeight: 37,
-                  fontFamily: 'Montserrat_Bold',
-                }}
-              >
-                {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue))}
-              </Text>
-            </HStack>
-          </Skeleton>
-        </VStack>
+          <AStack>
+            <AText fontSize={11}>
+              {`${translate('home_net_worth')} • ${currentCode}`}
+            </AText>
+            <ASkeleton loading={loading}>
+              <AStack>
+                <AText fontSize={35} lineHeight={37} bold>
+                  {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue))}
+                </AText>
+              </AStack>
+            </ASkeleton>
+          </AStack>
         )}
 
         {balance && balance[0] && !hideBalance && (
-          <VStack p={1} justifyContent="center" alignItems="center">
-            <Skeleton isLoaded={!loading} speed={2} startColor={colors.brandWhiteOpacity} w={70} h={5} mt={1} rounded={20}>
-              <HStack style={{
-                backgroundColor: parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight,
-                borderRadius: 10,
-                paddingHorizontal: 5,
-              }}
+          <AStack py={5}>
+            <ASkeleton loading={loading}>
+              <AStack
+                row
+                px={5}
+                backgroundColor={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight}
+                style={{ borderRadius: 10 }}
               >
-                <Text style={{
-                  fontSize: 12,
-                  fontFamily: 'Montserrat_Bold',
-                  color: parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess,
-                }}
+                <AText
+                  bold
+                  fontSize={12}
+                  color={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess}
                 >
                   {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, parseFloat(balance[0].monetaryValue))}`}
-                </Text>
-              </HStack>
-            </Skeleton>
-          </VStack>
+                </AText>
+              </AStack>
+            </ASkeleton>
+          </AStack>
         )}
 
         {hideBalance && (
-          <View style={{
+          <AView style={{
             height: 87, width: 200, justifyContent: 'center', alignItems: 'center',
           }}
           >
@@ -368,9 +299,9 @@ function NetWorth() {
               size={30}
               color={colors.text}
             />
-          </View>
+          </AView>
         )}
-      </TouchableOpacity>
+      </APressable>
     </View>
   ), [
     loading,
@@ -438,23 +369,14 @@ export default function HomeScreen() {
   const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 
   return (useMemo(() => (
-    <Box style={{ flex: 1 }}>
+    <AView style={{ flex: 1 }}>
       <LinearGradient
         colors={colorScheme === 'light' ? ['rgb(255,211,195)', 'rgb(255,194,183)', 'rgb(248,199,193)', 'rgb(255,228,194)'] : ['#790277', '#d30847', '#FF5533', '#efe96d']}
         start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 0 }}
         style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top + 50 }}
       >
-        <VStack
-          flex={1}
-          mx={4}
-          my={4}
-          py={1}
-          px={3}
-          pb={5}
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <AStackFlex>
           <NetWorth />
           <Pagination
             renderIcons={renderIcons}
@@ -462,15 +384,16 @@ export default function HomeScreen() {
             scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
             positionAnimatedValue={positionAnimatedValue}
           />
-        </VStack>
+        </AStackFlex>
       </LinearGradient>
 
       <View style={{ flex: 2 }}>
-        <Box
-          backgroundColor={colors.tileBackgroundColor}
-          borderTopRadius={30}
-          borderColor={colors.tileBackgroundColor}
+        <AView
           style={{
+            backgroundColor: colors.tileBackgroundColor,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            borderColor: colors.tileBackgroundColor,
             paddingTop: 5,
             position: 'absolute',
             top: -30,
@@ -501,8 +424,8 @@ export default function HomeScreen() {
             <InsightCategories key="2" />
             <InsightBudgets key="3" />
           </AnimatedPagerView>
-        </Box>
+        </AView>
       </View>
-    </Box>
+    </AView>
   ), [colors]));
 }

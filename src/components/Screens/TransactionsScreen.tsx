@@ -6,17 +6,17 @@ import React, {
   useState,
 } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   RefreshControl,
 } from 'react-native';
-import {
-  Button,
-  Skeleton,
-} from 'native-base';
 import moment from 'moment';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import {
-  EvilIcons, Ionicons, MaterialCommunityIcons, MaterialIcons,
+  EvilIcons,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
 } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +35,7 @@ import {
   APressable, AStackFlex, AText, AView,
 } from '../UI/ALibrary';
 import AFilterButton from '../UI/ALibrary/AFilterButton';
+import AButton from '../UI/ALibrary/AButton';
 
 const ITEM_HEIGHT = 90;
 
@@ -52,31 +53,20 @@ function ListFooterComponent({ onLoadMore, initLoading }) {
     <AStackFlex
       style={{
         height: ITEM_HEIGHT,
-        paddingLeft: 10,
-        backgroundColor: colors.tileBackgroundColor,
-        borderTopWidth: 0.5,
-        borderBottomWidth: 0.5,
-        borderColor: colors.listBorderColor,
       }}
     >
       {(loading || initLoading) && (
-      <AStackFlex row justifyContent="space-between" alignItems="flex-start" py={10} px={10}>
-        <AStackFlex justifyContent="flex-start" row>
-          <Skeleton w={8} h={8} m={1} ml={0} rounded={10} />
-          <Skeleton.Text w={130} ml={2} lines={3} />
-        </AStackFlex>
-        <Skeleton w={75} h={8} rounded={10} />
+      <AStackFlex py={10} px={10}>
+        <ActivityIndicator color={colors.text} />
       </AStackFlex>
       )}
       {(!initLoading && !loading && (page < totalPages)) && (
-      <AStackFlex px={3} py={3}>
-        <Button
-          leftIcon={<Ionicons name="cloud-download" size={20} color="white" />}
-          onPress={onLoadMore}
-        >
-          Load More
-        </Button>
-      </AStackFlex>
+        <AButton style={{ height: 40 }} mx={30} onPress={onLoadMore}>
+          <AStackFlex row>
+            <Ionicons name="cloud-download" size={15} color="white" style={{ margin: 5 }} />
+            <AText fontSize={15}>{translate('load_more')}</AText>
+          </AStackFlex>
+        </AButton>
       )}
     </AStackFlex>
   ), [

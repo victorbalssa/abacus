@@ -9,12 +9,14 @@ type APressableType = {
   children?: React.ReactNode
   onPress: () => void
   onLongPress?: () => void
+  flexDirection?: 'row' | 'column'
 }
 
 export default function APressable({
   onPress,
   onLongPress,
   disabled = false,
+  flexDirection = 'row',
   style = null,
   children = null,
 }: APressableType) {
@@ -28,7 +30,7 @@ export default function APressable({
       style={({ pressed }) => ({
         backgroundColor: pressed ? colors.listPressed : 'transparent',
         alignItems: 'center',
-        flexDirection: 'row',
+        flexDirection,
         ...style,
       })}
     >

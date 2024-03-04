@@ -112,7 +112,7 @@ export default function Filters() {
               backgroundColor: colors.filterBorderColor,
               justifyContent: 'center',
               alignItems: 'center',
-              borderRadius: 25,
+              borderRadius: 10,
               width: 60,
               height: 40,
               margin: 2,

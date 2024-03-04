@@ -7,9 +7,11 @@ type AIconButtonType = {
   px?: number
   py?: number
   borderWidth?: number
+  borderColor?: string
   backgroundColor?: string
   onPress: () => void,
   style?: AStyle
+  testID?: string
 }
 
 export default function AIconButton({
@@ -18,8 +20,10 @@ export default function AIconButton({
   px = 0,
   py = 0,
   borderWidth = 0,
+  borderColor = 'transparent',
   backgroundColor = 'transparent',
   style = null,
+  testID = null,
 }: AIconButtonType) {
   return (
     <View
@@ -29,11 +33,13 @@ export default function AIconButton({
       }}
     >
       <Pressable
+        testID={testID}
         onPress={onPress}
         style={({ pressed }) => ({
           width: 40,
           height: 40,
           borderWidth,
+          borderColor,
           borderRadius: 10,
           backgroundColor: pressed ? 'rgba(0,0,0,0.13)' : 'transparent',
           paddingHorizontal: px,

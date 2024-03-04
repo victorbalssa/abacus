@@ -9,9 +9,8 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {
-  AntDesign, Foundation, Ionicons,
+  AntDesign, FontAwesome, Foundation, Ionicons,
 } from '@expo/vector-icons';
-import { Box, IconButton } from 'native-base';
 import { StyleSheet, Platform, View } from 'react-native';
 
 import translate from '../i18n/locale';
@@ -33,7 +32,7 @@ import CredentialsScreen from '../components/Screens/CredentialsScreen';
 import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 import ErrorWidget from '../components/UI/ErrorWidget';
-import { APressable } from '../components/UI/ALibrary';
+import { AIconButton, APressable, AStack } from '../components/UI/ALibrary';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -59,11 +58,6 @@ const styles = StyleSheet.create({
     right: 0,
     height: 0,
   },
-  container: {
-    position: 'relative',
-    width: 45,
-    alignItems: 'center',
-  },
   background: {
     position: 'absolute',
     top: 0,
@@ -72,30 +66,21 @@ const styles = StyleSheet.create({
 
 function TabBarPrimaryButton() {
   const navigation = useNavigation();
+  const { colors } = useThemeColors();
 
   return (
-    <Box style={styles.container} pointerEvents="box-none">
-      <IconButton
-        _icon={{
-          as: AntDesign,
-          name: 'plus',
-        }}
+    <AStack justifyContent="flex-start">
+      <AIconButton
+        testID="navigation_create_transaction"
+        backgroundColor={colors.brandStyle}
+        icon={<AntDesign name="plus" color="white" size={22} />}
         onPress={() => navigation.dispatch(
           CommonActions.navigate({
             name: 'TransactionCreateScreen',
           }),
         )}
-        _pressed={{
-          style: {
-            top: -5,
-          },
-        }}
-        style={{
-          top: -5,
-        }}
-        testID="navigation_create_transaction"
       />
-    </Box>
+    </AStack>
   );
 }
 

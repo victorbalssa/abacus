@@ -1,21 +1,19 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
-import {
-  FormControl,
-  HStack,
-  Input,
-  Pressable,
-  Text,
-  Badge,
-  IconButton,
-  ScrollView,
-} from 'native-base';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, EvilIcons } from '@expo/vector-icons';
 import { RootState } from '../../../store';
 import { convertKeysToCamelCase, useThemeColors } from '../../../lib/common';
+import {
+  AInput,
+  APressable,
+  AStack,
+  AText,
+  AView,
+  ALabel,
+  AFormView, AIconButton,
+} from '../../UI/ALibrary';
 
 type AutocompleteType = {
   name: string,
@@ -25,7 +23,6 @@ type AutocompleteType = {
 export default function AutocompleteField({
   splitType = 'withdrawal',
   designation = 'source',
-  isInvalid = false,
   isRequired = false,
   label,
   placeholder,
@@ -34,7 +31,6 @@ export default function AutocompleteField({
   onSelectAutocomplete,
   InputRightElement,
   routeApi,
-  error = null,
   onDeleteMultiple = null,
   multiple = false,
   small = false,
@@ -90,43 +86,39 @@ export default function AutocompleteField({
 
   return useMemo(
     () => (
-      <FormControl mt="1" isRequired={isRequired} isInvalid={isInvalid}>
+      <AFormView>
         {!small && (
-          <FormControl.Label>
+          <ALabel isRequired={isRequired}>
             {label}
-          </FormControl.Label>
+          </ALabel>
         )}
-        {multiple && (
-          <ScrollView horizontal>
-            {value.map((item, index) => (
-              <Badge
-                mr={1}
-                mb={2}
-                py={1}
-                borderRadius={10}
-                key={`${index + 1}${item}`}
-                rightIcon={(
-                  <IconButton
-                    mr={0}
-                    h={1}
-                    w={1}
-                    variant="ghost"
-                    colorScheme="gray"
-                    _icon={{
-                      as: AntDesign,
-                      name: 'closecircle',
-                      size: 19,
-                    }}
-                    onPress={() => handleDeleteMultiple(item)}
-                  />
-                )}
-              >
-                {item}
-              </Badge>
-            ))}
-          </ScrollView>
-        )}
-        <Input
+
+        {multiple && (value.map((item: string, index: number) => (
+          <AView style={{ width: '100%' }}>
+            <AView
+              key={`${index + 1}${item}`}
+              style={{
+                height: 30,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                borderRadius: 10,
+                paddingHorizontal: 0,
+                marginBottom: 5,
+                backgroundColor: colors.brandNeutralFix,
+              }}
+            >
+              <EvilIcons name="tag" size={24} color={colors.brandDark} />
+              <AText px={5} fontSize={15} lineHeight={20} color={colors.brandDark} numberOfLines={1} maxWidth={200} bold>{item}</AText>
+              <AIconButton
+                icon={<AntDesign name="closecircle" size={19} color={colors.greyLight} />}
+                onPress={() => handleDeleteMultiple(item)}
+              />
+            </AView>
+          </AView>
+        )))}
+
+        <AInput
           returnKeyType="done"
           onSubmitEditing={({ nativeEvent: { text } }) => ((multiple && text !== '') ? handleSelectAutocomplete({ name: text }) : null)}
           placeholder={placeholder}
@@ -138,41 +130,34 @@ export default function AutocompleteField({
         />
 
         {displayAutocomplete && (
-          <View>
+          <AView style={{ maxWidth: '100%' }}>
             {autocompletes.map((autocomplete: AutocompleteType) => (
-              <Pressable
+              <APressable
+                style={{ borderRadius: 10, paddingLeft: 10 }}
                 key={autocomplete.id}
-                mx={2}
                 onPress={() => handleSelectAutocomplete(autocomplete)}
-                _pressed={{
-                  borderRadius: 10,
-                  backgroundColor: colors.tileBackgroundColor,
-                }}
               >
-                <HStack
+                <AStack
                   justifyContent="space-between"
-                  mx={2}
-                  my={2}
+                  mx={5}
+                  my={5}
                 >
-                  <Text maxW="90%" numberOfLines={1} underline>
+                  <AText fontSize={14} numberOfLines={1} underline>
                     {autocomplete.name || '-'}
-                  </Text>
-                </HStack>
-              </Pressable>
+                  </AText>
+                </AStack>
+              </APressable>
             ))}
-          </View>
+          </AView>
         )}
-        {error && <FormControl.ErrorMessage>{error}</FormControl.ErrorMessage>}
-      </FormControl>
+      </AFormView>
     ),
     [
-      isInvalid,
       isRequired,
       label,
       placeholder,
       multiple,
       value,
-      error,
       designation,
       small,
       splitType,

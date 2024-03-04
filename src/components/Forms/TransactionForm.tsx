@@ -1,8 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
 import {
-  Keyboard, Platform, View, KeyboardAvoidingView, ScrollView,
+  Keyboard,
+  Platform,
+  View,
+  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
-import { Button } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
 import * as Crypto from 'expo-crypto';
@@ -11,12 +16,13 @@ import { Ionicons } from '@expo/vector-icons';
 import TransactionSplitForm from '../Forms/TransactionSplitForm';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
-import ToastAlert from '../UI/ToastAlert';
+import ToastMessage from '../UI/ToastMessage';
 import GroupTitle from './Fields/GroupTitle';
 
 import Loading from '../UI/Loading';
 import { initialSplit } from '../../models/transactions';
-import { AView } from '../UI/ALibrary';
+import { AStackFlex, AText, AView } from '../UI/ALibrary';
+import AButton from '../UI/ALibrary/AButton';
 
 function MultipleTransactionSplitForm({ isNew, splits, title }) {
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
@@ -42,7 +48,7 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
   }
 
   return (
-    <View>
+    <AView>
       {splitNumber.map((e, i) => (
         <TransactionSplitForm
           key={e}
@@ -53,24 +59,14 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
           handleDelete={() => deleteTransactionSplit(i)}
         />
       ))}
-      <Button
-        mt="3"
-        leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
-        shadow={2}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.99,
-            }],
-          },
-        }}
-        onPress={addTransactionSplit}
-        colorScheme="coolGray"
-      >
-        {translate('transaction_form_new_split_button')}
-      </Button>
+      <AButton style={{ height: 40, marginTop: 5 }} onPress={addTransactionSplit}>
+        <AStackFlex row>
+          <Ionicons name="add-circle" size={20} color="white" style={{ margin: 5 }} />
+          <AText fontSize={15}>{translate('transaction_form_new_split_button')}</AText>
+        </AStackFlex>
+      </AButton>
       <GroupTitle title={title || ''} />
-    </View>
+    </AView>
   );
 }
 
@@ -78,7 +74,6 @@ function TransactionFormButtons({ navigation, handleSubmit }) {
   const loading = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.loading);
   const error = useSelector((state: RootState) => state.transactions.error);
   const success = useSelector((state: RootState) => state.transactions.success);
-  const dispatch = useDispatch<RootDispatch>();
 
   const goToTransactions = async () => {
     navigation.navigate('Transactions', {
@@ -90,55 +85,31 @@ function TransactionFormButtons({ navigation, handleSubmit }) {
     });
   };
 
+  const toastRef = useRef(null);
+  const onHandleSubmit = async () => {
+    await handleSubmit();
+    if (toastRef.current) {
+      toastRef.current.show();
+    }
+  };
+
   return (
     <View>
-      {success && !loading && (
-        <ToastAlert
-          title={translate('transaction_form_success_title')}
-          status="success"
-          variant="solid"
-          onClose={dispatch.transactions.resetStatus}
-          description={translate('transaction_form_success_description')}
-          onPress={goToTransactions}
-        />
-      )}
-      {error !== '' && !loading && (
-        <ToastAlert
-          title={translate('transaction_form_error_title')}
-          status="error"
-          variant="solid"
-          onClose={dispatch.transactions.resetStatus}
-          description={error}
-        />
-      )}
-      <Button
-        mt="3"
-        leftIcon={<Ionicons name="cloud-upload-sharp" size={20} color="white" />}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.99,
-            }],
-          },
-        }}
-        _loading={{
-          bg: 'primary.50',
-          _text: {
-            color: 'white',
-          },
-          alignItems: 'flex-start',
-          opacity: 1,
-        }}
-        _spinner={{
-          color: 'white',
-          size: 10,
-        }}
-        isLoading={loading}
-        isLoadingText="Submitting..."
-        onPress={handleSubmit}
-      >
-        {translate('transaction_form_submit_button')}
-      </Button>
+      <ToastMessage
+        type={success ? 'success' : 'error'}
+        title={translate(`transaction_form_${success ? 'success' : 'error'}_title`)}
+        description={error || translate('transaction_form_success_description')}
+        timeout={2000}
+        onPress={goToTransactions}
+        ref={toastRef}
+      />
+
+      <AButton type="primary" loading={loading} style={{ height: 40, marginTop: 5 }} onPress={onHandleSubmit}>
+        <AStackFlex row>
+          <Ionicons name="cloud-upload-sharp" size={20} color="white" style={{ margin: 5 }} />
+          <AText fontSize={15}>{translate('transaction_form_submit_button')}</AText>
+        </AStackFlex>
+      </AButton>
     </View>
   );
 }

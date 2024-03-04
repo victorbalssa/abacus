@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { useRoute, CommonActions, useFocusEffect } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { Button } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
@@ -214,14 +213,12 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
 
         {!editMode && (
           <AStackFlex px={10}>
-            <Button
-              w="100%"
-              leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
-              onPress={goToCredentialCreateScreen}
-              colorScheme="coolGray"
-            >
-              {translate('configuration_credentials_add_button')}
-            </Button>
+            <AButton style={{ height: 40 }} onPress={goToCredentialCreateScreen}>
+              <AStackFlex row>
+                <Ionicons name="add-circle" size={20} color="white" style={{ margin: 5 }} />
+                <AText fontSize={15}>{translate('configuration_credentials_add_button')}</AText>
+              </AStackFlex>
+            </AButton>
           </AStackFlex>
         )}
 

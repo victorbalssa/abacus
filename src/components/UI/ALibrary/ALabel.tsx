@@ -3,62 +3,60 @@ import { Text } from 'react-native';
 import { useThemeColors } from '../../../lib/common';
 import { AStyle } from './types';
 
-type ATextType = {
-  px?: number
-  py?: number
-  color?: string,
+type ALabelType = {
   fontSize?: number
   lineHeight?: number
   maxWidth?: number | '100%' | '90%' | '80%' | '70%' | '60%' | '50%' | '40%' | '30%'
-  bold?: boolean
-  fontFamily?: 'Montserrat_Bold' | 'Montserrat'
   numberOfLines?: number
+  isRequired?: boolean
   textAlign?: 'center' | 'left' | 'right'
   underline?: boolean
-  capitalize?: boolean
   onPress?: () => void
   style?: AStyle
   children: React.ReactNode
+  testID?: string
 }
 
-export default function AText({
-  px = 0,
-  py = 0,
-  color,
-  fontSize = 11,
+export default function ALabel({
+  children,
   lineHeight,
   maxWidth,
-  bold = false,
-  fontFamily = 'Montserrat',
+  fontSize = 14,
   numberOfLines,
+  isRequired = false,
   textAlign = 'left',
   underline = false,
-  capitalize = false,
   onPress = null,
   style = null,
-  children,
-}: ATextType) {
+  testID = null,
+}: ALabelType) {
   const { colors } = useThemeColors();
 
   return (
     <Text
+      testID={testID}
       onPress={onPress}
       numberOfLines={numberOfLines}
       style={{
-        color: color || colors.text,
+        color: colors.greyLight,
         lineHeight,
         fontSize,
         maxWidth,
         textAlign,
-        fontFamily: bold ? `${fontFamily}_Bold` : fontFamily,
-        paddingHorizontal: px,
-        paddingVertical: py,
+        fontFamily: 'Montserrat_Bold',
+        paddingHorizontal: 2,
+        paddingBottom: 2,
         textDecorationLine: underline ? 'underline' : 'none',
-        textTransform: capitalize ? 'capitalize' : 'none',
         ...style,
       }}
     >
       {children}
+      {isRequired && (
+      <Text style={{ color: colors.red }}>
+        {' '}
+        *
+      </Text>
+      )}
     </Text>
   );
 }

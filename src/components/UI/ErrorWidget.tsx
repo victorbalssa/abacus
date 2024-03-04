@@ -1,16 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useToast } from 'native-base';
 import { AxiosError } from 'axios';
 import { useNavigation, CommonActions } from '@react-navigation/native';
-import { View } from 'react-native';
 
 import { RootState } from '../../store';
-import ToastAlert from './ToastAlert';
+import ToastMessage from './ToastMessage';
 import translate from '../../i18n/locale';
 
 export default function ErrorWidget() {
-  const toast = useToast();
   const { error } = useSelector((state: RootState) => state.loading.global);
   const navigation = useNavigation();
 
@@ -23,25 +20,30 @@ export default function ErrorWidget() {
     }),
   );
 
+  const toastRef = useRef(null);
   useEffect(() => {
-    if (error && (error as Error).message) {
-      toast.show({
-        render: ({ id }) => (
-          <ToastAlert
-            onClose={() => toast.close(id)}
-            title={translate('error_widget_title')}
-            status="error"
-            variant="solid"
-            description={(error as Error).message}
-          />
-        ),
-      });
-    }
+    (async () => {
+      if (error && (error as Error).message) {
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
 
-    if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 401) {
-      goToOauth();
-    }
+        console.log('----',(error as Error).message);
+      }
+
+      if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 401) {
+        goToOauth();
+      }
+    })();
   }, [error]);
 
-  return <View />;
+  return (
+    <ToastMessage
+      type="error"
+      title={translate('error_widget_title')}
+      description={(error as Error).message}
+      timeout={2000}
+      ref={toastRef}
+    />
+  );
 }

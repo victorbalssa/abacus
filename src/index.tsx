@@ -9,18 +9,11 @@ import {
   AppState,
   LogBox,
   Image,
+  Alert,
+  AppStateStatus,
 } from 'react-native';
-import {
-  AlertDialog,
-  Button,
-  extendTheme,
-  NativeBaseProvider,
-  Text,
-} from 'native-base';
 import { StatusBar } from 'expo-status-bar';
 import * as Device from 'expo-device';
-import AnimatedSplash from 'react-native-animated-splash-screen';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Updates from 'expo-updates';
 import { useFonts, loadAsync } from 'expo-font';
 
@@ -32,32 +25,18 @@ import {
 } from '@expo/vector-icons';
 
 import { store, persistor } from './store';
-import themeConstants from './constants/theme';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
 import translate from './i18n/locale';
-import { useThemeColors } from './lib/common';
-import ABlurView from './components/UI/ALibrary/ABlurView';
-
-const config = {
-  dependencies: {
-    'linear-gradient': LinearGradient,
-  },
-};
-
-const theme = extendTheme(themeConstants);
+import { AText, ABlurView } from './components/UI/ALibrary';
 
 const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 
 export default function App() {
   LogBox.ignoreAllLogs(true);
-
-  const { colors } = useThemeColors();
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  const OTARef = React.createRef();
-  const [OTAOpen, setOTAOpen] = useState(false);
   const [fontsLoaded] = useFonts({
     /* eslint-disable global-require */
     Montserrat: require('./fonts/Montserrat-Regular.ttf'),
@@ -86,13 +65,27 @@ export default function App() {
     }
   };
 
+  const showOTAAlert = () => Alert.alert(
+    translate('layout_new_update_header'),
+    translate('layout_new_update_body_text'),
+    [
+      {
+        text: translate('layout_new_update_update_button'),
+        onPress: () => onOTAUpdate(),
+      },
+      {
+        text: translate('cancel'),
+      },
+    ],
+  );
+
   const onCheckOTA = async () => {
     try {
       if (Device.isDevice && !__DEV__) {
         const update = await Updates.checkForUpdateAsync();
 
         if (update.isAvailable) {
-          setOTAOpen(true);
+          showOTAAlert();
         }
       }
     } catch (e) {
@@ -100,7 +93,7 @@ export default function App() {
     }
   };
 
-  const _handleAppStateChange = (nextAppState) => {
+  const _handleAppStateChange = (nextAppState: AppStateStatus) => {
     appState.current = nextAppState;
     setAppStateVisible(appState.current);
   };
@@ -119,72 +112,41 @@ export default function App() {
   const abacusIcon = require('./images/icon-abacus-splash.png');
 
   return (
-    <AnimatedSplash
-      translucent
-      isLoaded={fontsLoaded}
-      logoImage={abacusIcon}
-      backgroundColor={colors.backgroundColor}
-      logoHeight={145}
-      logoWidth={145}
-    >
-      <NativeBaseProvider config={config} theme={theme}>
+    <Provider store={store}>
+      <PersistGate
+        loading={<Loading />}
+        persistor={persistor}
+      >
         <StatusBar />
-        <Provider store={store}>
-          <PersistGate
-            loading={<Loading />}
-            persistor={persistor}
-          >
-            {fontsLoaded && (
-              <>
-                <Routes />
-                {appStateVisible !== 'active' && (
-                  <ABlurView
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      bottom: 0,
-                      right: 0,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    intensity={60}
-                  >
-                    <Image
-                      style={{
-                        width: 100,
-                        height: 100,
-                      }}
-                      source={abacusIcon}
-                    />
-                    <Text>Abacus</Text>
-                  </ABlurView>
-                )}
-              </>
+        {fontsLoaded && (
+          <>
+            <Routes />
+            {appStateVisible !== 'active' && (
+            <ABlurView
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              intensity={60}
+            >
+              <Image
+                style={{
+                  width: 100,
+                  height: 100,
+                }}
+                source={abacusIcon}
+              />
+              <AText>Abacus</AText>
+            </ABlurView>
             )}
-          </PersistGate>
-        </Provider>
-
-        <AlertDialog leastDestructiveRef={OTARef} isOpen={OTAOpen} onClose={() => setOTAOpen(false)}>
-          <AlertDialog.Content>
-            <AlertDialog.CloseButton />
-            <AlertDialog.Header>{translate('layout_new_update_header')}</AlertDialog.Header>
-            <AlertDialog.Body>
-              {translate('layout_new_update_body_text')}
-            </AlertDialog.Body>
-            <AlertDialog.Footer>
-              <Button.Group>
-                <Button variant="unstyled" colorScheme="coolGray" onPress={() => setOTAOpen(false)} ref={OTARef}>
-                  {translate('layout_new_update_cancel_button')}
-                </Button>
-                <Button colorScheme="primary" onPress={onOTAUpdate}>
-                  {translate('layout_new_update_update_button')}
-                </Button>
-              </Button.Group>
-            </AlertDialog.Footer>
-          </AlertDialog.Content>
-        </AlertDialog>
-      </NativeBaseProvider>
-    </AnimatedSplash>
+          </>
+        )}
+      </PersistGate>
+    </Provider>
   );
 }
