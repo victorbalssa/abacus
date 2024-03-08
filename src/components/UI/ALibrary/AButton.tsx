@@ -7,6 +7,7 @@ interface AButtonType {
   type?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info' | 'light' | 'dark' | 'transparent'
   style?: AStyle
   disabled?: boolean
+  disabledTint?: boolean
   children?: React.ReactNode
   onPress: () => void
   mx?: number
@@ -21,6 +22,7 @@ export default function AButton({
   mx = 0,
   px = 0,
   disabled = false,
+  disabledTint = false,
   loading = false,
   style = null,
   children = null,
@@ -35,7 +37,7 @@ export default function AButton({
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => ({
-        opacity: disabled ? 0.3 : 1,
+        opacity: disabled && disabledTint ? 0.3 : 1,
         backgroundColor: pressed ? colors.filterBorderColor : backgroundColor,
         borderRadius: 10,
         marginBottom: 10,

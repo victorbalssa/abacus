@@ -71,7 +71,7 @@ export default function OauthForm({
       <ScrollView
         testID="auth_scroll_view"
         style={{
-          padding: 10,
+          padding: 15,
         }}
         keyboardShouldPersistTaps="handled"
         bounces={false}
@@ -116,7 +116,7 @@ export default function OauthForm({
             <AText fontSize={13} lineHeight={20} onPress={() => Linking.openURL(`${config.backendURL}/profile`)} underline>
               {`${isValidHttpUrl(config.backendURL) ? config.backendURL : '[Firefly III URL]'}/profile`}
             </AText>
-            <AStackFlex row py={10} alignItems="flex-start" justifyContent="flex-start" flexWrap="wrap">
+            <AStackFlex row py={10} justifyContent="flex-start" flexWrap="wrap">
               <AText fontSize={13}>
                 2.
                 {' '}
@@ -129,13 +129,14 @@ export default function OauthForm({
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: colors.brandStyle,
-                  borderRadius: 5,
+                  borderRadius: 10,
                   marginLeft: 10,
-                  paddingRight: 3,
+                  paddingRight: 7,
+                  padding: 1,
                 }}
                 onPress={copyToClipboard}
               >
-                <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
+                <Ionicons name="copy" size={12} color="white" style={{ margin: 5 }} />
                 <AText fontSize={13} numberOfLines={1} color="white" bold>abacusfiiiapp://redirect</AText>
               </APressable>
             </AStackFlex>
@@ -224,10 +225,11 @@ export default function OauthForm({
               onPress={handleLogin}
               testID="auth_form_submit_button_initial"
               disabled={!isValidHttpUrl(config.backendURL) || !isMinimumRequirement()}
+              disabledTint
             >
               <AStackFlex row>
                 <Ionicons name="log-in-outline" size={20} color="white" style={{ margin: 5 }} />
-                <AText fontSize={15}>{translate('auth_form_submit_button_initial')}</AText>
+                <AText fontSize={15} color="white">{translate('auth_form_submit_button_initial')}</AText>
               </AStackFlex>
             </AButton>
           </AView>

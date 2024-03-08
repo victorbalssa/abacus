@@ -114,7 +114,7 @@ export default function Filters() {
               alignItems: 'center',
               borderRadius: 10,
               width: 60,
-              height: 40,
+              height: 35,
               margin: 2,
             }}
             >

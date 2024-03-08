@@ -1,12 +1,12 @@
 import React, {
-  useEffect, useMemo, useRef, useState,
+  useEffect, useLayoutEffect, useMemo, useRef, useState,
 } from 'react';
 import {
   Keyboard,
   Platform,
   View,
   KeyboardAvoidingView,
-  ScrollView,
+  ScrollView, Pressable,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
@@ -23,6 +23,7 @@ import Loading from '../UI/Loading';
 import { initialSplit } from '../../models/transactions';
 import { AStackFlex, AText, AView } from '../UI/ALibrary';
 import AButton from '../UI/ALibrary/AButton';
+import ErrorWidget from '../UI/ErrorWidget';
 
 function MultipleTransactionSplitForm({ isNew, splits, title }) {
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
@@ -88,9 +89,6 @@ function TransactionFormButtons({ navigation, handleSubmit }) {
   const toastRef = useRef(null);
   const onHandleSubmit = async () => {
     await handleSubmit();
-    if (toastRef.current) {
-      toastRef.current.show();
-    }
   };
 
   return (
@@ -99,7 +97,7 @@ function TransactionFormButtons({ navigation, handleSubmit }) {
         type={success ? 'success' : 'error'}
         title={translate(`transaction_form_${success ? 'success' : 'error'}_title`)}
         description={error || translate('transaction_form_success_description')}
-        timeout={2000}
+        timeout={5000}
         onPress={goToTransactions}
         ref={toastRef}
       />
@@ -144,6 +142,16 @@ export default function TransactionForm({
     }
   };
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={handleSubmit}>
+          <AText fontSize={16}>{translate('transaction_form_submit_button')}</AText>
+        </Pressable>
+      ),
+    });
+  }, [navigation, dispatch, title, splits, id]);
+
   return useMemo(
     () => (
       <KeyboardAvoidingView
@@ -161,6 +169,7 @@ export default function TransactionForm({
           <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
           <AView style={{ height: 170 }} />
         </ScrollView>
+        <ErrorWidget />
       </KeyboardAvoidingView>
     ),
     [],

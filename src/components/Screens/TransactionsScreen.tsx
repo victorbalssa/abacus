@@ -447,7 +447,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
               <Ionicons name="close-circle" size={20} color={colors.text} />
             </APressable>
             )}
-            <AFilterButton filterType="Type" selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} />
+            <AFilterButton filterType="Type" selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} capitalize />
             <AFilterButton filterType="Currency" selected={currentCode} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
             {/*
             <AFilterButton filterType="Period" selected={title} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />

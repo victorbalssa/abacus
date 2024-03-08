@@ -29,7 +29,7 @@ export default function AutocompleteField({
   value,
   onChangeText = null,
   onSelectAutocomplete,
-  InputRightElement,
+  InputRightElement = null,
   routeApi,
   onDeleteMultiple = null,
   multiple = false,
@@ -94,9 +94,8 @@ export default function AutocompleteField({
         )}
 
         {multiple && (value.map((item: string, index: number) => (
-          <AView style={{ width: '100%' }}>
+          <AView key={`${index + 1}${item}`} style={{ width: '100%' }}>
             <AView
-              key={`${index + 1}${item}`}
               style={{
                 height: 30,
                 flexDirection: 'row',
@@ -119,6 +118,7 @@ export default function AutocompleteField({
         )))}
 
         <AInput
+          height={40}
           returnKeyType="done"
           onSubmitEditing={({ nativeEvent: { text } }) => ((multiple && text !== '') ? handleSelectAutocomplete({ name: text }) : null)}
           placeholder={placeholder}

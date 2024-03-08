@@ -256,9 +256,14 @@ export default createModel<RootModel>()({
       } = payload;
 
       const currentPage = 1;
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date();
+      today.setMonth(new Date().getMonth() - 6);
+      const sixMonthsAgo = today.toISOString().split('T')[0];
+      const todayInOneMonth = new Date();
+      todayInOneMonth.setMonth(new Date().getMonth() + 1);
+      const inOneMonth = todayInOneMonth.toISOString().split('T')[0];
       let search = searchQuery || ' ';
-      search += (end && start) ? ` date_before:${end} date_after:${start}` : ` date_before:${today}`;
+      search += (end && start) ? ` date_after:${start} date_before:${end}` : ` date_after:${sixMonthsAgo}  date_before:${inOneMonth}`;
       search += (currentCode) ? ` currency_is:${currentCode}` : '';
       search += (type) ? ` type:${type}` : '';
 
@@ -296,9 +301,14 @@ export default createModel<RootModel>()({
 
       const currentPage = (page < totalPages) ? page + 1 : 1;
       if (page < totalPages) {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date();
+        today.setMonth(new Date().getMonth() - 6);
+        const sixMonthsAgo = today.toISOString().split('T')[0];
+        const todayInOneMonth = new Date();
+        todayInOneMonth.setMonth(new Date().getMonth() + 1);
+        const inOneMonth = todayInOneMonth.toISOString().split('T')[0];
         let search = searchQuery || ' ';
-        search += (end && start) ? ` date_before:${end} date_after:${start}` : ` date_before:${today}`;
+        search += (end && start) ? ` date_after:${start} date_before:${end}` : ` date_after:${sixMonthsAgo}  date_before:${inOneMonth}`;
         search += (currentCode) ? ` currency_is:${currentCode}` : '';
         search += (type) ? ` type:${type}` : '';
 

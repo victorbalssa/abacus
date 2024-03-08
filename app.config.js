@@ -30,6 +30,9 @@ export default {
     infoPlist: {
       NSFaceIDUsageDescription: 'Abacus use Authentication with TouchId or FaceID',
       NSLocalNetworkUsageDescription: 'Abacus use Local Network to access Firefly III on your local network',
+      NSAppTransportSecurity: {
+        NSAllowsArbitraryLoads: true,
+      },
     },
     config: {
       usesNonExemptEncryption: false,

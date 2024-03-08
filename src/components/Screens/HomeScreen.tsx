@@ -11,7 +11,7 @@ import {
   RefreshControl,
   Animated,
   Switch,
-  View,
+  View, Pressable,
 } from 'react-native';
 import axios from 'axios';
 import type { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
@@ -203,7 +203,7 @@ function InsightBudgets() {
               <AText fontSize={14} lineHeight={22} numberOfLines={1}>
                 {budget.attributes.name}
               </AText>
-              <AText fontSize={12} numberOfLines={1}>
+              <AText fontSize={12} lineHeight={20} numberOfLines={1}>
                 {localNumberFormat(budget.currencyCode, budget.differenceFloat < 0 ? (budget.differenceFloat * -1) : budget.differenceFloat)}
                 {' / '}
                 {localNumberFormat(budget.currencyCode, budget.limit)}
@@ -213,12 +213,13 @@ function InsightBudgets() {
             <ASkeleton loading={loading}>
               <AStack alignItems="flex-end">
                 <AStack
-                  px={5}
+                  px={6}
+                  py={2}
                   backgroundColor={-budget.differenceFloat > budget.limit ? colors.brandNeutralLight : colors.brandSuccessLight}
                   style={{ borderRadius: 5 }}
                 >
                   <AText
-                    fontSize={14}
+                    fontSize={15}
                     numberOfLines={1}
                     color={-budget.differenceFloat > budget.limit ? colors.brandNeutral : colors.brandSuccess}
                     style={{ textAlign: 'center' }}
@@ -246,52 +247,60 @@ function NetWorth() {
   const hideBalance = useSelector((state: RootState) => state.configuration.hideBalance);
   const netWorth = useSelector((state: RootState) => state.firefly.netWorth);
   const balance = useSelector((state: RootState) => state.firefly.balance);
+  const spent = useSelector((state: RootState) => state.firefly.earned);
+  const earned = useSelector((state: RootState) => state.firefly.spent);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNetWorth?.loading);
   const dispatch = useDispatch<RootDispatch>();
 
   return useMemo(() => (
     <View testID="home_screen_net_worth">
-      <APressable flexDirection="column" onPress={() => dispatch.configuration.setHideBalance(!hideBalance)}>
-        {netWorth && netWorth[0] && !hideBalance && (
-          <AStack>
-            <AText fontSize={11}>
-              {`${translate('home_net_worth')} • ${currentCode}`}
+      <Pressable onPress={() => dispatch.configuration.setHideBalance(!hideBalance)}>
+        {!hideBalance && (
+        <AView style={{
+          height: 90,
+          width: 300,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        >
+          <AText fontSize={12} lineHeight={18}>
+            {`${translate('home_net_worth')} • ${currentCode}`}
+          </AText>
+          <ASkeleton loading={loading}>
+            <AText fontSize={35} lineHeight={37} bold>
+              {localNumberFormat(currentCode, parseFloat(netWorth[0]?.monetaryValue || '0'))}
             </AText>
-            <ASkeleton loading={loading}>
-              <AStack>
-                <AText fontSize={35} lineHeight={37} bold>
-                  {localNumberFormat(netWorth[0].currencyCode, parseFloat(netWorth[0].monetaryValue))}
-                </AText>
-              </AStack>
-            </ASkeleton>
-          </AStack>
-        )}
+          </ASkeleton>
 
-        {balance && balance[0] && !hideBalance && (
-          <AStack py={5}>
-            <ASkeleton loading={loading}>
-              <AStack
-                row
-                px={5}
-                backgroundColor={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight}
-                style={{ borderRadius: 10 }}
+          {balance && balance[0] && earned && earned[0] && spent && spent[0] && !hideBalance && (
+          <ASkeleton loading={loading}>
+            <AStack
+              py={2}
+              my={1}
+              px={5}
+              backgroundColor={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight}
+              style={{ borderRadius: 10 }}
+            >
+              <AText
+                bold
+                fontSize={12}
+                color={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess}
               >
-                <AText
-                  bold
-                  fontSize={12}
-                  color={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess}
-                >
-                  {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, parseFloat(balance[0].monetaryValue))}`}
-                </AText>
-              </AStack>
-            </ASkeleton>
-          </AStack>
+                {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, parseFloat(balance[0].monetaryValue))}`}
+              </AText>
+            </AStack>
+          </ASkeleton>
+          )}
+        </AView>
         )}
 
         {hideBalance && (
           <AView style={{
-            height: 87, width: 200, justifyContent: 'center', alignItems: 'center',
+            height: 90,
+            width: 300,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
           >
             <FontAwesome
@@ -301,7 +310,7 @@ function NetWorth() {
             />
           </AView>
         )}
-      </APressable>
+      </Pressable>
     </View>
   ), [
     loading,
@@ -309,6 +318,8 @@ function NetWorth() {
     colors,
     netWorth,
     balance,
+    earned,
+    spent,
     currentCode,
   ]);
 }
@@ -374,7 +385,7 @@ export default function HomeScreen() {
         colors={colorScheme === 'light' ? ['rgb(255,211,195)', 'rgb(255,194,183)', 'rgb(248,199,193)', 'rgb(255,228,194)'] : ['#790277', '#d30847', '#FF5533', '#efe96d']}
         start={{ x: 0, y: 1 }}
         end={{ x: 1, y: 0 }}
-        style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top + 50 }}
+        style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top }}
       >
         <AStackFlex>
           <NetWorth />
@@ -396,7 +407,7 @@ export default function HomeScreen() {
             borderColor: colors.tileBackgroundColor,
             paddingTop: 5,
             position: 'absolute',
-            top: -30,
+            top: -55,
             height: '100%',
             right: 0,
             left: 0,

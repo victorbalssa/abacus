@@ -9,9 +9,11 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {
-  AntDesign, FontAwesome, Foundation, Ionicons,
+  AntDesign, Foundation, Ionicons,
 } from '@expo/vector-icons';
-import { StyleSheet, Platform, View } from 'react-native';
+import {
+  StyleSheet, Platform, View, Pressable,
+} from 'react-native';
 
 import translate from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
@@ -32,7 +34,9 @@ import CredentialsScreen from '../components/Screens/CredentialsScreen';
 import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 import ErrorWidget from '../components/UI/ErrorWidget';
-import { AIconButton, APressable, AStack } from '../components/UI/ALibrary';
+import {
+  AIconButton, APressable, AStack, AText,
+} from '../components/UI/ALibrary';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -105,7 +109,6 @@ function TabBarComponent({
           insets={insets}
         />
       </ABlurView>
-      <ErrorWidget />
     </>
   );
 }
@@ -151,13 +154,12 @@ function TabBarConfigurationScreenIcon({ color }) {
 }
 
 export function HeaderClose() {
-  const { colors } = useThemeColors();
   const navigation = useNavigation();
 
   return (
-    <APressable onPress={navigation.goBack}>
-      <Ionicons name="close-circle" size={25} color={colors.text} />
-    </APressable>
+    <Pressable onPress={navigation.goBack}>
+      <AText fontSize={16}>{translate('cancel')}</AText>
+    </Pressable>
   );
 }
 
@@ -334,7 +336,8 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
-              headerRight: HeaderClose,
+              headerLeft: HeaderClose,
+              headerTitleAlign: 'center',
               headerShadowVisible: true,
               headerTitleStyle: {
                 fontFamily: 'Montserrat_Bold',
@@ -352,7 +355,8 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: 'Filters',
-              headerRight: HeaderClose,
+              headerTitleAlign: 'center',
+              headerLeft: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
                 fontFamily: 'Montserrat_Bold',
@@ -369,15 +373,15 @@ export default function Index() {
             options={{
               headerShown: true,
               headerBackVisible: false,
-              headerTitle: '',
-              headerRight: HeaderClose,
+              headerTitleAlign: 'center',
+              headerLeft: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
                 fontFamily: 'Montserrat_Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {
-                backgroundColor: colors.backgroundColor,
+                backgroundColor: colors.tileBackgroundColor,
               },
             }}
           />

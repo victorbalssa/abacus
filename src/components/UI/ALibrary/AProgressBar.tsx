@@ -20,10 +20,10 @@ export default function AProgressBar({
     <View
       style={{
         width: '100%',
-        height: 4,
+        height: 7,
         borderRadius: 5,
         overflow: 'hidden',
-        borderColor: colors.listBorderColor,
+        borderColor: colors.warmGray200,
         borderWidth: 0.5,
         ...style,
       }}

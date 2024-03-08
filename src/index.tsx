@@ -29,6 +29,7 @@ import Routes from './routes';
 import Loading from './components/UI/Loading';
 import translate from './i18n/locale';
 import { AText, ABlurView } from './components/UI/ALibrary';
+import ErrorWidget from "./components/UI/ErrorWidget";
 
 const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 
@@ -121,6 +122,7 @@ export default function App() {
         {fontsLoaded && (
           <>
             <Routes />
+            <ErrorWidget />
             {appStateVisible !== 'active' && (
             <ABlurView
               style={{

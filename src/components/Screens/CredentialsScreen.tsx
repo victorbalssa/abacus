@@ -4,7 +4,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { Alert, Platform } from 'react-native';
+import {Alert, Platform, Pressable} from 'react-native';
 import {
   AView,
   AText,
@@ -152,7 +152,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
             {translate('configuration_credentials')}
           </AText>
           {(credentials.length > 0 && routeName === 'credentials') ? (
-            <APressable
+            <Pressable
               style={{
                 width: 100,
                 marginRight: 10,
@@ -161,8 +161,8 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
               }}
               onPress={() => setEditMode(!editMode)}
             >
-              <AText fontSize={16} color={colors.brandStyle}>{editMode ? 'Done' : 'Edit'}</AText>
-            </APressable>
+              <AText fontSize={16}>{editMode ? 'Done' : 'Edit'}</AText>
+            </Pressable>
           ) : <AView style={{ width: 100 }} />}
         </AStackFlex>
         <AStackFlex px={10}>
@@ -177,8 +177,8 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
                   display: editMode ? 'flex' : 'none',
                   width: 17,
                   height: 17,
-                  marginLeft: 10,
-                  marginRight: 5,
+                  marginLeft: 15,
+                  marginRight: 10,
                 }}
               >
                 <AView

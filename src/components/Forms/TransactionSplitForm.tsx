@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import moment from 'moment/moment';
-import { Platform } from 'react-native';
+import { Platform, Switch } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getLocales } from 'expo-localization';
 
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import AutocompleteField from './Fields/AutocompleteField';
-import { RootDispatch } from '../../store';
+import { RootDispatch, RootState } from '../../store';
 import { TransactionSplitType, types } from '../../models/transactions';
 import {
   AText,
@@ -21,6 +21,7 @@ import {
   AFormView,
   AButton, AStackFlex, APressable,
 } from '../UI/ALibrary';
+import ForeignCurrencyField from './Fields/ForeignCurrencyField';
 
 export default function TransactionSplitForm({
   index,
@@ -30,6 +31,7 @@ export default function TransactionSplitForm({
   transaction,
 }) {
   const [locale] = getLocales();
+  const displayForeignCurrency = useSelector((state: RootState) => state.configuration.displayForeignCurrency);
   const dispatch = useDispatch<RootDispatch>();
   const { colorScheme, colors } = useThemeColors();
   const [formData, setData] = useState<TransactionSplitType>({
@@ -84,6 +86,11 @@ export default function TransactionSplitForm({
       onPress={() => resetTransaction(fields)}
     />
   );
+
+  const onSwitch = async (bool: boolean) => {
+    dispatch.configuration.setDisplayForeignCurrency(bool);
+    return Promise.resolve();
+  };
 
   return (
     <AStack
@@ -156,7 +163,7 @@ export default function TransactionSplitForm({
                 borderColor: colors.listBorderColor,
               }}
             >
-              <AText fontSize={17} color={colors.text} bold capitalize>{name}</AText>
+              <AText fontSize={15} color={colors.text} bold capitalize>{name}</AText>
             </APressable>
           ))}
         </AStack>
@@ -184,20 +191,7 @@ export default function TransactionSplitForm({
         />
       </AFormView>
 
-      <AutocompleteField
-        label=""
-        small
-        placeholder={translate('transaction_form_foreign_currency_label')}
-        value={formData.foreignCurrencyCode}
-        onSelectAutocomplete={(autocomplete: { id: string, code: string }) => setTransaction({
-          ...formData,
-          foreignCurrencyId: autocomplete.id,
-          foreignCurrencyCode: autocomplete.code,
-        })}
-        InputRightElement={null}
-        routeApi="currencies-with-code"
-      />
-
+      {displayForeignCurrency && (
       <AFormView>
         <ALabel>
           {translate('transaction_form_foreign_amount_label')}
@@ -215,14 +209,25 @@ export default function TransactionSplitForm({
             foreignAmount: value,
           })}
           InputRightElement={deleteBtn(['foreignAmount', 'foreignCurrencyId', 'foreignCurrencyCode'])}
+          InputLeftElement={(
+            <ForeignCurrencyField
+              placeholder={translate('transaction_form_foreign_currency_label')}
+              value={formData.foreignCurrencyId}
+              onSelect={(currencyId) => setTransaction({
+                ...formData,
+                foreignCurrencyId: currencyId,
+              })}
+            />
+          )}
         />
       </AFormView>
+      )}
 
       <AFormView>
         <ALabel isRequired>
           {translate('transaction_form_date_label')}
         </ALabel>
-        <AStack row>
+        <AStack row style={{ width: '100%', height: 40 }}>
           {showDatePicker && (
           <DateTimePicker
             accentColor={colors.brandDark}
@@ -259,16 +264,28 @@ export default function TransactionSplitForm({
           {Platform.OS === 'android' && (
           <AStack row>
             <AButton
-              mx={2}
+              mx={10}
+              px={10}
               onPress={() => setShowDatePicker(true)}
+              style={{
+                height: 40,
+                borderWidth: 0.5,
+                borderColor: colors.listBorderColor,
+              }}
             >
-              <AText>{moment(formData.date).format('ll')}</AText>
+              <AText fontSize={14}>{moment(formData.date).format('ll')}</AText>
             </AButton>
             <AButton
-              mx={2}
+              mx={10}
+              px={10}
               onPress={() => setShowTimePicker(true)}
+              style={{
+                height: 40,
+                borderWidth: 0.5,
+                borderColor: colors.listBorderColor,
+              }}
             >
-              <AText>{moment(formData.date).format('hh:mm a')}</AText>
+              <AText fontSize={14}>{moment(formData.date).format('hh:mm a')}</AText>
             </AButton>
           </AStack>
           )}
@@ -369,7 +386,6 @@ export default function TransactionSplitForm({
 
       <AutocompleteField
         multiple
-        InputRightElement={null}
         label={translate('transaction_form_tags_label')}
         placeholder={translate('transaction_form_tags_label')}
         value={formData.tags}
@@ -433,6 +449,11 @@ export default function TransactionSplitForm({
           <AText fontSize={15} color={colors.greyLight}>{translate('transaction_form_reset_button')}</AText>
         </AStackFlex>
       </AButton>
+
+      <AStackFlex row py={10} px={10} alignItems="center" justifyContent="space-between">
+        <AText fontSize={12}>{translate('transaction_form_foreign_currency_label')}</AText>
+        <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayForeignCurrency} />
+      </AStackFlex>
     </AStack>
   );
 }

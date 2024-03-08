@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { AText, AView } from './ALibrary';
+import { Ionicons } from '@expo/vector-icons';
+import { AStack, AText } from './ALibrary';
 import { useThemeColors } from '../../lib/common';
 
 type ToastMessagePropType = {
@@ -25,19 +25,11 @@ function ToastMessage({
   const TOAST_TYPE = {
     success: {
       backgroundColor: colors.green,
-      icon: 'check-circle',
+      icon: 'checkmark-circle',
     },
     error: {
       backgroundColor: colors.red,
-      icon: 'exclamation-circle',
-    },
-    info: {
-      backgroundColor: colors.blue,
-      icon: 'info-circle',
-    },
-    warning: {
-      backgroundColor: '#f39c12',
-      icon: 'exclamation-triangle',
+      icon: 'alert-circle',
     },
   };
 
@@ -60,14 +52,17 @@ function ToastMessage({
   <Animated.View
     style={{
       position: 'absolute',
-      top: 50,
-      width: '100%',
-      height: 80,
+      bottom: 70,
+      left: 0,
+      right: 0,
+      height: 70,
+      marginHorizontal: 12,
       backgroundColor,
       borderRadius: 10,
-      padding: 12,
+      padding: 5,
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -77,14 +72,15 @@ function ToastMessage({
       shadowRadius: 3.84,
       elevation: 5,
     }}
-    entering={FadeInUp.delay(200)}
+    entering={FadeInUp}
     exiting={FadeOutUp}
   >
-    <FontAwesome5 name={icon} size={20} color="#FFF" />
-    <AView style={{ marginLeft: 12 }}>
+    <Ionicons name={icon} size={22} color="#FFF" style={{ margin: 5 }} />
+    <AStack alignItems="flex-start" justifyContent="flex-start" style={{ marginLeft: 8, flex: 1 }}>
       <AText fontSize={18} bold>{title}</AText>
       <AText fontSize={15} onPress={onPress}>{description}</AText>
-    </AView>
+    </AStack>
+    <Ionicons name="close-circle" size={22} color="#FFF" style={{ margin: 5 }} onPress={() => setIsVisible(false)} />
   </Animated.View>
   );
 }
