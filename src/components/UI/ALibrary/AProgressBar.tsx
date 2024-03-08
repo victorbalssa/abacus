@@ -1,7 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import { AStyle } from './types';
-import {useThemeColors} from "../../../lib/common";
+import { useThemeColors } from '../../../lib/common';
 
 type AProgressBarType = {
   value: number

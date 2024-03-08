@@ -3,14 +3,12 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../store';
 import {
-  AInput,
   APressable,
   AStack,
   AText,
   AView,
 } from '../../UI/ALibrary';
 import { CurrencyType } from '../../../models/currencies';
-import { useThemeColors } from '../../../lib/common';
 
 type ForeignCurrencyFieldProps = {
   placeholder?: string,

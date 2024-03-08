@@ -25,8 +25,10 @@ import { localNumberFormat, useThemeColors } from '../../lib/common';
 
 import Pagination from '../UI/Pagination';
 import {
-  APressable,
-  AScrollView, AStack, AText, AView,
+  AScrollView,
+  AStack,
+  AText,
+  AView,
   AProgressBar,
   ASkeleton, AStackFlex,
 } from '../UI/ALibrary';
@@ -189,7 +191,7 @@ function InsightBudgets() {
       <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
         {translate('home_budgets')}
       </AText>
-      {insightBudgets.filter((budget) => budget.attributes?.active).map((budget, index) => (
+      {insightBudgets.filter((budget) => budget.attributes?.active).map((budget) => (
         <AStack
           key={budget.attributes.name}
           mx={15}

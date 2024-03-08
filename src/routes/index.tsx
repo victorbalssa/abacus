@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  DefaultTheme,
+  CommonActions,
+  useNavigation,
   NavigationContainer,
-  DefaultTheme, useNavigation, CommonActions,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -9,7 +11,8 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {
-  AntDesign, Foundation, Ionicons,
+  AntDesign,
+  Foundation,
 } from '@expo/vector-icons';
 import {
   StyleSheet, Platform, View, Pressable,
@@ -33,9 +36,10 @@ import CredentialsScreen from '../components/Screens/CredentialsScreen';
 // UI components
 import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
-import ErrorWidget from '../components/UI/ErrorWidget';
 import {
-  AIconButton, APressable, AStack, AText,
+  AIconButton,
+  AStack,
+  AText,
 } from '../components/UI/ALibrary';
 
 const Stack = createNativeStackNavigator();
@@ -95,21 +99,19 @@ function TabBarComponent({
   insets,
 }) {
   return (
-    <>
-      <ABlurView
-        style={{
-          ...styles.navigatorContainer,
-          borderTopWidth: 0.5,
-        }}
-      >
-        <BottomTabBar
-          state={state}
-          descriptors={descriptors}
-          navigation={navigation}
-          insets={insets}
-        />
-      </ABlurView>
-    </>
+    <ABlurView
+      style={{
+        ...styles.navigatorContainer,
+        borderTopWidth: 0.5,
+      }}
+    >
+      <BottomTabBar
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+        insets={insets}
+      />
+    </ABlurView>
   );
 }
 

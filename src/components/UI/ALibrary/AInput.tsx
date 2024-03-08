@@ -15,7 +15,7 @@ type AInputType = {
   type?: 'text' | 'password'
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send' | 'default'
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad' | 'url'
-  onSubmitEditing?: ({ nativeEvent: { text } }: { nativeEvent: { text: any; }; }) => void
+  onSubmitEditing?: ({ nativeEvent: { text } }: { nativeEvent: { text: string; }; }) => void
   placeholder?: string
   value?: string
   onChangeText?: (text: string) => void
@@ -52,7 +52,7 @@ export default function AInput({
 }: AInputType) {
   const { colors } = useThemeColors();
   const [isFocused, setIsFocused] = React.useState(false);
-  const handleFocus = (focusState: boolean, callback: any) => {
+  const handleFocus = (focusState: boolean, callback: () => void) => {
     setIsFocused(focusState);
     callback();
   };
@@ -96,10 +96,10 @@ export default function AInput({
         placeholder={placeholder}
         onSubmitEditing={onSubmitEditing}
         onFocus={(e) => {
-          handleFocus(true, onFocus ? () => onFocus(e) : () => {});
+          handleFocus(true, onFocus ? () => onFocus(e) : () => null);
         }}
         onBlur={(e) => {
-          handleFocus(false, onBlur ? () => onBlur(e) : () => {});
+          handleFocus(false, onBlur ? () => onBlur(e) : () => null);
         }}
       />
       {InputRightElement}
