@@ -37,7 +37,7 @@ export default {
     config: {
       usesNonExemptEncryption: false,
     },
-    bundleIdentifier: IS_DEV ? 'abacus.fireflyiii.ios.app.dev' : 'abacus.fireflyiii.ios.app',
+    bundleIdentifier: IS_DEV ? 'abacus.fireflyiii.ios.app.dev' : 'abacus.ios.app',
     buildNumber: '0.13.0',
   },
   android: {
