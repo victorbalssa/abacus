@@ -42,21 +42,6 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      bioAuthCheck().catch();
-      // delete old secure store keys
-      deleteOldSecureStore().catch();
-      getCredentials().then((c) => setCredentials(c));
-    }, [authenticated]),
-  );
-
-  const goToCredentialCreateScreen = () => navigation.dispatch(
-    CommonActions.navigate({
-      name: 'CredentialCreateScreen',
-    }),
-  );
-
   const loginWithCredential = async (credential: TCredential) => {
     const {
       backendURL: currentBackendURL,
@@ -82,6 +67,27 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
       }),
     );
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      bioAuthCheck().catch();
+      // delete old secure store keys
+      deleteOldSecureStore().catch();
+      getCredentials()
+        .then((c) => {
+          if (c.length === 1 && routeName === 'credentials') {
+            loginWithCredential(c[0]);
+          }
+          setCredentials(c);
+        });
+    }, [authenticated]),
+  );
+
+  const goToCredentialCreateScreen = () => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'CredentialCreateScreen',
+    }),
+  );
 
   const handleDeleteCredential = async (index: number) => {
     await dispatch.configuration.resetAllStates();
