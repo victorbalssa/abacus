@@ -2,37 +2,58 @@ import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { AxiosError } from 'axios';
 
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { RootState } from '../../store';
 import ToastMessage from './ToastMessage';
 import translate from '../../i18n/locale';
+import useToasts from './useToasts';
 
 export default function ErrorWidget() {
-  const { error } = useSelector((state: RootState) => state.loading.global);
+  const { showToast, toasts, removeToast } = useToasts();
+  const error = useSelector((state: RootState) => state.loading.models.configuration.error);
+  const success = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction.success);
+  const navigation = useNavigation();
 
-  const toastRef = useRef(null);
+  const goToCredentials = async () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'credentials' },
+        ],
+      }),
+    );
+  };
+
+  const isFirstRun = useRef(true);
   useEffect(() => {
     (async () => {
-      if (error && (error as Error).message) {
-        if (toastRef.current !== null) {
-          toastRef.current.show();
-        }
-
-        // console.log((error as Error).message);
+      if (error && (error as Error).message && !isFirstRun.current) {
+        showToast(translate('error_widget_title'), (error as Error).message, 'error');
       }
 
-      if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 401) {
-        // goToOauth();
+      if (success && !isFirstRun.current) {
+        showToast(translate('transaction_form_success_title'), translate('transaction_form_success_description'), 'success');
+      }
+
+      if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 404 && !isFirstRun.current) {
+        goToCredentials();
+      }
+
+      if (isFirstRun.current) {
+        isFirstRun.current = false;
       }
     })();
-  }, [error]);
+  }, [error, success]);
 
-  return (
+  return toasts.map((toast) => (
     <ToastMessage
-      type="error"
-      title={translate('error_widget_title')}
-      description={(error as Error).message}
-      timeout={5000}
-      ref={toastRef}
+      key={toast.id}
+      id={toast.id}
+      type={toast.type}
+      title={toast.title}
+      description={toast.description}
+      onUnmount={removeToast}
     />
-  );
+  ));
 }

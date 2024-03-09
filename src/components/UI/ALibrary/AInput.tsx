@@ -46,7 +46,7 @@ export default function AInput({
   InputLeftElement = null,
   InputRightElement = null,
   textAlign = 'left',
-  fontSize = 15,
+  fontSize = 14,
   numberOfLines = 1,
   style = null,
 }: AInputType) {
@@ -70,7 +70,7 @@ export default function AInput({
       }}
       row
     >
-      {InputLeftElement || <AView style={{ width: 15 }} />}
+      {InputLeftElement || <AView style={{ width: 10 }} />}
       <TextInput
         testID={testID}
         multiline={numberOfLines > 1}
@@ -83,7 +83,7 @@ export default function AInput({
           textAlign,
           fontFamily: bold ? 'Montserrat_Bold' : 'Montserrat',
           color: colors.text,
-          borderRadius: 10,
+          paddingVertical: 5,
           ...style,
         }}
         cursorColor={colors.listBorderColor}

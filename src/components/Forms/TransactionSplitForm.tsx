@@ -87,11 +87,6 @@ export default function TransactionSplitForm({
     />
   );
 
-  const onSwitch = async (bool: boolean) => {
-    dispatch.configuration.setDisplayForeignCurrency(bool);
-    return Promise.resolve();
-  };
-
   return (
     <AStack
       justifyContent="flex-start"
@@ -197,7 +192,7 @@ export default function TransactionSplitForm({
           {translate('transaction_form_foreign_amount_label')}
         </ALabel>
         <AInput
-          height={40}
+          height={30}
           returnKeyType="done"
           keyboardType="decimal-pad"
           placeholder="0.00"
@@ -449,11 +444,6 @@ export default function TransactionSplitForm({
           <AText fontSize={15} color={colors.greyLight}>{translate('transaction_form_reset_button')}</AText>
         </AStackFlex>
       </AButton>
-
-      <AStackFlex row py={10} px={10} alignItems="center" justifyContent="space-between">
-        <AText fontSize={12}>{translate('transaction_form_foreign_currency_label')}</AText>
-        <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayForeignCurrency} />
-      </AStackFlex>
     </AStack>
   );
 }

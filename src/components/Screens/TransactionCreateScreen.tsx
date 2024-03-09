@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ScreenType } from '../../types/screen';
 import TransactionForm from '../Forms/TransactionForm';
+import ErrorWidget from '../UI/ErrorWidget';
 
 export default function TransactionCreateScreen({ navigation, route }: ScreenType) {
   const {
@@ -14,10 +15,13 @@ export default function TransactionCreateScreen({ navigation, route }: ScreenTyp
   } = route;
 
   return (
-    <TransactionForm
-      navigation={navigation}
-      splits={splits}
-      title={groupTitle}
-    />
+    <>
+      <TransactionForm
+        navigation={navigation}
+        splits={splits}
+        title={groupTitle}
+      />
+      <ErrorWidget />
+    </>
   );
 }

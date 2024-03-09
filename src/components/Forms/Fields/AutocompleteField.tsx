@@ -133,7 +133,7 @@ export default function AutocompleteField({
           <AView style={{ maxWidth: '100%' }}>
             {autocompletes.map((autocomplete: AutocompleteType) => (
               <APressable
-                style={{ borderRadius: 10, paddingLeft: 10 }}
+                style={{ borderRadius: 10, paddingLeft: 5 }}
                 key={autocomplete.id}
                 onPress={() => handleSelectAutocomplete(autocomplete)}
               >
@@ -142,7 +142,7 @@ export default function AutocompleteField({
                   mx={5}
                   my={5}
                 >
-                  <AText fontSize={14} numberOfLines={1} underline>
+                  <AText fontSize={15} numberOfLines={1} underline>
                     {autocomplete.name || '-'}
                   </AText>
                 </AStack>

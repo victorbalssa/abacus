@@ -41,6 +41,7 @@ import {
   AStack,
   AText,
 } from '../components/UI/ALibrary';
+import ErrorWidget from '../components/UI/ErrorWidget';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -111,6 +112,7 @@ function TabBarComponent({
         navigation={navigation}
         insets={insets}
       />
+      <ErrorWidget />
     </ABlurView>
   );
 }
