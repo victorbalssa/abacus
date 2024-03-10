@@ -2,8 +2,9 @@ import { FlexAlignType } from 'react-native';
 
 export interface AStyle {
   flex?: number
+  flexWrap?: 'wrap' | 'nowrap'
   display?: 'flex' | 'none'
-  height?: number
+  height?: number | '100%' | '90%' | '80%' | '70%' | '60%' | '50%'
   width?: number | '100%' | '90%' | '80%' | '70%' | '60%' | '50%'
   margin?: number
   padding?: number
@@ -33,4 +34,11 @@ export interface AStyle {
   alignItems?: FlexAlignType
   justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly'
   flexDirection?: 'row' | 'column'
+  textAlign?: 'center' | 'left' | 'right'
+  maxWidth?: number | '100%' | '90%' | '80%' | '70%' | '60%' | '50%'
+  borderTopLeftRadius?: number
+  borderTopRightRadius?: number
+  borderBottomRightRadius?: number
+  borderBottomLeftRadius?: number
+  borderLeftWidth?: number
 }

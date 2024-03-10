@@ -3,7 +3,6 @@ import { Animated, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Box } from 'native-base';
 import PagerView, { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
 import { Entypo, Feather } from '@expo/vector-icons';
 
@@ -12,6 +11,7 @@ import { useThemeColors } from '../../lib/common';
 import AssetsHistoryChart from '../Charts/AssetsHistoryChart';
 import BalanceHistoryChart from '../Charts/BalanceHistoryChart';
 import Pagination from '../UI/Pagination';
+import { AStack } from '../UI/ALibrary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -62,14 +62,14 @@ export default function ChartScreen() {
         justifyContent: 'center',
       }}
     >
-      <Box alignItems="center" p={2}>
+      <AStack px={5} py={5}>
         <Pagination
           renderIcons={renderIcons}
           handlePress={(index) => viewPagerRef?.current?.setPage(index)}
           scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
           positionAnimatedValue={positionAnimatedValue}
         />
-      </Box>
+      </AStack>
 
       <AnimatedPagerView
         ref={viewPagerRef}

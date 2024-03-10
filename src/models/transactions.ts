@@ -44,8 +44,6 @@ export type TransactionStateType = {
   },
   page: number
   totalPages: number
-  error: string
-  success: boolean
 }
 
 export type ErrorStateType = {
@@ -108,8 +106,6 @@ const INITIAL_STATE = {
   page: 1,
   totalPages: 1,
   transactionPayload: null,
-  error: '',
-  success: false,
 } as TransactionStateType;
 
 export default createModel<RootModel>()({
@@ -220,26 +216,6 @@ export default createModel<RootModel>()({
         },
       };
     },
-    setErrorStatus(state, error): TransactionStateType {
-      return {
-        ...state,
-        error,
-        success: false,
-      };
-    },
-    setSuccessStatus(state): TransactionStateType {
-      return {
-        ...state,
-        success: true,
-      };
-    },
-    resetStatus(state): TransactionStateType {
-      return {
-        ...state,
-        error: '',
-        success: false,
-      };
-    },
     resetState() {
       return INITIAL_STATE;
     },
@@ -256,9 +232,11 @@ export default createModel<RootModel>()({
       } = payload;
 
       const currentPage = 1;
-      const today = new Date().toISOString().split('T')[0];
+      const todayInOneMonth = new Date();
+      todayInOneMonth.setMonth(new Date().getMonth() + 1);
+      const inOneMonth = todayInOneMonth.toISOString().split('T')[0];
       let search = searchQuery || ' ';
-      search += (end && start) ? ` date_before:${end} date_after:${start}` : ` date_before:${today}`;
+      search += (end && start) ? ` date_after:${start} date_before:${end}` : `  date_before:${inOneMonth}`;
       search += (currentCode) ? ` currency_is:${currentCode}` : '';
       search += (type) ? ` type:${type}` : '';
 
@@ -296,9 +274,11 @@ export default createModel<RootModel>()({
 
       const currentPage = (page < totalPages) ? page + 1 : 1;
       if (page < totalPages) {
-        const today = new Date().toISOString().split('T')[0];
+        const todayInOneMonth = new Date();
+        todayInOneMonth.setMonth(new Date().getMonth() + 1);
+        const inOneMonth = todayInOneMonth.toISOString().split('T')[0];
         let search = searchQuery || ' ';
-        search += (end && start) ? ` date_before:${end} date_after:${start}` : ` date_before:${today}`;
+        search += (end && start) ? ` date_after:${start} date_before:${end}` : ` date_before:${inOneMonth}`;
         search += (currentCode) ? ` currency_is:${currentCode}` : '';
         search += (type) ? ` type:${type}` : '';
 

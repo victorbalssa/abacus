@@ -11,6 +11,7 @@ interface AFilterButtonType {
   navigation: NavigationType;
   selected: string;
   selectFilter: (filter: string) => void;
+  capitalize?: boolean;
 }
 
 export default function AFilterButton({
@@ -18,6 +19,7 @@ export default function AFilterButton({
   navigation,
   filterType,
   selectFilter,
+  capitalize = false,
 }: AFilterButtonType) {
   const { colors } = useThemeColors();
 
@@ -42,7 +44,7 @@ export default function AFilterButton({
           marginHorizontal: 2,
         }}
       >
-        <AText fontSize={13} bold>
+        <AText fontSize={13} bold capitalize={capitalize}>
           {selected || filterType}
         </AText>
         <Ionicons name="chevron-down-outline" size={15} color={colors.text} />

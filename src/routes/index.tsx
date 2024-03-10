@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  DefaultTheme,
+  CommonActions,
+  useNavigation,
   NavigationContainer,
-  DefaultTheme, useNavigation, CommonActions,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -9,10 +11,12 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {
-  AntDesign, Foundation, Ionicons,
+  AntDesign,
+  Foundation,
 } from '@expo/vector-icons';
-import { Box, IconButton } from 'native-base';
-import { StyleSheet, Platform, View } from 'react-native';
+import {
+  StyleSheet, Platform, View, Pressable,
+} from 'react-native';
 
 import translate from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
@@ -32,8 +36,13 @@ import CredentialsScreen from '../components/Screens/CredentialsScreen';
 // UI components
 import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
+import {
+  AIconButton,
+  AStack,
+  AText,
+} from '../components/UI/ALibrary';
 import ErrorWidget from '../components/UI/ErrorWidget';
-import { APressable } from '../components/UI/ALibrary';
+import PrivacyScreen from '../components/UI/PrivacyScreen';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -59,11 +68,6 @@ const styles = StyleSheet.create({
     right: 0,
     height: 0,
   },
-  container: {
-    position: 'relative',
-    width: 45,
-    alignItems: 'center',
-  },
   background: {
     position: 'absolute',
     top: 0,
@@ -72,30 +76,21 @@ const styles = StyleSheet.create({
 
 function TabBarPrimaryButton() {
   const navigation = useNavigation();
+  const { colors } = useThemeColors();
 
   return (
-    <Box style={styles.container} pointerEvents="box-none">
-      <IconButton
-        _icon={{
-          as: AntDesign,
-          name: 'plus',
-        }}
+    <AStack justifyContent="flex-start">
+      <AIconButton
+        testID="navigation_create_transaction"
+        backgroundColor={colors.brandStyle}
+        icon={<AntDesign name="plus" color="white" size={22} />}
         onPress={() => navigation.dispatch(
           CommonActions.navigate({
             name: 'TransactionCreateScreen',
           }),
         )}
-        _pressed={{
-          style: {
-            top: -5,
-          },
-        }}
-        style={{
-          top: -5,
-        }}
-        testID="navigation_create_transaction"
       />
-    </Box>
+    </AStack>
   );
 }
 
@@ -106,22 +101,20 @@ function TabBarComponent({
   insets,
 }) {
   return (
-    <>
-      <ABlurView
-        style={{
-          ...styles.navigatorContainer,
-          borderTopWidth: 0.5,
-        }}
-      >
-        <BottomTabBar
-          state={state}
-          descriptors={descriptors}
-          navigation={navigation}
-          insets={insets}
-        />
-      </ABlurView>
+    <ABlurView
+      style={{
+        ...styles.navigatorContainer,
+        borderTopWidth: 0.5,
+      }}
+    >
+      <BottomTabBar
+        state={state}
+        descriptors={descriptors}
+        navigation={navigation}
+        insets={insets}
+      />
       <ErrorWidget />
-    </>
+    </ABlurView>
   );
 }
 
@@ -166,13 +159,12 @@ function TabBarConfigurationScreenIcon({ color }) {
 }
 
 export function HeaderClose() {
-  const { colors } = useThemeColors();
   const navigation = useNavigation();
 
   return (
-    <APressable onPress={navigation.goBack}>
-      <Ionicons name="close-circle" size={25} color={colors.text} />
-    </APressable>
+    <Pressable onPress={navigation.goBack}>
+      <AText fontSize={16}>{translate('cancel')}</AText>
+    </Pressable>
   );
 }
 
@@ -196,10 +188,10 @@ function TransactionsStack() {
             backgroundColor: colors.tileBackgroundColor,
           },
           headerTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
+            fontFamily: 'Montserrat-Bold',
           },
           headerLargeTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
+            fontFamily: 'Montserrat-Bold',
           },
         }}
       />
@@ -212,7 +204,7 @@ function TransactionsStack() {
           headerBackTitleVisible: true,
           headerBackTitle: translate('router_back_button'),
           headerBackTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
+            fontFamily: 'Montserrat-Bold',
           },
           headerTransparent: false,
           headerTintColor: colors.text,
@@ -234,79 +226,82 @@ function Home() {
   const { colors } = useThemeColors();
 
   return (
-    <Tab.Navigator
-      tabBar={TabBarComponent}
-      screenOptions={() => ({
-        tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
-        tabBarActiveBackgroundColor: colors.tabBackgroundColor,
-        tabBarActiveTintColor: colors.brandStyle,
-        tabBarInactiveTintColor: colors.tabInactiveDarkLight,
-        tabBarHideOnKeyboard: true,
-        headerShown: false,
-        tabBarShowLabel: true,
-        tabBarLazyLoad: true,
-        tabBarStyle: {
-          backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
-          borderTopWidth: 0,
-          marginTop: 10,
-          elevation: 0,
-        },
-        tabBarLabelStyle: {
-          fontSize: 10,
-          fontFamily: 'Montserrat',
-          paddingBottom: 10,
-        },
-      })}
-    >
-      <Tab.Screen
-        name={translate('navigation_home_tab')}
-        component={HomeScreen}
-        options={{
-          headerShown: true,
-          // eslint-disable-next-line react/no-unstable-nested-components
-          header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
-          headerTransparent: true,
-          tabBarIcon: TabBarHomeScreenIcon,
-          tabBarTestID: 'navigation_home_tab',
-        }}
-      />
-      <Tab.Screen
-        name={translate('navigation_chart_tab')}
-        component={ChartScreen}
-        options={{
-          headerShown: true,
-          // eslint-disable-next-line react/no-unstable-nested-components
-          header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
-          headerTransparent: true,
-          tabBarIcon: TabBarChartScreenIcon,
-          tabBarTestID: 'navigation_chart_tab',
-        }}
-      />
-      <Tab.Screen
-        name="TransactionCreateBtn"
-        component={PrimaryButtonComponent}
-        options={{
-          tabBarButton: TabBarPrimaryButton,
-        }}
-      />
-      <Tab.Screen
-        name="Transactions"
-        component={TransactionsStack}
-        options={{
-          tabBarIcon: TabBarTransactionScreenIcon,
-          title: translate('navigation_transactions_tab'),
-          tabBarTestID: 'navigation_transactions_tab',
-        }}
-      />
-      <Tab.Screen
-        name={translate('navigation_settings_tab')}
-        component={ConfigurationScreen}
-        options={{
-          tabBarIcon: TabBarConfigurationScreenIcon,
-          tabBarTestID: 'navigation_settings_tab',
-        }}
-      />
-    </Tab.Navigator>
+    <>
+      <Tab.Navigator
+        tabBar={TabBarComponent}
+        screenOptions={() => ({
+          tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
+          tabBarActiveBackgroundColor: colors.tabBackgroundColor,
+          tabBarActiveTintColor: colors.brandStyle,
+          tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+          tabBarHideOnKeyboard: true,
+          headerShown: false,
+          tabBarShowLabel: true,
+          tabBarLazyLoad: true,
+          tabBarStyle: {
+            backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+            borderTopWidth: 0,
+            marginTop: 10,
+            elevation: 0,
+          },
+          tabBarLabelStyle: {
+            fontSize: 10,
+            fontFamily: 'Montserrat-Regular',
+            paddingBottom: 10,
+          },
+        })}
+      >
+        <Tab.Screen
+          name={translate('navigation_home_tab')}
+          component={HomeScreen}
+          options={{
+            headerShown: true,
+            // eslint-disable-next-line react/no-unstable-nested-components
+            header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
+            headerTransparent: true,
+            tabBarIcon: TabBarHomeScreenIcon,
+            tabBarTestID: 'navigation_home_tab',
+          }}
+        />
+        <Tab.Screen
+          name={translate('navigation_chart_tab')}
+          component={ChartScreen}
+          options={{
+            headerShown: true,
+            // eslint-disable-next-line react/no-unstable-nested-components
+            header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
+            headerTransparent: true,
+            tabBarIcon: TabBarChartScreenIcon,
+            tabBarTestID: 'navigation_chart_tab',
+          }}
+        />
+        <Tab.Screen
+          name="TransactionCreateBtn"
+          component={PrimaryButtonComponent}
+          options={{
+            tabBarButton: TabBarPrimaryButton,
+          }}
+        />
+        <Tab.Screen
+          name="Transactions"
+          component={TransactionsStack}
+          options={{
+            tabBarIcon: TabBarTransactionScreenIcon,
+            title: translate('navigation_transactions_tab'),
+            tabBarTestID: 'navigation_transactions_tab',
+          }}
+        />
+        <Tab.Screen
+          name={translate('navigation_settings_tab')}
+          component={ConfigurationScreen}
+          options={{
+            tabBarIcon: TabBarConfigurationScreenIcon,
+            tabBarTestID: 'navigation_settings_tab',
+          }}
+        />
+      </Tab.Navigator>
+      <PrivacyScreen />
+    </>
   );
 }
 
@@ -349,10 +344,11 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: translate('transaction_screen_title'),
-              headerRight: HeaderClose,
+              headerLeft: HeaderClose,
+              headerTitleAlign: 'center',
               headerShadowVisible: true,
               headerTitleStyle: {
-                fontFamily: 'Montserrat_Bold',
+                fontFamily: 'Montserrat-Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {
@@ -367,10 +363,11 @@ export default function Index() {
               headerShown: true,
               headerBackVisible: false,
               headerTitle: 'Filters',
-              headerRight: HeaderClose,
+              headerTitleAlign: 'center',
+              headerLeft: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
-                fontFamily: 'Montserrat_Bold',
+                fontFamily: 'Montserrat-Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {
@@ -384,15 +381,15 @@ export default function Index() {
             options={{
               headerShown: true,
               headerBackVisible: false,
-              headerTitle: '',
-              headerRight: HeaderClose,
+              headerTitleAlign: 'center',
+              headerLeft: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
-                fontFamily: 'Montserrat_Bold',
+                fontFamily: 'Montserrat-Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {
-                backgroundColor: colors.backgroundColor,
+                backgroundColor: colors.tileBackgroundColor,
               },
             }}
           />

@@ -62,7 +62,7 @@ export default function CredentialCreateScreen({ navigation }: ScreenType) {
         } catch (e) {
           Alert.alert(
             translate('oauth_token_error_title'),
-            `${translate('oauth_token_error_description')}, ${e.message}`,
+            `${translate('oauth_token_error_description')}. Error: ${e.message}`,
           );
         }
       }
@@ -85,10 +85,10 @@ export default function CredentialCreateScreen({ navigation }: ScreenType) {
       await addCredential(credential);
 
       navigation.goBack();
-    } catch (_) {
+    } catch (e) {
       Alert.alert(
         translate('oauth_token_error_title'),
-        translate('oauth_wrong_token_error_description'),
+        `${translate('oauth_wrong_token_error_description')} Error: ${e.message}`,
       );
     }
   };

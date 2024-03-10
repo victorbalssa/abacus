@@ -8,6 +8,7 @@ type ConfigurationStateType = {
   backendURL: string
   hideBalance: boolean
   displayAllAccounts: boolean
+  displayForeignCurrency: boolean
   useBiometricAuth: boolean
   apiVersion: string
   serverVersion: string
@@ -42,6 +43,7 @@ const INITIAL_STATE = {
   backendURL: '',
   hideBalance: false,
   displayAllAccounts: false,
+  displayForeignCurrency: false,
   useBiometricAuth: false,
   apiVersion: '',
   serverVersion: '',
@@ -85,6 +87,13 @@ export default createModel<RootModel>()({
       return {
         ...state,
         displayAllAccounts,
+      };
+    },
+
+    setDisplayForeignCurrency(state, displayForeignCurrency: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        displayForeignCurrency,
       };
     },
 

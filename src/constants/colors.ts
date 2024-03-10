@@ -22,6 +22,7 @@ export default {
   warmGray100: '#3b3b3b',
   blurAndroidHeader: 'rgba(40,40,40,0.16)',
   brandNeutralFix: '#e3e3e3',
+  greyLight: '#6c6c6c',
   dark: {
     text: 'white',
     textOpposite: 'black',
@@ -31,9 +32,8 @@ export default {
     blurBackground: 'rgba(29,31,33,0.77)',
     tabInactiveDarkLight: 'rgb(190,190,190)',
     listBorderColor: 'rgb(56,56,56)',
-    listPressed: 'muted.800',
+    listPressed: '#606060',
     filterBorderColor: '#606060',
-
     brandNeutral: '#e3e3e3',
     brandNeutralLight: '#3d3d3d',
     brandDanger: '#e3e3e3',
@@ -45,8 +45,9 @@ export default {
     brandSuccessGlow: '#63d90f',
     brandSuccess: '#e3e3e3',
     brandLight: 'rgba(248,248,248,0)',
-
     warmGray200: 'rgba(141,141,141,0.4)',
+    primary: '#FF5533',
+    info: 'rgb(29,31,33)',
   },
   light: {
     text: 'black',
@@ -57,9 +58,8 @@ export default {
     blurBackground: 'rgba(192,192,192,0.69)',
     tabInactiveDarkLight: 'rgba(103,103,103,0.61)',
     listBorderColor: '#dadada',
-    listPressed: 'muted.300',
+    listPressed: '#606060',
     filterBorderColor: '#606060',
-
     brandNeutral: '#3d3d3d',
     brandNeutralLight: '#e3e3e3',
     brandDanger: '#ff2d2d',
@@ -71,7 +71,8 @@ export default {
     brandSuccessGlow: '#31af07',
     brandSuccess: '#15803d',
     brandLight: '#f8f8f8',
-
     warmGray200: 'rgba(238,238,238,0.61)',
+    primary: '#FF5533',
+    info: '#ececec',
   },
 };

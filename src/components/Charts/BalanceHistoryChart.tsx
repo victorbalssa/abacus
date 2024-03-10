@@ -64,10 +64,7 @@ export default function BalanceHistoryChart() {
               paddingVertical: 10,
             }}
           >
-            <AText
-              fontFamily="Montserrat_Bold"
-              fontSize={24}
-            >
+            <AText fontSize={24} bold>
               {translate('balance_history_chart')}
               {' '}
               {currentCode}

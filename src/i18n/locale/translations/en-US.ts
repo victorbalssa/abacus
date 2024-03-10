@@ -141,5 +141,6 @@ export default {
   go_to_credentials: 'Go to Credentials',
 
   configuration_logout_alert_title: 'Logout',
+  load_more: 'Load more',
 
 };

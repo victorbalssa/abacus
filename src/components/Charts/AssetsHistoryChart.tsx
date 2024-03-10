@@ -66,7 +66,7 @@ function Cursor({
           paddingHorizontal: 10,
         }}
       >
-        <AText fontFamily="Montserrat_Bold" fontSize={16} py={1}>
+        <AText fontSize={16} py={1} bold>
           {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
             month: 'short',
             day: 'numeric',
@@ -175,10 +175,7 @@ export default function AssetsHistoryChart() {
               paddingVertical: 10,
             }}
           >
-            <AText
-              fontFamily="Montserrat_Bold"
-              fontSize={24}
-            >
+            <AText fontSize={24} bold>
               {translate('assets_history_chart')}
               {' '}
               {currentCode}

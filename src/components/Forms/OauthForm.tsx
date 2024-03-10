@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Input,
-  FormControl,
-  Button,
-  Switch,
-} from 'native-base';
-import {
   KeyboardAvoidingView,
   Platform,
   Alert,
   ScrollView,
+  Switch,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import * as Clipboard from 'expo-clipboard';
@@ -21,7 +16,15 @@ import { isValidHttpUrl, useThemeColors } from '../../lib/common';
 import translate from '../../i18n/locale';
 import { RootState } from '../../store';
 import {
-  APressable, AStackFlex, AText, AView,
+  AFormView,
+  AInput,
+  ALabel,
+  APressable,
+  AStack,
+  AStackFlex,
+  AText,
+  AView,
+  AButton,
 } from '../UI/ALibrary';
 
 const copyToClipboard = async () => {
@@ -34,8 +37,6 @@ export default function OauthForm({
   setConfig,
   oauthLogin,
   tokenLogin,
-  useBiometricAuth = false,
-  biometricCheck = () => {},
 }) {
   const { colors } = useThemeColors();
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getNewAccessToken?.loading);
@@ -54,6 +55,7 @@ export default function OauthForm({
   };
 
   const handleLogin = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
     if (isOauth) {
       oauthLogin();
     } else {
@@ -68,13 +70,19 @@ export default function OauthForm({
     >
       <ScrollView
         testID="auth_scroll_view"
+        style={{
+          padding: 15,
+        }}
         keyboardShouldPersistTaps="handled"
         bounces={false}
       >
-        <AStackFlex px={20} style={{ marginTop: Platform.OS === 'ios' ? 10 : 20 }}>
-          <FormControl isRequired>
-            <FormControl.Label testID="auth_form_url_label">{translate('auth_form_url_label')}</FormControl.Label>
-            <Input
+        <AStack
+          justifyContent="flex-start"
+          style={{ marginTop: Platform.OS === 'ios' ? 10 : 20 }}
+        >
+          <AFormView mx={0}>
+            <ALabel testID="auth_form_url_label" isRequired>{translate('auth_form_url_label')}</ALabel>
+            <AInput
               returnKeyType="done"
               placeholder={translate('auth_form_url_placeholder')}
               keyboardType="url"
@@ -85,32 +93,32 @@ export default function OauthForm({
               })}
               testID="auth_form_url_input"
             />
-            <FormControl.HelperText>
+            <AText py={5} px={2} fontSize={11}>
               {translate('auth_form_url_help')}
-            </FormControl.HelperText>
-          </FormControl>
+            </AText>
+          </AFormView>
 
-          <AText py={10} fontSize={13}>{translate('auth_external_heads_up')}</AText>
+          <AText py={10} px={0.2} fontSize={13}>{translate('auth_external_heads_up')}</AText>
 
           <AStackFlex row py={10} alignItems="center" justifyContent="space-between">
             <AText fontSize={12}>{translate('auth_use_personal_access_token')}</AText>
-            <Switch testID="toggle_is_oauth" isChecked={!isOauth} onToggle={toggleIsOauth} colorScheme="primary" />
+            <Switch testID="toggle_is_oauth" thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={() => toggleIsOauth()} value={!isOauth} />
           </AStackFlex>
 
           {isOauth && (
           <AStackFlex py={10} alignItems="flex-start" justifyContent="flex-start">
             <AText fontSize={13}>
-              ‣
+              1.
               {' '}
               {translate('auth_create_new_oauth_client')}
               {' '}
-              <AText fontSize={13} lineHeight={20} onPress={() => Linking.openURL(`${config.backendURL}/profile`)} underline>
-                {`${isValidHttpUrl(config.backendURL) ? config.backendURL : '[Firefly III URL]'}/profile`}
-              </AText>
             </AText>
-            <AStackFlex row py={10} alignItems="flex-start" justifyContent="flex-start">
+            <AText fontSize={13} lineHeight={20} onPress={() => Linking.openURL(`${config.backendURL}/profile`)} underline>
+              {`${isValidHttpUrl(config.backendURL) ? config.backendURL : '[Firefly III URL]'}/profile`}
+            </AText>
+            <AStackFlex row py={10} justifyContent="flex-start" flexWrap="wrap">
               <AText fontSize={13}>
-                ‣
+                2.
                 {' '}
                 {translate('auth_form_set_redirect')}
               </AText>
@@ -121,19 +129,20 @@ export default function OauthForm({
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: colors.brandStyle,
-                  borderRadius: 5,
+                  borderRadius: 10,
                   marginLeft: 10,
-                  paddingRight: 3,
+                  paddingRight: 7,
+                  padding: 1,
                 }}
                 onPress={copyToClipboard}
               >
-                <Ionicons name="copy" size={10} color="white" style={{ margin: 5 }} />
-                <AText fontSize={13} fontFamily="Montserrat_Bold" color="white">abacusfiiiapp://redirect</AText>
+                <Ionicons name="copy" size={12} color="white" style={{ margin: 5 }} />
+                <AText fontSize={13} numberOfLines={1} color="white" bold>abacusfiiiapp://redirect</AText>
               </APressable>
             </AStackFlex>
-            <FormControl isRequired>
-              <FormControl.Label>{translate('auth_form_oauth_clientId')}</FormControl.Label>
-              <Input
+            <AFormView mx={0}>
+              <ALabel isRequired>{translate('auth_form_oauth_clientId')}</ALabel>
+              <AInput
                 keyboardType="numeric"
                 returnKeyType="done"
                 placeholder={translate('auth_form_oauth_clientId')}
@@ -143,10 +152,10 @@ export default function OauthForm({
                   oauthClientId: v,
                 })}
               />
-            </FormControl>
-            <FormControl>
-              <FormControl.Label>{translate('auth_form_oauth_client_secret')}</FormControl.Label>
-              <Input
+            </AFormView>
+            <AFormView mx={0}>
+              <ALabel>{translate('auth_form_oauth_client_secret')}</ALabel>
+              <AInput
                 returnKeyType="done"
                 type="password"
                 placeholder={translate('auth_form_oauth_client_secret')}
@@ -156,17 +165,17 @@ export default function OauthForm({
                   oauthClientSecret: v,
                 })}
               />
-              <FormControl.HelperText>
+              <AText py={5} px={2} fontSize={11}>
                 {translate('auth_form_secrets_help_message')}
-              </FormControl.HelperText>
-            </FormControl>
+              </AText>
+            </AFormView>
           </AStackFlex>
           )}
 
           {!isOauth && (
             <AStackFlex py={10} alignItems="flex-start" justifyContent="flex-start">
               <AText fontSize={13} onPress={() => Linking.openURL(`${config.backendURL}/profile`)}>
-                ‣
+                1.
                 {' '}
                 {translate('auth_create_new_personal_access_token')}
                 {' '}
@@ -175,9 +184,11 @@ export default function OauthForm({
                   /profile
                 </AText>
               </AText>
-              <FormControl isRequired py={3}>
-                <FormControl.Label testID="auth_form_personal_access_token_label">{translate('auth_form_personal_access_token_label')}</FormControl.Label>
-                <Input
+              <AFormView mx={0}>
+                <ALabel testID="auth_form_personal_access_token_label" isRequired>
+                  {translate('auth_form_personal_access_token_label')}
+                </ALabel>
+                <AInput
                   returnKeyType="done"
                   type="password"
                   placeholder={translate('auth_form_personal_access_token_label')}
@@ -188,10 +199,10 @@ export default function OauthForm({
                   })}
                   testID="auth_form_personal_access_token_input"
                 />
-                <FormControl.HelperText>
+                <AText py={5} px={2} fontSize={11}>
                   {translate('auth_form_secrets_help_message')}
-                </FormControl.HelperText>
-              </FormControl>
+                </AText>
+              </AFormView>
             </AStackFlex>
           )}
 
@@ -207,72 +218,22 @@ export default function OauthForm({
           </AView>
 
           <AView style={{ width: '100%' }}>
-            <Button
-              leftIcon={<Ionicons name="log-in-outline" size={20} color="white" />}
-              mt="2"
-              shadow={2}
-              onPressOut={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-              _pressed={{
-                style: {
-                  transform: [{
-                    scale: 0.99,
-                  }],
-                },
-              }}
-              _loading={{
-                bg: 'primary.50',
-                _text: {
-                  color: 'white',
-                },
-                alignItems: 'flex-start',
-                opacity: 1,
-              }}
-              _spinner={{
-                color: 'white',
-                size: 10,
-              }}
-              colorScheme="primary"
-              isDisabled={!isValidHttpUrl(config.backendURL) || !isMinimumRequirement()}
-              isLoading={loading}
-              isLoadingText={translate('auth_form_submit_button_loading')}
+            <AButton
+              type="primary"
+              loading={loading}
+              style={{ height: 40, marginTop: 5 }}
               onPress={handleLogin}
               testID="auth_form_submit_button_initial"
+              disabled={!isValidHttpUrl(config.backendURL) || !isMinimumRequirement()}
+              disabledTint
             >
-              {translate('auth_form_submit_button_initial')}
-            </Button>
-            {useBiometricAuth && (
-            <Button
-              leftIcon={<Ionicons name="lock-open" size={16} color="white" />}
-              mt="2"
-              shadow={2}
-              onTouchStart={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-              _pressed={{
-                style: {
-                  transform: [{
-                    scale: 0.99,
-                  }],
-                },
-              }}
-              _loading={{
-                _text: {
-                  color: 'white',
-                },
-                alignItems: 'flex-start',
-                opacity: 1,
-              }}
-              _spinner={{
-                color: 'white',
-                size: 10,
-              }}
-              colorScheme="coolGray"
-              isLoading={loading}
-              onPress={() => biometricCheck()}
-            >
-              {translate('auth_form_biometrics_lock')}
-            </Button>
-            )}
+              <AStackFlex row>
+                <Ionicons name="log-in-outline" size={20} color="white" style={{ margin: 5 }} />
+                <AText fontSize={15} color="white">{translate('auth_form_submit_button_initial')}</AText>
+              </AStackFlex>
+            </AButton>
           </AView>
-        </AStackFlex>
+        </AStack>
         <AView style={{ height: 170 }} />
       </ScrollView>
     </KeyboardAvoidingView>

@@ -113,6 +113,8 @@ export default createModel<RootModel>()({
       const {
         netWorth = state.netWorth,
         balance = state.balance,
+        spent = state.spent,
+        earned = state.earned,
         accounts = state.accounts,
         earnedChart = state.earnedChart,
         spentChart = state.spentChart,
@@ -122,6 +124,8 @@ export default createModel<RootModel>()({
         ...state,
         netWorth,
         balance,
+        spent,
+        earned,
         accounts,
         earnedChart,
         spentChart,
@@ -236,6 +240,8 @@ export default createModel<RootModel>()({
         const { data: summary } = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
         const netWorth = [];
         const balance = [];
+        const earned = [];
+        const spent = [];
         Object.keys(summary).forEach((key) => {
           if (key.includes('net-worth-in')) {
             netWorth.push(summary[key]);
@@ -243,11 +249,19 @@ export default createModel<RootModel>()({
           if (key.includes('balance-in')) {
             balance.push(summary[key]);
           }
+          if (key.includes('earned-in')) {
+            earned.push(summary[key]);
+          }
+          if (key.includes('spent-in')) {
+            spent.push(summary[key]);
+          }
         });
 
         dispatch.firefly.setData({
           netWorth,
           balance,
+          earned,
+          spent,
         });
       }
     },

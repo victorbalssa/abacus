@@ -1,8 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
-  Keyboard, Platform, View, KeyboardAvoidingView, ScrollView,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+  Pressable,
+  Switch,
 } from 'react-native';
-import { Button } from 'native-base';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
 import * as Crypto from 'expo-crypto';
@@ -11,14 +20,17 @@ import { Ionicons } from '@expo/vector-icons';
 import TransactionSplitForm from '../Forms/TransactionSplitForm';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
-import ToastAlert from '../UI/ToastAlert';
 import GroupTitle from './Fields/GroupTitle';
 
 import Loading from '../UI/Loading';
 import { initialSplit } from '../../models/transactions';
-import { AView } from '../UI/ALibrary';
+import { AStackFlex, AText, AView } from '../UI/ALibrary';
+import AButton from '../UI/ALibrary/AButton';
+import { useThemeColors } from '../../lib/common';
 
 function MultipleTransactionSplitForm({ isNew, splits, title }) {
+  const { colors } = useThemeColors();
+  const displayForeignCurrency = useSelector((state: RootState) => state.configuration.displayForeignCurrency);
   const [splitNumber, setSplitNumber] = useState<string[]>([]);
   const dispatch = useDispatch<RootDispatch>();
 
@@ -37,12 +49,17 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
     dispatch.transactions.deleteTransactionSplit(index);
   };
 
+  const onSwitch = async (bool: boolean) => {
+    dispatch.configuration.setDisplayForeignCurrency(bool);
+    return Promise.resolve();
+  };
+
   if (splitNumber.length === 0) {
     return <Loading />;
   }
 
   return (
-    <View>
+    <AView>
       {splitNumber.map((e, i) => (
         <TransactionSplitForm
           key={e}
@@ -53,93 +70,39 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
           handleDelete={() => deleteTransactionSplit(i)}
         />
       ))}
-      <Button
-        mt="3"
-        leftIcon={<Ionicons name="add-circle" size={20} color="white" />}
-        shadow={2}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.99,
-            }],
-          },
+      <AButton
+        style={{
+          height: 40,
+          marginTop: 5,
+          borderWidth: 0.5,
+          borderColor: colors.listBorderColor,
         }}
         onPress={addTransactionSplit}
-        colorScheme="coolGray"
       >
-        {translate('transaction_form_new_split_button')}
-      </Button>
+        <AStackFlex row>
+          <Ionicons name="add-circle" size={22} color={colors.greyLight} style={{ margin: 5 }} />
+          <AText color={colors.greyLight} fontSize={15}>{translate('transaction_form_new_split_button')}</AText>
+        </AStackFlex>
+      </AButton>
       <GroupTitle title={title || ''} />
-    </View>
+      <AStackFlex row py={10} alignItems="center" justifyContent="space-between">
+        <AText color={colors.greyLight} fontSize={14} bold>{translate('transaction_form_foreign_currency_label')}</AText>
+        <Switch thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayForeignCurrency} />
+      </AStackFlex>
+    </AView>
   );
 }
 
-function TransactionFormButtons({ navigation, handleSubmit }) {
+function TransactionFormButtons({ handleSubmit }) {
   const loading = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.loading);
-  const error = useSelector((state: RootState) => state.transactions.error);
-  const success = useSelector((state: RootState) => state.transactions.success);
-  const dispatch = useDispatch<RootDispatch>();
-
-  const goToTransactions = async () => {
-    navigation.navigate('Transactions', {
-      screen: 'TransactionsScreen',
-      merge: true,
-      params: {
-        forceRefresh: true,
-      },
-    });
-  };
 
   return (
-    <View>
-      {success && !loading && (
-        <ToastAlert
-          title={translate('transaction_form_success_title')}
-          status="success"
-          variant="solid"
-          onClose={dispatch.transactions.resetStatus}
-          description={translate('transaction_form_success_description')}
-          onPress={goToTransactions}
-        />
-      )}
-      {error !== '' && !loading && (
-        <ToastAlert
-          title={translate('transaction_form_error_title')}
-          status="error"
-          variant="solid"
-          onClose={dispatch.transactions.resetStatus}
-          description={error}
-        />
-      )}
-      <Button
-        mt="3"
-        leftIcon={<Ionicons name="cloud-upload-sharp" size={20} color="white" />}
-        _pressed={{
-          style: {
-            transform: [{
-              scale: 0.99,
-            }],
-          },
-        }}
-        _loading={{
-          bg: 'primary.50',
-          _text: {
-            color: 'white',
-          },
-          alignItems: 'flex-start',
-          opacity: 1,
-        }}
-        _spinner={{
-          color: 'white',
-          size: 10,
-        }}
-        isLoading={loading}
-        isLoadingText="Submitting..."
-        onPress={handleSubmit}
-      >
-        {translate('transaction_form_submit_button')}
-      </Button>
-    </View>
+    <AButton type="primary" loading={loading} style={{ height: 40, marginTop: 5 }} onPress={handleSubmit}>
+      <AStackFlex row>
+        <Ionicons name="cloud-upload-sharp" size={20} color="white" style={{ margin: 5 }} />
+        <AText color="white" fontSize={15}>{translate('transaction_form_submit_button')}</AText>
+      </AStackFlex>
+    </AButton>
   );
 }
 
@@ -153,10 +116,6 @@ export default function TransactionForm({
 
   useEffect(() => {
     dispatch.transactions.resetTransaction({ splits, title });
-
-    return () => {
-      dispatch.transactions.resetStatus();
-    };
   }, []);
 
   const handleSubmit = async () => {
@@ -164,14 +123,20 @@ export default function TransactionForm({
     try {
       await dispatch.transactions.upsertTransaction({ id });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch();
-      dispatch.transactions.setSuccessStatus();
     } catch (e) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch();
-      if (e.response) {
-        dispatch.transactions.setErrorStatus(e.response.data.message);
-      }
     }
   };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={handleSubmit}>
+          <AText fontSize={16} bold>{translate('transaction_form_submit_button')}</AText>
+        </Pressable>
+      ),
+    });
+  }, [navigation, dispatch, title, splits, id]);
 
   return useMemo(
     () => (
@@ -187,7 +152,7 @@ export default function TransactionForm({
           bounces={false}
         >
           <MultipleTransactionSplitForm isNew={id === '-1'} title={title} splits={splits} />
-          <TransactionFormButtons navigation={navigation} handleSubmit={handleSubmit} />
+          <TransactionFormButtons handleSubmit={handleSubmit} />
           <AView style={{ height: 170 }} />
         </ScrollView>
       </KeyboardAvoidingView>

@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core';
 import { RootModel } from './index';
 
-type CurrencyType = {
+export interface CurrencyType {
   id: string
   type: string
   attributes: {
@@ -13,7 +13,7 @@ type CurrencyType = {
     decimalPlaces: number
     createdAt: string
     updatedAt: string
-  },
+  }
 }
 
 type CurrencyStateType = {

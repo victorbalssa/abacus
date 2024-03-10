@@ -1,47 +1,59 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useToast } from 'native-base';
 import { AxiosError } from 'axios';
-import { useNavigation, CommonActions } from '@react-navigation/native';
-import { View } from 'react-native';
 
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { RootState } from '../../store';
-import ToastAlert from './ToastAlert';
+import ToastMessage from './ToastMessage';
 import translate from '../../i18n/locale';
+import useToasts from './useToasts';
 
 export default function ErrorWidget() {
-  const toast = useToast();
-  const { error } = useSelector((state: RootState) => state.loading.global);
+  const { showToast, toasts, removeToast } = useToasts();
+  const error = useSelector((state: RootState) => state.loading.models.configuration.error);
+  const success = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction.success);
   const navigation = useNavigation();
 
-  const goToOauth = () => navigation.dispatch(
-    CommonActions.reset({
-      index: 0,
-      routes: [
-        { name: 'credentials' },
-      ],
-    }),
-  );
+  const goToCredentials = async () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'credentials' },
+        ],
+      }),
+    );
+  };
 
+  const isFirstRun = useRef(true);
   useEffect(() => {
-    if (error && (error as Error).message) {
-      toast.show({
-        render: ({ id }) => (
-          <ToastAlert
-            onClose={() => toast.close(id)}
-            title={translate('error_widget_title')}
-            status="error"
-            variant="solid"
-            description={(error as Error).message}
-          />
-        ),
-      });
-    }
+    (async () => {
+      if (error && (error as Error).message && !isFirstRun.current) {
+        showToast(translate('error_widget_title'), (error as Error).message, 'error');
+      }
 
-    if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 401) {
-      goToOauth();
-    }
-  }, [error]);
+      if (success && !isFirstRun.current) {
+        showToast(translate('transaction_form_success_title'), translate('transaction_form_success_description'), 'success');
+      }
 
-  return <View />;
+      if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 404 && !isFirstRun.current) {
+        goToCredentials();
+      }
+
+      if (isFirstRun.current) {
+        isFirstRun.current = false;
+      }
+    })();
+  }, [error, success]);
+
+  return toasts.map((toast) => (
+    <ToastMessage
+      key={toast.id}
+      id={toast.id}
+      type={toast.type}
+      title={toast.title}
+      description={toast.description}
+      onUnmount={removeToast}
+    />
+  ));
 }
