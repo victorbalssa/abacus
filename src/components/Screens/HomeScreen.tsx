@@ -93,7 +93,7 @@ function AssetsAccounts() {
 
             <ASkeleton loading={loading}>
               <AText
-                maxWidth={100}
+                maxWidth={150}
                 fontSize={14}
                 numberOfLines={1}
               >
@@ -278,13 +278,14 @@ function NetWorth() {
           {balance && balance[0] && earned && earned[0] && spent && spent[0] && !hideBalance && (
           <ASkeleton loading={loading}>
             <AStack
-              py={2}
+              py={0}
               my={1}
               px={5}
               backgroundColor={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutralLight : colors.brandSuccessLight}
-              style={{ borderRadius: 10 }}
+              style={{ borderRadius: 5 }}
             >
               <AText
+                py={0}
                 bold
                 fontSize={12}
                 color={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess}

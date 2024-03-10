@@ -87,8 +87,8 @@ function ToastMessage({
     >
       <Ionicons name={icon} size={22} color="#FFF" style={{ padding: 7, borderRadius: 5 }} />
       <AStack alignItems="flex-start" justifyContent="flex-start" style={{ marginLeft: 8, flex: 1 }}>
-        <AText fontSize={18} bold>{title}</AText>
-        <AText fontSize={15} onPress={type === 'success' ? goToTransactions : null}>{description}</AText>
+        <AText color="white" fontSize={18} bold>{title}</AText>
+        <AText color="white" fontSize={15} onPress={type === 'success' ? goToTransactions : null}>{description}</AText>
       </AStack>
       <Ionicons name="close-circle" size={22} color="#FFF" style={{ padding: 7, borderRadius: 5 }} onPress={() => onUnmount(id)} />
     </Animated.View>
