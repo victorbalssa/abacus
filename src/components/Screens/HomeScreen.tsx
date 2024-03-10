@@ -66,7 +66,7 @@ function AssetsAccounts() {
           <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
           </AText>
-          <Switch style={{ marginHorizontal: 10 }} thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
+          <Switch style={{ marginHorizontal: 10 }} thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
         </AStack>
         {accounts && accounts.filter((a) => a.display || displayAllAccounts).map((account, index) => (
           <AStack

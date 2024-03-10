@@ -50,7 +50,7 @@ export default function AText({
         fontSize,
         maxWidth,
         textAlign,
-        fontFamily: bold ? `${fontFamily}_Bold` : fontFamily,
+        fontFamily: bold ? 'Montserrat-Bold' : fontFamily,
         paddingHorizontal: px,
         paddingVertical: py,
         textDecorationLine: underline ? 'underline' : 'none',

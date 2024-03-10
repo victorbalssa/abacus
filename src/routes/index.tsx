@@ -42,6 +42,7 @@ import {
   AText,
 } from '../components/UI/ALibrary';
 import ErrorWidget from '../components/UI/ErrorWidget';
+import PrivacyScreen from '../components/UI/PrivacyScreen';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -225,79 +226,82 @@ function Home() {
   const { colors } = useThemeColors();
 
   return (
-    <Tab.Navigator
-      tabBar={TabBarComponent}
-      screenOptions={() => ({
-        tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
-        tabBarActiveBackgroundColor: colors.tabBackgroundColor,
-        tabBarActiveTintColor: colors.brandStyle,
-        tabBarInactiveTintColor: colors.tabInactiveDarkLight,
-        tabBarHideOnKeyboard: true,
-        headerShown: false,
-        tabBarShowLabel: true,
-        tabBarLazyLoad: true,
-        tabBarStyle: {
-          backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
-          borderTopWidth: 0,
-          marginTop: 10,
-          elevation: 0,
-        },
-        tabBarLabelStyle: {
-          fontSize: 10,
-          fontFamily: 'Montserrat-Regular',
-          paddingBottom: 10,
-        },
-      })}
-    >
-      <Tab.Screen
-        name={translate('navigation_home_tab')}
-        component={HomeScreen}
-        options={{
-          headerShown: true,
-          // eslint-disable-next-line react/no-unstable-nested-components
-          header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
-          headerTransparent: true,
-          tabBarIcon: TabBarHomeScreenIcon,
-          tabBarTestID: 'navigation_home_tab',
-        }}
-      />
-      <Tab.Screen
-        name={translate('navigation_chart_tab')}
-        component={ChartScreen}
-        options={{
-          headerShown: true,
-          // eslint-disable-next-line react/no-unstable-nested-components
-          header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
-          headerTransparent: true,
-          tabBarIcon: TabBarChartScreenIcon,
-          tabBarTestID: 'navigation_chart_tab',
-        }}
-      />
-      <Tab.Screen
-        name="TransactionCreateBtn"
-        component={PrimaryButtonComponent}
-        options={{
-          tabBarButton: TabBarPrimaryButton,
-        }}
-      />
-      <Tab.Screen
-        name="Transactions"
-        component={TransactionsStack}
-        options={{
-          tabBarIcon: TabBarTransactionScreenIcon,
-          title: translate('navigation_transactions_tab'),
-          tabBarTestID: 'navigation_transactions_tab',
-        }}
-      />
-      <Tab.Screen
-        name={translate('navigation_settings_tab')}
-        component={ConfigurationScreen}
-        options={{
-          tabBarIcon: TabBarConfigurationScreenIcon,
-          tabBarTestID: 'navigation_settings_tab',
-        }}
-      />
-    </Tab.Navigator>
+    <>
+      <Tab.Navigator
+        tabBar={TabBarComponent}
+        screenOptions={() => ({
+          tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
+          tabBarActiveBackgroundColor: colors.tabBackgroundColor,
+          tabBarActiveTintColor: colors.brandStyle,
+          tabBarInactiveTintColor: colors.tabInactiveDarkLight,
+          tabBarHideOnKeyboard: true,
+          headerShown: false,
+          tabBarShowLabel: true,
+          tabBarLazyLoad: true,
+          tabBarStyle: {
+            backgroundColor: Platform.select({ ios: 'transparent', android: colors.tileBackgroundColor }),
+            borderTopWidth: 0,
+            marginTop: 10,
+            elevation: 0,
+          },
+          tabBarLabelStyle: {
+            fontSize: 10,
+            fontFamily: 'Montserrat-Regular',
+            paddingBottom: 10,
+          },
+        })}
+      >
+        <Tab.Screen
+          name={translate('navigation_home_tab')}
+          component={HomeScreen}
+          options={{
+            headerShown: true,
+            // eslint-disable-next-line react/no-unstable-nested-components
+            header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
+            headerTransparent: true,
+            tabBarIcon: TabBarHomeScreenIcon,
+            tabBarTestID: 'navigation_home_tab',
+          }}
+        />
+        <Tab.Screen
+          name={translate('navigation_chart_tab')}
+          component={ChartScreen}
+          options={{
+            headerShown: true,
+            // eslint-disable-next-line react/no-unstable-nested-components
+            header: ({ navigation }) => <NavigationHeader navigation={navigation} />,
+            headerTransparent: true,
+            tabBarIcon: TabBarChartScreenIcon,
+            tabBarTestID: 'navigation_chart_tab',
+          }}
+        />
+        <Tab.Screen
+          name="TransactionCreateBtn"
+          component={PrimaryButtonComponent}
+          options={{
+            tabBarButton: TabBarPrimaryButton,
+          }}
+        />
+        <Tab.Screen
+          name="Transactions"
+          component={TransactionsStack}
+          options={{
+            tabBarIcon: TabBarTransactionScreenIcon,
+            title: translate('navigation_transactions_tab'),
+            tabBarTestID: 'navigation_transactions_tab',
+          }}
+        />
+        <Tab.Screen
+          name={translate('navigation_settings_tab')}
+          component={ConfigurationScreen}
+          options={{
+            tabBarIcon: TabBarConfigurationScreenIcon,
+            tabBarTestID: 'navigation_settings_tab',
+          }}
+        />
+      </Tab.Navigator>
+      <PrivacyScreen />
+    </>
   );
 }
 

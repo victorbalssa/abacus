@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment/moment';
-import { Platform, Switch } from 'react-native';
+import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -104,7 +104,7 @@ export default function TransactionSplitForm({
         <AStack style={{ width: '100%', paddingHorizontal: 10 }} justifyContent="space-between" row>
           <AText
             fontSize={15}
-            color={colors.warmGray200}
+            color={colors.greyLight}
             textAlign="center"
             style={{
               justifyContent: 'center',
@@ -114,7 +114,7 @@ export default function TransactionSplitForm({
               paddingTop: 10,
               borderWidth: 0.5,
               borderRadius: 10,
-              borderColor: colors.warmGray200,
+              borderColor: colors.greyLight,
             }}
           >
             {index + 1}
@@ -123,8 +123,8 @@ export default function TransactionSplitForm({
           </AText>
           <AIconButton
             borderWidth={0.5}
-            borderColor={colors.warmGray200}
-            icon={<Ionicons name="trash" size={20} color={colors.warmGray200} />}
+            borderColor={colors.greyLight}
+            icon={<Ionicons name="trash" size={20} color={colors.greyLight} />}
             onPress={handleDelete}
           />
         </AStack>
@@ -158,7 +158,7 @@ export default function TransactionSplitForm({
                 borderColor: colors.listBorderColor,
               }}
             >
-              <AText fontSize={15} color={colors.text} bold capitalize>{name}</AText>
+              <AText fontSize={15} color={type === formData.type ? 'white' : colors.text} bold capitalize>{name}</AText>
             </APressable>
           ))}
         </AStack>

@@ -1,11 +1,16 @@
 import React, {
-  useEffect, useLayoutEffect, useMemo, useRef, useState,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
 } from 'react';
 import {
   Keyboard,
   Platform,
   KeyboardAvoidingView,
-  ScrollView, Pressable, Switch,
+  ScrollView,
+  Pressable,
+  Switch,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
@@ -65,16 +70,24 @@ function MultipleTransactionSplitForm({ isNew, splits, title }) {
           handleDelete={() => deleteTransactionSplit(i)}
         />
       ))}
-      <AButton style={{ height: 40, marginTop: 5 }} onPress={addTransactionSplit}>
+      <AButton
+        style={{
+          height: 40,
+          marginTop: 5,
+          borderWidth: 0.5,
+          borderColor: colors.listBorderColor,
+        }}
+        onPress={addTransactionSplit}
+      >
         <AStackFlex row>
-          <Ionicons name="add-circle" size={20} color="white" style={{ margin: 5 }} />
-          <AText fontSize={15}>{translate('transaction_form_new_split_button')}</AText>
+          <Ionicons name="add-circle" size={22} color={colors.greyLight} style={{ margin: 5 }} />
+          <AText color={colors.greyLight} fontSize={15}>{translate('transaction_form_new_split_button')}</AText>
         </AStackFlex>
       </AButton>
       <GroupTitle title={title || ''} />
-      <AStackFlex row py={10} px={10} alignItems="center" justifyContent="space-between">
-        <AText fontSize={12}>{translate('transaction_form_foreign_currency_label')}</AText>
-        <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayForeignCurrency} />
+      <AStackFlex row py={10} alignItems="center" justifyContent="space-between">
+        <AText color={colors.greyLight} fontSize={14} bold>{translate('transaction_form_foreign_currency_label')}</AText>
+        <Switch thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayForeignCurrency} />
       </AStackFlex>
     </AView>
   );
@@ -87,7 +100,7 @@ function TransactionFormButtons({ handleSubmit }) {
     <AButton type="primary" loading={loading} style={{ height: 40, marginTop: 5 }} onPress={handleSubmit}>
       <AStackFlex row>
         <Ionicons name="cloud-upload-sharp" size={20} color="white" style={{ margin: 5 }} />
-        <AText fontSize={15}>{translate('transaction_form_submit_button')}</AText>
+        <AText color="white" fontSize={15}>{translate('transaction_form_submit_button')}</AText>
       </AStackFlex>
     </AButton>
   );

@@ -102,7 +102,7 @@ export default function OauthForm({
 
           <AStackFlex row py={10} alignItems="center" justifyContent="space-between">
             <AText fontSize={12}>{translate('auth_use_personal_access_token')}</AText>
-            <Switch testID="toggle_is_oauth" thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={() => toggleIsOauth()} value={!isOauth} />
+            <Switch testID="toggle_is_oauth" thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={() => toggleIsOauth()} value={!isOauth} />
           </AStackFlex>
 
           {isOauth && (

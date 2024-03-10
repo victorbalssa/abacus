@@ -180,7 +180,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
           }}
         >
           <AText fontSize={14}>{translate('auth_form_biometrics_lock')}</AText>
-          <Switch thumbColor={colors.text} trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={() => bioAuthCallback(setUseBiometricAuth)} value={useBiometricAuth} />
+          <Switch thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={() => bioAuthCallback(setUseBiometricAuth)} value={useBiometricAuth} />
         </AStack>
       </AView>
 
