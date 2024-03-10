@@ -9,7 +9,7 @@ export default {
     'ios',
     'android',
   ],
-  version: '0.13.1',
+  version: '0.13.2',
   orientation: 'portrait',
   updates: {
     enabled: true,
@@ -38,7 +38,7 @@ export default {
       usesNonExemptEncryption: false,
     },
     bundleIdentifier: IS_DEV ? 'abacus.fireflyiii.ios.app.dev' : 'abacus.ios.app',
-    buildNumber: '0.13.1',
+    buildNumber: '0.13.2',
   },
   android: {
     icon: './src/images/icon-abacus.png',
@@ -56,7 +56,7 @@ export default {
     },
     playStoreUrl: 'https://play.google.com/store/apps/details?id=abacus.fireflyiii.android.app',
     package: IS_DEV ? 'abacus.fireflyiii.android.app.dev' : 'abacus.fireflyiii.android.app',
-    versionCode: 20,
+    versionCode: 21,
   },
   scheme: 'abacusfiiiapp',
   githubUrl: 'https://github.com/victorbalssa/abacus',
