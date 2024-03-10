@@ -92,7 +92,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
         <>
           <Text
             style={{
-              fontFamily: 'Montserrat_Bold',
+              fontFamily: 'Montserrat-Bold',
               margin: 15,
               color: colors.text,
               fontSize: 15,
@@ -124,7 +124,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
                   {range === period ? (
                     <Ionicons name="today" size={18} color="white" />
                   ) : (
-                    <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+                    <Text style={{ fontFamily: 'Montserrat-Bold', color: 'white' }}>
                       {`${period}M`}
                     </Text>
                   )}

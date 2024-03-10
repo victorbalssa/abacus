@@ -43,7 +43,7 @@ export default function ALabel({
         fontSize,
         maxWidth,
         textAlign,
-        fontFamily: 'Montserrat_Bold',
+        fontFamily: 'Montserrat-Bold',
         paddingHorizontal: 2,
         paddingBottom: 2,
         textDecorationLine: underline ? 'underline' : 'none',

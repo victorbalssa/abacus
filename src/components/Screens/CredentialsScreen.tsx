@@ -31,17 +31,6 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const dispatch = useDispatch<RootDispatch>();
 
-  const bioAuthCheck = async () => {
-    if (useBiometricAuth && !authenticated) {
-      const bioAuth = await LocalAuthentication.authenticateAsync();
-      if (bioAuth.success) {
-        setAuthenticated(true);
-      }
-    } else {
-      setAuthenticated(true);
-    }
-  };
-
   const loginWithCredential = async (credential: TCredential) => {
     const {
       backendURL: currentBackendURL,
@@ -68,19 +57,33 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
     );
   };
 
+  const bioAuthCheck = useCallback((c: TCredential[]) => {
+    (async () => {
+      if (useBiometricAuth && !authenticated) {
+        const bioAuth = await LocalAuthentication.authenticateAsync();
+        if (bioAuth.success !== true) {
+          return;
+        }
+      }
+
+      setAuthenticated(true);
+      if (c.length === 1 && routeName === 'credentials') {
+        await loginWithCredential(c[0]);
+      }
+    })();
+  }, [useBiometricAuth, authenticated]);
+
   useFocusEffect(
     useCallback(() => {
-      bioAuthCheck().catch();
       // delete old secure store keys
       deleteOldSecureStore().catch();
       getCredentials()
         .then((c) => {
-          if (c.length === 1 && routeName === 'credentials') {
-            loginWithCredential(c[0]);
-          }
           setCredentials(c);
-        });
-    }, [authenticated]),
+          return c;
+        })
+        .then((c) => bioAuthCheck(c));
+    }, []),
   );
 
   const goToCredentialCreateScreen = () => navigation.dispatch(
@@ -124,7 +127,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
         bounces={false}
         showsVerticalScrollIndicator={false}
       >
-        <AButton style={{ height: 50 }} mx={40} onPress={bioAuthCheck}>
+        <AButton style={{ height: 50 }} mx={40} onPress={() => bioAuthCheck(credentials)}>
           <AStackFlex row>
             <Ionicons name="lock-open" size={15} color="white" style={{ margin: 5 }} />
             <AText fontSize={15}>{translate('auth_form_biometrics_lock')}</AText>
@@ -150,10 +153,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
           }}
         >
           <AView style={{ width: 100 }} />
-          <AText
-            fontSize={17}
-            fontFamily="Montserrat_Bold"
-          >
+          <AText fontSize={17} bold>
             {translate('configuration_credentials')}
           </AText>
           {(credentials.length > 0 && routeName === 'credentials') ? (

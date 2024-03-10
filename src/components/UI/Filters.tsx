@@ -47,7 +47,7 @@ export default function Filters() {
     >
       <Text
         style={{
-          fontFamily: 'Montserrat_Bold',
+          fontFamily: 'Montserrat-Bold',
           margin: 15,
           color: colors.text,
           fontSize: 15,
@@ -89,7 +89,7 @@ export default function Filters() {
 
       <Text
         style={{
-          fontFamily: 'Montserrat_Bold',
+          fontFamily: 'Montserrat-Bold',
           margin: 15,
           color: colors.text,
           fontSize: 15,
@@ -121,7 +121,7 @@ export default function Filters() {
               {range === period ? (
                 <Ionicons name="today" size={18} color="white" />
               ) : (
-                <Text style={{ fontFamily: 'Montserrat_Bold', color: 'white' }}>
+                <Text style={{ fontFamily: 'Montserrat-Bold', color: 'white' }}>
                   {`${period}M`}
                 </Text>
               )}
@@ -131,7 +131,7 @@ export default function Filters() {
       </AStackFlex>
       <Text
         style={{
-          fontFamily: 'Montserrat_Bold',
+          fontFamily: 'Montserrat-Bold',
           margin: 15,
           color: colors.text,
           fontSize: 15,
@@ -161,7 +161,7 @@ export default function Filters() {
             }}
             >
               <Text
-                style={{ fontFamily: 'Montserrat_Bold', color: 'white', maxWidth: 200 }}
+                style={{ fontFamily: 'Montserrat-Bold', color: 'white', maxWidth: 200 }}
                 numberOfLines={1}
               >
                 {account.attributes.name}

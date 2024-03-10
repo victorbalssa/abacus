@@ -187,10 +187,10 @@ function TransactionsStack() {
             backgroundColor: colors.tileBackgroundColor,
           },
           headerTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
+            fontFamily: 'Montserrat-Bold',
           },
           headerLargeTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
+            fontFamily: 'Montserrat-Bold',
           },
         }}
       />
@@ -203,7 +203,7 @@ function TransactionsStack() {
           headerBackTitleVisible: true,
           headerBackTitle: translate('router_back_button'),
           headerBackTitleStyle: {
-            fontFamily: 'Montserrat_Bold',
+            fontFamily: 'Montserrat-Bold',
           },
           headerTransparent: false,
           headerTintColor: colors.text,
@@ -244,7 +244,7 @@ function Home() {
         },
         tabBarLabelStyle: {
           fontSize: 10,
-          fontFamily: 'Montserrat',
+          fontFamily: 'Montserrat-Regular',
           paddingBottom: 10,
         },
       })}
@@ -344,7 +344,7 @@ export default function Index() {
               headerTitleAlign: 'center',
               headerShadowVisible: true,
               headerTitleStyle: {
-                fontFamily: 'Montserrat_Bold',
+                fontFamily: 'Montserrat-Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {
@@ -363,7 +363,7 @@ export default function Index() {
               headerLeft: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
-                fontFamily: 'Montserrat_Bold',
+                fontFamily: 'Montserrat-Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {
@@ -381,7 +381,7 @@ export default function Index() {
               headerLeft: HeaderClose,
               headerShadowVisible: true,
               headerTitleStyle: {
-                fontFamily: 'Montserrat_Bold',
+                fontFamily: 'Montserrat-Bold',
               },
               headerTintColor: colors.text,
               headerStyle: {

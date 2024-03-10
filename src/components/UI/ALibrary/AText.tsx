@@ -11,7 +11,7 @@ type ATextType = {
   lineHeight?: number
   maxWidth?: number | '100%' | '90%' | '80%' | '70%' | '60%' | '50%' | '40%' | '30%'
   bold?: boolean
-  fontFamily?: 'Montserrat_Bold' | 'Montserrat'
+  fontFamily?: 'Montserrat-Bold' | 'Montserrat-Regular'
   numberOfLines?: number
   textAlign?: 'center' | 'left' | 'right'
   underline?: boolean
@@ -29,7 +29,7 @@ export default function AText({
   lineHeight,
   maxWidth,
   bold = false,
-  fontFamily = 'Montserrat',
+  fontFamily = 'Montserrat-Regular',
   numberOfLines,
   textAlign = 'left',
   underline = false,

@@ -72,6 +72,16 @@ export default {
     'expo-localization',
     './plugins/withAndroidStyles',
     './plugins/withAndroidManifest',
+    [
+      'expo-font',
+      {
+        fonts: [
+          './src/fonts/Montserrat-Bold.ttf',
+          './src/fonts/Montserrat-Regular.ttf',
+          './src/fonts/Montserrat-Light.ttf',
+        ],
+      },
+    ],
   ],
   userInterfaceStyle: 'automatic',
 };

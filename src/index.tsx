@@ -1,21 +1,11 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
-import {
-  AppState,
-  LogBox,
-  Image,
-  Alert,
-  AppStateStatus,
-} from 'react-native';
+import { Alert, LogBox } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as Device from 'expo-device';
 import * as Updates from 'expo-updates';
-import { useFonts, loadAsync } from 'expo-font';
+import { loadAsync } from 'expo-font';
 
 import {
   AntDesign,
@@ -28,24 +18,12 @@ import { store, persistor } from './store';
 import Routes from './routes';
 import Loading from './components/UI/Loading';
 import translate from './i18n/locale';
-import { AText, ABlurView } from './components/UI/ALibrary';
-
-const cacheFonts = (fonts) => fonts.map((font) => loadAsync(font));
 
 export default function App() {
   LogBox.ignoreAllLogs(true);
-  const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
-  const [fontsLoaded] = useFonts({
-    /* eslint-disable global-require */
-    Montserrat: require('./fonts/Montserrat-Regular.ttf'),
-    Montserrat_Light: require('./fonts/Montserrat-Light.ttf'),
-    Montserrat_Bold: require('./fonts/Montserrat-Bold.ttf'),
-    /* eslint-enable global-require */
-  });
 
   const cache = async () => {
+    const cacheFonts = (fonts: { [p: string]: string }[]) => fonts.map((font) => loadAsync(font));
     const fontAssets = cacheFonts([
       AntDesign.font,
       Ionicons.font,
@@ -93,23 +71,11 @@ export default function App() {
     }
   };
 
-  const _handleAppStateChange = (nextAppState: AppStateStatus) => {
-    appState.current = nextAppState;
-    setAppStateVisible(appState.current);
-  };
-
   useEffect(() => {
     (async () => {
       await Promise.all([cache(), onCheckOTA()]);
     })();
-    const subscription = AppState.addEventListener('change', _handleAppStateChange);
-    return () => {
-      subscription.remove();
-    };
   }, []);
-
-  /* eslint-disable-next-line @typescript-eslint/no-var-requires,global-require */
-  const abacusIcon = require('./images/icon-abacus-splash.png');
 
   return (
     <Provider store={store}>
@@ -118,34 +84,7 @@ export default function App() {
         persistor={persistor}
       >
         <StatusBar />
-        {fontsLoaded && (
-          <>
-            <Routes />
-            {appStateVisible !== 'active' && (
-            <ABlurView
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              intensity={60}
-            >
-              <Image
-                style={{
-                  width: 100,
-                  height: 100,
-                }}
-                source={abacusIcon}
-              />
-              <AText>Abacus</AText>
-            </ABlurView>
-            )}
-          </>
-        )}
+        <Routes />
       </PersistGate>
     </Provider>
   );

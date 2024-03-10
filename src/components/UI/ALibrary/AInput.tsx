@@ -81,7 +81,7 @@ export default function AInput({
           height,
           fontSize,
           textAlign,
-          fontFamily: bold ? 'Montserrat_Bold' : 'Montserrat',
+          fontFamily: bold ? 'Montserrat-Bold' : 'Montserrat-Regular',
           color: colors.text,
           paddingVertical: 5,
           ...style,

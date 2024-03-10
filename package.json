@@ -53,6 +53,7 @@
     "expo-secure-store": "~12.8.1",
     "expo-status-bar": "~1.11.1",
     "expo-store-review": "~6.8.3",
+    "expo-system-ui": "~2.9.3",
     "expo-updates": "~0.24.11",
     "globally": "^0.0.0",
     "i18n-js": "^4.1.1",
