@@ -22,6 +22,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
+import BillListItem from '../UI/Bills/BillListItem';
 
 import Pagination from '../UI/Pagination';
 import {
@@ -244,6 +245,72 @@ function InsightBudgets() {
   );
 }
 
+function Bills() {
+  const { colors } = useThemeColors();
+
+  const billsSummary = useSelector((state: RootState) => state.firefly.bills);
+  const bills = useSelector((state: RootState) => state.bills.bills);
+  const loading = useSelector((state: RootState) => state.loading.effects.bills?.getBills?.loading);
+  const dispatch = useDispatch<RootDispatch>();
+
+  const totalPaid = useMemo(() => parseFloat(billsSummary?.paid?.monetaryValue || '0'), [billsSummary]);
+  const totalUnpaid = useMemo(() => Math.abs(parseFloat(billsSummary?.unpaid?.monetaryValue || '0')), [billsSummary]);
+  const total = useMemo(() => totalPaid + totalUnpaid, [totalPaid, totalUnpaid]);
+
+  return (
+    <AScrollView
+      showsVerticalScrollIndicator={false}
+      refreshControl={(
+        <RefreshControl
+          refreshing={false}
+          onRefresh={() => dispatch.bills.getBills()}
+        />
+      )}
+    >
+      <AStack row>
+        <AText fontSize={25} lineHeight={27} style={{ margin: 15, flex: 1 }} bold>
+          {translate('home_bills')}
+        </AText>
+
+        <AStack
+          px={6}
+          py={2}
+          mx={15}
+          backgroundColor={colors.brandSuccessLight}
+          style={{ borderRadius: 5 }}
+        >
+          <AText
+            fontSize={15}
+            numberOfLines={1}
+            color={colors.brandSuccess}
+            style={{ textAlign: 'center' }}
+            bold
+          >
+            {`${((totalPaid / total) * 100).toFixed(0)}%`}
+          </AText>
+        </AStack>
+      </AStack>
+
+      <AStack mx={15} justifyContent="flex-start">
+        <AProgressBar
+          color={colors.green}
+          value={(totalPaid / total) * 100}
+        />
+      </AStack>
+
+      {bills.map((bill, index) => (
+        <BillListItem
+          key={bill.id}
+          bill={bill}
+          loading={loading}
+          lastItem={index + 1 === bills.length}
+        />
+      ))}
+      <AView style={{ height: 150 }} />
+    </AScrollView>
+  );
+}
+
 function NetWorth() {
   const { colors } = useThemeColors();
   const hideBalance = useSelector((state: RootState) => state.configuration.hideBalance);
@@ -338,6 +405,7 @@ export default function HomeScreen() {
     <Ionicons key="wallet" name="wallet" size={22} color={colors.text} />,
     <Ionicons key="pricetag" name="pricetags" size={22} color={colors.text} />,
     <MaterialCommunityIcons key="progress-check" name="progress-check" size={22} color={colors.text} />,
+    <Ionicons key="calendar-clear" name="calendar-clear" size={22} color={colors.text} />,
   ];
 
   useEffect(() => {
@@ -365,6 +433,7 @@ export default function HomeScreen() {
           dispatch.accounts.getAccounts();
           dispatch.categories.getInsightCategories();
           dispatch.budgets.getInsightBudgets();
+          dispatch.bills.getBills();
         }
       };
 
@@ -437,6 +506,7 @@ export default function HomeScreen() {
             <AssetsAccounts key="1" />
             <InsightCategories key="2" />
             <InsightBudgets key="3" />
+            <Bills key="4" />
           </AnimatedPagerView>
         </AView>
       </View>

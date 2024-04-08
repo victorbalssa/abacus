@@ -1,5 +1,6 @@
 import { Models } from '@rematch/core';
 import accounts from './accounts';
+import bills from './bills';
 import budgets from './budgets';
 import categories from './categories';
 import configuration from './configuration';
@@ -9,6 +10,7 @@ import transactions from './transactions';
 
 export interface RootModel extends Models<RootModel> {
   accounts: typeof accounts
+  bills: typeof bills
   budgets: typeof budgets
   categories: typeof categories
   configuration: typeof configuration
@@ -19,6 +21,7 @@ export interface RootModel extends Models<RootModel> {
 
 export const models: RootModel = {
   accounts,
+  bills,
   budgets,
   categories,
   configuration,

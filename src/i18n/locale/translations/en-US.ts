@@ -143,4 +143,8 @@ export default {
   configuration_logout_alert_title: 'Logout',
   load_more: 'Load more',
 
+  // from X.X.X
+  home_bills: 'Bills',
+  bills_paid: 'Paid',
+  bills_not_expected: 'Not expected',
 };

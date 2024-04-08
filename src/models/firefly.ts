@@ -48,6 +48,7 @@ export type FireflyStateType = {
   earned: HomeDisplayType[],
   balance: HomeDisplayType[],
   accounts: AssetAccountType[],
+  bills: { paid: HomeDisplayType | null, unpaid: HomeDisplayType | null },
   earnedChart: { x: number, y: number }[],
   spentChart:{ x: number, y: number }[],
 }
@@ -102,6 +103,7 @@ const INITIAL_STATE = {
   accounts: [],
   earnedChart: [],
   spentChart: [],
+  bills: { paid: null, unpaid: null },
 } as FireflyStateType;
 
 export default createModel<RootModel>()({
@@ -118,6 +120,7 @@ export default createModel<RootModel>()({
         accounts = state.accounts,
         earnedChart = state.earnedChart,
         spentChart = state.spentChart,
+        bills = state.bills,
       } = payload;
 
       return {
@@ -129,6 +132,7 @@ export default createModel<RootModel>()({
         accounts,
         earnedChart,
         spentChart,
+        bills,
       };
     },
 
@@ -242,6 +246,7 @@ export default createModel<RootModel>()({
         const balance = [];
         const earned = [];
         const spent = [];
+        const bills = { paid: null, unpaid: null };
         Object.keys(summary).forEach((key) => {
           if (key.includes('net-worth-in')) {
             netWorth.push(summary[key]);
@@ -255,6 +260,12 @@ export default createModel<RootModel>()({
           if (key.includes('spent-in')) {
             spent.push(summary[key]);
           }
+          if (key.includes('bills-paid-in')) {
+            bills.paid = summary[key];
+          }
+          if (key.includes('bills-unpaid-in')) {
+            bills.unpaid = summary[key];
+          }
         });
 
         dispatch.firefly.setData({
@@ -262,6 +273,7 @@ export default createModel<RootModel>()({
           balance,
           earned,
           spent,
+          bills,
         });
       }
     },
