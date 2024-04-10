@@ -16,18 +16,22 @@ export default function BillListItem({ bill, loading, lastItem }: Props) {
   const paidDate = useMemo(() => bill.attributes.paidDates[0]?.date || null, [bill]);
 
   const statusColor = useMemo(() => {
+    // The bill is paid
     if (paidDate !== null) {
       return colors.green;
     }
 
+    // The bill is not expected in the current period
     if (bill.attributes.nextExpectedMatch === null) {
       return colors.brandStyle4;
     }
 
+    // The bill should be paid by now
     if (moment(bill.attributes.nextExpectedMatch).diff(moment(), 'days') < 0) {
       return colors.brandWarning;
     }
 
+    // The expected date is in the future
     return undefined;
   }, [paidDate]);
 
