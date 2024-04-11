@@ -272,31 +272,35 @@ function Bills() {
           {translate('home_bills')}
         </AText>
 
-        <AStack
-          px={6}
-          py={2}
-          mx={15}
-          backgroundColor={colors.brandSuccessLight}
-          style={{ borderRadius: 5 }}
-        >
-          <AText
-            fontSize={15}
-            numberOfLines={1}
-            color={colors.brandSuccess}
-            style={{ textAlign: 'center' }}
-            bold
+        {total !== 0 && (
+          <AStack
+            px={6}
+            py={2}
+            mx={15}
+            backgroundColor={colors.brandSuccessLight}
+            style={{ borderRadius: 5 }}
           >
-            {`${((totalPaid / total) * 100).toFixed(0)}%`}
-          </AText>
-        </AStack>
+            <AText
+              fontSize={15}
+              numberOfLines={1}
+              color={colors.brandSuccess}
+              style={{ textAlign: 'center' }}
+              bold
+            >
+              {`${((totalPaid / total) * 100).toFixed(0)}%`}
+            </AText>
+          </AStack>
+        )}
       </AStack>
 
-      <AStack mx={15} justifyContent="flex-start">
-        <AProgressBar
-          color={colors.green}
-          value={(totalPaid / total) * 100}
-        />
-      </AStack>
+      {total !== 0 && (
+        <AStack mx={15} justifyContent="flex-start">
+          <AProgressBar
+            color={colors.green}
+            value={(totalPaid / total) * 100}
+          />
+        </AStack>
+      )}
 
       {bills.map((bill, index) => (
         <BillListItem
