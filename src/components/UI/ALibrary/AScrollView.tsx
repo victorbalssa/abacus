@@ -5,6 +5,7 @@ import { AStyle } from './types';
 type AScrollViewType = {
   bounces?: boolean
   showsVerticalScrollIndicator?: boolean
+  showsHorizontalScrollIndicator?: boolean
   horizontal?: boolean
   style?: AStyle
   refreshControl?: ReactElement<RefreshControlProps, string>
@@ -14,6 +15,7 @@ type AScrollViewType = {
 export default function AScrollView({
   bounces = true,
   showsVerticalScrollIndicator = true,
+  showsHorizontalScrollIndicator = true,
   horizontal = false,
   style = null,
   refreshControl = null,
@@ -24,6 +26,7 @@ export default function AScrollView({
       horizontal={horizontal}
       bounces={bounces}
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
       contentContainerStyle={style}
       refreshControl={refreshControl}
     >

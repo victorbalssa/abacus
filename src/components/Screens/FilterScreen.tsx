@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  TouchableOpacity,
-  View,
-  ScrollView,
+  TouchableOpacity, View, ScrollView, Text,
 } from 'react-native';
 
+import { AntDesign } from '@expo/vector-icons';
 import { AStackFlex, AText, AView } from '../UI/ALibrary';
 import { RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
@@ -87,53 +86,38 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
         ))}
       </AStackFlex>
       )}
-
-      {/*      {filterType === 'Period' ? (
-        <>
-          <Text
-            style={{
-              fontFamily: 'Montserrat-Bold',
-              margin: 15,
-              color: colors.text,
-              fontSize: 15,
-              lineHeight: 15,
+      {filterType === 'Account' && (
+      <AStackFlex justifyContent="center" row flexWrap="wrap">
+        {accounts.map((account) => (
+          <TouchableOpacity
+            key={`key-${account.id}`}
+            onPress={() => {
+              selectFilter(account.attributes.name);
+              navigation.goBack();
             }}
           >
-            {translate('period')}
-          </Text>
-
-          <AStackFlex row justifyContent="center" flexWrap="wrap">
-            {[1, 3, 6, 12].map((period) => (
-              <TouchableOpacity
-                key={period}
-                onPress={() => {
-                  selectFilter({ start, end, title });
-                  navigation.goBack();
-                }}
+            <View style={{
+              backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? colors.brandStyle : colors.filterBorderColor,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+              height: 35,
+              margin: 2,
+              paddingHorizontal: 10,
+            }}
+            >
+              <Text
+                style={{ fontFamily: 'Montserrat-Bold', color: 'white', maxWidth: 200 }}
+                numberOfLines={1}
               >
-                <View style={{
-                  backgroundColor: colors.filterBorderColor,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 25,
-                  width: 60,
-                  height: 40,
-                  margin: 2,
-                }}
-                >
-                  {range === period ? (
-                    <Ionicons name="today" size={18} color="white" />
-                  ) : (
-                    <Text style={{ fontFamily: 'Montserrat-Bold', color: 'white' }}>
-                      {`${period}M`}
-                    </Text>
-                  )}
-                </View>
-              </TouchableOpacity>
-            ))}
-          </AStackFlex>
-        </>
-      ) : null} */}
+                {account.attributes.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </AStackFlex>
+      )}
+
       <View style={{ height: 200 }} />
     </ScrollView>
   ), [

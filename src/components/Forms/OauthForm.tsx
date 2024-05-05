@@ -54,6 +54,14 @@ export default function OauthForm({
     return false;
   };
 
+  const setDemoCredentials = async () => {
+    setConfig({
+      ...config,
+      backendURL: 'https://demo.firefly-iii.org',
+      oauthClientId: '4',
+    });
+  };
+
   const handleLogin = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
     if (isOauth) {
@@ -214,7 +222,14 @@ export default function OauthForm({
               padding: 15,
             }}
           >
-            <AText fontSize={13} onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')} underline>{translate('auth_form_need_help')}</AText>
+            <AText
+              fontSize={13}
+              onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')}
+              onLongPress={() => setDemoCredentials()}
+              underline
+            >
+              {translate('auth_form_need_help')}
+            </AText>
           </AView>
 
           <AView style={{ width: '100%' }}>

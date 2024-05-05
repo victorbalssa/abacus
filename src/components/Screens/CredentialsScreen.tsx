@@ -173,7 +173,7 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
         <AStackFlex px={10}>
           {credentials.map((c, index) => (
             <AButton
-              key={`${c.backendURL}-${c.email}`}
+              key={`${c.backendURL}-${c.email}-${index + 1}`}
               onPress={() => loginWithCredential(c)}
               disabled={editMode}
             >

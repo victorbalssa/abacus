@@ -64,10 +64,10 @@ export type ErrorStateType = {
 export type GetTransactionsPayload = {
   type: '' | 'withdrawal' | 'deposit' | 'transfer'
   search?: string
-  start?: string
-  end?: string
+  start?: Date
+  end?: Date
   currentCode?: string
-  accountIds?: number[]
+  account?: string
 }
 
 export const initialSplit = () => ({
@@ -230,7 +230,7 @@ export default createModel<RootModel>()({
       const {
         type,
         start,
-        end,
+        account,
         currentCode,
         search: searchQuery,
       } = payload;
@@ -240,9 +240,10 @@ export default createModel<RootModel>()({
       todayInOneMonth.setMonth(new Date().getMonth() + 1);
       const inOneMonth = todayInOneMonth.toISOString().split('T')[0];
       let search = searchQuery || ' ';
-      search += (end && start) ? ` date_after:${start} date_before:${end}` : `  date_before:${inOneMonth}`;
+      search += ` date_after:${start.toISOString().split('T')[0]} date_before:${inOneMonth}`;
       search += (currentCode) ? ` currency_is:${currentCode}` : '';
       search += (type) ? ` type:${type}` : '';
+      search += (account) ? ` account_contains:"${account}"` : '';
 
       const {
         data: transactions,
@@ -271,7 +272,7 @@ export default createModel<RootModel>()({
       const {
         type,
         start,
-        end,
+        account,
         currentCode,
         search: searchQuery,
       } = payload;
@@ -282,9 +283,10 @@ export default createModel<RootModel>()({
         todayInOneMonth.setMonth(new Date().getMonth() + 1);
         const inOneMonth = todayInOneMonth.toISOString().split('T')[0];
         let search = searchQuery || ' ';
-        search += (end && start) ? ` date_after:${start} date_before:${end}` : ` date_before:${inOneMonth}`;
+        search += ` date_after:${start.toISOString().split('T')[0]} date_before:${inOneMonth}`;
         search += (currentCode) ? ` currency_is:${currentCode}` : '';
         search += (type) ? ` type:${type}` : '';
+        search += (account) ? ` account_contains:"${account}"` : '';
 
         const {
           data: transactions,

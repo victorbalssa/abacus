@@ -17,6 +17,7 @@ type ATextType = {
   underline?: boolean
   capitalize?: boolean
   onPress?: () => void
+  onLongPress?: () => void
   style?: AStyle
   children: React.ReactNode
 }
@@ -35,6 +36,7 @@ export default function AText({
   underline = false,
   capitalize = false,
   onPress = null,
+  onLongPress = null,
   style = null,
   children,
 }: ATextType) {
@@ -43,6 +45,7 @@ export default function AText({
   return (
     <Text
       onPress={onPress}
+      onLongPress={onLongPress}
       numberOfLines={numberOfLines}
       style={{
         color: color || colors.text,

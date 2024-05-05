@@ -35,16 +35,14 @@ export default function AFilterButton({
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          borderWidth: 0.2,
-          borderColor: colors.filterBorderColor,
           backgroundColor: selected ? colors.filterBorderColor : colors.listBorderColor,
-          borderRadius: 10,
+          borderRadius: 8,
           paddingHorizontal: 7,
-          paddingVertical: 5,
           marginHorizontal: 2,
+          height: 37,
         }}
       >
-        <AText fontSize={13} bold capitalize={capitalize}>
+        <AText fontSize={15} bold capitalize={capitalize}>
           {selected || filterType}
         </AText>
         <Ionicons name="chevron-down-outline" size={15} color={colors.text} />

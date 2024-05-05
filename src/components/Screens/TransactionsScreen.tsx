@@ -32,10 +32,11 @@ import translate from '../../i18n/locale';
 import { D_WIDTH, localNumberFormat, useThemeColors } from '../../lib/common';
 import { ScreenType } from '../../types/screen';
 import {
-  APressable, AStackFlex, AText, AView,
+  APressable, AScrollView, AStackFlex, AText, AView,
 } from '../UI/ALibrary';
 import AFilterButton from '../UI/ALibrary/AFilterButton';
 import AButton from '../UI/ALibrary/AButton';
+import ADateFilterButton from '../UI/ALibrary/ADateFilterButton';
 
 const ITEM_HEIGHT = 90;
 
@@ -310,10 +311,14 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
   const [loading, setLoading] = useState<boolean>(false);
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
-  const [search, setSearch] = React.useState('');
-  const [{ start, end }] = React.useState({ start: '', end: '', title: '' });
-  const [type, setType] = React.useState<'' | 'withdrawal' | 'deposit' | 'transfer'>('');
-  const [currentCode, setCurrentCode] = React.useState('');
+  const [search, setSearch] = useState('');
+  const defaultStart = useSelector((state: RootState) => state.firefly.rangeDetails.start);
+  const [start, setStartDate] = useState<Date>(new Date(defaultStart));
+  const defaultEnd = useSelector((state: RootState) => state.firefly.rangeDetails.end);
+  const [end] = useState<Date>(new Date(defaultEnd));
+  const [account, setAccount] = useState<string>('');
+  const [type, setType] = useState<'' | 'withdrawal' | 'deposit' | 'transfer'>('');
+  const [currentCode, setCurrentCode] = useState('');
   const {
     transactions: {
       getMoreTransactions,
@@ -328,6 +333,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
       end,
       type,
       currentCode,
+      account,
       search,
     };
     const effectTransactions = await getMoreTransactions(payload);
@@ -340,6 +346,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
       end,
       type,
       currentCode,
+      account,
       search,
     };
     setLoading(true);
@@ -384,7 +391,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
 
   useEffect(() => {
     onLoad().catch();
-  }, [type, currentCode]);
+  }, [type, currentCode, start, account]);
 
   const closeRow = (rowKey: string | number, rowMap: { [x: string]: { closeRow: () => void; }; }) => {
     if (rowMap[rowKey]) {
@@ -410,6 +417,8 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     setType('');
     setCurrentCode('');
     setSearch('');
+    setAccount('');
+    setStartDate(new Date(defaultStart));
   };
 
   return (
@@ -424,32 +433,33 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
       )}
       ListHeaderComponent={(
         <AStackFlex px={14} backgroundColor={colors.tileBackgroundColor}>
-          <AStackFlex
-            row
-            justifyContent="flex-start"
+          <AScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
             style={{
               marginBottom: 10,
             }}
           >
-            {(type !== '' || currentCode !== '') && (
-            <APressable
+            {(type !== '' || currentCode !== '' || account !== '') && (
+            <AView
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 27,
+                width: 20,
                 paddingVertical: 3,
                 borderRadius: 10,
                 marginRight: 5,
-                backgroundColor: colors.filterBorderColor,
               }}
-              onPress={resetFilters}
+
             >
-              <Ionicons name="close-circle" size={20} color={colors.text} />
-            </APressable>
+              <Ionicons onPress={resetFilters} name="close-circle" size={20} color={colors.text} />
+            </AView>
             )}
+            <ADateFilterButton currentDate={start} selectDate={(date: Date) => setStartDate(date)} />
             <AFilterButton filterType="Type" selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} capitalize />
             <AFilterButton filterType="Currency" selected={currentCode} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
-          </AStackFlex>
+            <AFilterButton filterType="Account" selected={account} selectFilter={(selected) => setAccount(selected)} navigation={navigation} />
+          </AScrollView>
         </AStackFlex>
       )}
       initialNumToRender={15}
