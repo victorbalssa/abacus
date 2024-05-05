@@ -70,13 +70,15 @@ export default createModel<RootModel>()({
 
       const { data: bills } = await dispatch.configuration.apiFetch({ url: `/api/v1/bills?start=${start}&end=${end}` }) as { data: BillType[] };
 
-      const sortedBills = [...bills]
+      const filteredBills = [...bills]
+        // Filter out inactive bills
+        .filter((bill) => bill.attributes.active)
         // Order by next expected date
         .sort((a, b) => moment(a.attributes.nextExpectedMatch).diff(moment(b.attributes.nextExpectedMatch)))
         // Make sure all paid bills are at the end of the list
         .sort((a, b) => a.attributes.paidDates.length - b.attributes.paidDates.length);
 
-      dispatch.bills.setBills({ bills: sortedBills });
+      dispatch.bills.setBills({ bills: filteredBills });
     },
   }),
 });
