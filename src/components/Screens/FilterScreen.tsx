@@ -4,7 +4,6 @@ import {
   TouchableOpacity, View, ScrollView, Text,
 } from 'react-native';
 
-import { AntDesign } from '@expo/vector-icons';
 import { AStackFlex, AText, AView } from '../UI/ALibrary';
 import { RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
@@ -87,7 +86,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
       </AStackFlex>
       )}
       {filterType === 'Account' && (
-      <AStackFlex justifyContent="center" row flexWrap="wrap">
+      <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
         {accounts.map((account) => (
           <TouchableOpacity
             key={`key-${account.id}`}

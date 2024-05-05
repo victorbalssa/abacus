@@ -1,9 +1,10 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Platform } from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { getLocales } from 'expo-localization';
-import { AButton, AStack, AText } from './index';
+import { Ionicons } from '@expo/vector-icons';
+import { AText } from './index';
 import { useThemeColors } from '../../../lib/common';
 import AView from './AView';
 
@@ -24,8 +25,6 @@ export default function ADateFilterButton({
     <AView style={{ marginHorizontal: 2 }}>
       {showDatePicker && (
         <DateTimePicker
-          // to fix the display issue of -1 day, offset the timezone by 1 minute
-          timeZoneOffsetInMinutes={1}
           accentColor={colors.brandDark}
           themeVariant={colorScheme}
           locale={locale.languageCode}
@@ -38,18 +37,25 @@ export default function ADateFilterButton({
         />
       )}
       {Platform.OS === 'android' && (
-        <AStack row>
-          <AButton
-            mx={10}
-            px={10}
-            onPress={() => setShowDatePicker(true)}
+        <TouchableOpacity
+          onPress={() => setShowDatePicker(true)}
+        >
+          <AView
             style={{
-              height: 40, borderWidth: 0.5, borderColor: colors.listBorderColor,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: colors.listBorderColor,
+              borderRadius: 8,
+              paddingHorizontal: 7,
+              marginHorizontal: 2,
+              height: 37,
             }}
           >
-            <AText fontSize={14}>{moment(currentDate).format('ll')}</AText>
-          </AButton>
-        </AStack>
+            <AText fontSize={14} bold>{moment(currentDate).format('ll')}</AText>
+            <Ionicons name="chevron-down-outline" size={15} color={colors.text} />
+          </AView>
+        </TouchableOpacity>
       )}
     </AView>
   );

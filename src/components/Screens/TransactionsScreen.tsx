@@ -313,9 +313,9 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [search, setSearch] = useState('');
   const defaultStart = useSelector((state: RootState) => state.firefly.rangeDetails.start);
-  const [start, setStartDate] = useState<Date>(new Date(defaultStart));
+  const [start, setStartDate] = useState<Date>(new Date(`${defaultStart}T12:00:00`));
   const defaultEnd = useSelector((state: RootState) => state.firefly.rangeDetails.end);
-  const [end] = useState<Date>(new Date(defaultEnd));
+  const [end] = useState<Date>(new Date(`${defaultEnd}T12:00:00`));
   const [account, setAccount] = useState<string>('');
   const [type, setType] = useState<'' | 'withdrawal' | 'deposit' | 'transfer'>('');
   const [currentCode, setCurrentCode] = useState('');
@@ -418,7 +418,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     setCurrentCode('');
     setSearch('');
     setAccount('');
-    setStartDate(new Date(defaultStart));
+    setStartDate(new Date(`${defaultStart}T12:00:00`));
   };
 
   return (
