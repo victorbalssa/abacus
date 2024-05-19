@@ -69,6 +69,8 @@ export default {
     },
   },
   plugins: [
+    'expo-asset',
+    'expo-secure-store',
     'expo-localization',
     './plugins/withAndroidStyles',
     './plugins/withAndroidManifest',
