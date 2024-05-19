@@ -319,6 +319,7 @@ export default function TransactionSplitForm({
         onSelectAutocomplete={(autocomplete) => setTransaction({
           ...formData,
           sourceName: autocomplete.name,
+          sourceId: autocomplete.id,
           currencyCode: autocomplete.currencyCode,
           currencySymbol: autocomplete.currencySymbol,
         })}
@@ -340,6 +341,7 @@ export default function TransactionSplitForm({
         onSelectAutocomplete={(autocomplete) => setTransaction({
           ...formData,
           destinationName: autocomplete.name,
+          destinationId: autocomplete.id,
         })}
         InputRightElement={deleteBtn(['destinationName'])}
         routeApi="accounts"
@@ -439,7 +441,9 @@ export default function TransactionSplitForm({
           setTransaction({
             date: new Date(),
             sourceName: '',
+            sourceId: null,
             destinationName: '',
+            destinationId: null,
             description: '',
             amount: '',
             type: 'withdrawal',
