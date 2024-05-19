@@ -22,7 +22,7 @@ import { ScreenType } from '../../types/screen';
 import { RootDispatch, RootState } from '../../store';
 import AButton from '../UI/ALibrary/AButton';
 
-export default function CredentialsScreen({ navigation }: ScreenType) {
+export default function CredentialsScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
   const { name: routeName } = useRoute();
   const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
@@ -67,7 +67,12 @@ export default function CredentialsScreen({ navigation }: ScreenType) {
       }
 
       setAuthenticated(true);
-      if (c.length === 1 && routeName === 'credentials') {
+      const {
+        params: {
+          noRedirect = false,
+        } = {},
+      } = route;
+      if (c.length === 1 && routeName === 'credentials' && !noRedirect) {
         await loginWithCredential(c[0]);
       }
     })();

@@ -95,7 +95,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
       CommonActions.reset({
         index: 0,
         routes: [
-          { name: 'credentials' },
+          { name: 'credentials', params: { noRedirect: true } },
         ],
       }),
     );

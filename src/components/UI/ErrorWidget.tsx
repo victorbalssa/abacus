@@ -19,7 +19,7 @@ export default function ErrorWidget() {
       CommonActions.reset({
         index: 0,
         routes: [
-          { name: 'credentials' },
+          { name: 'credentials', params: { noRedirect: true } },
         ],
       }),
     );
@@ -37,7 +37,7 @@ export default function ErrorWidget() {
         showToast(translate('transaction_form_success_title'), translate('transaction_form_success_description'), 'success');
       }
 
-      if (error && (error as AxiosError).response?.status && (error as AxiosError).response?.status === 404 && !isFirstRun.current) {
+      if (error && (error as AxiosError).response?.status && [401, 403].includes((error as AxiosError).response?.status) && !isFirstRun.current) {
         goToCredentials();
       }
 

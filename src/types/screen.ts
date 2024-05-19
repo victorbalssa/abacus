@@ -22,6 +22,7 @@ export interface ScreenType {
       };
       id?: string;
       forceRefresh?: boolean | undefined;
+      noRedirect?: boolean;
       filterType?: string;
       selectFilter?: (filter: string) => void;
     }

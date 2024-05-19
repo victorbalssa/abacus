@@ -133,19 +133,19 @@ export default createModel<RootModel>()({
       if (currentCode) {
         const [
           { data: accounts },
-          { data: frontPageAccounts },
+          { data: frontpageAccounts },
         ] = await Promise.all([
           dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as Promise<{ data: AccountType[] }>,
-          dispatch.configuration.apiFetch({ url: '/api/v2/preferences/frontPageAccounts' }) as Promise<{ data: PreferenceType }>,
+          dispatch.configuration.apiFetch({ url: '/api/v1/preferences/frontpageAccounts' }) as Promise<{ data: PreferenceType }>,
         ]);
 
         const filteredAccounts = accounts
           .filter((a: AccountType) => a.attributes.active)
           .sort((a, b) => (b.attributes.order < a.attributes.order ? 1 : -1));
 
-        if (frontPageAccounts) {
+        if (frontpageAccounts) {
           accounts.forEach((a: AccountType, index) => {
-            accounts[index].display = frontPageAccounts.attributes.data.includes(parseInt(a.id, 10));
+            accounts[index].display = frontpageAccounts.attributes.data.includes(parseInt(a.id, 10));
           });
         }
 
