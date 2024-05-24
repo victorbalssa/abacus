@@ -83,6 +83,69 @@ export default {
   home_header_time_range_q: 'T', // Put an abbreviation that best represents a quarter
   home_header_time_range_s: 'S', // Put an abbreviation that best represents a semiannual
 
+// from 0.6.0
+  balance: 'Solde',
+  history: 'Historique',
+  home_categories: 'Catégories',
+  home_net_worth: 'Valeur Nette',
+  
   // from 0.7.0
   home_budgets: 'Budgets',
+  configuration_ui: 'Interface Utilisateur',
+  configuration_color_mode: 'Mode Sombre',
+  auth_form_personal_access_token_label: 'Jeton d\'Accès Personnel',
+  auth_use_personal_access_token: 'Utiliser un Jeton d\'Accès Personnel',
+  auth_external_heads_up: '❗️Si vous utilisez un fournisseur d\'authentification externe comme Authelia, Keycloak, Cloudflare Tunnels, etc. Les Clients OAuth ne fonctionneront pas. Vous pouvez utiliser uniquement des Jetons d\'Accès Personnel.',
+  auth_create_new_oauth_client: 'Créer un nouveau client Oauth dans l\'onglet OAuth, ici :',
+  auth_create_new_personal_access_token: 'Créer un nouveau Jeton d\'Accès Personnel dans l\'onglet OAuth, ici :',
+  oauth_wrong_token_error_description: 'Échec de la validation de l\'accessToken, veuillez vérifier votre jeton ou l\'URL du backend.',
+  transaction_screen_edit_title: 'Modifier la Transaction',
+  
+  // from 0.9.0
+  transaction_form_foreign_currency_label: 'Devise étrangère',
+  transaction_form_group_title_label: 'Description de la transaction divisée',
+  transaction_form_group_title_placeholder: 'Titre',
+  transaction_form_group_title_helper: 'Si vous créez une transaction divisée, il doit y avoir une description globale pour toutes les divisions de la transaction.',
+  configuration_review_app_ios: 'Évaluer Abacus sur l\'AppStore',
+  configuration_review_app_android: 'Évaluer Abacus sur Google Play',
+  
+  // from 0.9.2
+  assets_history_chart: 'Graphique des comptes',
+  balance_history_chart: 'Graphique de la Valeur Nette',
+  balance_history_chart_no_data: 'Pour accéder à ce graphique, veuillez mettre à jour FireflyIII à la dernière version.',
+  account_not_included_in_net_worth: '* Compte non inclus dans la Valeur Nette.',
+  
+  // from 0.10.0
+  period: 'Période',
+  currency: 'Devise',
+  
+  home_all_accounts: 'Tous les Comptes',
+  
+  // from 0.10.3
+  router_back_button: 'Retour',
+  transaction_clone: 'Cloner',
+  transaction_delete: 'Supprimer',
+  
+  // from 0.11.0
+  configuration_credentials: 'Identifiants',
+  configuration_manage_credentials: 'Gérer les Identifiants',
+  configuration_credentials_add_button: 'Ajouter un Identifiant',
+  logout: 'Déconnexion',
+  
+  // from 0.12.0
+  credential_clear_confirm_button: 'Supprimer',
+  credential_clear_alert_title: 'Êtes-vous sûr ?',
+  credential_clear_cancel_button: 'Annuler',
+  go_to_credentials: 'Aller aux Identifiants',
+  
+  configuration_logout_alert_title: 'Déconnexion',
+  load_more: 'Charger plus',
+  
+  // from X.X.X
+  home_bills: 'Factures',
+  home_piggy_banks: 'Tirelires',
+  bills_paid: 'Payé',
+  bills_not_expected: 'Non attendu',
+  transaction_form_bill_label: 'Facture',
+  
 };
