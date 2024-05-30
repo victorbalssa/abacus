@@ -147,5 +147,6 @@ export default {
   bills_paid: 'Payé',
   bills_not_expected: 'Non attendu',
   transaction_form_bill_label: 'Facture',
-  
+  configuration_transaction_form: 'Formulaire',
+  close_after_transaction: 'Fermer la transaction après l\'avoir envoyé'
 };

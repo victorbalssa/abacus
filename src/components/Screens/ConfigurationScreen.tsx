@@ -32,9 +32,11 @@ import {
 
 export default function ConfigurationScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
+  const closeTransactionScreen = useSelector((state: RootState) => state.configuration.closeTransactionScreen);
   const safeAreaInsets = useSafeAreaInsets();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
+  const dispatch = useDispatch<RootDispatch>();
   const {
     configuration: {
       setUseBiometricAuth,
@@ -99,6 +101,11 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
         ],
       }),
     );
+  };
+
+  const handleCheckBoxChange = async (bool: boolean) => {
+    dispatch.configuration.setCloseTransactionScreen(bool);
+    return Promise.resolve();
   };
 
   const showLogoutAlert = () => Alert.alert(
@@ -272,6 +279,31 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
           <AText fontSize={14}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</AText>
           <Ionicons name={Platform.select({ ios: 'logo-apple-appstore', android: 'logo-google-playstore' })} size={23} color="gray" />
         </APressable>
+      </AView>
+      <AText py={10} px={10} fontSize={18} bold>
+        {translate('configuration_transaction_form')}
+      </AText>
+      <AView
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+          backgroundColor: colors.tileBackgroundColor,
+        }}
+      >
+        <AStack
+          row
+          justifyContent="space-between"
+          style={{
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+          }}
+        >
+          <AText fontSize={14}>{translate('close_after_transaction')}</AText>
+          <Switch thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={handleCheckBoxChange} value={closeTransactionScreen} />
+        </AStack>
       </AView>
 
       <AText py={10} px={10} fontSize={18} bold>

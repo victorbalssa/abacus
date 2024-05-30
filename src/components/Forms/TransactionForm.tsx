@@ -113,6 +113,7 @@ export default function TransactionForm({
   id = '-1',
 }) {
   const dispatch = useDispatch<RootDispatch>();
+  const closeTransactionScreen = useSelector((state: RootState) => state.configuration.closeTransactionScreen);
 
   useEffect(() => {
     dispatch.transactions.resetTransaction({ splits, title });
@@ -123,6 +124,9 @@ export default function TransactionForm({
     try {
       await dispatch.transactions.upsertTransaction({ id });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch();
+      if (closeTransactionScreen) {
+        navigation.goBack();
+      }
     } catch (e) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch();
     }

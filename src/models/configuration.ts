@@ -12,6 +12,7 @@ type ConfigurationStateType = {
   useBiometricAuth: boolean
   apiVersion: string
   serverVersion: string
+  closeTransactionScreen: boolean
 }
 
 type FireflyIIIApiResponse = {
@@ -47,6 +48,7 @@ const INITIAL_STATE = {
   useBiometricAuth: false,
   apiVersion: '',
   serverVersion: '',
+  closeTransactionScreen: false,
 } as ConfigurationStateType;
 
 export default createModel<RootModel>()({
@@ -99,6 +101,13 @@ export default createModel<RootModel>()({
 
     resetState() {
       return INITIAL_STATE;
+    },
+
+    setCloseTransactionScreen(state, closeTransactionScreen: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        closeTransactionScreen,
+      };
     },
   },
 

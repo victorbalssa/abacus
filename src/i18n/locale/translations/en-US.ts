@@ -149,4 +149,6 @@ export default {
   bills_paid: 'Paid',
   bills_not_expected: 'Not expected',
   transaction_form_bill_label: 'Bill',
+  configuration_transaction_form: 'Transaction Form',
+  close_after_transaction: 'Close transaction form after submission'
 };
