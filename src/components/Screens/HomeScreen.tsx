@@ -3,6 +3,7 @@ import React, {
   useMemo,
   useRef,
   useCallback,
+  useState,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
@@ -12,6 +13,7 @@ import {
   Animated,
   Switch,
   View, Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import axios from 'axios';
 import type { PagerViewOnPageScrollEventData } from 'react-native-pager-view';
@@ -48,6 +50,35 @@ function AssetsAccounts() {
     dispatch.accounts.getAccounts();
     return Promise.resolve();
   };
+  const [nameSortOrder, setNameSortOrder] = useState('asc');
+  const [balanceSortOrder, setBalanceSortOrder] = useState('desc');
+  const [lastPressed, setLastPressed] = useState(null);
+
+  const handleSortPress = (position) => {
+    setLastPressed(position);
+    if (position === 'left') {
+      setNameSortOrder(nameSortOrder === 'asc' ? 'desc' : 'asc');
+      setBalanceSortOrder(null);
+    } else if (position === 'right') {
+      setBalanceSortOrder(balanceSortOrder === 'desc' ? 'asc' : 'desc');
+      setNameSortOrder(null);
+    }
+  };
+
+  const sortedAccounts = accounts
+    .filter((a) => a.display || displayAllAccounts)
+    .sort((a, b) => {
+      if (nameSortOrder) {
+        return nameSortOrder === 'asc'
+          ? a.attributes.name.localeCompare(b.attributes.name)
+          : b.attributes.name.localeCompare(a.attributes.name);
+      } else if (balanceSortOrder) {
+        return balanceSortOrder === 'asc'
+          ? parseFloat(a.attributes.currentBalance) - parseFloat(b.attributes.currentBalance)
+          : parseFloat(b.attributes.currentBalance) - parseFloat(a.attributes.currentBalance);
+      }
+      return 0;
+    });
 
   return (
     <AScrollView
@@ -69,7 +100,28 @@ function AssetsAccounts() {
           </AText>
           <Switch style={{ marginHorizontal: 10 }} thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
         </AStack>
-        {accounts && accounts.filter((a) => a.display || displayAllAccounts).map((account, index) => (
+        <AStack px={5} row justifyContent="space-between">
+        <View style={{ flex: 1, alignItems: 'flex-start', paddingLeft: '5%'  }}>
+          <TouchableOpacity onPress={() => handleSortPress('left')}>
+            <MaterialCommunityIcons
+              name="sort"
+              size={22}
+              color={lastPressed === 'left' ? colors.primary : colors.text}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: '5%' }}>
+          <TouchableOpacity onPress={() => handleSortPress('right')}>
+            <MaterialCommunityIcons
+              name="sort"
+              size={22}
+              color={lastPressed === 'right' ? colors.primary : colors.text}
+              style={{ transform: [{ scaleX: -1 }] }}
+            />
+          </TouchableOpacity>
+        </View>
+      </AStack>
+        {sortedAccounts.map((account, index) => (
           <AStack
             key={account.id}
             row

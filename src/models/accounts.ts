@@ -138,11 +138,11 @@ export default createModel<RootModel>()({
           dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as Promise<{ data: AccountType[] }>,
           dispatch.configuration.apiFetch({ url: '/api/v1/preferences/frontpageAccounts' }) as Promise<{ data: PreferenceType }>,
         ]);
-
         const filteredAccounts = accounts
           .filter((a: AccountType) => a.attributes.active)
-          .sort((a, b) => (b.attributes.order < a.attributes.order ? 1 : -1));
-
+          .filter((a: AccountType) => a.attributes.type != "initial-balance")
+          .sort((a, b) => (b.attributes.name < a.attributes.name ? 1 : -1));
+        const accountMap = filteredAccounts.map((account, index) => account.attributes.currentBalance)
         if (frontpageAccounts) {
           accounts.forEach((a: AccountType, index) => {
             accounts[index].display = frontpageAccounts.attributes.data.includes(parseInt(a.id, 10));
