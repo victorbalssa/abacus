@@ -31,7 +31,7 @@ export default {
     tabBackgroundColor: 'transparent',
     blurBackground: 'rgba(29,31,33,0.77)',
     tabInactiveDarkLight: 'rgb(190,190,190)',
-    listBorderColor: 'rgb(50,52,55)',
+    listBorderColor: 'rgb(52,54,57)',
     listPressed: '#606060',
     filterBorderColor: '#606060',
     brandNeutral: '#e3e3e3',

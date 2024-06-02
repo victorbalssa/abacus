@@ -432,29 +432,25 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         />
       )}
       ListHeaderComponent={(
-        <AStackFlex px={14} backgroundColor={colors.tileBackgroundColor}>
-          <AScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{
-              marginBottom: 10,
-            }}
-          >
-            {(type !== '' || currentCode !== '' || account !== '') && (
+        <AStackFlex row backgroundColor={colors.tileBackgroundColor} py={5}>
+          {(type !== '' || currentCode !== '' || account !== '') && (
             <AView
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: 20,
-                paddingVertical: 3,
-                borderRadius: 10,
-                marginRight: 5,
+                width: 30,
+                height: 30,
+                marginHorizontal: 5,
               }}
 
             >
-              <Ionicons onPress={resetFilters} name="close-circle" size={20} color={colors.text} />
+              <Ionicons onPress={resetFilters} name="close-circle" size={24} color={colors.text} />
             </AView>
-            )}
+          )}
+          <AScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
             <ADateFilterButton currentDate={start} selectDate={(date: Date) => setStartDate(date)} />
             <AFilterButton filterType="Type" selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} capitalize />
             <AFilterButton filterType="Currency" selected={currentCode} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
