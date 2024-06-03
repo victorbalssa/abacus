@@ -59,6 +59,7 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
 | Budgets                      |     ✅     |
 | Categories                   |     ✅     |
 | Translations                 |   ✅(@carvalholeo)    |
+| Piggy bank                   |     ✅     |
 
 ---
 
