@@ -11,6 +11,7 @@ import { RootState } from '../../store';
 import { useThemeColors } from '../../lib/common';
 import { ScreenType } from '../../types/screen';
 import { types } from '../../models/transactions';
+import translate from '../../i18n/locale';
 
 export default function FilterScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
@@ -74,7 +75,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
           ))}
         </AStackFlex>
       )}
-      {filterType === 'Currency' && (
+      {filterType === translate('currency') && (
       <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
         {currencies.map((currency) => (
           <TouchableOpacity
