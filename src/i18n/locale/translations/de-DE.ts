@@ -13,7 +13,7 @@ export default {
   configuration_debug: 'Debug',
   configuration_get_help: 'Hilfe',
   assetsHistoryCharts_chart_works: 'Dieses Diagramm funktioniert am besten mit bis zu 4 Konten.',
-  assetsHistoryCharts_change_preferences: 'klicke hier',
+  assetsHistoryCharts_change_preferences: 'Hier klicken',
   assetsHistoryCharts_choose_preferences_text: 'um deine bevorzugten Konten in den Firefly III-Einstellungen zu wählen:',
   assetsHistoryCharts_home_screen: 'Startbildschirm',
   transaction_form_description_required: 'Beschreibung ist erforderlich.',
@@ -53,15 +53,15 @@ export default {
   layout_new_update_cancel_button: 'Abbrechen',
   layout_new_update_update_button: 'Jetzt aktualisieren',
 
-  // from Version 0.31
+  // from version 0.31
   transaction_screen_title: 'Neue Transaktion',
   navigation_home_tab: 'Startseite',
   navigation_chart_tab: 'Diagramm',
   navigation_create_tab: 'Erstellen',
   navigation_transactions_tab: 'Transaktionen',
   navigation_settings_tab: 'Einstellungen',
-  transaction_form_type_withdraw: 'Abheben',
-  transaction_form_type_deposit: 'Einzahlung',
+  transaction_form_type_withdraw: 'Ausgabe',
+  transaction_form_type_deposit: 'Einnahme',
   transaction_form_type_transfer: 'Überweisung',
 
   // from 0.4.1
@@ -83,7 +83,7 @@ export default {
   transaction_form_error_title: 'Fehler',
   home_header_time_range_year: 'Jahr',
   home_header_time_range_q: 'Q', // Abkürzung für ein Quartal
-  home_header_time_range_s: 'S', // Abkürzung für ein Halbjahr
+  home_header_time_range_s: 'H', // Abkürzung für ein Halbjahr
 
   // from 0.6.0
   balance: 'Saldo',
