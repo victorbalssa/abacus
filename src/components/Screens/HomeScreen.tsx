@@ -315,7 +315,10 @@ function Bills() {
       refreshControl={(
         <RefreshControl
           refreshing={false}
-          onRefresh={() => dispatch.bills.getBills()}
+          onRefresh={() => Promise.all([
+            dispatch.bills.getBills(),
+            dispatch.firefly.getNetWorth(),
+          ])}
         />
       )}
     >
@@ -379,11 +382,14 @@ function PiggyBanks() {
       refreshControl={(
         <RefreshControl
           refreshing={false}
-          onRefresh={() => dispatch.piggybank.getPiggyBanks()}
+          onRefresh={() => Promise.all([
+            dispatch.piggybank.getPiggyBanks(),
+            dispatch.firefly.getNetWorth(),
+          ])}
         />
       )}
     >
-      <AText fontSize={25} lineHeight={27} style={{ margin: 15 }}>
+      <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
         {translate('home_piggy_banks')}
       </AText>
       {piggyBanks.map((pb) => (
