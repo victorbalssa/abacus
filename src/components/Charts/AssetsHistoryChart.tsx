@@ -253,18 +253,18 @@ export default function AssetsHistoryChart() {
               }}
             />
             {accounts.map((chart) => chart.entries.length > 0 && (
-            <VictoryLine
-              key={chart.label}
-              style={{
-                data: {
-                  stroke: chart.color,
-                  strokeWidth: 2,
-                },
-              }}
-              interpolation="monotoneX"
-              data={chart.entries}
-              name={`${chart.label} (${chart.currencySymbol})`}
-            />
+              <VictoryLine
+                key={chart.label}
+                style={{
+                  data: {
+                    stroke: chart.color,
+                    strokeWidth: 2,
+                  },
+                }}
+                interpolation="monotoneX"
+                data={chart.entries}
+                name={`${chart.label} (${chart.currencySymbol})`}
+              />
             ))}
           </VictoryChart>
           )}

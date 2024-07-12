@@ -296,7 +296,7 @@ export default createModel<RootModel>()({
       } = rootState;
 
       const accountIdsParam = (selectedAccountIds && selectedAccountIds.length > 0) ? `&accounts[]=${selectedAccountIds.join('&accounts[]=')}` : '';
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/account/dashboard?start=${start}&end=${end}${accountIdsParam}` }) as { data: AssetAccountType[] };
+      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}${accountIdsParam}` }) as { data: AssetAccountType[] };
       let colorIndex = 0;
 
       accounts

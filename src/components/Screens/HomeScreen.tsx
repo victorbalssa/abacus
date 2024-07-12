@@ -372,8 +372,8 @@ function Bills() {
 
 function PiggyBanks() {
   const { colors } = useThemeColors();
-  const piggyBanks = useSelector((state: RootState) => state.piggybank.piggyBanks);
-  const loading = useSelector((state: RootState) => state.loading.effects.piggybanks?.getPiggyBanks?.loading);
+  const piggyBanks = useSelector((state: RootState) => state.piggyBanks.piggyBanks);
+  const loading = useSelector((state: RootState) => state.loading.effects.piggyBanks?.getPiggyBanks?.loading);
   const dispatch = useDispatch<RootDispatch>();
 
   return (
@@ -383,7 +383,7 @@ function PiggyBanks() {
         <RefreshControl
           refreshing={false}
           onRefresh={() => Promise.all([
-            dispatch.piggybank.getPiggyBanks(),
+            dispatch.piggyBanks.getPiggyBanks(),
             dispatch.firefly.getNetWorth(),
           ])}
         />
@@ -392,7 +392,7 @@ function PiggyBanks() {
       <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
         {translate('home_piggy_banks')}
       </AText>
-      {piggyBanks.map((pb) => (
+      {piggyBanks.filter((pb) => pb.attributes?.percentage).map((pb) => (
         <AStack
           key={pb.id}
           mx={15}
@@ -430,7 +430,7 @@ function PiggyBanks() {
                     style={{ textAlign: 'center' }}
                     bold
                   >
-                    {`${pb.attributes.percentage.toFixed(0)}%`}
+                    {`${pb.attributes.percentage?.toFixed(0)}%`}
                   </AText>
                 </AStack>
               </AStack>
@@ -572,7 +572,7 @@ export default function HomeScreen() {
           dispatch.categories.getInsightCategories();
           dispatch.budgets.getInsightBudgets();
           dispatch.bills.getBills();
-          dispatch.piggybank.getPiggyBanks();
+          dispatch.piggyBanks.getPiggyBanks();
         }
       };
 

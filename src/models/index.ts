@@ -7,12 +7,12 @@ import configuration from './configuration';
 import currencies from './currencies';
 import firefly from './firefly';
 import transactions from './transactions';
-import piggybank from './piggybank';
+import piggyBanks from './piggyBanks';
 
 export interface RootModel extends Models<RootModel> {
   accounts: typeof accounts
   bills: typeof bills
-  piggybank : typeof piggybank
+  piggyBanks : typeof piggyBanks
   budgets: typeof budgets
   categories: typeof categories
   configuration: typeof configuration
@@ -24,7 +24,7 @@ export interface RootModel extends Models<RootModel> {
 export const models: RootModel = {
   accounts,
   bills,
-  piggybank,
+  piggyBanks,
   budgets,
   categories,
   configuration,

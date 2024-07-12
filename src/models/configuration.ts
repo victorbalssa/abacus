@@ -216,7 +216,7 @@ export default createModel<RootModel>()({
         dispatch.currencies.resetState(),
         dispatch.firefly.resetState(),
         dispatch.transactions.resetState(),
-        dispatch.piggybank.resetState(),
+        dispatch.piggyBanks.resetState(),
       ]);
     },
   }),
