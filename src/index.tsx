@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as Device from 'expo-device';
 import * as Updates from 'expo-updates';
 import { loadAsync } from 'expo-font';
+import * as Sentry from '@sentry/react-native';
 
 import {
   AntDesign,
@@ -19,7 +20,11 @@ import Routes from './routes';
 import Loading from './components/UI/Loading';
 import translate from './i18n/locale';
 
-export default function App() {
+function App() {
+  Sentry.init({
+    dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+    debug: true,
+  });
   LogBox.ignoreAllLogs(true);
 
   const cache = async () => {
@@ -89,3 +94,5 @@ export default function App() {
     </Provider>
   );
 }
+
+export default Sentry.wrap(App);

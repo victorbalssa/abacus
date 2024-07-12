@@ -4,12 +4,11 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { Alert, Platform, Pressable } from 'react-native';
 import {
-  AView,
-  AText,
-  AScrollView,
-  AStackFlex,
+  Alert, Platform, Pressable, Switch,
+} from 'react-native';
+import {
+  AView, AText, AScrollView, AStackFlex,
 } from '../UI/ALibrary';
 
 import translate from '../../i18n/locale';

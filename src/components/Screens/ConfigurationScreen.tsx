@@ -301,7 +301,7 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
             marginLeft: 10,
           }}
         >
-          <AText fontSize={14}>{translate('close_after_transaction')}</AText>
+          <AText fontSize={14} numberOfLines={2}>{translate('close_after_transaction')}</AText>
           <Switch thumbColor="white" trackColor={{ false: '#767577', true: colors.brandStyle }} onValueChange={handleCheckBoxChange} value={closeTransactionScreen} />
         </AStack>
       </AView>

@@ -39,7 +39,7 @@ On iOS, Tokens are stored in [**iOS Keychains**](https://developer.apple.com/doc
 
 On Android, Tokens are stored in [**SharedPreferences**](https://developer.android.com/training/data-storage/shared-preferences), encrypted with [**Android's Keystore system**](https://developer.android.com/training/articles/keystore.html).
 
-No external API calls nor Analytics API, not even sentry / crashlytics.
+No external API calls nor Analytics API, but we are using Sentry only for anonymous crash & bug report.
 
 ---
 
@@ -75,6 +75,8 @@ No external API calls nor Analytics API, not even sentry / crashlytics.
     - Persist plugin [@rematch/persist](https://rematchjs.org/docs/plugins/persist)
 - __Linting__
     - Airbnb's Linting : [https://github.com/airbnb/javascript](https://github.com/airbnb/javascript)
+- __Bug report__
+    - Sentry : [https://sentry.io](https://sentry.io)
 
 ---
 
