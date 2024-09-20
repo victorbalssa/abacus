@@ -181,7 +181,7 @@ function TransactionsStack() {
         component={TransactionsScreen}
         initialParams={{ forceRefresh: false }}
         options={{
-          headerTitle: 'Transactions',
+          headerTitle: translate('navigation_transactions_tab'),
           headerLargeTitle: true,
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
@@ -287,7 +287,7 @@ function Home() {
           }}
         />
         <Tab.Screen
-          name="Transactions"
+          name={translate('navigation_transactions_tab')}
           component={TransactionsStack}
           options={{
             tabBarIcon: TabBarTransactionScreenIcon,

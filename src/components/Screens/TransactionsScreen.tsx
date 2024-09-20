@@ -359,7 +359,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     navigation.setOptions({
       headerSearchBarOptions: {
         autoCapitalize: 'none',
-        placeholder: 'Search transactions...',
+        placeholder: translate('transaction_search_placeholder'),
         headerIconColor: colors.text,
         textColor: colors.text,
         hintTextColor: colors.text,

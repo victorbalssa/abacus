@@ -161,4 +161,6 @@ export default {
   configuration_theme: 'Personalizzazione',
   configuration_theme_selection: 'Cambia colore tema',
   configuration_theme_title: 'Colori tema',
+
+  transaction_search_placeholder: 'Cerca transazioni...',
 };

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import { AStack, AText } from './ALibrary';
 import { useThemeColors } from '../../lib/common';
+import translate from '../../i18n/locale';
 
 type ToastMessagePropType = {
   id: string
@@ -47,7 +48,7 @@ function ToastMessage({
 
   const goToTransactions = async () => {
     navigation.dispatch(
-      CommonActions.navigate('Transactions', {
+      CommonActions.navigate(translate('navigation_transactions_tab'), {
         screen: 'TransactionsScreen',
         merge: true,
         params: {
