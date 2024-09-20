@@ -15,6 +15,7 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "updates" ]
+  workflow_dispatch:
 
 jobs:
   eslint:
