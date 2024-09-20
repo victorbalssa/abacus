@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AText, AView } from './index';
 import { NavigationType } from '../../../types/screen';
 import { useThemeColors } from '../../../lib/common';
+import translate from '../../../i18n/locale';
 
 interface AFilterButtonType {
   filterType: string;
@@ -43,7 +44,7 @@ export default function AFilterButton({
         }}
       >
         <AText fontSize={15} bold capitalize={capitalize}>
-          {selected || filterType}
+          {filterType === translate('transaction_type_label') && selected !== '' ? translate(`transaction_form_type_${selected}`) : selected || filterType}
         </AText>
         <Ionicons name="chevron-down-outline" size={15} color={colors.text} />
       </AView>

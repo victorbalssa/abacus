@@ -163,4 +163,5 @@ export default {
   configuration_theme_title: 'Colori tema',
 
   transaction_search_placeholder: 'Cerca transazioni...',
+  transaction_type_label: 'Tipo',
 };

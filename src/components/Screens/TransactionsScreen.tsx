@@ -452,7 +452,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
             showsHorizontalScrollIndicator={false}
           >
             <ADateFilterButton currentDate={start} selectDate={(date: Date) => setStartDate(date)} />
-            <AFilterButton filterType="Type" selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} capitalize />
+            <AFilterButton filterType={translate('transaction_type_label')} selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} capitalize />
             <AFilterButton filterType={translate('currency')} selected={currentCode} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />
             <AFilterButton filterType={translate('home_accounts')} selected={account} selectFilter={(selected) => setAccount(selected)} navigation={navigation} />
           </AScrollView>

@@ -47,7 +47,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
           </AText>
         </View>
       )}
-      {filterType === 'Type' && (
+      {filterType === translate('transaction_type_label') && (
         <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
           {types.map((type) => (
             <TouchableOpacity

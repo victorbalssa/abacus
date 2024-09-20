@@ -31,7 +31,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
 
   return useMemo(() => (
     <ScrollView bounces={false} contentContainerStyle={{ paddingHorizontal: 5 }}>
-      {filterType === 'Type' && (
+      {filterType === translate('transaction_type_label') && (
         <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
           {types.map((type) => (
             <TouchableOpacity
