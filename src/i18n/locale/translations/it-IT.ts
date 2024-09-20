@@ -1,14 +1,14 @@
 export default {
   configuration_app_version: 'Versione Applicazione',
   configuration_about: 'Info',
-  configuration_clear_option: 'Annulla e ripristina l\'applicazione',
-  configuration_clear_confirm_button: 'Annulla ora',
+  configuration_clear_option: 'Pulisci e ripristina l\'applicazione',
+  configuration_clear_confirm_button: 'Pulisci ora',
   configuration_clear_alert_title: 'Sei sicuro?',
   configuration_clear_alert_text: 'Pulizia cache, verranno rimossi:\n'
-    + 'Configurazione Locale\n'
-    + 'Oauth Client ID & Secret\n'
-    + 'URL della tua instanza',
-  cancel: 'Cancella',
+    + ' - Configurazione Locale\n'
+    + ' - Oauth Client ID & Secret\n'
+    + ' - URL della tua instanza',
+  cancel: 'Annulla',
   configuration_security: 'Sicurezza',
   configuration_share_feedback: 'Condividi un Feedback',
   configuration_report_issue: 'Segnala un problema',
@@ -23,14 +23,18 @@ export default {
   transaction_form_description_short: 'Descrizione troppo corta.',
   transaction_form_amount_required: 'Importo è richiesto.',
   transaction_form_description_label: 'Descrizione',
-  transaction_form_sourceAccount_label: 'Account sorgente',
-  transaction_form_destinationAccount_label: 'Account destinatario',
+  transaction_form_sourceAccount_label: 'Conto di origine',
+  transaction_form_destinationAccount_label: 'Conto destinazione',
   transaction_form_date_label: 'Data',
   transaction_form_amount_label: 'Importo',
+  transaction_form_foreign_amount_label: 'Importo estero',
+  transaction_form_notes_label: 'Note',
   transaction_form_category_label: 'Categoria',
   transaction_form_budget_label: 'Budget',
+  transaction_form_tags_label: 'Tags',
   transaction_form_reset_button: 'Ripristina',
   transaction_form_submit_button: 'Salva',
+  transaction_form_new_split_button: 'Dividi',
   transaction_list_alert_title: 'Sei sicuro?',
   transaction_list_alert_text: 'Questa transazione verrà rimossa permanentemente:',
   transaction_list_delete_button: 'Elimina',
@@ -45,6 +49,7 @@ export default {
   auth_form_need_help: 'Bisogno di aiuto?',
   auth_form_submit_button_initial: 'Log In',
   auth_form_submit_button_loading: 'Invio in corso...',
+  auth_form_biometrics_lock: 'Abilita sblocco dell\'app',
   home_accounts: 'Conti',
   layout_new_update_header: 'Nuovo aggiornamento disponibile',
   layout_new_update_body_text: 'Puoi sempre aggiornare dopo dal pannello "Impostazioni".',
@@ -60,7 +65,7 @@ export default {
   navigation_settings_tab: 'Impostazioni',
   transaction_form_type_withdraw: 'Uscita',
   transaction_form_type_deposit: 'Entrata',
-  transaction_form_type_transfer: 'Transferimento',
+  transaction_form_type_transfer: 'Trasfer.',
 
   // from 0.4.1
   period_switcher_monthly: 'Mensile',
@@ -143,14 +148,17 @@ export default {
 
   // from X.X.X
   home_bills: 'Bollette',
+  home_piggy_banks: 'Salvadanai',
   bills_paid: 'Pagato fino a',
   due_by: 'Scadenza',
   date_unavailable: 'ulteriore avviso',
   bills_not_expected: 'Non attesa',
   transaction_form_bill_label: 'Bolletta',
+  configuration_transaction_form: 'Modulo Transazioni',
+  close_after_transaction: 'Chiudi il modulo dopo l\'invio',
 
   // from 0.19.0
   configuration_theme: 'Personalizzazione',
-  configuration_theme_selection: 'Cambia tema colore',
-  configuration_theme_title: 'Temi colore',
+  configuration_theme_selection: 'Cambia colore tema',
+  configuration_theme_title: 'Colori tema',
 };
