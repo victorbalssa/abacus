@@ -165,4 +165,6 @@ export default {
   transaction_search_placeholder: 'Cerca transazioni...',
   transaction_type_label: 'Tipo',
   filters_screen_title: 'Filtri',
+  credentials_done_button: 'Fatto',
+  credentials_edit_button: 'Modifica',
 };

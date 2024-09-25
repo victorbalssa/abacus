@@ -171,7 +171,7 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
               }}
               onPress={() => setEditMode(!editMode)}
             >
-              <AText fontSize={16}>{editMode ? 'Done' : 'Edit'}</AText>
+              <AText fontSize={16}>{editMode ? translate('credentials_done_button') : translate('credentials_edit_button')}</AText>
             </Pressable>
           ) : <AView style={{ width: 100 }} />}
         </AStackFlex>
