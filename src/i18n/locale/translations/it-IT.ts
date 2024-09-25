@@ -164,6 +164,7 @@ export default {
 
   transaction_search_placeholder: 'Cerca transazioni...',
   transaction_type_label: 'Tipo',
+  authenticate_label: 'Sblocca',
   filters_screen_title: 'Filtri',
   credentials_done_button: 'Fatto',
   credentials_edit_button: 'Modifica',

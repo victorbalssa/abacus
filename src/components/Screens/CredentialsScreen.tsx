@@ -60,7 +60,9 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
   const bioAuthCheck = useCallback((c: TCredential[]) => {
     (async () => {
       if (useBiometricAuth && !authenticated) {
-        const bioAuth = await LocalAuthentication.authenticateAsync();
+        const bioAuth = await LocalAuthentication.authenticateAsync({
+          promptMessage: translate('authenticate_label'),
+        });
         if (bioAuth.success !== true) {
           return;
         }

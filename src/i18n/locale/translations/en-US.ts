@@ -161,6 +161,7 @@ export default {
 
   transaction_search_placeholder: 'Search transactions...',
   transaction_type_label: 'Type',
+  authenticate_label: 'Authenticate',
   filters_screen_title: 'Filters',
   credentials_done_button: 'Done',
   credentials_edit_button: 'Edit',

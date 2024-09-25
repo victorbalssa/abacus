@@ -46,7 +46,9 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
   } = useDispatch<RootDispatch>();
 
   const bioAuthCallback = async (callback) => {
-    const bioAuth = await LocalAuthentication.authenticateAsync();
+    const bioAuth = await LocalAuthentication.authenticateAsync({
+      promptMessage: translate('authenticate_label'),
+    });
     if (bioAuth.success) {
       callback();
     }
