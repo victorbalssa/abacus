@@ -383,7 +383,7 @@ export default function Index() {
             options={{
               headerShown: true,
               headerBackVisible: false,
-              headerTitle: 'Filters',
+              headerTitle: translate('filters_screen_title'),
               headerTitleAlign: 'center',
               headerLeft: HeaderClose,
               headerShadowVisible: true,

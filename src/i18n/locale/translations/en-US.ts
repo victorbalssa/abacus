@@ -161,4 +161,5 @@ export default {
 
   transaction_search_placeholder: 'Search transactions...',
   transaction_type_label: 'Type',
+  filters_screen_title: 'Filters',
 };
