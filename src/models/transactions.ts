@@ -1,7 +1,6 @@
 import { createModel } from '@rematch/core';
 import { AxiosResponse } from 'axios';
 import { RootModel } from './index';
-import translate from '../i18n/locale';
 
 export type TransactionSplitType = {
   order?: number
@@ -96,15 +95,15 @@ export const initialSplit = () => ({
 export const types = [
   {
     type: 'withdrawal',
-    name: translate('transaction_form_type_withdraw'),
+    keyName: 'transaction_form_type_withdraw',
   },
   {
     type: 'deposit',
-    name: translate('transaction_form_type_deposit'),
+    keyName: 'transaction_form_type_deposit',
   },
   {
     type: 'transfer',
-    name: translate('transaction_form_type_transfer'),
+    keyName: 'transaction_form_type_transfer',
   },
 ];
 

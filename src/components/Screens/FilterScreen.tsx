@@ -52,7 +52,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
               }}
               >
                 <AText fontSize={15} color="white" bold>
-                  {type.name}
+                  {translate(type.keyName)}
                 </AText>
               </AView>
             </TouchableOpacity>

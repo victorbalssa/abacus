@@ -132,7 +132,7 @@ export default function TransactionSplitForm({
       {isNew && (
       <AFormView>
         <AStack style={{ width: '100%' }} row>
-          {types.map(({ type, name }, i) => (
+          {types.map(({ type, keyName }, i) => (
             <APressable
               key={type}
               onPress={() => {
@@ -158,7 +158,7 @@ export default function TransactionSplitForm({
                 borderColor: colors.listBorderColor,
               }}
             >
-              <AText fontSize={15} color={type === formData.type ? 'white' : colors.text} bold capitalize>{name}</AText>
+              <AText fontSize={15} color={type === formData.type ? 'white' : colors.text} bold capitalize>{translate(keyName)}</AText>
             </APressable>
           ))}
         </AStack>
