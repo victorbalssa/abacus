@@ -4,11 +4,7 @@ import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import { maxBy, minBy } from 'lodash';
 import semver from 'semver';
 import axios from 'axios';
-import {
-  discovery,
-  redirectUri,
-  addCredential,
-} from '../lib/oauth';
+import { discovery, redirectUri, addCredential } from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
 import { generateRangeTitle } from '../lib/common';
@@ -16,49 +12,49 @@ import { AccountType } from './accounts';
 import { TCredential } from '../types/credential';
 
 export type HomeDisplayType = {
-  title: string,
-  valueParsed: string,
-  monetaryValue: string,
-  currencyCode: string,
-}
+  title: string;
+  valueParsed: string;
+  monetaryValue: string;
+  currencyCode: string;
+};
 
 export type AssetAccountType = {
-  title: string,
-  label: string,
-  currencyCode: string,
-  currencySymbol: string,
-  valueParsed: string,
-  color: string,
-  colorScheme: string,
-  entries: { x: number, y: number }[],
-  maxY: number,
-  minY: number,
-}
+  title: string;
+  label: string;
+  currencyCode: string;
+  currencySymbol: string;
+  valueParsed: string;
+  color: string;
+  colorScheme: string;
+  entries: { x: number; y: number }[];
+  maxY: number;
+  minY: number;
+};
 
 export type BalanceType = {
-  label: 'earned' | 'spent',
-  currencyCode: string,
-  entries: { [timestamp: string]:string }[],
-}
+  label: 'earned' | 'spent';
+  currencyCode: string;
+  entries: { [timestamp: string]: string }[];
+};
 
 export type FireflyStateType = {
-  rangeDetails: RangeDetailsType,
-  netWorth: HomeDisplayType[],
-  spent: HomeDisplayType[],
-  earned: HomeDisplayType[],
-  balance: HomeDisplayType[],
-  accounts: AssetAccountType[],
-  bills: { paid: HomeDisplayType | null, unpaid: HomeDisplayType | null },
-  earnedChart: { x: number, y: number }[],
-  spentChart:{ x: number, y: number }[],
-}
+  rangeDetails: RangeDetailsType;
+  netWorth: HomeDisplayType[];
+  spent: HomeDisplayType[];
+  earned: HomeDisplayType[];
+  balance: HomeDisplayType[];
+  accounts: AssetAccountType[];
+  bills: { paid: HomeDisplayType | null; unpaid: HomeDisplayType | null };
+  earnedChart: { x: number; y: number }[];
+  spentChart: { x: number; y: number }[];
+};
 
 export type RangeDetailsType = {
-  title: string,
-  range: number,
-  start: string,
-  end: string,
-}
+  title: string;
+  range: number;
+  start: string;
+  end: string;
+};
 
 const formatDateToYYYYMMDD = (date: Date): string => {
   const year = date.getFullYear();
@@ -83,7 +79,11 @@ const getCurrentQuarterEndDate = (): string => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
   const quarterEndMonth = Math.floor(currentMonth / 3) * 3 + 2;
-  const lastDayOfMonth = new Date(currentYear, quarterEndMonth + 1, 0).getDate();
+  const lastDayOfMonth = new Date(
+    currentYear,
+    quarterEndMonth + 1,
+    0,
+  ).getDate();
   const endDate = new Date(currentYear, quarterEndMonth, lastDayOfMonth);
 
   return formatDateToYYYYMMDD(endDate);
@@ -91,7 +91,11 @@ const getCurrentQuarterEndDate = (): string => {
 
 const INITIAL_STATE = {
   rangeDetails: {
-    title: generateRangeTitle(3, getCurrentQuarterStartDate(), getCurrentQuarterEndDate()),
+    title: generateRangeTitle(
+      3,
+      getCurrentQuarterStartDate(),
+      getCurrentQuarterEndDate(),
+    ),
     range: 3,
     start: getCurrentQuarterStartDate(),
     end: getCurrentQuarterEndDate(),
@@ -107,7 +111,6 @@ const INITIAL_STATE = {
 } as FireflyStateType;
 
 export default createModel<RootModel>()({
-
   state: INITIAL_STATE,
 
   reducers: {
@@ -152,17 +155,10 @@ export default createModel<RootModel>()({
     async setRange(payload, rootState): Promise<void> {
       const {
         firefly: {
-          rangeDetails: {
-            range: oldRange,
-            start: oldStart,
-            end: oldEnd,
-          },
+          rangeDetails: { range: oldRange, start: oldStart, end: oldEnd },
         },
       } = rootState;
-      const {
-        range = oldRange,
-        direction,
-      } = payload;
+      const { range = oldRange, direction } = payload;
 
       let start: string;
       let end: string;
@@ -172,10 +168,16 @@ export default createModel<RootModel>()({
       if (direction !== undefined) {
         if (direction > 0) {
           start = moment(oldStart).add(rangeInt, 'M').format('YYYY-MM-DD');
-          end = moment(oldEnd).add(rangeInt, 'M').endOf('M').format('YYYY-MM-DD');
+          end = moment(oldEnd)
+            .add(rangeInt, 'M')
+            .endOf('M')
+            .format('YYYY-MM-DD');
         } else {
           start = moment(oldStart).subtract(rangeInt, 'M').format('YYYY-MM-DD');
-          end = moment(oldEnd).subtract(rangeInt, 'M').endOf('M').format('YYYY-MM-DD');
+          end = moment(oldEnd)
+            .subtract(rangeInt, 'M')
+            .endOf('M')
+            .format('YYYY-MM-DD');
         }
       } else {
         const today = new Date();
@@ -190,7 +192,7 @@ export default createModel<RootModel>()({
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
           case 3:
-            start = `${today.getFullYear()}-${((quarter * 3) + 1).toString().padStart(2, '0')}-01`;
+            start = `${today.getFullYear()}-${(quarter * 3 + 1).toString().padStart(2, '0')}-01`;
             end = `${today.getFullYear()}-${((quarter + 1) * 3).toString().padStart(2, '0')}-28`;
             end = moment(end).endOf('M').format('YYYY-MM-DD');
             break;
@@ -226,14 +228,9 @@ export default createModel<RootModel>()({
     async getNetWorth(_: void, rootState): Promise<void> {
       const {
         firefly: {
-          rangeDetails: {
-            start,
-            end,
-          },
+          rangeDetails: { start, end },
         },
-        currencies: {
-          currentCode,
-        },
+        currencies: { currentCode },
       } = rootState;
       if (currentCode) {
         const params = new URLSearchParams({
@@ -241,7 +238,9 @@ export default createModel<RootModel>()({
           end,
           currency_code: currentCode,
         });
-        const { data: summary } = await dispatch.configuration.apiFetch({ url: `/api/v1/summary/basic?${params.toString()}` });
+        const { data: summary } = await dispatch.configuration.apiFetch({
+          url: `/api/v1/summary/basic?${params.toString()}`,
+        });
         const netWorth = [];
         const balance = [];
         const earned = [];
@@ -281,97 +280,88 @@ export default createModel<RootModel>()({
     async getAccountChart(_: void, rootState): Promise<void> {
       const {
         firefly: {
-          rangeDetails: {
-            range,
-            start,
-            end,
-          },
+          rangeDetails: { range, start, end },
         },
-        currencies: {
-          currentCode,
-        },
-        accounts: {
-          selectedAccountIds,
-        },
-        configuration: {
-          selectedBrandStyle,
-        },
+        currencies: { currentCode },
+        configuration: { selectedBrandStyle },
       } = rootState;
 
-      const accountIdsParam = (selectedAccountIds && selectedAccountIds.length > 0) ? `&accounts[]=${selectedAccountIds.join('&accounts[]=')}` : '';
-      const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/chart/account/overview?start=${start}&end=${end}${accountIdsParam}` }) as { data: AssetAccountType[] };
+      const { data: accounts } = (await dispatch.configuration.apiFetch({
+        url: `/api/v1/chart/account/overview?start=${start}&end=${end}`,
+      })) as { data: AssetAccountType[] };
       let colorIndex = 0;
 
-      accounts.forEach((v, index) => {
-        if (index === 0) {
-          accounts[index].color = selectedBrandStyle;
-        } else {
-          if (colorIndex >= 6) {
-            colorIndex = 0;
+      accounts
+        .forEach((v, index) => {
+          if (index === 0) {
+            accounts[index].color = selectedBrandStyle;
+          } else {
+            if (colorIndex >= 6) {
+              colorIndex = 0;
+            }
+            accounts[index].color = colors[`brandStyle${colorIndex}`];
+            colorIndex += 1;
           }
-          accounts[index].color = colors[`brandStyle${colorIndex}`];
-          colorIndex += 1;
-        }
-        accounts[index].colorScheme = `chart${colorIndex}`;
-        accounts[index].colorScheme = `chart${colorIndex}`;
-        colorIndex += 1;
-        accounts[index].colorScheme = `chart${colorIndex}`;
-        colorIndex += 1;
-        accounts[index].entries = range > 3 ? Object.keys(v.entries)
-          .filter((e, i) => i % 2 === 0)
-          .filter((e, i) => i % 2 === 0)
-          .filter((e, i) => i % 2 === 0)
-          .map((key) => {
-            const value = parseFloat(accounts[index].entries[key]);
-            const date = new Date(key);
+          accounts[index].entries = range > 3
+            ? Object.keys(v.entries)
+              .filter((e, i) => i % 2 === 0)
+              .filter((e, i) => i % 2 === 0)
+              .filter((e, i) => i % 2 === 0)
+              .map((key) => {
+                const value = parseFloat(accounts[index].entries[key]);
+                const date = new Date(key);
 
-            return {
-              x: +date,
-              y: value,
-            };
-          })
-          : Object.keys(v.entries).map((key) => {
-            const value = parseFloat(accounts[index].entries[key]);
-            const date = new Date(key);
+                return {
+                  x: +date,
+                  y: value,
+                };
+              })
+            : Object.keys(v.entries).map((key) => {
+              const value = parseFloat(accounts[index].entries[key]);
+              const date = new Date(key);
 
-            return {
-              x: +date,
-              y: value,
-            };
-          });
-        accounts[index].maxY = maxBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
-        accounts[index].minY = minBy(accounts[index].entries, (o: { x: number, y: number }) => (o.y)).y;
-      });
+              return {
+                x: +date,
+                y: value,
+              };
+            });
+          accounts[index].maxY = maxBy(
+            accounts[index].entries,
+            (o: { x: number; y: number }) => o.y,
+          ).y;
+          accounts[index].minY = minBy(
+            accounts[index].entries,
+            (o: { x: number; y: number }) => o.y,
+          ).y;
+        });
 
-      dispatch.firefly.setData({ accounts: accounts.filter((account) => account.currencyCode === currentCode) });
+      dispatch.firefly.setData({ accounts: accounts.filter((account) => account.currencyCode === currentCode).slice(0, 5) });
     },
 
     async getBalanceChart(_: void, rootState): Promise<void> {
       const {
         firefly: {
-          rangeDetails: {
-            start,
-            end,
-          },
+          rangeDetails: { start, end },
         },
-        currencies: {
-          currentCode,
-        },
-        configuration: {
-          apiVersion,
-        },
+        currencies: { currentCode },
+        configuration: { apiVersion },
       } = rootState;
 
       try {
         const apiSemverMinimum = '2.0.9';
-        const { data: accounts } = await dispatch.configuration.apiFetch({ url: `/api/v1/accounts?type=asset&date=${end}` }) as { data: AccountType[]};
-        if (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0) {
+        const { data: accounts } = (await dispatch.configuration.apiFetch({
+          url: `/api/v1/accounts?type=asset&date=${end}`,
+        })) as { data: AccountType[] };
+        if (
+          !semver.gte(apiVersion, apiSemverMinimum)
+          || accounts.length === 0
+        ) {
           this.setData({ earnedChart: [], spentChart: [] });
           return;
         }
 
-        const accountIdsParam = accounts.map((a) => a.id).join('&accounts[]=');
-        const { data: balances } = await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&accounts[]=${accountIdsParam}&period=1M` }) as { data: BalanceType[] };
+        const accountIdsParam = accounts.map((a) => a.id).join('&filter[accounts][]=');
+        const { data: balances } = (await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?filter[start]=${start}&filter[end]=${end}&filter[accounts][]=${accountIdsParam}` })) as { data: BalanceType[] };
 
         const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
 
@@ -424,14 +414,17 @@ export default createModel<RootModel>()({
       );
 
       if (!response.accessToken) {
-        throw new Error('Failed to get accessToken with the refresh token. Please restart the Sign In process.');
+        throw new Error(
+          'Failed to get accessToken with the refresh token. Please restart the Sign In process.',
+        );
       }
 
       const newCredential = { ...credential };
       newCredential.accessToken = response.accessToken;
       newCredential.refreshToken = response.refreshToken;
-      newCredential.accessTokenExpiresIn = (response.issuedAt && response.expiresIn)
-        ? (response.issuedAt + response.expiresIn + -600).toString() : '';
+      newCredential.accessTokenExpiresIn = response.issuedAt && response.expiresIn
+        ? (response.issuedAt + response.expiresIn + -600).toString()
+        : '';
       await addCredential(newCredential);
 
       // set backend url and access token for this session
@@ -473,8 +466,10 @@ export default createModel<RootModel>()({
         email,
         backendURL,
         accessToken: response.accessToken,
-        accessTokenExpiresIn: (response.issuedAt && response.expiresIn)
-          ? (response.issuedAt + response.expiresIn + -600).toString() : '',
+        accessTokenExpiresIn:
+          response.issuedAt && response.expiresIn
+            ? (response.issuedAt + response.expiresIn + -600).toString()
+            : '',
         oauthClientId,
         oauthClientSecret,
         refreshToken: response.refreshToken,
@@ -482,6 +477,5 @@ export default createModel<RootModel>()({
 
       await addCredential(credential);
     },
-
   }),
 });

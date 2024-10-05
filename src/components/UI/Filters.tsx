@@ -26,15 +26,12 @@ export default function Filters() {
   const {
     firefly: {
       setRange,
-      getAccountChart,
     },
     currencies: {
       setCurrentCode,
     },
     accounts: {
       getAccounts,
-      setSelectedAccountIds,
-      resetSelectedAccountIds,
     },
   } = useDispatch<RootDispatch>();
 
@@ -67,7 +64,6 @@ export default function Filters() {
               setCurrentCode(currency.attributes.code);
               navigation.goBack();
               getAccounts();
-              resetSelectedAccountIds();
             }}
           >
             <View style={{
@@ -129,68 +125,6 @@ export default function Filters() {
             </View>
           </TouchableOpacity>
         ))}
-      </AStackFlex>
-      <Text
-        style={{
-          fontFamily: 'Montserrat-Bold',
-          margin: 15,
-          color: colors.text,
-          fontSize: 15,
-          lineHeight: 15,
-        }}
-      >
-        {translate('home_accounts')}
-      </Text>
-      <AStackFlex justifyContent="center" row flexWrap="wrap">
-        {accounts.map((account) => (
-          <TouchableOpacity
-            key={`key-${account.id}`}
-            onPress={() => {
-              setSelectedAccountIds(parseInt(account.id, 10));
-              navigation.goBack();
-              getAccountChart();
-            }}
-          >
-            <View style={{
-              backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? selectedBrandStyle : colors.filterBorderColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 10,
-              height: 35,
-              margin: 2,
-              paddingHorizontal: 10,
-            }}
-            >
-              <Text
-                style={{ fontFamily: 'Montserrat-Bold', color: 'white', maxWidth: 200 }}
-                numberOfLines={1}
-              >
-                {account.attributes.name}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-        <TouchableOpacity
-          key="key-reset"
-          onPress={() => {
-            resetSelectedAccountIds();
-            navigation.goBack();
-            getAccountChart();
-          }}
-        >
-          <View style={{
-            backgroundColor: colors.filterBorderColor,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-            height: 35,
-            margin: 2,
-            paddingHorizontal: 10,
-          }}
-          >
-            <AntDesign name="close" size={20} color={colors.text} />
-          </View>
-        </TouchableOpacity>
       </AStackFlex>
       <View style={{ height: 200 }} />
     </ScrollView>
