@@ -17,7 +17,7 @@
       "tsx": true,
       "modules": true
     },
-    "ecmaVersion": 11,
+    "ecmaVersion": 14,
     "project": "./tsconfig.json",
     "sourceType": "module"
   },

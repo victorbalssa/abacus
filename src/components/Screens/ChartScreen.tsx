@@ -20,6 +20,7 @@ export default function ChartScreen() {
   const safeAreaInsets = useSafeAreaInsets();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
+  const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const prevFiltersRef = useRef<string>();
   const viewPagerRef = useRef<PagerView>();
   const scrollOffsetAnimatedValue = React.useRef(new Animated.Value(0)).current;
@@ -42,15 +43,15 @@ export default function ChartScreen() {
         }
       };
 
-      if (prevFiltersRef.current !== `${start}-${end}`) {
+      if (prevFiltersRef.current !== `${start}-${end}-${currentCode}`) {
         fetchData();
-        prevFiltersRef.current = `${start}-${end}`;
+        prevFiltersRef.current = `${start}-${end}-${currentCode}`;
       }
 
       return () => {
         isActive = false;
       };
-    }, [start, end]),
+    }, [start, end, currentCode]),
   );
 
   return useMemo(() => (

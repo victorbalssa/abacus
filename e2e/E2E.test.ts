@@ -24,6 +24,7 @@ describe.each([
   ['id-ID'],
   ['zh-CN'],
   ['ko-KR'],
+  ['tr-TR'],
 ])(`%s`, (locale) => {
   beforeAll(async () => {
     // reset authentication tokens

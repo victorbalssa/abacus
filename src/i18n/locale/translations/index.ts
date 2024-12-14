@@ -33,6 +33,9 @@ import 'moment/locale/vi';
 import koKR from './ko-KR';
 import 'moment/locale/ko';
 
+import trTR from './tr-TR';
+import 'moment/locale/tr';
+
 export default {
   de: deDE,
   en: enUS,
@@ -46,4 +49,5 @@ export default {
   ru: ruRU,
   vi: viVN,
   ko: koKR,
+  tr: trTR,
 };

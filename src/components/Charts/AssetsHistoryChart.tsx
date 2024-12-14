@@ -23,16 +23,6 @@ import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import ErrorBoundary from '../UI/ErrorBoundary';
 
-function AccountsLengthMessage() {
-  return (
-    <View style={{ margin: 5 }}>
-      <AText fontSize={12}>
-        {translate('assetsHistoryCharts_chart_works')}
-      </AText>
-    </View>
-  );
-}
-
 function CursorPointer({ x, y, stroke }) {
   return (
     <>
@@ -268,7 +258,6 @@ export default function AssetsHistoryChart() {
             ))}
           </VictoryChart>
           )}
-          {accounts.length > 4 && (<AccountsLengthMessage />)}
         </AStackFlex>
         <View style={{ height: 200 }} />
       </ScrollView>
