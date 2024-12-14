@@ -361,7 +361,7 @@ export default createModel<RootModel>()({
         }
 
         const accountIdsParam = accounts.map((a) => a.id).join('&filter[accounts][]=');
-        const { data: balances } = (await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?filter[start]=${start}&filter[end]=${end}&filter[accounts][]=${accountIdsParam}` })) as { data: BalanceType[] };
+        const { data: balances } = (await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&filter[accounts][]=${accountIdsParam}` })) as { data: BalanceType[] };
 
         const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
 
