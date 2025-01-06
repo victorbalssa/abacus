@@ -84,6 +84,17 @@ export default {
         ],
       },
     ],
+    [
+      'expo-quick-actions',
+      {
+        androidIcons: {
+          shortcut_add: {
+            foregroundImage: './src/images/icon-adaptive-add.png',
+            backgroundColor: '#FF5533',
+          },
+        },
+      },
+    ],
   ],
   userInterfaceStyle: 'automatic',
 };
