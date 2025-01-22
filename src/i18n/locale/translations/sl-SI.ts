@@ -52,6 +52,8 @@ export default {
   layout_new_update_body_text: 'Vedno lahko posodobite kasneje na zavihku Nastavitve.',
   layout_new_update_cancel_button: 'Prekliči',
   layout_new_update_update_button: 'Posodobite zdaj',
+  
+  // from version 0.31  
   transaction_screen_title: 'Nova transakcija',
   navigation_home_tab: 'Domov',
   navigation_chart_tab: 'Grafikon',
@@ -61,6 +63,8 @@ export default {
   transaction_form_type_withdraw: 'Odliv',
   transaction_form_type_deposit: 'Priliv',
   transaction_form_type_transfer: 'Prenos',
+  
+  // from 0.4.1
   period_switcher_monthly: 'Mesečno',
   period_switcher_quarterly: 'Četrtletno',
   period_switcher_semiannually: 'Polletno',
@@ -80,10 +84,14 @@ export default {
   home_header_time_range_year: 'Leto',
   home_header_time_range_q: 'Č', // Put an abbreviation that best represents a quarter
   home_header_time_range_s: 'P', // Put an abbreviation that best represents a semiannual
+  
+  // from 0.6.0
   balance: 'Bilanca',
   history: 'Zgodovina',
   home_categories: 'Kategorije',
   home_net_worth: 'Neto vrednost',
+  
+  // from 0.7.0
   home_budgets: 'Proračuni',
   configuration_ui: 'Uporabniški vmesnik',
   configuration_color_mode: 'Temen način',
@@ -94,32 +102,48 @@ export default {
   auth_create_new_personal_access_token: 'Tukaj ustvarite novega odjemalca Oauth na zavihku OAuth:',
   oauth_wrong_token_error_description: 'AccessToken ni bilo mogoče preveriti, ponovno preverite svoj žeton ali zaledni URL.',
   transaction_screen_edit_title: 'Uredite transakcijo',
+  
+  // from 0.9.0
   transaction_form_foreign_currency_label: 'Tuja valuta',
   transaction_form_group_title_label: 'Opis razdeljene transakcije',
   transaction_form_group_title_placeholder: 'Naslov',
   transaction_form_group_title_helper: 'Če ustvarite razdeljeno transakcijo, mora obstajati globalni opis za vse delitve transakcije.',
   configuration_review_app_ios: 'Ocenite Abacus v AppStore',
   configuration_review_app_android: 'Ocenite Abacus v Google Play',
+  
+  // from 0.9.2
   assets_history_chart: 'Grafikon računov',
   balance_history_chart: 'Grafikon neto vrednosti',
   balance_history_chart_no_data: 'Za dostop do teh grafikonov posodobite Firefly III na najnovejšo različico.',
   account_not_included_in_net_worth: '* Račun ni vključen v neto vrednost.',
+  
+  // from 0.10.0
   period: 'Obdobje',
   currency: 'Valuta',
+  
   home_all_accounts: 'Vsi računi',
+  
+  // from 0.10.3
   router_back_button: 'Nazaj',
   transaction_clone: 'Kloniraj',
   transaction_delete: 'Izbriši',
+  
+  // from 0.11.0
   configuration_credentials: 'Prijavni podatki',
   configuration_manage_credentials: 'Uredi prijavne podatke',
   configuration_credentials_add_button: 'Dodaj prijavne podatke',
   logout: 'Odjava',
+  
+  // from 0.12.0
   credential_clear_confirm_button: 'Izbriši',
   credential_clear_alert_title: 'Ali ste prepričani?',
   credential_clear_cancel_button: 'Prekliči',
   go_to_credentials: 'Pojdi na prijavne podatke',
+  
   configuration_logout_alert_title: 'Odjava',
   load_more: 'Naloži več',
+  
+  // from X.X.X
   home_bills: 'Računi',
   home_piggy_banks: 'Hranilniki',
   bills_paid: 'Plačano do',
@@ -129,7 +153,16 @@ export default {
   transaction_form_bill_label: 'Račun',
   configuration_transaction_form: 'Transakcija od',
   close_after_transaction: 'Zapri transakcijo po predložitvi',
+  
+  // from 0.19.0
   configuration_theme: 'Prilagoditev',
   configuration_theme_selection: 'Spremeni barvno temo',
   configuration_theme_title: 'Barvne teme',
+  
+  transaction_search_placeholder: 'Iskanje po transakcijah...',
+  transaction_type_label: 'Tip',
+  authenticate_label: 'Avtenticiraj',
+  filters_screen_title: 'Filtri',
+  credentials_done_button: 'Končano',
+  credentials_edit_button: 'Uredi',
 };
