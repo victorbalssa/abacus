@@ -165,4 +165,7 @@ export default {
   filters_screen_title: 'Filters',
   credentials_done_button: 'Done',
   credentials_edit_button: 'Edit',
+  no_category: '(no category)',
+  category_total_spent: 'Total spent',
+  category_perday_spent: 'Spent per day',
 };

@@ -4,6 +4,7 @@ import {
   CommonActions,
   useNavigation,
   NavigationContainer,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
@@ -18,6 +19,9 @@ import {
   StyleSheet, Platform, View, Pressable,
 } from 'react-native';
 import { useSelector } from 'react-redux';
+import {
+  useQuickActionCallback,
+} from 'expo-quick-actions/hooks';
 import { RootState } from '../store';
 import translate from '../i18n/locale';
 import { useThemeColors } from '../lib/common';
@@ -45,6 +49,7 @@ import {
 } from '../components/UI/ALibrary';
 import ErrorWidget from '../components/UI/ErrorWidget';
 import PrivacyScreen from '../components/UI/PrivacyScreen';
+import { AbacusQuickAction } from '../types/quickAction';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -311,6 +316,15 @@ function Home() {
 
 export default function Index() {
   const { colors } = useThemeColors();
+  const navigationRef = useNavigationContainerRef();
+
+  useQuickActionCallback((action: AbacusQuickAction) => {
+    navigationRef.dispatch(
+      CommonActions.navigate({
+        name: action.params.href,
+      }),
+    );
+  });
 
   return (
     <NavigationContainer
@@ -321,6 +335,7 @@ export default function Index() {
           background: colors.backgroundColor,
         },
       }}
+      ref={navigationRef}
     >
       <Stack.Navigator
         initialRouteName="credentials"
