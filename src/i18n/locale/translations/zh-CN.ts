@@ -63,7 +63,7 @@ export default {
   navigation_create_tab: '创建',
   navigation_transactions_tab: '交易',
   navigation_settings_tab: '设置',
-  transaction_form_type_withdraw: '支出',
+  transaction_form_type_withdrawal: '支出',
   transaction_form_type_deposit: '收入',
   transaction_form_type_transfer: '转账',
 

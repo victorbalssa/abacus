@@ -63,7 +63,7 @@ export default {
   navigation_create_tab: 'Oluştur',
   navigation_transactions_tab: 'İşlemler',
   navigation_settings_tab: 'Ayarlar',
-  transaction_form_type_withdraw: 'Çekme',
+  transaction_form_type_withdrawal: 'Çekme',
   transaction_form_type_deposit: 'Yatırma',
   transaction_form_type_transfer: 'Transfer',
 
@@ -168,4 +168,4 @@ export default {
   filters_screen_title: 'Filtreler',
   credentials_done_button: 'Tamam',
   credentials_edit_button: 'Düzenle',
-}; 
+};

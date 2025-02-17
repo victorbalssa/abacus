@@ -58,7 +58,7 @@ export default {
   navigation_create_tab: 'Buat',
   navigation_transactions_tab: 'Transaksi',
   navigation_settings_tab: 'Pengaturan',
-  transaction_form_type_withdraw: 'Penarikan',
+  transaction_form_type_withdrawal: 'Penarikan',
   transaction_form_type_deposit: 'Deposit',
   transaction_form_type_transfer: 'Transfer',
 

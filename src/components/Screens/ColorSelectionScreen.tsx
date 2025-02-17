@@ -87,7 +87,7 @@ export default function ColorSelectionScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <AScrollView style={styles.container}>
       {themes.map((theme) => (
         <TouchableOpacity
           key={theme}
@@ -99,6 +99,6 @@ export default function ColorSelectionScreen() {
           onPress={() => handleColorSelect(theme)}
         />
       ))}
-    </View>
+    </AScrollView>
   );
 }

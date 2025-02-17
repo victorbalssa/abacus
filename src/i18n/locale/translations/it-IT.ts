@@ -63,7 +63,7 @@ export default {
   navigation_create_tab: 'Crea',
   navigation_transactions_tab: 'Transazioni',
   navigation_settings_tab: 'Impostazioni',
-  transaction_form_type_withdraw: 'Uscita',
+  transaction_form_type_withdrawal: 'Uscita',
   transaction_form_type_deposit: 'Entrata',
   transaction_form_type_transfer: 'Trasfer.',
 
