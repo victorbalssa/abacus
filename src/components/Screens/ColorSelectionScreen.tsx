@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  View, TouchableOpacity, StyleSheet, Dimensions, useColorScheme,
+  TouchableOpacity, StyleSheet, Dimensions, useColorScheme,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { RootDispatch, RootState } from '../../store';
 import colors from '../../constants/colors';
+import { AScrollView } from '../UI/ALibrary';
 
 const themes = [
   'gradientRed',
