@@ -64,11 +64,13 @@ export default function AutocompleteField({
     refreshAutocomplete(text);
   }, [multiple, onChangeText]);
 
-  const handleSelectAutocomplete = useCallback((autocomplete) => {
+  const handleSelectAutocomplete = useCallback(async (autocomplete: AutocompleteType) => {
     onSelectAutocomplete(autocomplete);
-    setDisplayAutocomplete(false);
     if (multiple) {
+      await refreshAutocomplete('');
       setMultipleValue('');
+    } else {
+      setDisplayAutocomplete(false);
     }
   }, [onSelectAutocomplete]);
 
