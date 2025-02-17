@@ -4,7 +4,7 @@ import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import { maxBy, minBy } from 'lodash';
 import semver from 'semver';
 import axios from 'axios';
-import { discovery, redirectUri, addCredential } from '../lib/oauth';
+import { discovery, redirectUri, addCredential, deleteCredential, replaceAccessToken } from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
 import { generateRangeTitle } from '../lib/common';
@@ -425,7 +425,7 @@ export default createModel<RootModel>()({
       newCredential.accessTokenExpiresIn = response.issuedAt && response.expiresIn
         ? (response.issuedAt + response.expiresIn + -600).toString()
         : '';
-      await addCredential(newCredential);
+      await replaceAccessToken(newCredential);
 
       // set backend url and access token for this session
       axios.defaults.headers.Authorization = `Bearer ${response.accessToken}`;
