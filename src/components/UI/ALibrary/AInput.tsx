@@ -112,6 +112,7 @@ export default function AInput({
         onBlur={(e) => {
           handleFocus(false, onBlur ? () => onBlur(e) : () => null);
         }}
+        textContentType={type === 'password' ? 'password' : 'none'}
       />
       {InputRightElement}
     </AStack>

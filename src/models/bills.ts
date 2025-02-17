@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import moment from 'moment/moment';
 import { RootModel } from './index';
+import { TransactionType } from './transactions';
 
 export type BillType = {
   id: string,

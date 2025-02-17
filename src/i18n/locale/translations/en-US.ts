@@ -60,7 +60,7 @@ export default {
   navigation_create_tab: 'Create',
   navigation_transactions_tab: 'Transactions',
   navigation_settings_tab: 'Settings',
-  transaction_form_type_withdraw: 'Withdraw',
+  transaction_form_type_withdrawal: 'Withdrawal',
   transaction_form_type_deposit: 'Deposit',
   transaction_form_type_transfer: 'Transfer',
 

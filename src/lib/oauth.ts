@@ -60,9 +60,22 @@ export const deleteOldSecureStore = async () => {
   ]);
 };
 
-export const deleteAccessToken = async (index: number) => {
+export const replaceAccessToken = async (credential: TCredential) => {
   const credentials = await getCredentials();
-  const newCredentials = [...credentials];
-  newCredentials[index].accessToken = '';
+  const newCredentials = credentials.map((c) => {
+    if (
+      c.email === credential.email
+      && c.backendURL === credential.backendURL
+      && c.oauthClientId === credential.oauthClientId
+      && c.refreshToken === credential.refreshToken
+    ) {
+      return {
+        ...c,
+        accessToken: credential.accessToken,
+        accessTokenExpiresIn: credential.accessTokenExpiresIn,
+      };
+    }
+    return c;
+  });
   await setCredentials(newCredentials);
 };

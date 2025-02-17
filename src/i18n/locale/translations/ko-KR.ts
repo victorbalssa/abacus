@@ -60,7 +60,7 @@ export default {
   navigation_create_tab: '생성',
   navigation_transactions_tab: '거래',
   navigation_settings_tab: '설정',
-  transaction_form_type_withdraw: '출금',
+  transaction_form_type_withdrawal: '출금',
   transaction_form_type_deposit: '입금',
   transaction_form_type_transfer: '이체',
 

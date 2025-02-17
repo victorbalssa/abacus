@@ -63,7 +63,7 @@ export default {
   navigation_create_tab: 'Tạo',
   navigation_transactions_tab: 'Giao dịch',
   navigation_settings_tab: 'Cài đặt',
-  transaction_form_type_withdraw: 'Rút tiền',
+  transaction_form_type_withdrawal: 'Rút tiền',
   transaction_form_type_deposit: 'Gửi tiền',
   transaction_form_type_transfer: 'Chuyển tiền',
 

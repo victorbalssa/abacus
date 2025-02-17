@@ -113,6 +113,7 @@ export default function TransactionForm({
   id = '-1',
 }) {
   const dispatch = useDispatch<RootDispatch>();
+  const loading = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.loading);
   const closeTransactionScreen = useSelector((state: RootState) => state.configuration.closeTransactionScreen);
 
   useEffect(() => {
@@ -135,9 +136,9 @@ export default function TransactionForm({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={handleSubmit}>
+        <AButton type="transparent" loading={loading} style={{ height: 40, marginTop: 5 }} onPress={handleSubmit}>
           <AText fontSize={16} bold>{translate('transaction_form_submit_button')}</AText>
-        </Pressable>
+        </AButton>
       ),
     });
   }, [navigation, dispatch, title, splits, id]);

@@ -63,7 +63,7 @@ export default {
   navigation_create_tab: 'Создать',
   navigation_transactions_tab: 'Транзакции',
   navigation_settings_tab: 'Настройки',
-  transaction_form_type_withdraw: 'Расход',
+  transaction_form_type_withdrawal: 'Расход',
   transaction_form_type_deposit: 'Доход',
   transaction_form_type_transfer: 'Перевод',
 

@@ -95,7 +95,7 @@ export const initialSplit = () => ({
 export const types = [
   {
     type: 'withdrawal',
-    keyName: 'transaction_form_type_withdraw',
+    keyName: 'transaction_form_type_withdrawal',
   },
   {
     type: 'deposit',

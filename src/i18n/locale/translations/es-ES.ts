@@ -56,7 +56,7 @@ export default {
   navigation_create_tab: 'Crear',
   navigation_transactions_tab: 'Transacciones',
   navigation_settings_tab: 'Ajustes',
-  transaction_form_type_withdraw: 'Retirar',
+  transaction_form_type_withdrawal: 'Retirar',
   transaction_form_type_deposit: 'Depositar',
   transaction_form_type_transfer: 'Transferir',
 
