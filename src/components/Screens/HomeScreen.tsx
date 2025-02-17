@@ -203,8 +203,12 @@ function InsightCategories() {
             fontSize={14}
             maxWidth="60%"
             numberOfLines={1}
+            bold={(category.name === 'total' || category.name === 'perday')}
           >
-            {category.name}
+            {(category.name === 'no-category') ? translate('no_category') : ''}
+            {(category.name === 'total') ? translate('category_total_spent') : ''}
+            {(category.name === 'perday') ? translate('category_perday_spent') : ''}
+            {(category.name !== 'no-category' && category.name !== 'total' && category.name !== 'perday') ? category.name : ''}
           </AText>
 
           <ASkeleton loading={loading}>
@@ -212,6 +216,7 @@ function InsightCategories() {
               fontSize={14}
               maxWidth={100}
               numberOfLines={1}
+              bold={(category.name === 'total' || category.name === 'perday')}
             >
               {localNumberFormat(category.currencyCode, (category.differenceFloat * -1))}
             </AText>

@@ -57,7 +57,7 @@ export default {
   layout_new_update_update_button: 'Aggiorna adesso',
 
   // from version 0.31
-  transaction_screen_title: 'Nuova Transazione',
+  transaction_screen_title: 'Nuova Trans.',
   navigation_home_tab: 'Home',
   navigation_chart_tab: 'Grafici',
   navigation_create_tab: 'Crea',
@@ -115,8 +115,8 @@ export default {
   configuration_review_app_android: 'Lascia una recensione su Google Play',
 
   // from 0.9.2
-  assets_history_chart: 'Grafico conti',
-  balance_history_chart: 'Grafico del patrimonio netto',
+  assets_history_chart: 'Conti',
+  balance_history_chart: 'Patrimonio netto',
   balance_history_chart_no_data: 'Per accedere a questo grafico aggiorna FireflyIII all\'ultima verione.',
   account_not_included_in_net_worth: '* Conto non incluso nel Patrimonio Netto.',
 
@@ -168,4 +168,7 @@ export default {
   filters_screen_title: 'Filtri',
   credentials_done_button: 'Fatto',
   credentials_edit_button: 'Modifica',
+  no_category: '(nessuna categoria)',
+  category_total_spent: 'Totale speso',
+  category_perday_spent: 'Speso al giorno',
 };
