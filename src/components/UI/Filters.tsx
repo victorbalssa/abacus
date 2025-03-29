@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import { AStackFlex, AText } from './ALibrary';
 import { RootDispatch, RootState } from '../../store';

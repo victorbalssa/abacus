@@ -1,15 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { useRoute, CommonActions, useFocusEffect } from '@react-navigation/native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { Alert, Platform, Pressable } from 'react-native';
+import { Alert, SafeAreaView } from 'react-native';
 import {
   AView,
   AText,
   AScrollView,
   AStackFlex,
+  AIconButton,
 } from '../UI/ALibrary';
 
 import translate from '../../i18n/locale';
@@ -24,6 +25,7 @@ import AButton from '../UI/ALibrary/AButton';
 
 export default function CredentialsScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
+  const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
   const { name: routeName } = useRoute();
   const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
   const [credentials, setCredentials] = useState<TCredential[]>([]);
@@ -31,30 +33,40 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const dispatch = useDispatch<RootDispatch>();
 
-  const loginWithCredential = async (credential: TCredential) => {
-    const {
-      backendURL: currentBackendURL,
-      accessToken,
-      accessTokenExpiresIn: expiresIn,
-      refreshToken,
-    } = credential;
+  const goToCredentialCreateScreen = (url: string) => navigation.dispatch(
+    CommonActions.navigate({
+      name: 'CredentialCreateScreen',
+      params: {
+        payload: {
+          url,
+        },
+      },
+    }),
+  );
 
-    axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
-    dispatch.configuration.setBackendURL(currentBackendURL);
-    dispatch.currencies.setCurrentCode('');
+  const loginWithCredential = async (credential: TCredential, index: number) => {
+    try {
+      const {
+        backendURL: currentBackendURL,
+        accessToken,
+        accessTokenExpiresIn: expiresIn,
+        refreshToken,
+      } = credential;
 
-    if (!isTokenFresh(expiresIn) && refreshToken) {
-      await dispatch.firefly.getFreshAccessToken(credential);
+      axios.defaults.headers.Authorization = `Bearer ${accessToken}`;
+      dispatch.configuration.setBackendURL(currentBackendURL);
+      dispatch.currencies.setCurrentCode('');
+
+      if (!isTokenFresh(expiresIn) && refreshToken) {
+        await dispatch.firefly.getFreshAccessToken(credential);
+      }
+
+      navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'dashboard' }] }));
+    } catch (e) {
+      Alert.alert(translate('oauth_token_error_title'), e.message);
+      goToCredentialCreateScreen(credential.backendURL);
+      await deleteCredential(index);
     }
-
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: 'dashboard' },
-        ],
-      }),
-    );
   };
 
   const bioAuthCheck = useCallback((c: TCredential[]) => {
@@ -75,7 +87,7 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
         } = {},
       } = route;
       if (c.length === 1 && routeName === 'credentials' && !noRedirect) {
-        await loginWithCredential(c[0]);
+        await loginWithCredential(c[0], 0);
       }
     })();
   }, [useBiometricAuth, authenticated]);
@@ -93,11 +105,12 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
     }, []),
   );
 
-  const goToCredentialCreateScreen = () => navigation.dispatch(
-    CommonActions.navigate({
-      name: 'CredentialCreateScreen',
-    }),
-  );
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (<AIconButton icon={<Ionicons name="settings-outline" color={selectedBrandStyle} size={24} />} onPress={() => setEditMode(!editMode)} />),
+      headerRight: () => (<AIconButton icon={<Ionicons name="add-circle-outline" color={selectedBrandStyle} size={26} />} onPress={() => goToCredentialCreateScreen('')} />),
+    });
+  }, [navigation, goToCredentialCreateScreen, editMode, setEditMode]);
 
   const handleDeleteCredential = async (index: number) => {
     await dispatch.configuration.resetAllStates();
@@ -145,97 +158,55 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
   }
 
   return (
-    <AScrollView
-      bounces={false}
-      showsVerticalScrollIndicator={false}
-    >
-      <AStackFlex alignItems="flex-start">
-        <AStackFlex
-          row
-          justifyContent="space-between"
-          style={{
-            height: 50,
-            paddingHorizontal: 15,
-            marginTop: Platform.OS === 'ios' ? 0 : 20,
-          }}
-        >
-          <AView style={{ width: 100 }} />
-          <AText fontSize={17} bold>
-            {translate('configuration_credentials')}
-          </AText>
-          {(credentials.length > 0 && routeName === 'credentials') ? (
-            <Pressable
+    <SafeAreaView style={{ flex: 1 }}>
+      <AScrollView showsVerticalScrollIndicator={false}>
+        {credentials.map((c, index) => (
+          <AButton
+            key={`${c.backendURL}-${c.email}-${index + 1}`}
+            onPress={() => loginWithCredential(c, index)}
+            disabled={editMode}
+            style={{
+              borderWidth: 0.5,
+              borderColor: colors.listBorderColor,
+              marginHorizontal: 7,
+              marginBottom: 0,
+              marginTop: 7,
+            }}
+          >
+            <AView
               style={{
-                width: 100,
+                display: editMode ? 'flex' : 'none',
+                width: 17,
+                height: 17,
+                marginLeft: 15,
                 marginRight: 10,
-                alignItems: 'flex-end',
-                justifyContent: 'flex-end',
               }}
-              onPress={() => setEditMode(!editMode)}
-            >
-              <AText fontSize={16}>{editMode ? translate('credentials_done_button') : translate('credentials_edit_button')}</AText>
-            </Pressable>
-          ) : <AView style={{ width: 100 }} />}
-        </AStackFlex>
-        <AStackFlex px={10}>
-          {credentials.map((c, index) => (
-            <AButton
-              key={`${c.backendURL}-${c.email}-${index + 1}`}
-              onPress={() => loginWithCredential(c)}
-              disabled={editMode}
             >
               <AView
                 style={{
-                  display: editMode ? 'flex' : 'none',
-                  width: 17,
-                  height: 17,
-                  marginLeft: 15,
-                  marginRight: 10,
+                  flex: 1,
+                  width: 16,
+                  height: 16,
+                  backgroundColor: 'white',
+                  borderRadius: 10,
+                  position: 'absolute',
+                  top: 0.5,
+                  left: 0.5,
                 }}
-              >
-                <AView
-                  style={{
-                    flex: 1,
-                    width: 16,
-                    height: 16,
-                    backgroundColor: 'white',
-                    borderRadius: 10,
-                    position: 'absolute',
-                    top: 0.5,
-                    left: 0.5,
-                  }}
-                />
-                <AntDesign onPress={() => showAlert(index)} name="minuscircle" size={17} color="red" />
-              </AView>
-              <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={25} color={colors.text} />
-              <AStackFlex alignItems="flex-start" mx={5}>
-                <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
-                <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
-                <AText
-                  py={3}
-                  numberOfLines={1}
-                  fontSize={10}
-                >
-                  {c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}
-                </AText>
-              </AStackFlex>
-            </AButton>
-          ))}
-        </AStackFlex>
-
-        {!editMode && (
-          <AStackFlex px={10}>
-            <AButton style={{ height: 40 }} onPress={goToCredentialCreateScreen}>
-              <AStackFlex row>
-                <Ionicons name="add-circle" size={20} color="white" style={{ margin: 5 }} />
-                <AText fontSize={15}>{translate('configuration_credentials_add_button')}</AText>
-              </AStackFlex>
-            </AButton>
-          </AStackFlex>
-        )}
-
-        <AView style={{ height: 300 }} />
-      </AStackFlex>
-    </AScrollView>
+              />
+              <AntDesign onPress={() => showAlert(index)} name="minuscircle" size={17} color="red" />
+            </AView>
+            <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={27} color={colors.text} />
+            <AStackFlex alignItems="flex-start" mx={5}>
+              <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
+              <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
+              <AText py={3} numberOfLines={1} fontSize={10}>
+                {c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}
+              </AText>
+            </AStackFlex>
+          </AButton>
+        ))}
+      </AScrollView>
+    </SafeAreaView>
   );
 }
