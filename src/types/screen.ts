@@ -24,6 +24,7 @@ export interface ScreenType {
       forceRefresh?: boolean | undefined;
       noRedirect?: boolean;
       filterType?: string;
+      trasactionSearch?: string;
       selectFilter?: (filter: string) => void;
     }
   }

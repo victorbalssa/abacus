@@ -26,6 +26,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 
+import { SearchBarCommands } from 'react-native-screens';
 import { GetTransactionsPayload, TransactionSplitType, TransactionType } from '../../models/transactions';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
@@ -327,6 +328,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     },
   } = useDispatch<RootDispatch>();
 
+  const searchBarRef = React.useRef<SearchBarCommands>();
   const onLoadMore = async () => {
     const payload: GetTransactionsPayload = {
       start,
@@ -358,6 +360,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
+        ref: searchBarRef,
         autoCapitalize: 'none',
         placeholder: translate('transaction_search_placeholder'),
         headerIconColor: colors.text,
@@ -370,6 +373,16 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         shouldShowHintSearchIcon: false,
       },
     });
+    //set search bar on first screen open
+    if (params?.trasactionSearch !== undefined) {
+      const p = { ...params };
+      setTimeout(() => {
+        setSearch(p?.trasactionSearch);
+        searchBarRef.current?.focus();
+        searchBarRef.current?.setText(p?.trasactionSearch);
+        searchBarRef.current?.blur();
+      }, 500);
+    }
   }, [navigation, search]);
 
   useFocusEffect(
@@ -381,6 +394,15 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
           onLoad().catch();
           navigation.setParams({ forceRefresh: false });
         }
+      }
+
+      if (params?.trasactionSearch !== undefined) {
+        setSearch(params?.trasactionSearch);
+        searchBarRef.current?.focus();
+        searchBarRef.current?.setText(params?.trasactionSearch);
+        searchBarRef.current?.blur();
+        // disabled
+        params.trasactionSearch = undefined;
       }
 
       return () => {

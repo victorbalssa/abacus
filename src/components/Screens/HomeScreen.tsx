@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { CommonActions, useFocusEffect, useScrollToTop, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   RefreshControl,
@@ -170,6 +170,20 @@ function InsightCategories() {
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
   const loading = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories?.loading);
   const dispatch = useDispatch<RootDispatch>();
+  const navigation = useNavigation();
+  
+  const goToTransactions = async (id: string, trasactionSearch: string) => {
+    navigation.dispatch(
+      CommonActions.navigate(translate('navigation_transactions_tab'), {
+        screen: 'TransactionsScreen',
+        merge: true,
+        params: {
+          id,
+          trasactionSearch,
+        },
+      }),
+    );
+  };
 
   return (
     <AScrollView
@@ -188,6 +202,15 @@ function InsightCategories() {
         {translate('home_categories')}
       </AText>
       {insightCategories.map((category, index) => (
+        <TouchableOpacity
+          key={category.name}
+          onPress={() => {
+            if (category.name === 'total' || category.name === 'perday') return;
+            if (category.name === 'no-category') {
+              goToTransactions(category.id, 'has_any_category:false');
+            } else goToTransactions(category.id, `category_is:"${category.name}"`);
+          }}
+        >
         <AStack
           key={category.name}
           row
@@ -222,6 +245,7 @@ function InsightCategories() {
             </AText>
           </ASkeleton>
         </AStack>
+        </TouchableOpacity>
       ))}
       <AView style={{ height: 150 }} />
     </AScrollView>
