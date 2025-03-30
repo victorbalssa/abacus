@@ -40,7 +40,7 @@ export default function AFilterButton({
           borderRadius: 8,
           paddingHorizontal: 7,
           marginHorizontal: 2,
-          height: 37,
+          height: 35,
         }}
       >
         <AText fontSize={15} bold capitalize={capitalize}>

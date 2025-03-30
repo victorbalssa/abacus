@@ -464,15 +464,11 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
                 height: 30,
                 marginHorizontal: 5,
               }}
-
             >
               <Ionicons onPress={resetFilters} name="close-circle" size={24} color={colors.text} />
             </AView>
           )}
-          <AScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          >
+          <AScrollView horizontal showsHorizontalScrollIndicator={false}>
             <ADateFilterButton currentDate={start} selectDate={(date: Date) => setStartDate(date)} />
             <AFilterButton filterType={translate('transaction_type_label')} selected={type} selectFilter={(selected: 'withdrawal' | 'deposit' | 'transfer') => setType(selected)} navigation={navigation} capitalize />
             <AFilterButton filterType={translate('currency')} selected={currentCode} selectFilter={(selected) => setCurrentCode(selected)} navigation={navigation} />

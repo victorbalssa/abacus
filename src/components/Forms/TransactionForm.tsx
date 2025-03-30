@@ -5,12 +5,7 @@ import React, {
   useState,
 } from 'react';
 import {
-  Keyboard,
-  Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-  Pressable,
-  Switch,
+  Keyboard, Platform, KeyboardAvoidingView, ScrollView, Switch, ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Haptics from 'expo-haptics';
@@ -112,6 +107,7 @@ export default function TransactionForm({
   splits = [],
   id = '-1',
 }) {
+  const { colors } = useThemeColors();
   const dispatch = useDispatch<RootDispatch>();
   const loading = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.loading);
   const closeTransactionScreen = useSelector((state: RootState) => state.configuration.closeTransactionScreen);
@@ -136,12 +132,10 @@ export default function TransactionForm({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <AButton type="transparent" loading={loading} style={{ height: 40, marginTop: 5 }} onPress={handleSubmit}>
-          <AText fontSize={16} bold>{translate('transaction_form_submit_button')}</AText>
-        </AButton>
+        loading ? <ActivityIndicator size="small" color={colors.text} /> : <AText onPress={handleSubmit} fontSize={16} bold>{translate('transaction_form_submit_button')}</AText>
       ),
     });
-  }, [navigation, dispatch, title, splits, id]);
+  }, [navigation, dispatch, title, splits, id, loading]);
 
   return useMemo(
     () => (

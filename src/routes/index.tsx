@@ -192,9 +192,6 @@ function TransactionsStack() {
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerTintColor: colors.text,
           headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: colors.tileBackgroundColor,
-          },
           headerTitleStyle: {
             fontFamily: 'Montserrat-Bold',
           },
@@ -306,6 +303,17 @@ function Home() {
           options={{
             tabBarIcon: TabBarConfigurationScreenIcon,
             tabBarTestID: 'navigation_settings_tab',
+            headerShown: true,
+            headerTransparent: false,
+            headerShadowVisible: false,
+            headerTitle: translate('navigation_settings_tab'),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.backgroundColor,
+            },
+            headerTitleStyle: {
+              fontFamily: 'Montserrat-Bold',
+            },
           }}
         />
       </Tab.Navigator>
@@ -344,6 +352,22 @@ export default function Index() {
         <Stack.Screen
           name="credentials"
           component={CredentialsScreen}
+          options={{
+            headerShown: true,
+            headerTitle: 'Abacus',
+            headerBackTitleVisible: false,
+            headerLargeTitle: true,
+            headerTransparent: Platform.select({ ios: true, android: false }),
+            headerBlurEffect: Platform.select({ ios: 'regular' }),
+            headerTintColor: colors.text,
+            headerShadowVisible: false,
+            headerTitleStyle: {
+              fontFamily: 'Montserrat-Bold',
+            },
+            headerLargeTitleStyle: {
+              fontFamily: 'Montserrat-Bold',
+            },
+          }}
         />
         <Stack.Screen
           name="dashboard"

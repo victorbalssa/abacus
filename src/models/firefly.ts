@@ -4,7 +4,9 @@ import { exchangeCodeAsync, refreshAsync } from 'expo-auth-session';
 import { maxBy, minBy } from 'lodash';
 import semver from 'semver';
 import axios from 'axios';
-import { discovery, redirectUri, addCredential, deleteCredential, replaceAccessToken } from '../lib/oauth';
+import {
+  discovery, redirectUri, addCredential, replaceAccessToken,
+} from '../lib/oauth';
 import colors from '../constants/colors';
 import { RootModel } from './index';
 import { generateRangeTitle } from '../lib/common';

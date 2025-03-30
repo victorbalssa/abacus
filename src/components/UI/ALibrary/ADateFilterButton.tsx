@@ -49,7 +49,7 @@ export default function ADateFilterButton({
               borderRadius: 8,
               paddingHorizontal: 7,
               marginHorizontal: 2,
-              height: 37,
+              height: 35,
             }}
           >
             <AText fontSize={14} bold>{moment(currentDate).format('ll')}</AText>

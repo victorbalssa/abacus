@@ -16,7 +16,6 @@ import {
 import * as StoreReview from 'expo-store-review';
 import { useDispatch, useSelector } from 'react-redux';
 import { CommonActions } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
@@ -33,7 +32,6 @@ import {
 export default function ConfigurationScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
   const closeTransactionScreen = useSelector((state: RootState) => state.configuration.closeTransactionScreen);
-  const safeAreaInsets = useSafeAreaInsets();
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
   const dispatch = useDispatch<RootDispatch>();
@@ -129,14 +127,9 @@ export default function ConfigurationScreen({ navigation }: ScreenType) {
 
   return (
     <AScrollView
-      style={{
-        paddingTop: safeAreaInsets.top,
-        backgroundColor: colors.backgroundColor,
-      }}
-      bounces={false}
+      style={{ backgroundColor: colors.backgroundColor }}
       showsVerticalScrollIndicator={false}
     >
-
       <AText py={10} px={10} fontSize={18} bold>
         {translate('configuration_security')}
       </AText>

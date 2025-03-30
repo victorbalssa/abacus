@@ -16,11 +16,19 @@ import { OauthConfigType, ScreenType } from '../../types/screen';
 import translate from '../../i18n/locale';
 import { TCredential } from '../../types/credential';
 
-export default function CredentialCreateScreen({ navigation }: ScreenType) {
+export default function CredentialCreateScreen({ navigation, route }: ScreenType) {
   const dispatch = useDispatch<RootDispatch>();
 
+  const {
+    params: {
+      payload: {
+        url,
+      } = {},
+    } = {},
+  } = route;
+
   const [config, setConfig] = useState<OauthConfigType>({
-    backendURL: 'https://',
+    backendURL: url || 'https://',
     oauthClientId: '',
     oauthClientSecret: '',
     personalAccessToken: '',

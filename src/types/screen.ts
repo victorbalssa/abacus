@@ -17,6 +17,7 @@ export interface ScreenType {
   route?: {
     params?: {
       payload?: {
+        url?: string
         splits?: TransactionSplitType[];
         groupTitle?: string
       };
