@@ -35,7 +35,7 @@ import ChartScreen from '../components/Screens/ChartScreen';
 import TransactionCreateScreen from '../components/Screens/TransactionCreateScreen';
 import TransactionsScreen from '../components/Screens/TransactionsScreen';
 import TransactionDetailScreen from '../components/Screens/TransactionDetailScreen';
-import ConfigurationScreen from '../components/Screens/ConfigurationScreen';
+import SettingsScreen from '../components/Screens/SettingsScreen';
 import CredentialsScreen from '../components/Screens/CredentialsScreen';
 import ColorSelectionScreen from '../components/Screens/ColorSelectionScreen';
 
@@ -53,6 +53,7 @@ import { AbacusQuickAction } from '../types/quickAction';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
+const SettingStack = createNativeStackNavigator();
 const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -223,6 +224,33 @@ function TransactionsStack() {
   );
 }
 
+function SettingsStack() {
+  const { colors } = useThemeColors();
+
+  return (
+    <SettingStack.Navigator>
+      <SettingStack.Screen
+        name={translate('navigation_settings_tab')}
+        component={SettingsScreen}
+        options={{
+          headerTitle: translate('navigation_settings_tab'),
+          headerLargeTitle: true,
+          headerTransparent: Platform.select({ ios: true, android: false }),
+          headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerTintColor: colors.text,
+          headerShadowVisible: false,
+          headerTitleStyle: {
+            fontFamily: 'Montserrat-Bold',
+          },
+          headerLargeTitleStyle: {
+            fontFamily: 'Montserrat-Bold',
+          },
+        }}
+      />
+    </SettingStack.Navigator>
+  );
+}
+
 function PrimaryButtonComponent() {
   return <View />;
 }
@@ -299,21 +327,11 @@ function Home() {
         />
         <Tab.Screen
           name={translate('navigation_settings_tab')}
-          component={ConfigurationScreen}
+          component={SettingsStack}
           options={{
             tabBarIcon: TabBarConfigurationScreenIcon,
             tabBarTestID: 'navigation_settings_tab',
-            headerShown: true,
-            headerTransparent: false,
-            headerShadowVisible: false,
-            headerTitle: translate('navigation_settings_tab'),
-            headerTintColor: colors.text,
-            headerStyle: {
-              backgroundColor: colors.backgroundColor,
-            },
-            headerTitleStyle: {
-              fontFamily: 'Montserrat-Bold',
-            },
+            title: translate('navigation_settings_tab'),
           }}
         />
       </Tab.Navigator>
