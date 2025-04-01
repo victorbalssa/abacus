@@ -191,6 +191,7 @@ function TransactionsStack() {
           headerLargeTitle: true,
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerStyle: Platform.select({ android: { backgroundColor: colors.tileBackgroundColor } }),
           headerTintColor: colors.text,
           headerShadowVisible: false,
           headerTitleStyle: {
@@ -237,6 +238,7 @@ function SettingsStack() {
           headerLargeTitle: true,
           headerTransparent: Platform.select({ ios: true, android: false }),
           headerBlurEffect: Platform.select({ ios: 'regular' }),
+          headerStyle: Platform.select({ android: { backgroundColor: colors.tileBackgroundColor } }),
           headerTintColor: colors.text,
           headerShadowVisible: false,
           headerTitleStyle: {
@@ -379,6 +381,7 @@ export default function Index() {
             headerBlurEffect: Platform.select({ ios: 'regular' }),
             headerTintColor: colors.text,
             headerShadowVisible: false,
+            headerStyle: Platform.select({ android: { backgroundColor: colors.tileBackgroundColor } }),
             headerTitleStyle: {
               fontFamily: 'Montserrat-Bold',
             },

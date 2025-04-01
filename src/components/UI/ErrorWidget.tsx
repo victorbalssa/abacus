@@ -11,7 +11,7 @@ import useToasts from './useToasts';
 export default function ErrorWidget() {
   const { showToast, toasts, removeToast } = useToasts();
   const error = useSelector((state: RootState) => state.loading.models.configuration.error);
-  const success = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction.success);
+  const success = useSelector((state: RootState) => state.loading.effects.transactions.upsertTransaction?.success);
   const navigation = useNavigation();
 
   const goToCredentials = async () => {
