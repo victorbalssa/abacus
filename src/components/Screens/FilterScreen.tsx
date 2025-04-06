@@ -30,7 +30,7 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
   }, [navigation, filterType]);
 
   return useMemo(() => (
-    <ScrollView bounces={false} contentContainerStyle={{ paddingHorizontal: 5 }}>
+    <ScrollView bounces={false} contentContainerStyle={{ paddingTop: 10, paddingHorizontal: 5 }}>
       {filterType === translate('transaction_type_label') && (
         <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
           {types.map((type) => (
