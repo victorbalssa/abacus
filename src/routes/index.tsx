@@ -193,7 +193,7 @@ function TransactionsStack() {
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerStyle: Platform.select({ android: { backgroundColor: colors.tileBackgroundColor } }),
           headerTintColor: colors.text,
-          headerShadowVisible: false,
+          headerShadowVisible: true,
           headerTitleStyle: {
             fontFamily: 'Montserrat-Bold',
           },
@@ -229,9 +229,9 @@ function SettingsStack() {
   const { colors } = useThemeColors();
 
   return (
-    <SettingStack.Navigator>
+    <SettingStack.Navigator initialRouteName="SettingsScreen">
       <SettingStack.Screen
-        name={translate('navigation_settings_tab')}
+        name="SettingsScreen"
         component={SettingsScreen}
         options={{
           headerTitle: translate('navigation_settings_tab'),
@@ -240,12 +240,30 @@ function SettingsStack() {
           headerBlurEffect: Platform.select({ ios: 'regular' }),
           headerStyle: Platform.select({ android: { backgroundColor: colors.tileBackgroundColor } }),
           headerTintColor: colors.text,
-          headerShadowVisible: false,
+          headerShadowVisible: true,
           headerTitleStyle: {
             fontFamily: 'Montserrat-Bold',
           },
           headerLargeTitleStyle: {
             fontFamily: 'Montserrat-Bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="SettingsColorSelectionScreen"
+        component={ColorSelectionScreen}
+        options={{
+          headerShown: true,
+          headerTitle: translate('configuration_theme_title'),
+          headerShadowVisible: true,
+          headerBackTitleVisible: true,
+          headerBackTitle: translate('router_back_button'),
+          headerBackTitleStyle: {
+            fontFamily: 'Montserrat-Bold',
+          },
+          headerTintColor: colors.text,
+          headerStyle: {
+            backgroundColor: colors.tileBackgroundColor,
           },
         }}
       />
@@ -332,8 +350,8 @@ function Home() {
           component={SettingsStack}
           options={{
             tabBarIcon: TabBarConfigurationScreenIcon,
-            tabBarTestID: 'navigation_settings_tab',
             title: translate('navigation_settings_tab'),
+            tabBarTestID: 'navigation_settings_tab',
           }}
         />
       </Tab.Navigator>
@@ -393,23 +411,6 @@ export default function Index() {
         <Stack.Screen
           name="dashboard"
           component={Home}
-        />
-        <Stack.Screen
-          name="ColorSelectionScreen"
-          component={ColorSelectionScreen}
-          options={{
-            headerShown: true,
-            headerTitle: translate('configuration_theme_title'),
-            headerBackTitleVisible: true,
-            headerBackTitle: translate('router_back_button'),
-            headerBackTitleStyle: {
-              fontFamily: 'Montserrat-Bold',
-            },
-            headerTintColor: colors.text,
-            headerStyle: {
-              backgroundColor: colors.tileBackgroundColor,
-            },
-          }}
         />
         <ModalStack.Group
           screenOptions={{

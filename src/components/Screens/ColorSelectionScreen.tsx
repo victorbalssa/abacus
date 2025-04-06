@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { RootDispatch, RootState } from '../../store';
 import colors from '../../constants/colors';
-import { AScrollView } from '../UI/ALibrary';
+import { AScrollView, AView } from '../UI/ALibrary';
 
 const themes = [
   'gradientRed',
@@ -46,7 +46,7 @@ const themeToBrandStyle = {
 
 const { width } = Dimensions.get('window');
 const numColumns = 3;
-const tileSize = (width - (numColumns + 1) * 10) / numColumns;
+const tileSize = (width - (numColumns + 1) * 20) / numColumns;
 
 const styles = StyleSheet.create({
   container: {
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
+    paddingTop: 10,
   },
   colorTile: {
     width: tileSize,
@@ -88,18 +89,20 @@ export default function ColorSelectionScreen() {
   };
 
   return (
-    <AScrollView style={styles.container}>
-      {themes.map((theme) => (
-        <TouchableOpacity
-          key={theme}
-          style={[
-            styles.colorTile,
-            { backgroundColor: themeToBrandStyle[theme] },
-            currentTheme === theme && [styles.selectedTile, { borderColor: highlightColor, shadowColor: highlightColor }],
-          ]}
-          onPress={() => handleColorSelect(theme)}
-        />
-      ))}
+    <AScrollView>
+      <AView style={styles.container}>
+        {themes.map((theme) => (
+          <TouchableOpacity
+            key={theme}
+            style={[
+              styles.colorTile,
+              { backgroundColor: themeToBrandStyle[theme] },
+              currentTheme === theme && [styles.selectedTile, { borderColor: highlightColor, shadowColor: highlightColor }],
+            ]}
+            onPress={() => handleColorSelect(theme)}
+          />
+        ))}
+      </AView>
     </AScrollView>
   );
 }

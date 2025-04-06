@@ -28,6 +28,7 @@ export default function AScrollView({
       showsVerticalScrollIndicator={showsVerticalScrollIndicator}
       showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
       contentContainerStyle={style}
+      contentInsetAdjustmentBehavior="automatic"
       refreshControl={refreshControl}
     >
       {children}

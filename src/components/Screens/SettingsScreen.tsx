@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Platform, SafeAreaView, Switch,
+  Alert, Platform, Switch,
 } from 'react-native';
 import * as Linking from 'expo-linking';
 import * as Application from 'expo-application';
@@ -124,270 +124,268 @@ export default function SettingsScreen({ navigation }: ScreenType) {
   );
 
   return (
-    <SafeAreaView>
-      <AScrollView>
-        <AText py={10} px={10} fontSize={18} bold>
-          {translate('configuration_security')}
-        </AText>
-        <AView
+    <AScrollView>
+      <AText py={10} px={10} fontSize={18} bold>
+        {translate('configuration_security')}
+      </AText>
+      <AView
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+          backgroundColor: colors.tileBackgroundColor,
+        }}
+      >
+        <AStack
+          row
+          justifyContent="space-between"
           style={{
-            borderTopWidth: 0.5,
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
-            backgroundColor: colors.tileBackgroundColor,
           }}
         >
-          <AStack
-            row
-            justifyContent="space-between"
-            style={{
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>URL</AText>
-            <AText fontSize={14} onPress={() => Linking.openURL(backendURL)} underline>{backendURL}</AText>
-          </AStack>
-          <APressable
-            flexDirection="row"
-            onPress={goToAccounts}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_manage_credentials')}</AText>
-            <FontAwesome name="angle-right" size={22} color="gray" />
-          </APressable>
-          <AStack
-            row
-            justifyContent="space-between"
-            style={{
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-            }}
-          >
-            <AText fontSize={14}>{translate('auth_form_biometrics_lock')}</AText>
-            <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={() => bioAuthCallback(setUseBiometricAuth)} value={useBiometricAuth} />
-          </AStack>
-        </AView>
+          <AText fontSize={14}>URL</AText>
+          <AText fontSize={14} onPress={() => Linking.openURL(backendURL)} underline>{backendURL}</AText>
+        </AStack>
+        <APressable
+          flexDirection="row"
+          onPress={goToAccounts}
+          style={{
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+            borderBottomWidth: 0.5,
+            borderColor: colors.listBorderColor,
+          }}
+        >
+          <AText fontSize={14}>{translate('configuration_manage_credentials')}</AText>
+          <FontAwesome name="angle-right" size={22} color="gray" />
+        </APressable>
+        <AStack
+          row
+          justifyContent="space-between"
+          style={{
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+          }}
+        >
+          <AText fontSize={14}>{translate('auth_form_biometrics_lock')}</AText>
+          <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={() => bioAuthCallback(setUseBiometricAuth)} value={useBiometricAuth} />
+        </AStack>
+      </AView>
 
-        <AText py={10} px={10} fontSize={18} bold>
-          {translate('configuration_about')}
-        </AText>
-        <AView
+      <AText py={10} px={10} fontSize={18} bold>
+        {translate('configuration_about')}
+      </AText>
+      <AView
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+          backgroundColor: colors.tileBackgroundColor,
+        }}
+      >
+        <AStack
+          row
+          justifyContent="space-between"
           style={{
-            borderTopWidth: 0.5,
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
-            backgroundColor: colors.tileBackgroundColor,
           }}
         >
-          <AStack
-            row
-            justifyContent="space-between"
-            style={{
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_app_version')}</AText>
-            <AText fontSize={14}>{Application.nativeApplicationVersion}</AText>
-          </AStack>
-          <APressable
-            flexDirection="row"
-            onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/')}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_share_feedback')}</AText>
-            <Octicons name="cross-reference" size={20} color="gray" />
-          </APressable>
-          <APressable
-            flexDirection="row"
-            onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/issues/new')}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_report_issue')}</AText>
-            <Octicons name="issue-opened" size={20} color="gray" />
-          </APressable>
-          <APressable
-            flexDirection="row"
-            onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_sources')}</AText>
-            <AntDesign name="github" size={22} color="gray" />
-          </APressable>
-          <APressable
-            flexDirection="row"
-            onPress={reviewApp}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-            }}
-          >
-            <AText fontSize={14}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</AText>
-            <Ionicons name={Platform.select({ ios: 'logo-apple-appstore', android: 'logo-google-playstore' })} size={23} color="gray" />
-          </APressable>
-        </AView>
-        <AText py={10} px={10} fontSize={18} bold>
-          {translate('configuration_transaction_form')}
-        </AText>
-        <AView
+          <AText fontSize={14}>{translate('configuration_app_version')}</AText>
+          <AText fontSize={14}>{Application.nativeApplicationVersion}</AText>
+        </AStack>
+        <APressable
+          flexDirection="row"
+          onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/discussions/')}
           style={{
-            borderTopWidth: 0.5,
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
-            backgroundColor: colors.tileBackgroundColor,
           }}
         >
-          <AStack
-            row
-            justifyContent="space-between"
-            style={{
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-            }}
-          >
-            <AText fontSize={14}>{translate('close_after_transaction')}</AText>
-            <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={handleCheckBoxChange} value={closeTransactionScreen} />
-          </AStack>
-        </AView>
+          <AText fontSize={14}>{translate('configuration_share_feedback')}</AText>
+          <Octicons name="cross-reference" size={20} color="gray" />
+        </APressable>
+        <APressable
+          flexDirection="row"
+          onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/issues/new')}
+          style={{
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+            borderBottomWidth: 0.5,
+            borderColor: colors.listBorderColor,
+          }}
+        >
+          <AText fontSize={14}>{translate('configuration_report_issue')}</AText>
+          <Octicons name="issue-opened" size={20} color="gray" />
+        </APressable>
+        <APressable
+          flexDirection="row"
+          onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus')}
+          style={{
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+            borderBottomWidth: 0.5,
+            borderColor: colors.listBorderColor,
+          }}
+        >
+          <AText fontSize={14}>{translate('configuration_sources')}</AText>
+          <AntDesign name="github" size={22} color="gray" />
+        </APressable>
+        <APressable
+          flexDirection="row"
+          onPress={reviewApp}
+          style={{
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+          }}
+        >
+          <AText fontSize={14}>{translate(Platform.select({ ios: 'configuration_review_app_ios', android: 'configuration_review_app_android' }))}</AText>
+          <Ionicons name={Platform.select({ ios: 'logo-apple-appstore', android: 'logo-google-playstore' })} size={23} color="gray" />
+        </APressable>
+      </AView>
+      <AText py={10} px={10} fontSize={18} bold>
+        {translate('configuration_transaction_form')}
+      </AText>
+      <AView
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+          backgroundColor: colors.tileBackgroundColor,
+        }}
+      >
+        <AStack
+          row
+          justifyContent="space-between"
+          style={{
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+          }}
+        >
+          <AText fontSize={14}>{translate('close_after_transaction')}</AText>
+          <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={handleCheckBoxChange} value={closeTransactionScreen} />
+        </AStack>
+      </AView>
 
-        <AText py={10} px={10} fontSize={18} bold>
-          {translate('configuration_theme')}
-        </AText>
-        <AView
+      <AText py={10} px={10} fontSize={18} bold>
+        {translate('configuration_theme')}
+      </AText>
+      <AView
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+          backgroundColor: colors.tileBackgroundColor,
+        }}
+      >
+        <APressable
+          flexDirection="row"
+          onPress={() => navigation.navigate('SettingsColorSelectionScreen', { filterType: '', selectFilter: () => {} })}
           style={{
-            borderTopWidth: 0.5,
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
-            backgroundColor: colors.tileBackgroundColor,
           }}
         >
-          <APressable
-            flexDirection="row"
-            onPress={() => navigation.navigate('ColorSelectionScreen', { filterType: '', selectFilter: () => {} })}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_theme_selection')}</AText>
-            <FontAwesome name="angle-right" size={22} color="gray" />
-          </APressable>
-        </AView>
+          <AText fontSize={14}>{translate('configuration_theme_selection')}</AText>
+          <FontAwesome name="angle-right" size={22} color="gray" />
+        </APressable>
+      </AView>
 
-        <AText py={10} px={10} fontSize={18} bold>
-          {translate('configuration_debug')}
-        </AText>
-        <AView
+      <AText py={10} px={10} fontSize={18} bold>
+        {translate('configuration_debug')}
+      </AText>
+      <AView
+        style={{
+          borderTopWidth: 0.5,
+          borderBottomWidth: 0.5,
+          borderColor: colors.listBorderColor,
+          backgroundColor: colors.tileBackgroundColor,
+        }}
+      >
+        <APressable
+          flexDirection="row"
+          onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')}
           style={{
-            borderTopWidth: 0.5,
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
-            backgroundColor: colors.tileBackgroundColor,
           }}
         >
-          <APressable
-            flexDirection="row"
-            onPress={() => Linking.openURL('https://github.com/victorbalssa/abacus/blob/master/.github/HELP.md')}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_get_help')}</AText>
-            <FontAwesome name="angle-right" size={22} color="gray" />
-          </APressable>
-          <APressable
-            flexDirection="row"
-            onPress={showResetCacheAlert}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-              borderBottomWidth: 0.5,
-              borderColor: colors.listBorderColor,
-            }}
-          >
-            <AText fontSize={14}>{translate('configuration_clear_option')}</AText>
-            <FontAwesome name="angle-right" size={22} color="gray" />
-          </APressable>
-          <APressable
-            flexDirection="row"
-            onPress={showLogoutAlert}
-            style={{
-              justifyContent: 'space-between',
-              height: 45,
-              paddingHorizontal: 10,
-              paddingVertical: 5,
-              marginLeft: 10,
-            }}
-          >
-            <AText fontSize={14}>{translate('go_to_credentials')}</AText>
-            <FontAwesome name="angle-right" size={22} color="gray" />
-          </APressable>
-        </AView>
+          <AText fontSize={14}>{translate('configuration_get_help')}</AText>
+          <FontAwesome name="angle-right" size={22} color="gray" />
+        </APressable>
+        <APressable
+          flexDirection="row"
+          onPress={showResetCacheAlert}
+          style={{
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+            borderBottomWidth: 0.5,
+            borderColor: colors.listBorderColor,
+          }}
+        >
+          <AText fontSize={14}>{translate('configuration_clear_option')}</AText>
+          <FontAwesome name="angle-right" size={22} color="gray" />
+        </APressable>
+        <APressable
+          flexDirection="row"
+          onPress={showLogoutAlert}
+          style={{
+            justifyContent: 'space-between',
+            height: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+          }}
+        >
+          <AText fontSize={14}>{translate('go_to_credentials')}</AText>
+          <FontAwesome name="angle-right" size={22} color="gray" />
+        </APressable>
+      </AView>
 
-        <AView style={{ height: 170 }} />
-      </AScrollView>
-    </SafeAreaView>
+      <AView style={{ height: 170 }} />
+    </AScrollView>
   );
 }

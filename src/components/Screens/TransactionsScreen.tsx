@@ -373,7 +373,7 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         shouldShowHintSearchIcon: false,
       },
     });
-    //set search bar on first screen open
+    // set search bar on first screen open
     if (params?.trasactionSearch !== undefined) {
       const p = { ...params };
       setTimeout(() => {
