@@ -12,6 +12,7 @@ type AIconButtonType = {
   onPress: () => void,
   style?: AStyle
   testID?: string
+  disabled?: boolean
 }
 
 export default function AIconButton({
@@ -24,6 +25,7 @@ export default function AIconButton({
   backgroundColor = 'transparent',
   style = null,
   testID = null,
+  disabled = false,
 }: AIconButtonType) {
   return (
     <View
@@ -34,6 +36,7 @@ export default function AIconButton({
     >
       <Pressable
         testID={testID}
+        disabled={disabled}
         onPress={onPress}
         style={({ pressed }) => ({
           width: 40,

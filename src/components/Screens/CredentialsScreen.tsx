@@ -107,10 +107,10 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (<AIconButton icon={<Ionicons name="settings-outline" color={selectedBrandStyle} size={24} />} onPress={() => setEditMode(!editMode)} />),
+      headerLeft: () => credentials.length > 0 && (<AIconButton icon={<Ionicons name="settings-outline" color={selectedBrandStyle} size={24} />} onPress={() => setEditMode(!editMode)} />),
       headerRight: () => (<AIconButton icon={<Ionicons name="add-circle-outline" color={selectedBrandStyle} size={26} />} onPress={() => goToCredentialCreateScreen('')} />),
     });
-  }, [navigation, goToCredentialCreateScreen, editMode, setEditMode]);
+  }, [navigation, credentials, goToCredentialCreateScreen, editMode, setEditMode]);
 
   const handleDeleteCredential = async (index: number) => {
     await dispatch.configuration.resetAllStates();
