@@ -348,16 +348,12 @@ export default createModel<RootModel>()({
         currencies: { currentCode },
         configuration: { apiVersion },
       } = rootState;
-
       try {
         const apiSemverMinimum = '2.0.9';
         const { data: accounts } = (await dispatch.configuration.apiFetch({
           url: `/api/v1/accounts?type=asset&date=${end}`,
         })) as { data: AccountType[] };
-        if (
-          !semver.gte(apiVersion, apiSemverMinimum)
-          || accounts.length === 0
-        ) {
+        if (semver.valid(apiVersion) && (!semver.gte(apiVersion, apiSemverMinimum) || accounts.length === 0)) {
           this.setData({ earnedChart: [], spentChart: [] });
           return;
         }

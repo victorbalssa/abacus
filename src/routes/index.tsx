@@ -172,7 +172,7 @@ export function HeaderClose() {
 
   return (
     <Pressable onPress={navigation.goBack}>
-      <AText fontSize={16}>{translate('cancel')}</AText>
+      <AText fontSize={16} bold>{translate('cancel')}</AText>
     </Pressable>
   );
 }
@@ -394,11 +394,11 @@ export default function Index() {
             headerShown: true,
             headerTitle: 'Abacus',
             headerBackTitleVisible: false,
-            headerLargeTitle: true,
+            headerLargeTitle: false,
             headerTransparent: Platform.select({ ios: true, android: false }),
             headerBlurEffect: Platform.select({ ios: 'regular' }),
             headerTintColor: colors.text,
-            headerShadowVisible: false,
+            headerShadowVisible: true,
             headerStyle: Platform.select({ android: { backgroundColor: colors.tileBackgroundColor } }),
             headerTitleStyle: {
               fontFamily: 'Montserrat-Bold',
@@ -441,39 +441,12 @@ export default function Index() {
           <ModalStack.Screen
             name="FiltersScreen"
             component={FiltersScreen}
-            options={{
-              headerShown: true,
-              headerBackVisible: false,
-              headerTitle: translate('filters_screen_title'),
-              headerTitleAlign: 'center',
-              headerLeft: HeaderClose,
-              headerShadowVisible: true,
-              headerTitleStyle: {
-                fontFamily: 'Montserrat-Bold',
-              },
-              headerTintColor: colors.text,
-              headerStyle: {
-                backgroundColor: colors.tileBackgroundColor,
-              },
-            }}
+            options={{ headerShown: false }}
           />
           <ModalStack.Screen
             name="FilterScreen"
             component={FilterScreen}
-            options={{
-              headerShown: true,
-              headerBackVisible: false,
-              headerTitleAlign: 'center',
-              headerLeft: HeaderClose,
-              headerShadowVisible: true,
-              headerTitleStyle: {
-                fontFamily: 'Montserrat-Bold',
-              },
-              headerTintColor: colors.text,
-              headerStyle: {
-                backgroundColor: colors.tileBackgroundColor,
-              },
-            }}
+            options={{ headerShown: false }}
           />
           <ModalStack.Screen
             name="CredentialCreateScreen"
