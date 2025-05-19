@@ -36,6 +36,9 @@ import 'moment/locale/ko';
 import trTR from './tr-TR';
 import 'moment/locale/tr';
 
+import ukUA from './uk-UA';
+import 'moment/locale/uk';
+
 export default {
   de: deDE,
   en: enUS,
@@ -50,4 +53,5 @@ export default {
   vi: viVN,
   ko: koKR,
   tr: trTR,
+  uk: ukUA,
 };
