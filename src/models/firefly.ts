@@ -359,7 +359,8 @@ export default createModel<RootModel>()({
         }
 
         const accountIdsParam = accounts.map((a) => a.id).join('&filter[accounts][]=');
-        const { data: balances } = (await dispatch.configuration.apiFetch({ url: `/api/v2/chart/balance/balance?start=${start}&end=${end}&filter[accounts][]=${accountIdsParam}` })) as { data: BalanceType[] };
+        const endpoint = semver.gte(apiVersion, '6.3.0') ? '/api/v1/chart/balance/balance' : '/api/v2/chart/balance/balance';
+        const { data: balances } = (await dispatch.configuration.apiFetch({ url: `${endpoint}?start=${start}&end=${end}&filter[accounts][]=${accountIdsParam}` })) as { data: BalanceType[] };
 
         const earnedChartEntries = balances.filter((balance) => balance.currencyCode === currentCode && balance.label === 'earned')[0]?.entries;
 

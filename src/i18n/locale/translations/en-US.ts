@@ -113,7 +113,7 @@ export default {
 
   // from 0.9.2
   assets_history_chart: 'Accounts chart',
-  balance_history_chart: 'Net Worth chart',
+  balance_history_chart: 'Balance chart',
   balance_history_chart_no_data: 'To access this graph, please update FireflyIII to the latest version.',
   account_not_included_in_net_worth: '* Account not included in Net Worth.',
 
