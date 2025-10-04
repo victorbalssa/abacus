@@ -54,6 +54,7 @@ export default function AText({
         maxWidth,
         textAlign,
         fontFamily: bold ? 'Montserrat-Bold' : fontFamily,
+        fontWeight: bold ? 'bold' : 'normal',
         paddingHorizontal: px,
         paddingVertical: py,
         textDecorationLine: underline ? 'underline' : 'none',

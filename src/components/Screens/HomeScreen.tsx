@@ -35,6 +35,7 @@ import {
   AProgressBar,
   ASkeleton, AStackFlex,
 } from '../UI/ALibrary';
+import IncomeExpenseBar from '../UI/IncomeExpenseBar';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -168,9 +169,18 @@ function AssetsAccounts() {
 function InsightCategories() {
   const { colors } = useThemeColors();
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
+  const insightCategoriesTotal = useSelector((state: RootState) => state.categories.total);
+  const insightCategoriesPerDay = useSelector((state: RootState) => state.categories.perDay);
   const loading = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories?.loading);
   const dispatch = useDispatch<RootDispatch>();
   const navigation = useNavigation();
+  const expensesOnly = useSelector((state: RootState) => state.configuration.displayOnlyExpenseCategories);
+  const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
+
+  const onSwitch = async (bool: boolean) => {
+    dispatch.configuration.setDisplayOnlyExpenseCategories(bool);
+    return Promise.resolve();
+  };
 
   const goToTransactions = async (id: string, transactionSearch: string) => {
     navigation.dispatch(
@@ -198,55 +208,88 @@ function InsightCategories() {
         />
       )}
     >
-      <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
-        {translate('home_categories')}
-      </AText>
-      {insightCategories.map((category, index) => (
-        <TouchableOpacity
-          key={category.name}
-          onPress={() => {
-            if (category.name === 'total' || category.name === 'perday') return;
-            if (category.name === 'no-category') {
-              goToTransactions(category.id, 'has_any_category:false');
-            } else goToTransactions(category.id, `category_is:"${category.name}"`);
-          }}
-        >
-        <AStack
-          key={category.name}
-          row
-          mx={15}
-          style={{
-            height: 45,
-            borderColor: colors.listBorderColor,
-            borderBottomWidth: index + 1 === insightCategories.length ? 0 : 0.5,
-          }}
-          justifyContent="space-between"
-        >
-          <AText
-            fontSize={14}
-            maxWidth="60%"
-            numberOfLines={1}
-            bold={(category.name === 'total' || category.name === 'perday')}
-          >
-            {(category.name === 'no-category') ? translate('no_category') : ''}
-            {(category.name === 'total') ? translate('category_total_spent') : ''}
-            {(category.name === 'perday') ? translate('category_perday_spent') : ''}
-            {(category.name !== 'no-category' && category.name !== 'total' && category.name !== 'perday') ? category.name : ''}
-          </AText>
+      <AStack px={5} row justifyContent="space-between">
+        <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
+          {expensesOnly ? translate('home_expense_categories') : translate('home_all_categories')}
+        </AText>
+        <Switch style={{ marginHorizontal: 10 }} thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={onSwitch} value={expensesOnly} />
+      </AStack>
+      {[insightCategoriesPerDay, insightCategoriesTotal, ...insightCategories].map((category, index) => {
+        if (expensesOnly && category.expense >= 0) {
+          return '';
+        }
 
-          <ASkeleton loading={loading}>
-            <AText
-              fontSize={14}
-              maxWidth={100}
-              numberOfLines={1}
-              bold={(category.name === 'total' || category.name === 'perday')}
+        return (
+          <TouchableOpacity
+            key={category.id}
+            onPress={() => {
+              if (category.name === 'total' || category.name === 'perday') return;
+              if (category.name === 'no-category') {
+                goToTransactions(category.id, 'has_any_category:false');
+              } else {
+                goToTransactions(category.id, `category_is:"${category.name}"`);
+              }
+            }}
+          >
+            <AView
+              key={category.name}
+              style={{
+                borderColor: category.name === 'total' ? colors.dividerColor : colors.listBorderColor,
+                borderBottomWidth: index - 1 === insightCategories.length ? 0 : 1,
+                paddingBottom: !expensesOnly && category.name === 'total' ? 10 : 0,
+              }}
             >
-              {localNumberFormat(category.currencyCode, (category.differenceFloat * -1))}
-            </AText>
-          </ASkeleton>
-        </AStack>
-        </TouchableOpacity>
-      ))}
+              <AStack
+                row
+                mx={15}
+                style={{
+                  height: 45,
+                }}
+                justifyContent="space-between"
+              >
+                <AText
+                  fontSize={category.name === 'perday' ? 12 : 14}
+                  maxWidth="60%"
+                  numberOfLines={1}
+                  bold={(category.name === 'total' || category.name === 'perday')}
+                >
+                  {(category.name === 'no-category') ? translate('no_category') : ''}
+                  {(category.name === 'total') ? translate(expensesOnly ? 'category_total_spent' : 'category_total_balance') : ''}
+                  {(category.name === 'perday') ? translate(expensesOnly ? 'category_perday_spent' : 'category_perday_balance') : ''}
+                  {(category.name !== 'no-category' && category.name !== 'total' && category.name !== 'perday') ? category.name : ''}
+                </AText>
+
+                <ASkeleton loading={loading}>
+                  <AText
+                    fontSize={category.name === 'perday' ? 12 : 14}
+                    maxWidth={100}
+                    numberOfLines={1}
+                    bold={(category.name === 'total' || category.name === 'perday')}
+                    color={!expensesOnly ? category.difference > 0 ? colors.brandSuccess : category.difference < 0 ? colors.brandDanger : colors.text : colors.text}
+                  >
+                    {localNumberFormat(
+                      category.currencyCode,
+                      expensesOnly ? category.expense * -1 : category.difference,
+                    )}
+                  </AText>
+                </ASkeleton>
+              </AStack>
+              {!expensesOnly && category.name !== 'perday' && (
+                <IncomeExpenseBar
+                  income={category.income}
+                  incomeTotal={category.name === 'total' ? insightCategoriesTotal.income - insightCategoriesTotal.expense : insightCategoriesTotal.income}
+                  expense={category.expense}
+                  expenseTotal={category.name === 'total' ? insightCategoriesTotal.income - insightCategoriesTotal.expense : insightCategoriesTotal.expense}
+                  currencyCode={category.currencyCode}
+                  loading={loading}
+                  barBackground={category.name === 'total'}
+                  barHeight={category.name === 'total' ? 10 : undefined}
+                />
+              )}
+            </AView>
+          </TouchableOpacity>
+        );
+      })}
       <AView style={{ height: 150 }} />
     </AScrollView>
   );

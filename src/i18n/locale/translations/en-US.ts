@@ -89,6 +89,8 @@ export default {
   balance: 'Balance',
   history: 'History',
   home_categories: 'Categories',
+  home_all_categories: 'Categories',
+  home_expense_categories: 'Expense Categories',
   home_net_worth: 'Net Worth',
 
   // from 0.7.0
@@ -167,5 +169,7 @@ export default {
   credentials_edit_button: 'Edit',
   no_category: '(no category)',
   category_total_spent: 'Total spent',
+  category_total_balance: 'Total balance',
   category_perday_spent: 'Spent per day',
+  category_perday_balance: 'Per day balance',
 };
