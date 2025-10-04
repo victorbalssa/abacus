@@ -171,15 +171,15 @@ function InsightCategories() {
   const loading = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories?.loading);
   const dispatch = useDispatch<RootDispatch>();
   const navigation = useNavigation();
-  
-  const goToTransactions = async (id: string, trasactionSearch: string) => {
+
+  const goToTransactions = async (id: string, transactionSearch: string) => {
     navigation.dispatch(
       CommonActions.navigate(translate('navigation_transactions_tab'), {
         screen: 'TransactionsScreen',
         merge: true,
         params: {
           id,
-          trasactionSearch,
+          transactionSearch,
         },
       }),
     );
