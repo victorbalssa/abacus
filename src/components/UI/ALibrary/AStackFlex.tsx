@@ -10,6 +10,7 @@ type AStackFlexType = {
   py?: number
   mx?: number
   my?: number
+  gap?: number
   row?: boolean
   flex?: number
   justifyContent?: 'center' | 'flex-start' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly'
@@ -25,6 +26,7 @@ export default function AStackFlex({
   py = 0,
   mx = 0,
   my = 0,
+  gap = 0,
   flex = 1,
   row = false,
   justifyContent = 'center',
@@ -40,6 +42,7 @@ export default function AStackFlex({
         flex,
         width: '100%',
         flexDirection: row ? 'row' : 'column',
+        gap,
         justifyContent,
         alignItems,
         backgroundColor,
