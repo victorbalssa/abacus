@@ -169,9 +169,10 @@ function InsightCategories() {
   const { colors } = useThemeColors();
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
   const loading = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories?.loading);
+  const startDate = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const dispatch = useDispatch<RootDispatch>();
   const navigation = useNavigation();
-  
+
   const goToTransactions = async (id: string, trasactionSearch: string) => {
     navigation.dispatch(
       CommonActions.navigate(translate('navigation_transactions_tab'), {
@@ -180,6 +181,7 @@ function InsightCategories() {
         params: {
           id,
           trasactionSearch,
+          startDate: new Date(`${startDate}T12:00:00`),
         },
       }),
     );
