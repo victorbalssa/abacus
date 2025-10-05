@@ -112,7 +112,7 @@ export default function AutocompleteField({
               <EvilIcons name="tag" size={24} color={colors.brandDark} />
               <AText px={5} fontSize={15} lineHeight={20} color={colors.brandDark} numberOfLines={1} maxWidth={200} bold>{item}</AText>
               <AIconButton
-                icon={<AntDesign name="closecircle" size={19} color={colors.greyLight} />}
+                icon={<AntDesign name="close-circle" size={19} color={colors.greyLight} />}
                 onPress={() => handleDeleteMultiple(item)}
               />
             </AView>

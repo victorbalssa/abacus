@@ -285,11 +285,11 @@ export default createModel<RootModel>()({
           rangeDetails: { range, start, end },
         },
         currencies: { currentCode },
-        configuration: { selectedBrandStyle },
+        configuration: { selectedBrandStyle, displayAllAccounts },
       } = rootState;
 
       const { data: accounts } = (await dispatch.configuration.apiFetch({
-        url: `/api/v1/chart/account/overview?start=${start}&end=${end}`,
+        url: `/api/v1/chart/account/overview?start=${start}&end=${end}&preselected=${displayAllAccounts ? 'all' : ''}`,
       })) as { data: AssetAccountType[] };
       let colorIndex = 0;
 
@@ -337,7 +337,7 @@ export default createModel<RootModel>()({
           ).y;
         });
 
-      dispatch.firefly.setData({ accounts: accounts.filter((account) => account.currencyCode === currentCode).slice(0, 5) });
+      dispatch.firefly.setData({ accounts: accounts.filter((account) => account.currencyCode === currentCode) });
     },
 
     async getBalanceChart(_: void, rootState): Promise<void> {

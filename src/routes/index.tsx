@@ -130,7 +130,7 @@ function TabBarComponent({
 function TabBarChartScreenIcon({ color }) {
   return (
     <AntDesign
-      name="linechart"
+      name="line-chart"
       size={20}
       color={color}
     />

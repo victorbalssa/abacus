@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { AndroidConfig, withAndroidStyles } = require('@expo/config-plugins');
+const { AndroidConfig, withAndroidStyles } = require('expo/config-plugins');
 
 const setStrings = (modResults) => {
   let newStyles = { ...modResults };

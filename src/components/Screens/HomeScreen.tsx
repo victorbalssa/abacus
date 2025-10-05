@@ -6,7 +6,12 @@ import React, {
   useState,
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CommonActions, useFocusEffect, useScrollToTop, useNavigation } from '@react-navigation/native';
+import {
+  CommonActions,
+  useFocusEffect,
+  useScrollToTop,
+  useNavigation,
+} from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   RefreshControl,
@@ -35,6 +40,7 @@ import {
   AProgressBar,
   ASkeleton, AStackFlex,
 } from '../UI/ALibrary';
+import DisplayAllAccountsSwitch from '../UI/DisplayAllAccountsSwitch';
 import IncomeExpenseBar from '../UI/IncomeExpenseBar';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
@@ -47,11 +53,6 @@ function AssetsAccounts() {
   const dispatch = useDispatch<RootDispatch>();
   const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
 
-  const onSwitch = async (bool: boolean) => {
-    dispatch.configuration.setDisplayAllAccounts(bool);
-    dispatch.accounts.getAccounts();
-    return Promise.resolve();
-  };
   const [nameSortOrder, setNameSortOrder] = useState('asc');
   const [balanceSortOrder, setBalanceSortOrder] = useState('desc');
   const [lastPressed, setLastPressed] = useState(null);
@@ -96,11 +97,11 @@ function AssetsAccounts() {
       )}
     >
       <AView>
-        <AStack px={5} row justifyContent="space-between">
-          <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
+        <AStack px={15} my={5} row justifyContent="space-between">
+          <AText fontSize={25} lineHeight={27} style={{ margin: 5 }} bold>
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
           </AText>
-          <Switch style={{ marginHorizontal: 10 }} thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={onSwitch} value={displayAllAccounts} />
+          <DisplayAllAccountsSwitch />
         </AStack>
         <AStack px={5} row justifyContent="space-between">
           <View style={{ flex: 1, alignItems: 'flex-start', paddingLeft: '5%' }}>
@@ -172,9 +173,10 @@ function InsightCategories() {
   const insightCategoriesTotal = useSelector((state: RootState) => state.categories.total);
   const insightCategoriesPerDay = useSelector((state: RootState) => state.categories.perDay);
   const loading = useSelector((state: RootState) => state.loading.effects.categories.getInsightCategories?.loading);
+  const startDate = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const dispatch = useDispatch<RootDispatch>();
   const navigation = useNavigation();
-  const expensesOnly = useSelector((state: RootState) => state.configuration.displayOnlyExpenseCategories);
+const expensesOnly = useSelector((state: RootState) => state.configuration.displayOnlyExpenseCategories);
   const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
 
   const onSwitch = async (bool: boolean) => {
@@ -190,6 +192,7 @@ function InsightCategories() {
         params: {
           id,
           transactionSearch,
+          startDate: new Date(`${startDate}T12:00:00`),
         },
       }),
     );

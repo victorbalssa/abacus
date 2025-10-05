@@ -405,6 +405,11 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         params.transactionSearch = undefined;
       }
 
+      if (params?.startDate !== undefined) {
+        setStartDate(params.startDate);
+        params.startDate = undefined;
+      }
+
       return () => {
         isActive = false;
       };

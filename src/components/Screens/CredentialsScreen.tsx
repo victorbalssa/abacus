@@ -194,7 +194,7 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
                   left: 0.5,
                 }}
               />
-              <AntDesign onPress={() => showAlert(index)} name="minuscircle" size={17} color="red" />
+              <AntDesign onPress={() => showAlert(index)} name="minus-circle" size={17} color="red" />
             </AView>
             <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={27} color={colors.text} />
             <AStackFlex alignItems="flex-start" mx={5}>

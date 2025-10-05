@@ -1,4 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import {
   VictoryAxis,
   VictoryChart,
@@ -10,11 +12,16 @@ import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Localization from 'expo-localization';
-import { Pressable, View, ScrollView } from 'react-native';
+import {
+  Pressable,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import { getLocales } from 'expo-localization';
 import {
   AStackFlex,
-  AText,
+  AText, AView,
 } from '../UI/ALibrary';
 
 import { RootDispatch, RootState } from '../../store';
@@ -22,6 +29,7 @@ import Loading from '../UI/Loading';
 import translate from '../../i18n/locale';
 import { useThemeColors } from '../../lib/common';
 import ErrorBoundary from '../UI/ErrorBoundary';
+import DisplayAllAccountsSwitch from '../UI/DisplayAllAccountsSwitch';
 
 function CursorPointer({ x, y, stroke }) {
   return (
@@ -40,6 +48,8 @@ function Cursor({
   activePoints,
   colors,
 }) {
+  const [locale] = getLocales();
+
   return (
     <>
       <AStackFlex
@@ -57,7 +67,7 @@ function Cursor({
         }}
       >
         <AText fontSize={16} py={1} bold>
-          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
+          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(locale.languageCode, {
             month: 'short',
             day: 'numeric',
             year: 'numeric',
@@ -123,13 +133,23 @@ function Cursor({
 }
 
 export default function AssetsHistoryChart() {
+  const [locale] = getLocales();
   const { colors } = useThemeColors();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
-  const accounts = useSelector((state: RootState) => state.firefly?.accounts);
+  const accountCharts = useSelector((state: RootState) => state.firefly?.accounts);
+  const accounts = useSelector((state: RootState) => state.accounts.accounts);
+  const [hiddenAccounts, setHiddenAccounts] = useState<string[]>([]);
+  useEffect(() => {
+    setHiddenAccounts(accounts.filter((accountConfig) => !accountConfig.display).map((accountConfig) => accountConfig.attributes.name));
+  }, [accounts]);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
+
+  useEffect(() => {
+    dispatch.firefly.getAccountChart();
+  }, [accounts]);
 
   const getTickValues = useCallback(() => {
     const dateArray = [];
@@ -158,7 +178,7 @@ export default function AssetsHistoryChart() {
         >
           <AStackFlex
             row
-            alignItems="baseline"
+            alignItems="center"
             justifyContent="space-between"
             style={{
               paddingHorizontal: 10,
@@ -170,14 +190,17 @@ export default function AssetsHistoryChart() {
               {' '}
               {currentCode}
             </AText>
-            <Pressable
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
-                dispatch.firefly.getAccountChart();
-              }}
-            >
-              <AntDesign name="reload1" size={24} color={colors.text} />
-            </Pressable>
+            <AStackFlex row justifyContent="flex-end" gap={10}>
+              <DisplayAllAccountsSwitch />
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch();
+                  dispatch.firefly.getAccountChart();
+                }}
+              >
+                <AntDesign name="reload" size={24} color={colors.text} />
+              </Pressable>
+            </AStackFlex>
           </AStackFlex>
           <View style={{ height: 80 }} />
           {loading && (
@@ -206,8 +229,8 @@ export default function AssetsHistoryChart() {
                     x
                     y
                     activePoints
-                    maxY={maxBy(accounts, (c: { maxY: number }) => c.maxY)?.maxY || 0}
-                    minY={minBy(accounts, (c: { minY: number }) => c.minY)?.minY || 0}
+                    maxY={maxBy(accountCharts, (c: { maxY: number }) => c.maxY)?.maxY || 0}
+                    minY={minBy(accountCharts, (c: { minY: number }) => c.minY)?.minY || 0}
                     colors={colors}
                   />
               )}
@@ -231,7 +254,7 @@ export default function AssetsHistoryChart() {
             <VictoryAxis
               offsetY={105}
               tickValues={getTickValues()}
-              tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
+              tickFormat={(x) => (new Date(x).toLocaleString(locale.languageCode, { month: 'short' }))}
               style={{
                 grid: { stroke: '#949494', strokeWidth: 0.2 },
                 axis: { stroke: colors.brandLight },
@@ -242,7 +265,7 @@ export default function AssetsHistoryChart() {
                 },
               }}
             />
-            {accounts.map((chart) => chart.entries.length > 0 && (
+            {accountCharts.map((chart) => chart.entries.length > 0 && !hiddenAccounts.includes(chart.label) && (
               <VictoryLine
                 key={chart.label}
                 style={{
@@ -259,12 +282,41 @@ export default function AssetsHistoryChart() {
           </VictoryChart>
           )}
         </AStackFlex>
-        <View style={{ height: 200 }} />
+        <AStackFlex py={10} flexWrap="wrap" justifyContent="center" row>
+          {accountCharts.map((chart) => chart.entries.length > 0 && (
+            <TouchableOpacity
+              key={chart.label}
+              onPress={() => {
+                setHiddenAccounts(
+                  hiddenAccounts.includes(chart.label)
+                    ? hiddenAccounts.filter((hiddenLabel) => hiddenLabel !== chart.label)
+                    : [...hiddenAccounts, chart.label],
+                );
+              }}
+            >
+              <AView style={{
+                backgroundColor: hiddenAccounts.includes(chart.label) ? colors.backgroundColor : chart.color,
+                borderColor: hiddenAccounts.includes(chart.label) ? colors.backgroundColor : chart.color,
+                borderWidth: 2,
+                borderRadius: 10,
+                paddingHorizontal: 10,
+                height: 25,
+                margin: 2,
+              }}
+              >
+                <AText fontSize={15} color={hiddenAccounts.includes(chart.label) ? chart.color : colors.backgroundColor} bold>
+                  {chart.label}
+                </AText>
+              </AView>
+            </TouchableOpacity>
+          ))}
+        </AStackFlex>
       </ScrollView>
     </ErrorBoundary>
   ), [
     loading,
-    accounts,
+    accountCharts,
     colors,
+    hiddenAccounts,
   ]);
 }

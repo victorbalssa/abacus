@@ -1,12 +1,11 @@
-import { getDefaultConfig } from 'expo/metro-config';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { getDefaultConfig } from 'expo/metro-config.js';
 
-/** @type {import('expo/metro-config').MetroConfig} */
-const config = getDefaultConfig(__dirname, {
-  // [Web-only]: Enables CSS support in Metro.
-  isCSSEnabled: true,
-});
+// Recreate __filename and __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-config.resolver.sourceExts.push('mjs', 'cjs'); // fixes stable-hash module resolve issue
-config.resolver.assetExts.push('db');
+const config = getDefaultConfig(__dirname);
 
-module.exports = config;
+export default config;

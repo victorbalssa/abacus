@@ -82,7 +82,7 @@ export default function TransactionSplitForm({
 
   const deleteBtn = (fields: string[]) => (
     <AIconButton
-      icon={<AntDesign name="closecircle" size={19} color={colors.greyLight} />}
+      icon={<AntDesign name="close-circle" size={19} color={colors.greyLight} />}
       onPress={() => resetTransaction(fields)}
     />
   );
@@ -463,7 +463,7 @@ export default function TransactionSplitForm({
         }}
       >
         <AStackFlex row>
-          <AntDesign name="closecircle" size={18} color={colors.greyLight} style={{ margin: 5 }} />
+          <AntDesign name="close-circle" size={18} color={colors.greyLight} style={{ margin: 5 }} />
           <AText fontSize={15} color={colors.greyLight}>{translate('transaction_form_reset_button')}</AText>
         </AStackFlex>
       </AButton>

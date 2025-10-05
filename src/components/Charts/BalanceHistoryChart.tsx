@@ -9,10 +9,10 @@ import {
 import { isEmpty, round } from 'lodash';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import * as Localization from 'expo-localization';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ScrollView, View, Pressable } from 'react-native';
+import { getLocales } from 'expo-localization';
 import Loading from '../UI/Loading';
 import { useThemeColors } from '../../lib/common';
 import { RootDispatch, RootState } from '../../store';
@@ -21,6 +21,7 @@ import { AStackFlex, AText } from '../UI/ALibrary';
 import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function BalanceHistoryChart() {
+  const [locale] = getLocales();
   const { colors } = useThemeColors();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
@@ -75,7 +76,7 @@ export default function BalanceHistoryChart() {
                 dispatch.firefly.getBalanceChart();
               }}
             >
-              <AntDesign name="reload1" size={24} color={colors.text} />
+              <AntDesign name="reload" size={24} color={colors.text} />
             </Pressable>
           </AStackFlex>
           {loading && (
@@ -115,7 +116,7 @@ export default function BalanceHistoryChart() {
               offsetY={105}
               minDomain={{ x: 0 }}
               tickValues={getTickValues()}
-              tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
+              tickFormat={(x) => (new Date(x).toLocaleString(locale.languageCode, { month: 'short' }))}
               style={{
                 axis: { stroke: colors.brandLight },
                 tickLabels: {
