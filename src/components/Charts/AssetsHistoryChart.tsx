@@ -135,7 +135,10 @@ export default function AssetsHistoryChart() {
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
   const accountCharts = useSelector((state: RootState) => state.firefly?.accounts);
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
-  const [hiddenAccounts, setHiddenAccounts] = useState<string[]>(accounts.filter((accountConfig) => !accountConfig.display).map((accountConfig) => accountConfig.attributes.name));
+  const [hiddenAccounts, setHiddenAccounts] = useState<string[]>([]);
+  useEffect(() => {
+    setHiddenAccounts(accounts.filter((accountConfig) => !accountConfig.display).map((accountConfig) => accountConfig.attributes.name));
+  }, [accounts]);
   const loading = useSelector((state: RootState) => state.loading.effects.firefly.getAccountChart?.loading);
   const currentCode = useSelector((state: RootState) => state.currencies.currentCode);
   const dispatch = useDispatch<RootDispatch>();
