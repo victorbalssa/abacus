@@ -144,6 +144,7 @@ export default function SettingsScreen({ navigation }: ScreenType) {
             paddingHorizontal: 10,
             paddingVertical: 5,
             marginLeft: 10,
+            marginRight: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
           }}
@@ -157,9 +158,8 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           style={{
             justifyContent: 'space-between',
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
             marginLeft: 10,
+            marginRight: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
           }}
@@ -172,13 +172,14 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           justifyContent="space-between"
           style={{
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
             marginLeft: 10,
+            marginRight: 10,
           }}
         >
           <AText fontSize={14}>{translate('auth_form_biometrics_lock')}</AText>
-          <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={() => bioAuthCallback(setUseBiometricAuth)} value={useBiometricAuth} />
+          <AView>
+            <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={() => bioAuthCallback(setUseBiometricAuth)} value={useBiometricAuth} />
+          </AView>
         </AStack>
       </AView>
 
@@ -198,9 +199,8 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           justifyContent="space-between"
           style={{
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
             marginLeft: 10,
+            paddingRight: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
           }}
@@ -214,8 +214,7 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           style={{
             justifyContent: 'space-between',
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
+            paddingRight: 10,
             marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
@@ -230,8 +229,7 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           style={{
             justifyContent: 'space-between',
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
+            paddingRight: 10,
             marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
@@ -246,8 +244,7 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           style={{
             justifyContent: 'space-between',
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
+            paddingRight: 10,
             marginLeft: 10,
             borderBottomWidth: 0.5,
             borderColor: colors.listBorderColor,
@@ -262,8 +259,7 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           style={{
             justifyContent: 'space-between',
             height: 45,
-            paddingHorizontal: 10,
-            paddingVertical: 5,
+            paddingRight: 10,
             marginLeft: 10,
           }}
         >
@@ -293,7 +289,9 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           }}
         >
           <AText fontSize={14}>{translate('close_after_transaction')}</AText>
-          <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={handleCheckBoxChange} value={closeTransactionScreen} />
+          <AView>
+            <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={handleCheckBoxChange} value={closeTransactionScreen} />
+          </AView>
         </AStack>
       </AView>
 

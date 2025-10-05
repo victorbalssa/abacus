@@ -97,8 +97,8 @@ function AssetsAccounts() {
       )}
     >
       <AView>
-        <AStack px={15} my={5} row justifyContent="space-between">
-          <AText fontSize={25} lineHeight={27} style={{ margin: 5 }} bold>
+        <AStack mx={15} my={10} row justifyContent="space-between" alignItems="center">
+          <AText fontSize={25} bold>
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
           </AText>
           <DisplayAllAccountsSwitch />
@@ -211,14 +211,14 @@ function InsightCategories() {
         />
       )}
     >
-      <AStack px={5} row justifyContent="space-between">
-        <AText fontSize={25} lineHeight={27} style={{ margin: 15 }} bold>
+      <AStack mx={15} my={10} row justifyContent="space-between" alignItems="center">
+        <AText fontSize={25} bold>
           {expensesOnly ? translate('home_expense_categories') : translate('home_all_categories')}
         </AText>
-        <Switch style={{ marginHorizontal: 10 }} thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={onSwitch} value={expensesOnly} />
+        <Switch thumbColor="white" trackColor={{ false: '#767577', true: selectedBrandStyle }} onValueChange={onSwitch} value={expensesOnly} />
       </AStack>
       {[insightCategoriesPerDay, insightCategoriesTotal, ...insightCategories].map((category, index) => {
-        if (expensesOnly && category.expense >= 0) {
+        if (!category || (expensesOnly && category.expense >= 0)) {
           return null;
         }
 
@@ -666,8 +666,8 @@ export default function HomeScreen() {
     })();
   }, []);
 
-  const prevFiltersRef = useRef<string>();
-  const viewPagerRef = useRef<PagerView>();
+  const prevFiltersRef = useRef<string>(null);
+  const viewPagerRef = useRef<PagerView>(null);
   const scrollRef = useRef(null);
 
   useScrollToTop(scrollRef);
