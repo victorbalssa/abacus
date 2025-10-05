@@ -72,8 +72,6 @@ export default {
     'expo-asset',
     'expo-secure-store',
     'expo-localization',
-    './plugins/withAndroidStyles',
-    './plugins/withAndroidManifest',
     [
       'expo-font',
       {
