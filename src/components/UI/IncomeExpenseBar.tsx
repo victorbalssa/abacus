@@ -11,7 +11,6 @@ type IncomeExpenseBarPropType = {
   currencyCode: string,
   loading: boolean,
   barHeight?: number,
-  barBackground: boolean,
 }
 
 function IncomeExpenseBar({
@@ -22,7 +21,6 @@ function IncomeExpenseBar({
   currencyCode,
   loading,
   barHeight = 5,
-  barBackground = false,
 }: IncomeExpenseBarPropType) {
   const { colors } = useThemeColors();
   const incomePercentage = loading ? 0 : income && incomeTotal ? (income / incomeTotal) * 100 : 0;
@@ -56,7 +54,7 @@ function IncomeExpenseBar({
       </View>
       <View style={{ width: '50%', borderLeftWidth: 1, borderColor: colors.listBorderColor }}>
         <ASkeleton loading={loading}>
-          <AText style={{ width: '50%', paddingLeft: 5 }} textAlign="left">{localNumberFormat(currencyCode, income)}</AText>
+          <AText style={{ paddingLeft: 5 }} textAlign="left">{localNumberFormat(currencyCode, income)}</AText>
         </ASkeleton>
         {incomeTotal && (
           <View style={{

@@ -176,7 +176,7 @@ function InsightCategories() {
   const startDate = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const dispatch = useDispatch<RootDispatch>();
   const navigation = useNavigation();
-const expensesOnly = useSelector((state: RootState) => state.configuration.displayOnlyExpenseCategories);
+  const expensesOnly = useSelector((state: RootState) => state.configuration.displayOnlyExpenseCategories);
   const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
 
   const onSwitch = async (bool: boolean) => {
@@ -219,7 +219,7 @@ const expensesOnly = useSelector((state: RootState) => state.configuration.displ
       </AStack>
       {[insightCategoriesPerDay, insightCategoriesTotal, ...insightCategories].map((category, index) => {
         if (expensesOnly && category.expense >= 0) {
-          return '';
+          return null;
         }
 
         return (
@@ -285,7 +285,6 @@ const expensesOnly = useSelector((state: RootState) => state.configuration.displ
                   expenseTotal={category.name === 'total' ? insightCategoriesTotal.income - insightCategoriesTotal.expense : insightCategoriesTotal.expense}
                   currencyCode={category.currencyCode}
                   loading={loading}
-                  barBackground={category.name === 'total'}
                   barHeight={category.name === 'total' ? 10 : undefined}
                 />
               )}

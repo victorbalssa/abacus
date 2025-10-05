@@ -177,8 +177,8 @@ export default createModel<RootModel>()({
         dispatch.categories.setTotal({ total });
 
         if (filteredCategories.length > 0) {
-          total.currencyCode = filteredCategories[2].currencyCode;
-          total.currencyId = filteredCategories[2].currencyId;
+          total.currencyCode = filteredCategories[0].currencyCode;
+          total.currencyId = filteredCategories[0].currencyId;
 
           const days = dateDiffInDays(start, end);
 
