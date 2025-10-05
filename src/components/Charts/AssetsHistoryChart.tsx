@@ -311,7 +311,6 @@ export default function AssetsHistoryChart() {
     </ErrorBoundary>
   ), [
     loading,
-    accounts,
     accountCharts,
     colors,
     hiddenAccounts,
