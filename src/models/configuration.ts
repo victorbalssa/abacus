@@ -9,6 +9,7 @@ type ConfigurationStateType = {
   backendURL: string
   hideBalance: boolean
   displayAllAccounts: boolean
+  displayOnlyExpenseCategories: boolean
   displayForeignCurrency: boolean
   useBiometricAuth: boolean
   apiVersion: string
@@ -47,6 +48,7 @@ const INITIAL_STATE = {
   backendURL: '',
   hideBalance: false,
   displayAllAccounts: false,
+  displayOnlyExpenseCategories: false,
   displayForeignCurrency: false,
   useBiometricAuth: false,
   apiVersion: '',
@@ -94,6 +96,13 @@ export default createModel<RootModel>()({
       return {
         ...state,
         displayAllAccounts,
+      };
+    },
+
+    setDisplayOnlyExpenseCategories(state, displayOnlyExpenseCategories: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        displayOnlyExpenseCategories,
       };
     },
 

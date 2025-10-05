@@ -374,12 +374,12 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
       },
     });
     // set search bar on first screen open
-    if (params?.trasactionSearch !== undefined) {
+    if (params?.transactionSearch !== undefined) {
       const p = { ...params };
       setTimeout(() => {
-        setSearch(p?.trasactionSearch);
+        setSearch(p?.transactionSearch);
         searchBarRef.current?.focus();
-        searchBarRef.current?.setText(p?.trasactionSearch);
+        searchBarRef.current?.setText(p?.transactionSearch);
         searchBarRef.current?.blur();
       }, 500);
     }
@@ -396,13 +396,13 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
         }
       }
 
-      if (params?.trasactionSearch !== undefined) {
-        setSearch(params?.trasactionSearch);
+      if (params?.transactionSearch !== undefined) {
+        setSearch(params?.transactionSearch);
         searchBarRef.current?.focus();
-        searchBarRef.current?.setText(params?.trasactionSearch);
+        searchBarRef.current?.setText(params?.transactionSearch);
         searchBarRef.current?.blur();
         // disabled
-        params.trasactionSearch = undefined;
+        params.transactionSearch = undefined;
       }
 
       if (params?.startDate !== undefined) {
