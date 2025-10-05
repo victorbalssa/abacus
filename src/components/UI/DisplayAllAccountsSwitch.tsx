@@ -22,5 +22,6 @@ export default function DisplayAllAccountsSwitch() {
   ), [
     colors,
     displayAllAccounts,
+    selectedBrandStyle,
   ]);
 }
