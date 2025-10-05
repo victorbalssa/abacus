@@ -32,7 +32,7 @@ export default function GroupTitle({ title }) {
           }}
           InputRightElement={(
             <AIconButton
-              icon={<AntDesign name="closecircle" size={19} color={colors.greyLight} />}
+              icon={<AntDesign name="close-circle" size={19} color={colors.greyLight} />}
               onPress={() => {
                 setGroupTitle('');
                 dispatch.transactions.setGroupTitle('');

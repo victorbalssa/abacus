@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import {
   VictoryAxis,
   VictoryChart,
@@ -10,14 +12,13 @@ import { Line, Circle } from 'react-native-svg';
 import { AntDesign } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useDispatch, useSelector } from 'react-redux';
-import * as Localization from 'expo-localization';
 import {
   Pressable,
   View,
   ScrollView,
   TouchableOpacity,
-  Switch,
 } from 'react-native';
+import { getLocales } from 'expo-localization';
 import {
   AStackFlex,
   AText, AView,
@@ -47,6 +48,8 @@ function Cursor({
   activePoints,
   colors,
 }) {
+  const [locale] = getLocales();
+
   return (
     <>
       <AStackFlex
@@ -64,7 +67,7 @@ function Cursor({
         }}
       >
         <AText fontSize={16} py={1} bold>
-          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(Localization.locale, {
+          {`${activePoints.length !== 0 ? new Date(activePoints[0]?.x).toLocaleString(locale.languageCode, {
             month: 'short',
             day: 'numeric',
             year: 'numeric',
@@ -130,6 +133,7 @@ function Cursor({
 }
 
 export default function AssetsHistoryChart() {
+  const [locale] = getLocales();
   const { colors } = useThemeColors();
   const start = useSelector((state: RootState) => state.firefly.rangeDetails.start);
   const end = useSelector((state: RootState) => state.firefly.rangeDetails.end);
@@ -194,7 +198,7 @@ export default function AssetsHistoryChart() {
                   dispatch.firefly.getAccountChart();
                 }}
               >
-                <AntDesign name="reload1" size={24} color={colors.text} />
+                <AntDesign name="reload" size={24} color={colors.text} />
               </Pressable>
             </AStackFlex>
           </AStackFlex>
@@ -250,7 +254,7 @@ export default function AssetsHistoryChart() {
             <VictoryAxis
               offsetY={105}
               tickValues={getTickValues()}
-              tickFormat={(x) => (new Date(x).toLocaleString(Localization.locale, { month: 'short' }))}
+              tickFormat={(x) => (new Date(x).toLocaleString(locale.languageCode, { month: 'short' }))}
               style={{
                 grid: { stroke: '#949494', strokeWidth: 0.2 },
                 axis: { stroke: colors.brandLight },
