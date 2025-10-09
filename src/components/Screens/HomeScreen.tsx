@@ -152,6 +152,8 @@ function AssetsAccounts() {
                 maxWidth={150}
                 fontSize={14}
                 numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
               >
                 {localNumberFormat(account.attributes.currencyCode, parseFloat(account.attributes.currentBalance))}
               </AText>
@@ -580,7 +582,16 @@ function NetWorth() {
               {`${translate('home_net_worth')} • ${currentCode}`}
             </AText>
             <ASkeleton loading={loading}>
-              <AText fontSize={35} lineHeight={37} bold>
+              <AText
+                fontSize={35}
+                lineHeight={37}
+                bold
+                numberOfLines={1}
+                maxWidth="90%"
+                textAlign="center"
+                adjustsFontSizeToFit
+                minimumFontScale={0.6}
+              >
                 {localNumberFormat(currentCode, parseFloat(netWorth[0]?.monetaryValue || '0'))}
               </AText>
             </ASkeleton>
@@ -598,6 +609,10 @@ function NetWorth() {
                     py={0}
                     bold
                     fontSize={12}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}
+                    textAlign="center"
                     color={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess}
                   >
                     {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, parseFloat(balance[0].monetaryValue))}`}
