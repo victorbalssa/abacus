@@ -128,7 +128,7 @@ function AssetsAccounts() {
           const balance = parseFloat(account.attributes.currentBalance);
           const balanceDifference = parseFloat(account.attributes.balanceDifference);
           const balanceDifferencePercent = balance && balanceDifference
-            ? (Math.round((balanceDifference / balance) * 10000) / 100)
+            ? (Math.round((balanceDifference / Math.abs(balance)) * 10000) / 100)
             : 0;
           return (
             <AStackFlex
@@ -168,6 +168,7 @@ function AssetsAccounts() {
                         backgroundColor: balanceDifferencePercent < 0 && account.attributes.type !== 'liabilities' ? colors.red : colors.green,
                         borderRadius: 6,
                       }}
+                      color="white"
                     >
                       {balanceDifferencePercent}
                       %
@@ -185,19 +186,17 @@ function AssetsAccounts() {
                   >
                     {localNumberFormat(account.attributes.currencyCode, balance)}
                   </AText>
-                  <ASkeleton loading={loading}>
-                    {balanceDifferencePercent !== 0 && (
-                      <AText
-                        maxWidth={150}
-                        fontSize={12}
-                        numberOfLines={2}
-                        textAlign="right"
-                        color={balanceDifferencePercent < 0 && account.attributes.type !== 'liabilities' ? colors.brandStyleRed : colors.brandStyleGreen}
-                      >
-                        {localNumberFormat(account.attributes.currencyCode, balanceDifference)}
-                      </AText>
-                    )}
-                  </ASkeleton>
+                  {balanceDifferencePercent !== 0 && (
+                    <AText
+                      maxWidth={150}
+                      fontSize={12}
+                      numberOfLines={2}
+                      textAlign="right"
+                      color={balanceDifferencePercent < 0 && account.attributes.type !== 'liabilities' ? colors.brandDanger : colors.brandSuccess}
+                    >
+                      {localNumberFormat(account.attributes.currencyCode, balanceDifference)}
+                    </AText>
+                  )}
                 </ASkeleton>
               </AStackFlex>
             </AStackFlex>
