@@ -277,7 +277,7 @@ function InsightCategories() {
                   </AText>
                 </ASkeleton>
               </AStack>
-              {!expensesOnly && category.name !== 'perday' && (
+              {!expensesOnly && category.name !== 'perday' && insightCategoriesTotal && (
                 <IncomeExpenseBar
                   income={category.income}
                   incomeTotal={category.name === 'total' ? insightCategoriesTotal.income - insightCategoriesTotal.expense : insightCategoriesTotal.income}
