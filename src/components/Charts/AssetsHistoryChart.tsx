@@ -164,6 +164,8 @@ export default function AssetsHistoryChart() {
     return dateArray;
   }, [start, end]);
 
+  const activeCharts = accountCharts.filter((data) => data.entries.length > 0 && !hiddenAccounts.includes(data.label));
+
   return useMemo(() => (
     <ErrorBoundary>
       <ScrollView bounces={false}>
@@ -229,8 +231,8 @@ export default function AssetsHistoryChart() {
                     x
                     y
                     activePoints
-                    maxY={maxBy(accountCharts, (c: { maxY: number }) => c.maxY)?.maxY || 0}
-                    minY={minBy(accountCharts, (c: { minY: number }) => c.minY)?.minY || 0}
+                    maxY={maxBy(activeCharts, (c: { maxY: number }) => c.maxY)?.maxY || 0}
+                    minY={minBy(activeCharts, (c: { minY: number }) => c.minY)?.minY || 0}
                     colors={colors}
                   />
               )}
@@ -265,7 +267,7 @@ export default function AssetsHistoryChart() {
                 },
               }}
             />
-            {accountCharts.map((chart) => chart.entries.length > 0 && !hiddenAccounts.includes(chart.label) && (
+            {activeCharts.map((chart) => (
               <VictoryLine
                 key={chart.label}
                 style={{
