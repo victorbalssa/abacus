@@ -15,6 +15,7 @@ import { OauthConfigType, ScreenType } from '../../types/screen';
 
 import translate from '../../i18n/locale';
 import { TCredential } from '../../types/credential';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function CredentialCreateScreen({ navigation, route }: ScreenType) {
   const dispatch = useDispatch<RootDispatch>();
@@ -102,11 +103,13 @@ export default function CredentialCreateScreen({ navigation, route }: ScreenType
   };
 
   return (
-    <OauthForm
-      config={config}
-      setConfig={setConfig}
-      oauthLogin={() => promptAsync()}
-      tokenLogin={tokenLogin}
-    />
+    <ErrorBoundary>
+      <OauthForm
+        config={config}
+        setConfig={setConfig}
+        oauthLogin={() => promptAsync()}
+        tokenLogin={tokenLogin}
+      />
+    </ErrorBoundary>
   );
 }

@@ -42,6 +42,7 @@ import {
 } from '../UI/ALibrary';
 import DisplayAllAccountsSwitch from '../UI/DisplayAllAccountsSwitch';
 import IncomeExpenseBar from '../UI/IncomeExpenseBar';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -702,65 +703,67 @@ export default function HomeScreen() {
   const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 
   return (useMemo(() => (
-    <AView style={{ flex: 1 }}>
-      <LinearGradient
-        colors={gradientColors}
-        start={{ x: 0, y: 1 }}
-        end={{ x: 1, y: 0 }}
-        style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top }}
-      >
-        <AStackFlex>
-          <NetWorth />
-          <Pagination
-            renderIcons={renderIcons}
-            handlePress={(index) => viewPagerRef?.current?.setPage(index)}
-            scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
-            positionAnimatedValue={positionAnimatedValue}
-          />
-        </AStackFlex>
-      </LinearGradient>
-
-      <View style={{ flex: 2 }}>
-        <AView
-          style={{
-            backgroundColor: colors.tileBackgroundColor,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            borderColor: colors.tileBackgroundColor,
-            paddingTop: 5,
-            position: 'absolute',
-            top: -55,
-            height: '100%',
-            right: 0,
-            left: 0,
-          }}
+    <ErrorBoundary>
+      <AView style={{ flex: 1 }}>
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top }}
         >
-          <AnimatedPagerView
-            ref={viewPagerRef}
-            initialPage={0}
-            style={{ flex: 1 }}
-            onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
-              [
-                {
-                  nativeEvent: {
-                    offset: scrollOffsetAnimatedValue,
-                    position: positionAnimatedValue,
-                  },
-                },
-              ],
-              {
-                useNativeDriver: true,
-              },
-            )}
+          <AStackFlex>
+            <NetWorth />
+            <Pagination
+              renderIcons={renderIcons}
+              handlePress={(index) => viewPagerRef?.current?.setPage(index)}
+              scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
+              positionAnimatedValue={positionAnimatedValue}
+            />
+          </AStackFlex>
+        </LinearGradient>
+
+        <View style={{ flex: 2 }}>
+          <AView
+            style={{
+              backgroundColor: colors.tileBackgroundColor,
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30,
+              borderColor: colors.tileBackgroundColor,
+              paddingTop: 5,
+              position: 'absolute',
+              top: -55,
+              height: '100%',
+              right: 0,
+              left: 0,
+            }}
           >
-            <AssetsAccounts key="1" />
-            <InsightCategories key="2" />
-            <InsightBudgets key="3" />
-            <Bills key="4" />
-            <PiggyBanks key="5" />
-          </AnimatedPagerView>
-        </AView>
-      </View>
-    </AView>
+            <AnimatedPagerView
+              ref={viewPagerRef}
+              initialPage={0}
+              style={{ flex: 1 }}
+              onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
+                [
+                  {
+                    nativeEvent: {
+                      offset: scrollOffsetAnimatedValue,
+                      position: positionAnimatedValue,
+                    },
+                  },
+                ],
+                {
+                  useNativeDriver: true,
+                },
+              )}
+            >
+              <AssetsAccounts key="1" />
+              <InsightCategories key="2" />
+              <InsightBudgets key="3" />
+              <Bills key="4" />
+              <PiggyBanks key="5" />
+            </AnimatedPagerView>
+          </AView>
+        </View>
+      </AView>
+    </ErrorBoundary>
   ), [colors]));
 }
