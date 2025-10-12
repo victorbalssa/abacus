@@ -38,7 +38,15 @@ function IncomeExpenseBar({
       }}
       >
         <ASkeleton loading={loading}>
-          <AText style={{ width: '100%', paddingRight: 5 }} textAlign="right">{localNumberFormat(currencyCode, expense)}</AText>
+          <AText
+            style={{ width: '100%', paddingRight: 5 }}
+            textAlign="right"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.8}
+          >
+            {localNumberFormat(currencyCode, expense)}
+          </AText>
         </ASkeleton>
         {expenseTotal && (
           <View style={{
@@ -54,7 +62,15 @@ function IncomeExpenseBar({
       </View>
       <View style={{ width: '50%', borderLeftWidth: 1, borderColor: colors.listBorderColor }}>
         <ASkeleton loading={loading}>
-          <AText style={{ paddingLeft: 5 }} textAlign="left">{localNumberFormat(currencyCode, income)}</AText>
+          <AText
+            style={{ paddingLeft: 5 }}
+            textAlign="left"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.8}
+          >
+            {localNumberFormat(currencyCode, income)}
+          </AText>
         </ASkeleton>
         {incomeTotal && (
           <View style={{

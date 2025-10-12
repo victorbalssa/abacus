@@ -16,6 +16,8 @@ type ATextType = {
   textAlign?: 'center' | 'left' | 'right'
   underline?: boolean
   capitalize?: boolean
+  adjustsFontSizeToFit?: boolean
+  minimumFontScale?: number
   onPress?: () => void
   onLongPress?: () => void
   style?: AStyle
@@ -35,6 +37,8 @@ export default function AText({
   textAlign = 'left',
   underline = false,
   capitalize = false,
+  adjustsFontSizeToFit = false,
+  minimumFontScale = 0.5,
   onPress = null,
   onLongPress = null,
   style = null,
@@ -47,6 +51,8 @@ export default function AText({
       onPress={onPress}
       onLongPress={onLongPress}
       numberOfLines={numberOfLines}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
+      minimumFontScale={minimumFontScale}
       style={{
         color: color || colors.text,
         lineHeight,

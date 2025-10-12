@@ -227,7 +227,14 @@ function RenderItem({ item }) {
             padding: 5,
           }}
         >
-          <AText fontSize={15} color={getTransactionTypeAttributes(item.attributes.transactions[0].type).color} bold>
+          <AText
+            fontSize={15}
+            color={getTransactionTypeAttributes(item.attributes.transactions[0].type).color}
+            bold
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.8}
+          >
             {`${getTransactionTypeAttributes(item.attributes.transactions[0].type).prefix}${localNumberFormat(item.attributes.transactions[0].currencyCode, item.attributes.transactions.reduce((total, split) => total + parseFloat(split.amount), 0))}`}
           </AText>
         </AView>
