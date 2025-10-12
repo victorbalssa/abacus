@@ -760,8 +760,8 @@ export default function HomeScreen() {
   const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 
   return (useMemo(() => (
-    <ErrorBoundary>
-      <AView style={{ flex: 1 }}>
+    <AView style={{ flex: 1 }}>
+      <ErrorBoundary>
         <LinearGradient
           colors={gradientColors}
           start={{ x: 0, y: 1 }}
@@ -779,7 +779,7 @@ export default function HomeScreen() {
           </AStackFlex>
         </LinearGradient>
 
-        <View style={{ flex: 2 }}>
+        <View style={{ flex: 1 }}>
           <AView
             style={{
               backgroundColor: colors.tileBackgroundColor,
@@ -789,7 +789,7 @@ export default function HomeScreen() {
               paddingTop: 5,
               position: 'absolute',
               top: -55,
-              height: '100%',
+              height: '150%',
               right: 0,
               left: 0,
             }}
@@ -820,7 +820,7 @@ export default function HomeScreen() {
             </AnimatedPagerView>
           </AView>
         </View>
-      </AView>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </AView>
   ), [colors]));
 }

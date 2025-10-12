@@ -249,22 +249,22 @@ export default createModel<RootModel>()({
         const spent = [];
         const bills = { paid: null, unpaid: null };
         Object.keys(summary).forEach((key) => {
-          if (key.includes('net-worth-in')) {
+          if (key.includes(`net-worth-in-${currentCode}`)) {
             netWorth.push(summary[key]);
           }
-          if (key.includes('balance-in')) {
+          if (key.includes(`balance-in-${currentCode}`)) {
             balance.push(summary[key]);
           }
-          if (key.includes('earned-in')) {
+          if (key.includes(`earned-in-${currentCode}`)) {
             earned.push(summary[key]);
           }
-          if (key.includes('spent-in')) {
+          if (key.includes(`spent-in-${currentCode}`)) {
             spent.push(summary[key]);
           }
-          if (key.includes('bills-paid-in')) {
+          if (key.includes(`bills-paid-in-${currentCode}`)) {
             bills.paid = summary[key];
           }
-          if (key.includes('bills-unpaid-in')) {
+          if (key.includes(`bills-unpaid-in-${currentCode}`)) {
             bills.unpaid = summary[key];
           }
         });

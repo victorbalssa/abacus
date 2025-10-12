@@ -40,14 +40,12 @@ import CredentialsScreen from '../components/Screens/CredentialsScreen';
 import ColorSelectionScreen from '../components/Screens/ColorSelectionScreen';
 
 // UI components
-import ABlurView from '../components/UI/ALibrary/ABlurView';
 import NavigationHeader from '../components/UI/NavigationHeader';
 import {
   AIconButton,
   AStack,
   AText,
 } from '../components/UI/ALibrary';
-import ErrorWidget from '../components/UI/ErrorWidget';
 import PrivacyScreen from '../components/UI/PrivacyScreen';
 import { AbacusQuickAction } from '../types/quickAction';
 import ErrorBoundary from '../components/UI/ErrorBoundary';
@@ -57,31 +55,6 @@ const TransactionStack = createNativeStackNavigator();
 const SettingStack = createNativeStackNavigator();
 const ModalStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const styles = StyleSheet.create({
-  navigatorContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  navigator: {
-    borderTopWidth: 0,
-    backgroundColor: 'transparent',
-    elevation: 30,
-  },
-  xFillLine: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 0,
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-  },
-});
 
 function TabBarPrimaryButton() {
   const navigation = useNavigation();
@@ -101,30 +74,6 @@ function TabBarPrimaryButton() {
         )}
       />
     </AStack>
-  );
-}
-
-function TabBarComponent({
-  state,
-  descriptors,
-  navigation,
-  insets,
-}) {
-  return (
-    <ABlurView
-      style={{
-        ...styles.navigatorContainer,
-        borderTopWidth: 0.5,
-      }}
-    >
-      <BottomTabBar
-        state={state}
-        descriptors={descriptors}
-        navigation={navigation}
-        insets={insets}
-      />
-      <ErrorWidget />
-    </ABlurView>
   );
 }
 
@@ -281,7 +230,6 @@ function Home() {
   return (
     <ErrorBoundary>
       <Tab.Navigator
-        tabBar={TabBarComponent}
         screenOptions={() => ({
           tabBarInactiveBackgroundColor: colors.tabBackgroundColor,
           tabBarActiveBackgroundColor: colors.tabBackgroundColor,
