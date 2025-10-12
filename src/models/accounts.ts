@@ -6,6 +6,7 @@ export type AccountType = {
     accountNumber: string,
     accountRole: string,
     active: boolean,
+    balanceDifference: string,
     bic: null,
     createdAt: Date,
     creditCardType: string,
@@ -122,6 +123,7 @@ export default createModel<RootModel>()({
         },
         firefly: {
           rangeDetails: {
+            start,
             end,
           },
         },
@@ -135,7 +137,7 @@ export default createModel<RootModel>()({
           { data: accounts },
           { data: frontpageAccounts },
         ] = await Promise.all([
-          dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&date=${end}` }) as Promise<{ data: AccountType[] }>,
+          dispatch.configuration.apiFetch({ url: `/api/v1/currencies/${currentCode}/accounts?${displayAllAccounts ? '' : 'type=asset'}&start=${start}&end=${end}&date=${end}` }) as Promise<{ data: AccountType[] }>,
           dispatch.configuration.apiFetch({ url: '/api/v1/preferences/frontpageAccounts' }) as Promise<{ data: PreferenceType }>,
         ]);
         const filteredAccounts = accounts

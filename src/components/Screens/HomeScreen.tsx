@@ -125,42 +125,84 @@ function AssetsAccounts() {
             </TouchableOpacity>
           </View>
         </AStack>
-        {sortedAccounts.map((account, index) => (
-          <AStack
-            key={account.id}
-            row
-            mx={15}
-            style={{
-              height: 45,
-              borderColor: colors.listBorderColor,
-              borderBottomWidth: index + 1 === accounts.length ? 0 : 0.5,
-            }}
-            justifyContent="space-between"
-          >
-            <AText
-              fontSize={14}
-              maxWidth="60%"
-              numberOfLines={1}
+        {sortedAccounts.map((account, index) => {
+          const balance = parseFloat(account.attributes.currentBalance);
+          const balanceDifference = parseFloat(account.attributes.balanceDifference);
+          const balanceDifferencePercent = balance && balanceDifference
+            ? (Math.round((balanceDifference / Math.abs(balance)) * 10000) / 100)
+            : 0;
+          return (
+            <AStackFlex
+              key={account.id}
+              row
+              px={15}
+              py={10}
+              style={{
+                borderColor: colors.listBorderColor,
+                borderBottomWidth: index + 1 === accounts.length ? 0 : 0.5,
+              }}
             >
-              {account.attributes.name}
-              <AText fontSize={10}>
-                {account.attributes.includeNetWorth ? '' : '*'}
-              </AText>
-            </AText>
-
-            <ASkeleton loading={loading}>
-              <AText
-                maxWidth={150}
-                fontSize={14}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.8}
+              <AStackFlex
+                row
+                gap={10}
+                justifyContent="flex-start"
+                alignItems="center"
               >
-                {localNumberFormat(account.attributes.currencyCode, parseFloat(account.attributes.currentBalance))}
-              </AText>
-            </ASkeleton>
-          </AStack>
-        ))}
+                <AText
+                  fontSize={14}
+                  numberOfLines={1}
+                >
+                  {account.attributes.name}
+                  <AText fontSize={10}>
+                    {account.attributes.includeNetWorth ? '' : '*'}
+                  </AText>
+                </AText>
+
+                {balanceDifferencePercent !== 0 && (
+                  <ASkeleton loading={loading}>
+                    <AText
+                      fontSize={12}
+                      numberOfLines={2}
+                      textAlign="center"
+                      px={3}
+                      style={{
+                        backgroundColor: balanceDifferencePercent < 0 && account.attributes.type !== 'liabilities' ? colors.red : colors.green,
+                        borderRadius: 6,
+                      }}
+                      color="white"
+                    >
+                      {balanceDifferencePercent}
+                      %
+                    </AText>
+                  </ASkeleton>
+                )}
+              </AStackFlex>
+              <AStackFlex alignItems="flex-end" style={{ width: '100%' }}>
+                <ASkeleton loading={loading}>
+                  <AText
+                    maxWidth={150}
+                    fontSize={14}
+                    numberOfLines={2}
+                    textAlign="right"
+                  >
+                    {localNumberFormat(account.attributes.currencyCode, balance)}
+                  </AText>
+                  {balanceDifferencePercent !== 0 && (
+                    <AText
+                      maxWidth={150}
+                      fontSize={12}
+                      numberOfLines={2}
+                      textAlign="right"
+                      color={balanceDifferencePercent < 0 && account.attributes.type !== 'liabilities' ? colors.brandDanger : colors.brandSuccess}
+                    >
+                      {localNumberFormat(account.attributes.currencyCode, balanceDifference)}
+                    </AText>
+                  )}
+                </ASkeleton>
+              </AStackFlex>
+            </AStackFlex>
+          );
+        })}
         <AText fontSize={9} py={10} px={15}>
           {translate('account_not_included_in_net_worth')}
         </AText>
