@@ -22,6 +22,7 @@ import { TCredential } from '../../types/credential';
 import { ScreenType } from '../../types/screen';
 import { RootDispatch, RootState } from '../../store';
 import AButton from '../UI/ALibrary/AButton';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function CredentialsScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
@@ -159,54 +160,56 @@ export default function CredentialsScreen({ navigation, route }: ScreenType) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <AScrollView showsVerticalScrollIndicator={false}>
-        {credentials.map((c, index) => (
-          <AButton
-            key={`${c.backendURL}-${c.email}-${index + 1}`}
-            onPress={() => loginWithCredential(c, index)}
-            disabled={editMode}
-            style={{
-              borderWidth: 0.5,
-              borderColor: colors.listBorderColor,
-              marginHorizontal: 7,
-              marginBottom: 0,
-              marginTop: 7,
-            }}
-          >
-            <AView
+      <ErrorBoundary>
+        <AScrollView showsVerticalScrollIndicator={false}>
+          {credentials.map((c, index) => (
+            <AButton
+              key={`${c.backendURL}-${c.email}-${index + 1}`}
+              onPress={() => loginWithCredential(c, index)}
+              disabled={editMode}
               style={{
-                display: editMode ? 'flex' : 'none',
-                width: 17,
-                height: 17,
-                marginLeft: 15,
-                marginRight: 10,
+                borderWidth: 0.5,
+                borderColor: colors.listBorderColor,
+                marginHorizontal: 7,
+                marginBottom: 0,
+                marginTop: 7,
               }}
             >
               <AView
                 style={{
-                  flex: 1,
-                  width: 16,
-                  height: 16,
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  position: 'absolute',
-                  top: 0.5,
-                  left: 0.5,
+                  display: editMode ? 'flex' : 'none',
+                  width: 17,
+                  height: 17,
+                  marginLeft: 15,
+                  marginRight: 10,
                 }}
-              />
-              <AntDesign onPress={() => showAlert(index)} name="minus-circle" size={17} color="red" />
-            </AView>
-            <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={27} color={colors.text} />
-            <AStackFlex alignItems="flex-start" mx={5}>
-              <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
-              <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
-              <AText py={3} numberOfLines={1} fontSize={10}>
-                {c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}
-              </AText>
-            </AStackFlex>
-          </AButton>
-        ))}
-      </AScrollView>
+              >
+                <AView
+                  style={{
+                    flex: 1,
+                    width: 16,
+                    height: 16,
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    position: 'absolute',
+                    top: 0.5,
+                    left: 0.5,
+                  }}
+                />
+                <AntDesign onPress={() => showAlert(index)} name="minus-circle" size={17} color="red" />
+              </AView>
+              <Ionicons style={{ marginHorizontal: 5 }} name="person-circle" size={27} color={colors.text} />
+              <AStackFlex alignItems="flex-start" mx={5}>
+                <AText py={2} numberOfLines={1} fontSize={16} bold>{c.email}</AText>
+                <AText py={2} numberOfLines={1} fontSize={12} underline>{c.backendURL}</AText>
+                <AText py={3} numberOfLines={1} fontSize={10}>
+                  {c.accessTokenExpiresIn ? '(OAuth)' : '(Personal Access Token)'}
+                </AText>
+              </AStackFlex>
+            </AButton>
+          ))}
+        </AScrollView>
+      </ErrorBoundary>
     </SafeAreaView>
   );
 }

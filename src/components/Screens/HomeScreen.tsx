@@ -42,6 +42,7 @@ import {
 } from '../UI/ALibrary';
 import DisplayAllAccountsSwitch from '../UI/DisplayAllAccountsSwitch';
 import IncomeExpenseBar from '../UI/IncomeExpenseBar';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
@@ -321,7 +322,7 @@ function InsightCategories() {
                   </AText>
                 </ASkeleton>
               </AStack>
-              {!expensesOnly && category.name !== 'perday' && (
+              {!expensesOnly && category.name !== 'perday' && insightCategoriesTotal && (
                 <IncomeExpenseBar
                   income={category.income}
                   incomeTotal={category.name === 'total' ? insightCategoriesTotal.income - insightCategoriesTotal.expense : insightCategoriesTotal.income}
@@ -624,7 +625,16 @@ function NetWorth() {
               {`${translate('home_net_worth')} • ${currentCode}`}
             </AText>
             <ASkeleton loading={loading}>
-              <AText fontSize={35} lineHeight={37} bold>
+              <AText
+                fontSize={35}
+                lineHeight={37}
+                bold
+                numberOfLines={1}
+                maxWidth="90%"
+                textAlign="center"
+                adjustsFontSizeToFit
+                minimumFontScale={0.6}
+              >
                 {localNumberFormat(currentCode, parseFloat(netWorth[0]?.monetaryValue || '0'))}
               </AText>
             </ASkeleton>
@@ -642,6 +652,10 @@ function NetWorth() {
                     py={0}
                     bold
                     fontSize={12}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}
+                    textAlign="center"
                     color={parseFloat(balance[0].monetaryValue) < 0 ? colors.brandNeutral : colors.brandSuccess}
                   >
                     {`${parseFloat(balance[0].monetaryValue) > 0 ? '+' : ''}${localNumberFormat(balance[0].currencyCode, parseFloat(balance[0].monetaryValue))}`}
@@ -746,65 +760,67 @@ export default function HomeScreen() {
   const positionAnimatedValue = React.useRef(new Animated.Value(0)).current;
 
   return (useMemo(() => (
-    <AView style={{ flex: 1 }}>
-      <LinearGradient
-        colors={gradientColors}
-        start={{ x: 0, y: 1 }}
-        end={{ x: 1, y: 0 }}
-        style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top }}
-      >
-        <AStackFlex>
-          <NetWorth />
-          <Pagination
-            renderIcons={renderIcons}
-            handlePress={(index) => viewPagerRef?.current?.setPage(index)}
-            scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
-            positionAnimatedValue={positionAnimatedValue}
-          />
-        </AStackFlex>
-      </LinearGradient>
-
-      <View style={{ flex: 2 }}>
-        <AView
-          style={{
-            backgroundColor: colors.tileBackgroundColor,
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
-            borderColor: colors.tileBackgroundColor,
-            paddingTop: 5,
-            position: 'absolute',
-            top: -55,
-            height: '100%',
-            right: 0,
-            left: 0,
-          }}
+    <ErrorBoundary>
+      <AView style={{ flex: 1 }}>
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          style={{ minHeight: 250 + safeAreaInsets.top, paddingTop: safeAreaInsets.top }}
         >
-          <AnimatedPagerView
-            ref={viewPagerRef}
-            initialPage={0}
-            style={{ flex: 1 }}
-            onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
-              [
-                {
-                  nativeEvent: {
-                    offset: scrollOffsetAnimatedValue,
-                    position: positionAnimatedValue,
-                  },
-                },
-              ],
-              {
-                useNativeDriver: true,
-              },
-            )}
+          <AStackFlex>
+            <NetWorth />
+            <Pagination
+              renderIcons={renderIcons}
+              handlePress={(index) => viewPagerRef?.current?.setPage(index)}
+              scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
+              positionAnimatedValue={positionAnimatedValue}
+            />
+          </AStackFlex>
+        </LinearGradient>
+
+        <View style={{ flex: 2 }}>
+          <AView
+            style={{
+              backgroundColor: colors.tileBackgroundColor,
+              borderTopLeftRadius: 30,
+              borderTopRightRadius: 30,
+              borderColor: colors.tileBackgroundColor,
+              paddingTop: 5,
+              position: 'absolute',
+              top: -55,
+              height: '100%',
+              right: 0,
+              left: 0,
+            }}
           >
-            <AssetsAccounts key="1" />
-            <InsightCategories key="2" />
-            <InsightBudgets key="3" />
-            <Bills key="4" />
-            <PiggyBanks key="5" />
-          </AnimatedPagerView>
-        </AView>
-      </View>
-    </AView>
+            <AnimatedPagerView
+              ref={viewPagerRef}
+              initialPage={0}
+              style={{ flex: 1 }}
+              onPageScroll={Animated.event<PagerViewOnPageScrollEventData>(
+                [
+                  {
+                    nativeEvent: {
+                      offset: scrollOffsetAnimatedValue,
+                      position: positionAnimatedValue,
+                    },
+                  },
+                ],
+                {
+                  useNativeDriver: true,
+                },
+              )}
+            >
+              <AssetsAccounts key="1" />
+              <InsightCategories key="2" />
+              <InsightBudgets key="3" />
+              <Bills key="4" />
+              <PiggyBanks key="5" />
+            </AnimatedPagerView>
+          </AView>
+        </View>
+      </AView>
+    </ErrorBoundary>
   ), [colors]));
 }
