@@ -10,6 +10,7 @@ import { useThemeColors } from '../../lib/common';
 import { ScreenType } from '../../types/screen';
 import { types } from '../../models/transactions';
 import translate from '../../i18n/locale';
+import ErrorBoundary from '../UI/ErrorBoundary';
 
 export default function FilterScreen({ navigation, route }: ScreenType) {
   const { colors } = useThemeColors();
@@ -30,14 +31,43 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
   }, [navigation, filterType]);
 
   return useMemo(() => (
-    <ScrollView bounces={false} contentContainerStyle={{ paddingTop: 10, paddingHorizontal: 5 }}>
-      {filterType === translate('transaction_type_label') && (
+    <ErrorBoundary>
+      <ScrollView bounces={false} contentContainerStyle={{ paddingTop: 10, paddingHorizontal: 5 }}>
+        {filterType === translate('transaction_type_label') && (
+          <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
+            {types.map((type) => (
+              <TouchableOpacity
+                key={type.type}
+                onPress={() => {
+                  selectFilter(type.type);
+                  navigation.goBack();
+                }}
+              >
+                <AView style={{
+                  backgroundColor: colors.filterBorderColor,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 10,
+                  paddingHorizontal: 10,
+                  height: 35,
+                  margin: 2,
+                }}
+                >
+                  <AText fontSize={15} color="white" bold>
+                    {translate(type.keyName)}
+                  </AText>
+                </AView>
+              </TouchableOpacity>
+            ))}
+          </AStackFlex>
+        )}
+        {filterType === translate('currency') && (
         <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
-          {types.map((type) => (
+          {currencies.map((currency) => (
             <TouchableOpacity
-              key={type.type}
+              key={currency.id}
               onPress={() => {
-                selectFilter(type.type);
+                selectFilter(currency.attributes.code);
                 navigation.goBack();
               }}
             >
@@ -46,81 +76,54 @@ export default function FilterScreen({ navigation, route }: ScreenType) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: 10,
-                paddingHorizontal: 10,
+                width: 80,
                 height: 35,
                 margin: 2,
               }}
               >
                 <AText fontSize={15} color="white" bold>
-                  {translate(type.keyName)}
+                  {`${currency?.attributes.code} ${currency?.attributes.symbol}`}
                 </AText>
               </AView>
             </TouchableOpacity>
           ))}
         </AStackFlex>
-      )}
-      {filterType === translate('currency') && (
-      <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
-        {currencies.map((currency) => (
-          <TouchableOpacity
-            key={currency.id}
-            onPress={() => {
-              selectFilter(currency.attributes.code);
-              navigation.goBack();
-            }}
-          >
-            <AView style={{
-              backgroundColor: colors.filterBorderColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 10,
-              width: 80,
-              height: 35,
-              margin: 2,
-            }}
+        )}
+        {filterType === translate('home_accounts') && (
+        <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
+          {accounts.map((account) => (
+            <TouchableOpacity
+              key={`key-${account.id}`}
+              onPress={() => {
+                selectFilter(account.attributes.name);
+                navigation.goBack();
+              }}
             >
-              <AText fontSize={15} color="white" bold>
-                {`${currency?.attributes.code} ${currency?.attributes.symbol}`}
-              </AText>
-            </AView>
-          </TouchableOpacity>
-        ))}
-      </AStackFlex>
-      )}
-      {filterType === translate('home_accounts') && (
-      <AStackFlex row justifyContent="center" flexWrap="wrap" py={10}>
-        {accounts.map((account) => (
-          <TouchableOpacity
-            key={`key-${account.id}`}
-            onPress={() => {
-              selectFilter(account.attributes.name);
-              navigation.goBack();
-            }}
-          >
-            <View style={{
-              backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? selectedBrandStyle : colors.filterBorderColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 10,
-              height: 35,
-              margin: 2,
-              paddingHorizontal: 10,
-            }}
-            >
-              <Text
-                style={{ fontFamily: 'Montserrat-Bold', color: 'white', maxWidth: 200 }}
-                numberOfLines={1}
+              <View style={{
+                backgroundColor: selectedAccountIds?.includes(parseInt(account.id, 10)) ? selectedBrandStyle : colors.filterBorderColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 10,
+                height: 35,
+                margin: 2,
+                paddingHorizontal: 10,
+              }}
               >
-                {account.attributes.name}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </AStackFlex>
-      )}
+                <Text
+                  style={{ fontFamily: 'Montserrat-Bold', color: 'white', maxWidth: 200 }}
+                  numberOfLines={1}
+                >
+                  {account.attributes.name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </AStackFlex>
+        )}
 
-      <View style={{ height: 200 }} />
-    </ScrollView>
+        <View style={{ height: 200 }} />
+      </ScrollView>
+    </ErrorBoundary>
   ), [
     range,
     currencies,

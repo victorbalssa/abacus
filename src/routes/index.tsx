@@ -50,6 +50,7 @@ import {
 import ErrorWidget from '../components/UI/ErrorWidget';
 import PrivacyScreen from '../components/UI/PrivacyScreen';
 import { AbacusQuickAction } from '../types/quickAction';
+import ErrorBoundary from '../components/UI/ErrorBoundary';
 
 const Stack = createNativeStackNavigator();
 const TransactionStack = createNativeStackNavigator();
@@ -278,7 +279,7 @@ function Home() {
   const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
 
   return (
-    <>
+    <ErrorBoundary>
       <Tab.Navigator
         tabBar={TabBarComponent}
         screenOptions={() => ({
@@ -354,7 +355,7 @@ function Home() {
         />
       </Tab.Navigator>
       <PrivacyScreen />
-    </>
+    </ErrorBoundary>
   );
 }
 
