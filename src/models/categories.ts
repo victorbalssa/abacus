@@ -21,30 +21,12 @@ export type InsightCategoryType = {
 
 export type CategoriesStateType = {
   insightCategories: InsightCategoryType[],
-  total: InsightCategoryType,
-  perDay: InsightCategoryType,
+  total?: InsightCategoryType,
+  perDay?: InsightCategoryType,
 }
 
 const INITIAL_STATE = {
   insightCategories: [],
-  total: {
-    name: 'total',
-    id: 'total',
-    currencyCode: '',
-    currencyId: '0',
-    income: 0,
-    expense: 0,
-    difference: 0,
-  },
-  perDay: {
-    name: 'perday',
-    id: 'perday',
-    currencyCode: '',
-    currencyId: '0',
-    income: 0,
-    expense: 0,
-    difference: 0,
-  },
 } as CategoriesStateType;
 
 const dateDiffInDays = (start, end) => {
