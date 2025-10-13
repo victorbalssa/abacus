@@ -72,6 +72,7 @@ export default {
     'expo-asset',
     'expo-secure-store',
     'expo-localization',
+    './plugins/withPlugin.ts',
     [
       'expo-font',
       {
