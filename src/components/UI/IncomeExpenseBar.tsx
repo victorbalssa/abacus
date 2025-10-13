@@ -48,7 +48,7 @@ function IncomeExpenseBar({
             {localNumberFormat(currencyCode, expense)}
           </AText>
         </ASkeleton>
-        {expenseTotal && (
+        {expenseTotal ? (
           <View style={{
             width: `${expensePercentage}%`,
             marginLeft: `${100 - expensePercentage}%`,
@@ -58,7 +58,7 @@ function IncomeExpenseBar({
             borderTopLeftRadius: expensePercentage < 100 ? 5 : 0,
           }}
           />
-        )}
+        ) : null}
       </View>
       <View style={{ width: '50%', borderLeftWidth: 1, borderColor: colors.listBorderColor }}>
         <ASkeleton loading={loading}>
@@ -72,7 +72,7 @@ function IncomeExpenseBar({
             {localNumberFormat(currencyCode, income)}
           </AText>
         </ASkeleton>
-        {incomeTotal && (
+        {incomeTotal ? (
           <View style={{
             width: `${incomePercentage}%`,
             height: barHeight,
@@ -81,7 +81,7 @@ function IncomeExpenseBar({
             borderTopRightRadius: incomePercentage < 100 ? 5 : 0,
           }}
           />
-        )}
+        ) : null}
       </View>
     </AStack>
   );

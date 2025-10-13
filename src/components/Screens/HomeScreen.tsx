@@ -304,7 +304,7 @@ function InsightCategories() {
                   {(category.name === 'no-category') ? translate('no_category') : ''}
                   {(category.name === 'total') ? translate(expensesOnly ? 'category_total_spent' : 'category_total_balance') : ''}
                   {(category.name === 'perday') ? translate(expensesOnly ? 'category_perday_spent' : 'category_perday_balance') : ''}
-                  {(category.name !== 'no-category' && category.name !== 'total' && category.name !== 'perday') ? category.name : ''}
+                  {(category.name !== 'no-category' && category.name !== 'total' && category.name !== 'perday') ? category.name : null}
                 </AText>
 
                 <ASkeleton loading={loading}>

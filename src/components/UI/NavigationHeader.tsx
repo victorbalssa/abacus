@@ -61,7 +61,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
         <AText py={4} fontSize={12} numberOfLines={1}>
           {range === 1 ? `${moment(start).format('MMMM D')} - ${moment(end).format('D')}` : `${moment(start).format('MMMM D')} - ${moment(end).format('MMMM D')}`}
         </AText>
-        {(currentCode && range) && (
+        {(currentCode && range) ? (
         <AStack row justifyContent="flex-start">
           <View style={{
             alignSelf: 'flex-start',
@@ -90,7 +90,7 @@ export default function NavigationHeader({ navigation }): React.ReactNode {
             </AText>
           </View>
         </AStack>
-        )}
+        ) : null}
       </AStack>
 
       <TouchableOpacity
