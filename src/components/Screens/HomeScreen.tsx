@@ -64,6 +64,9 @@ function AssetsAccounts() {
   const balanceFontSize = isLarge ? 18 : isMedium ? 16 : 14;
   const balanceDifferenceFontSize = isLarge ? 16 : isMedium ? 14 : 12;
   const percentageBadgeFontSize = isLarge ? 16 : isMedium ? 14 : 12;
+  const sectionTitleFontSize = isLarge ? 28 : isMedium ? 27 : 25;
+  const footerTextFontSize = isLarge ? 12 : isMedium ? 11 : 9;
+  const sortIconSize = isLarge ? 26 : isMedium ? 24 : 22;
 
   const [nameSortOrder, setNameSortOrder] = useState('asc');
   const [balanceSortOrder, setBalanceSortOrder] = useState('desc');
@@ -110,7 +113,7 @@ function AssetsAccounts() {
     >
       <AView>
         <AStack mx={15} my={10} row justifyContent="space-between" alignItems="center">
-          <AText fontSize={25} bold>
+          <AText fontSize={sectionTitleFontSize} bold>
             {displayAllAccounts ? translate('home_all_accounts') : translate('home_accounts')}
           </AText>
           <DisplayAllAccountsSwitch />
@@ -120,7 +123,7 @@ function AssetsAccounts() {
             <TouchableOpacity onPress={() => handleSortPress('left')}>
               <MaterialCommunityIcons
                 name="sort"
-                size={22}
+                size={sortIconSize}
                 color={lastPressed === 'left' ? selectedBrandStyle : colors.text}
               />
             </TouchableOpacity>
@@ -129,7 +132,7 @@ function AssetsAccounts() {
             <TouchableOpacity onPress={() => handleSortPress('right')}>
               <MaterialCommunityIcons
                 name="sort"
-                size={22}
+                size={sortIconSize}
                 color={lastPressed === 'right' ? selectedBrandStyle : colors.text}
                 style={{ transform: [{ scaleX: -1 }] }}
               />
@@ -214,7 +217,7 @@ function AssetsAccounts() {
             </AStackFlex>
           );
         })}
-        <AText fontSize={9} py={10} px={15}>
+        <AText fontSize={footerTextFontSize} py={10} px={15}>
           {translate('account_not_included_in_net_worth')}
         </AText>
         <AView style={{ height: 150 }} />
