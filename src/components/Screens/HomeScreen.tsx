@@ -29,7 +29,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import moment from 'moment';
 import { RootDispatch, RootState } from '../../store';
 import translate from '../../i18n/locale';
-import { localNumberFormat, useThemeColors } from '../../lib/common';
+import {
+  localNumberFormat, useThemeColors, isLargeScreen, isMediumScreen,
+} from '../../lib/common';
 
 import Pagination from '../UI/Pagination';
 import {
@@ -53,6 +55,15 @@ function AssetsAccounts() {
   const loading = useSelector((state: RootState) => state.loading.effects.accounts.getAccounts?.loading);
   const dispatch = useDispatch<RootDispatch>();
   const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
+
+  // Responsive font sizing based on screen size
+  const isLarge = isLargeScreen();
+  const isMedium = isMediumScreen();
+  const accountNameFontSize = isLarge ? 18 : isMedium ? 16 : 14;
+  const accountAsteriskFontSize = isLarge ? 14 : isMedium ? 12 : 10;
+  const balanceFontSize = isLarge ? 18 : isMedium ? 16 : 14;
+  const balanceDifferenceFontSize = isLarge ? 16 : isMedium ? 14 : 12;
+  const percentageBadgeFontSize = isLarge ? 16 : isMedium ? 14 : 12;
 
   const [nameSortOrder, setNameSortOrder] = useState('asc');
   const [balanceSortOrder, setBalanceSortOrder] = useState('desc');
@@ -149,11 +160,11 @@ function AssetsAccounts() {
                 alignItems="center"
               >
                 <AText
-                  fontSize={14}
+                  fontSize={accountNameFontSize}
                   numberOfLines={1}
                 >
                   {account.attributes.name}
-                  <AText fontSize={10}>
+                  <AText fontSize={accountAsteriskFontSize}>
                     {account.attributes.includeNetWorth ? '' : '*'}
                   </AText>
                 </AText>
@@ -161,7 +172,7 @@ function AssetsAccounts() {
                 {balanceDifferencePercent !== 0 && (
                   <ASkeleton loading={loading}>
                     <AText
-                      fontSize={12}
+                      fontSize={percentageBadgeFontSize}
                       numberOfLines={2}
                       textAlign="center"
                       px={3}
@@ -181,7 +192,7 @@ function AssetsAccounts() {
                 <ASkeleton loading={loading}>
                   <AText
                     maxWidth={150}
-                    fontSize={14}
+                    fontSize={balanceFontSize}
                     numberOfLines={2}
                     textAlign="right"
                   >
@@ -190,7 +201,7 @@ function AssetsAccounts() {
                   {balanceDifferencePercent !== 0 && (
                     <AText
                       maxWidth={150}
-                      fontSize={12}
+                      fontSize={balanceDifferenceFontSize}
                       numberOfLines={2}
                       textAlign="right"
                       color={balanceDifferencePercent < 0 && account.attributes.type !== 'liabilities' ? colors.brandDanger : colors.brandSuccess}
