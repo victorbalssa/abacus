@@ -1,5 +1,5 @@
 export default {
-  configuration_app_version: '应用版本',
+  configuration_app_version: '应用程序版本',
   configuration_about: '关于',
   configuration_clear_option: '清理并重置应用',
   configuration_clear_confirm_button: '现在清理',
@@ -16,19 +16,19 @@ export default {
   configuration_debug: '调试',
   configuration_get_help: '获取帮助',
   assetsHistoryCharts_chart_works: '此报表使用 4 个帐户以内最佳',
-  assetsHistoryCharts_change_preferences: '点击这里',
+  assetsHistoryCharts_change_preferences: '点击此处',
   assetsHistoryCharts_choose_preferences_text: '要在 Firefly III 偏好设置中选择您的首选帐户：',
   assetsHistoryCharts_home_screen: '主屏幕',
-  transaction_form_description_required: '描述是必需的。',
-  transaction_form_description_short: '描述太短了。',
-  transaction_form_amount_required: '账户是必需的。',
+  transaction_form_description_required: '描述不可为空。',
+  transaction_form_description_short: '描述内容太短了。',
+  transaction_form_amount_required: '账户不可为空',
   transaction_form_description_label: '描述',
   transaction_form_sourceAccount_label: '付款账户',
   transaction_form_destinationAccount_label: '收款账户',
   transaction_form_date_label: '日期',
   transaction_form_amount_label: '金额',
   transaction_form_foreign_amount_label: '外币金额',
-  transaction_form_notes_label: '注释',
+  transaction_form_notes_label: '备注',
   transaction_form_category_label: '分类',
   transaction_form_budget_label: '预算',
   transaction_form_tags_label: '标签',
@@ -44,7 +44,7 @@ export default {
   auth_form_url_placeholder: "Firefly III 后端网址 (最后不要带 '/')",
   auth_form_oauth_clientId: 'OAuth 客户端 ID',
   auth_form_oauth_client_secret: 'OAuth 客户端密钥',
-  auth_form_secrets_help_message: '所有钥匙都存放在安全的房间里。',
+  auth_form_secrets_help_message: '所有密钥将被安全保存。',
   auth_form_set_redirect: '请将<跳转网址>设置为：',
   auth_form_need_help: '需要帮助？',
   auth_form_submit_button_initial: '登录',
@@ -89,10 +89,12 @@ export default {
   home_header_time_range_s: '期', // Put an abbreviation that best represents a semiannual
 
   // from 0.6.0
-  balance: '预算',
+  balance: '净值',
   history: '历史',
   home_categories: '分类',
-  home_net_worth: '净值',
+  home_all_categories: '全部分类',
+  home_expense_categories: '支出分类',
+  home_net_worth: '净资产',
 
   // from 0.7.0
   home_budgets: '预算',
@@ -115,29 +117,61 @@ export default {
   configuration_review_app_android: '在 Google Play 上评论 Abacus',
 
   // from 0.9.2
-  assets_history_chart: '账户图表',
+  assets_history_chart: '资产图表',
   balance_history_chart: '净值图表',
   balance_history_chart_no_data: '要访问此图表，请将 FireflyIII 更新到最新版本.',
   account_not_included_in_net_worth: '* 账户不计入净资产.',
 
   // from 0.10.0
-  period: '期间',
+  period: '周期',
   currency: '金额',
 
   home_all_accounts: '所有账户',
 
   // from 0.10.3
   router_back_button: '返回',
-  transaction_clone: '克隆',
+  transaction_clone: '复制',
   transaction_delete: '删除',
 
+  // from 0.11.0
+  configuration_credentials: '凭据',
+  configuration_manage_credentials: '凭据管理',
+  configuration_credentials_add_button: '添加凭据',
+  logout: '登出',
+
+  // from 0.12.0
+  credential_clear_confirm_button: '删除',
+  credential_clear_alert_title: '是否确定？',
+  credential_clear_cancel_button: '取消',
+  go_to_credentials: '前往凭据列表',
+  configuration_logout_alert_title: '登出',
+  load_more: '加载更多',
+
   // from X.X.X
+  home_bills: '账单',
+  home_piggy_banks: '存钱罐',
   bills_paid: '支付到',
-  due_by: '到期',
-  date_unavailable: '另行通知',
+  due_by: '账单日期',
+  date_unavailable: '无',
+  bills_not_expected: '无预期支付',
+  transaction_form_bill_label: '账单',
+  configuration_transaction_form: '交易表单',
+  close_after_transaction: '提交交易表单后关闭表单编辑页',
 
   // from 0.19.0
   configuration_theme: '定制',
   configuration_theme_selection: '更改颜色主题',
   configuration_theme_title: '颜色主题',
+
+  transaction_search_placeholder: '搜索交易...',
+  transaction_type_label: '类型',
+  authenticate_label: '认证',
+  filters_screen_title: '筛选',
+  credentials_done_button: '完成',
+  credentials_edit_button: '编辑',
+  no_category: '(无分类)',
+  category_total_spent: '总支出',
+  category_total_balance: '总结余',
+  category_perday_spent: '日均支出',
+  category_perday_balance: '日均结余',
 };
