@@ -39,6 +39,9 @@ import 'moment/locale/tr';
 import ukUA from './uk-UA';
 import 'moment/locale/uk';
 
+import jaJP from './ja-JP';
+import 'moment/locale/ja';
+
 export default {
   de: deDE,
   en: enUS,
@@ -54,4 +57,5 @@ export default {
   ko: koKR,
   tr: trTR,
   uk: ukUA,
+  ja: jaJP,
 };
