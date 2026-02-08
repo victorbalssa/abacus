@@ -191,7 +191,11 @@ function RenderItem({ item }) {
             </AText>
 
             <AText fontSize={12} maxWidth={D_WIDTH - 175} numberOfLines={1}>
-              {`${moment(item.attributes.transactions[0].date).format('ll')} • ${item.attributes.transactions[0].categoryName || ''}`}
+              {`${moment(item.attributes.transactions[0].date).format('LT')}${
+                item.attributes.transactions[0].categoryName
+                  ? ` • ${item.attributes.transactions[0].categoryName}`
+                  : ''
+              }`}
             </AText>
             {item.attributes.transactions[0].tags.length > 0 && (
               <AStackFlex justifyContent="flex-start" alignItems="flex-start" row>
@@ -455,8 +459,30 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
     setStartDate(new Date(`${defaultStart}T12:00:00`));
   };
 
+  const transactionSections = useMemo(
+    () => {
+      const byDay = new Map<string, TransactionType[]>();
+
+      transactions.forEach((t) => {
+        const date = t?.attributes?.transactions?.[0]?.date;
+        const dayKey = date ? moment(date).format('YYYY-MM-DD') : 'Invalid date';
+
+        const dayTransactions = byDay.get(dayKey);
+        if (dayTransactions) {
+          dayTransactions.push(t);
+        } else {
+          byDay.set(dayKey, [t]);
+        }
+      });
+
+      return Array.from(byDay.entries()).map(([title, data]) => ({ title, data }));
+    },
+    [transactions],
+  );
+
   return (
     <SwipeListView
+      useSectionList
       nestedScrollEnabled={false}
       contentInsetAdjustmentBehavior="automatic"
       refreshControl={(
@@ -490,8 +516,27 @@ export default function TransactionsScreen({ navigation, route }: ScreenType) {
       )}
       initialNumToRender={15}
       keyExtractor={(item: TransactionType) => item.id}
-      data={!loading ? transactions : []}
+      sections={!loading ? transactionSections : []}
       showsVerticalScrollIndicator
+      renderSectionHeader={({ section }) => {
+        const label = moment(section.title, 'YYYY-MM-DD', true).isValid()
+          ? moment(section.title, 'YYYY-MM-DD').format('LL')
+          : section.title;
+        return (
+          <AView
+            style={{
+              backgroundColor: colors.tileBackgroundColor,
+              paddingHorizontal: 10,
+              paddingTop: 12,
+              paddingBottom: 6,
+              borderTopWidth: 0.5,
+              borderColor: colors.listBorderColor,
+            }}
+          >
+            <AText bold>{label}</AText>
+          </AView>
+        );
+      }}
       renderItem={({ item }) => <RenderItem item={item} />}
       renderHiddenItem={(data, rowMap) => (
         <RenderHiddenItem
