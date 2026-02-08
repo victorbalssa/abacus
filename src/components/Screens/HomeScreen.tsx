@@ -140,9 +140,10 @@ function AssetsAccounts() {
             <AStackFlex
               key={account.id}
               row
-              px={15}
-              py={10}
+              mx={20}
               style={{
+                height: 45,
+                maxWidth: '90%',
                 borderColor: colors.listBorderColor,
                 borderBottomWidth: index + 1 === accounts.length ? 0 : 0.5,
               }}
