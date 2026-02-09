@@ -12,6 +12,7 @@ import {
   useScrollToTop,
   useNavigation,
 } from '@react-navigation/native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   RefreshControl,
@@ -44,10 +45,13 @@ import DisplayAllAccountsSwitch from '../UI/DisplayAllAccountsSwitch';
 import IncomeExpenseBar from '../UI/IncomeExpenseBar';
 import ErrorBoundary from '../UI/ErrorBoundary';
 
+const EXTRA_SCROLL_PADDING = 120;
+
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
 function AssetsAccounts() {
   const { colors } = useThemeColors();
+  const tabBarHeight = useBottomTabBarHeight();
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
   const displayAllAccounts = useSelector((state: RootState) => state.configuration.displayAllAccounts);
   const loading = useSelector((state: RootState) => state.loading.effects.accounts.getAccounts?.loading);
@@ -87,6 +91,7 @@ function AssetsAccounts() {
   return (
     <AScrollView
       showsVerticalScrollIndicator={false}
+      style={{ paddingBottom: tabBarHeight + EXTRA_SCROLL_PADDING }}
       refreshControl={(
         <RefreshControl
           refreshing={false}
@@ -135,9 +140,10 @@ function AssetsAccounts() {
             <AStackFlex
               key={account.id}
               row
-              px={15}
-              py={10}
+              mx={20}
               style={{
+                height: 45,
+                maxWidth: '90%',
                 borderColor: colors.listBorderColor,
                 borderBottomWidth: index + 1 === accounts.length ? 0 : 0.5,
               }}
@@ -206,7 +212,6 @@ function AssetsAccounts() {
         <AText fontSize={9} py={10} px={15}>
           {translate('account_not_included_in_net_worth')}
         </AText>
-        <AView style={{ height: 150 }} />
       </AView>
     </AScrollView>
   );
@@ -214,6 +219,7 @@ function AssetsAccounts() {
 
 function InsightCategories() {
   const { colors } = useThemeColors();
+  const tabBarHeight = useBottomTabBarHeight();
   const insightCategories = useSelector((state: RootState) => state.categories.insightCategories);
   const insightCategoriesTotal = useSelector((state: RootState) => state.categories.total);
   const insightCategoriesPerDay = useSelector((state: RootState) => state.categories.perDay);
@@ -246,6 +252,7 @@ function InsightCategories() {
   return (
     <AScrollView
       showsVerticalScrollIndicator={false}
+      style={{ paddingBottom: tabBarHeight + EXTRA_SCROLL_PADDING }}
       refreshControl={(
         <RefreshControl
           refreshing={false}
@@ -337,13 +344,13 @@ function InsightCategories() {
           </TouchableOpacity>
         );
       })}
-      <AView style={{ height: 150 }} />
     </AScrollView>
   );
 }
 
 function InsightBudgets() {
   const { colors } = useThemeColors();
+  const tabBarHeight = useBottomTabBarHeight();
   const insightBudgets = useSelector((state: RootState) => state.budgets.budgets);
   const loading = useSelector((state: RootState) => state.loading.effects.budgets.getInsightBudgets?.loading);
   const dispatch = useDispatch<RootDispatch>();
@@ -351,6 +358,7 @@ function InsightBudgets() {
   return (
     <AScrollView
       showsVerticalScrollIndicator={false}
+      style={{ paddingBottom: tabBarHeight + EXTRA_SCROLL_PADDING }}
       refreshControl={(
         <RefreshControl
           refreshing={false}
@@ -412,7 +420,6 @@ function InsightBudgets() {
           />
         </AStack>
       ))}
-      <AView style={{ height: 150 }} />
     </AScrollView>
   );
 }
@@ -428,6 +435,7 @@ function formatDate(date) {
 
 function Bills() {
   const { colors } = useThemeColors();
+  const tabBarHeight = useBottomTabBarHeight();
   const bills = useSelector((state: RootState) => state.bills.bills);
   const loading = useSelector((state: RootState) => state.loading.effects.bills?.getBills?.loading);
   const dispatch = useDispatch<RootDispatch>();
@@ -439,6 +447,7 @@ function Bills() {
   return (
     <AScrollView
       showsVerticalScrollIndicator={false}
+      style={{ paddingBottom: tabBarHeight + EXTRA_SCROLL_PADDING }}
       refreshControl={(
         <RefreshControl
           refreshing={loading}
@@ -516,13 +525,13 @@ function Bills() {
           </AStack>
         );
       })}
-      <AView style={{ height: 150 }} />
     </AScrollView>
   );
 }
 
 function PiggyBanks() {
   const { colors } = useThemeColors();
+  const tabBarHeight = useBottomTabBarHeight();
   const piggyBanks = useSelector((state: RootState) => state.piggyBanks.piggyBanks);
   const loading = useSelector((state: RootState) => state.loading.effects.piggyBanks?.getPiggyBanks?.loading);
   const dispatch = useDispatch<RootDispatch>();
@@ -530,6 +539,7 @@ function PiggyBanks() {
   return (
     <AScrollView
       showsVerticalScrollIndicator={false}
+      style={{ paddingBottom: tabBarHeight + EXTRA_SCROLL_PADDING }}
       refreshControl={(
         <RefreshControl
           refreshing={false}
@@ -594,7 +604,6 @@ function PiggyBanks() {
           />
         </AStack>
       ))}
-      <AView style={{ height: 150 }} />
     </AScrollView>
   );
 }
