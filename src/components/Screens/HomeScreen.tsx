@@ -29,6 +29,7 @@ import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icon
 import { LinearGradient } from 'expo-linear-gradient';
 import moment from 'moment';
 import { RootDispatch, RootState } from '../../store';
+import type { AccountType } from '../../models/accounts';
 import translate from '../../i18n/locale';
 import { localNumberFormat, useThemeColors } from '../../lib/common';
 
@@ -49,11 +50,22 @@ const EXTRA_SCROLL_PADDING = 120;
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 
+function getAccountDisplayBalance(account: AccountType, useCreditCardRunningBalance = false) {
+  const { accountRole, currentBalance, virtualBalance } = account.attributes;
+  const balance = parseFloat(currentBalance);
+
+  // Exclude the virtual credit limit to show the credit card's running balance.
+  return useCreditCardRunningBalance && accountRole === 'ccAsset'
+    ? balance - parseFloat(virtualBalance || '0')
+    : balance;
+}
+
 function AssetsAccounts() {
   const { colors } = useThemeColors();
   const tabBarHeight = useBottomTabBarHeight();
   const accounts = useSelector((state: RootState) => state.accounts.accounts);
   const displayAllAccounts = useSelector((state: RootState) => state.configuration.displayAllAccounts);
+  const useCreditCardRunningBalance = useSelector((state: RootState) => state.configuration.useCreditCardRunningBalance ?? false);
   const loading = useSelector((state: RootState) => state.loading.effects.accounts.getAccounts?.loading);
   const dispatch = useDispatch<RootDispatch>();
   const selectedBrandStyle = useSelector((state: RootState) => state.configuration.selectedBrandStyle || colors.brandStyleOrange);
@@ -81,9 +93,12 @@ function AssetsAccounts() {
           ? a.attributes.name.localeCompare(b.attributes.name)
           : b.attributes.name.localeCompare(a.attributes.name);
       } if (balanceSortOrder) {
+        const balanceA = getAccountDisplayBalance(a, useCreditCardRunningBalance);
+        const balanceB = getAccountDisplayBalance(b, useCreditCardRunningBalance);
+
         return balanceSortOrder === 'asc'
-          ? parseFloat(a.attributes.currentBalance) - parseFloat(b.attributes.currentBalance)
-          : parseFloat(b.attributes.currentBalance) - parseFloat(a.attributes.currentBalance);
+          ? balanceA - balanceB
+          : balanceB - balanceA;
       }
       return 0;
     });
@@ -191,7 +206,7 @@ function AssetsAccounts() {
                     numberOfLines={2}
                     textAlign="right"
                   >
-                    {localNumberFormat(account.attributes.currencyCode, balance)}
+                    {localNumberFormat(account.attributes.currencyCode, getAccountDisplayBalance(account, useCreditCardRunningBalance))}
                   </AText>
                   {balanceDifferencePercent !== 0 && (
                     <AText

@@ -30,6 +30,7 @@ import {
 export default function SettingsScreen({ navigation }: ScreenType) {
   const { colors } = useThemeColors();
   const closeTransactionScreen = useSelector((state: RootState) => state.configuration.closeTransactionScreen);
+  const useCreditCardRunningBalance = useSelector((state: RootState) => state.configuration.useCreditCardRunningBalance ?? false);
   const backendURL = useSelector((state: RootState) => state.configuration.backendURL);
   const useBiometricAuth = useSelector((state: RootState) => state.configuration.useBiometricAuth);
   const dispatch = useDispatch<RootDispatch>();
@@ -322,6 +323,27 @@ export default function SettingsScreen({ navigation }: ScreenType) {
           <AText fontSize={14}>{translate('configuration_theme_selection')}</AText>
           <FontAwesome name="angle-right" size={22} color="gray" />
         </APressable>
+        <AStack
+          row
+          justifyContent="space-between"
+          style={{
+            minHeight: 45,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            marginLeft: 10,
+          }}
+        >
+          <AText fontSize={14} style={{ flexShrink: 1, marginRight: 10 }}>
+            {translate('configuration_credit_card_running_balance')}
+          </AText>
+          <Switch
+            accessibilityLabel={translate('configuration_credit_card_running_balance')}
+            thumbColor="white"
+            trackColor={{ false: '#767577', true: selectedBrandStyle }}
+            onValueChange={(value) => dispatch.configuration.setUseCreditCardRunningBalance(value)}
+            value={useCreditCardRunningBalance}
+          />
+        </AStack>
       </AView>
 
       <AText py={10} px={10} fontSize={18} bold>
