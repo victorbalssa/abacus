@@ -159,6 +159,7 @@ export default {
   // from 0.19.0
   configuration_theme: 'Customization',
   configuration_theme_selection: 'Change color theme',
+  configuration_credit_card_running_balance: 'Use running balance for credit cards',
   configuration_theme_title: 'Color themes',
 
   transaction_search_placeholder: 'Search transactions...',

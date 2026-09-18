@@ -9,6 +9,7 @@ type ConfigurationStateType = {
   backendURL: string
   hideBalance: boolean
   displayAllAccounts: boolean
+  useCreditCardRunningBalance: boolean
   displayOnlyExpenseCategories: boolean
   displayForeignCurrency: boolean
   useBiometricAuth: boolean
@@ -48,6 +49,7 @@ const INITIAL_STATE = {
   backendURL: '',
   hideBalance: false,
   displayAllAccounts: false,
+  useCreditCardRunningBalance: false,
   displayOnlyExpenseCategories: false,
   displayForeignCurrency: false,
   useBiometricAuth: false,
@@ -103,6 +105,13 @@ export default createModel<RootModel>()({
       return {
         ...state,
         displayOnlyExpenseCategories,
+      };
+    },
+
+    setUseCreditCardRunningBalance(state, useCreditCardRunningBalance: boolean): ConfigurationStateType {
+      return {
+        ...state,
+        useCreditCardRunningBalance,
       };
     },
 
